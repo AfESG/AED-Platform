@@ -8,7 +8,7 @@ rails g model Submission \
   permission_email:string \
   mike_site:boolean
 
-rails g model PopulationEstimate \
+rails g model PopulationSubmission \
   submission_id:integer \
   data_licensing:string \
   embargo_date:date \
@@ -22,10 +22,12 @@ rails g model PopulationEstimate \
   survey_type_other:string
 
 rails g model SurveyAerialTotalCount \
+  population_submission_id:integer \
   surveyed_at_stratum_level:boolean \
   stratum_level_data_submitted:boolean
 
 rails g model SurveyAerialTotalCountStratum \
+  survey_aerial_total_count_id:integer \
   stratum_name:string \
   stratum_area:integer \
   \
@@ -48,11 +50,13 @@ rails g model SurveyAerialTotalCountStratum \
   carcasses_very_old:integer
 
 rails g model SurveyAerialSampleCount \
+  population_submission_id:integer \
   total_possible_transects:integer \
   surveyed_at_stratum_level:boolean \
   stratum_level_data_submitted:boolean
 
 rails g model SurveyAerialSampleCountStratum \
+  survey_aerial_sample_count_id:integer \
   stratum_name:string \
   stratum_area:integer \
   \
@@ -74,10 +78,12 @@ rails g model SurveyAerialSampleCountStratum \
   carcasses_very_old:integer
 
 rails g model SurveyGroundTotalCount \
+  population_submission_id:integer \
   surveyed_at_stratum_level:boolean \
   stratum_level_data_submitted:boolean
 
 rails g model SurveyGroundTotalCountStratum \
+  survey_ground_total_count_id:integer \
   stratum_name:string \
   stratum_area:integer \
   \
@@ -97,10 +103,12 @@ rails g model SurveyGroundTotalCountStratum \
   actually_seen:integer
 
 rails g model SurveyGroundSampleCount \
+  population_submission_id:integer \
   surveyed_at_stratum_level:boolean \
   stratum_level_data_submitted:boolean
 
 rails g model SurveyGroundSampleCountStratum \
+  survey_ground_sample_count_id:integer \
   stratum_name:string \
   stratum_area:integer \
   \
@@ -117,10 +125,12 @@ rails g model SurveyGroundSampleCountStratum \
   person_hours:integer
 
 rails g model SurveyDungCountLineTransect \
+  population_submission_id:integer \
   surveyed_at_stratum_level:boolean \
   stratum_level_data_submitted:boolean
 
 rails g model SurveyDungCountLineTransectStratum \
+  survey_dung_count_line_transect_id:integer \
   stratum_name:string \
   stratum_area:integer \
   \
@@ -172,11 +182,13 @@ rails g model SurveyDungCountLineTransectStratum \
   dung_density_no_precision_estimate_available:boolean \
   dung_encounter_rate:integer
 
-rails g model SurveyFaecalDNA \
+rails g model SurveyFaecalDna \
+  population_submission_id:integer \
   surveyed_at_stratum_level:boolean \
   stratum_level_data_submitted:boolean
 
-rails g model SurveyFaecalDNAStratum \
+rails g model SurveyFaecalDnaStratum \
+  survey_faecal_dna_id:integer \
   stratum_name:string \
   stratum_area:integer \
   \
@@ -195,11 +207,13 @@ rails g model SurveyFaecalDNAStratum \
   sampling_locations:integer
 
 rails g model SurveyOther \
+  population_submission_id:integer \
   other_method_description:string \
   population_estimate_min:integer \
   population_estimate_max:integer
 
 rails g model SurveyIndividualRegistration \
+  population_submission_id:integer \
   population_estimate:integer \
   population_upper_range:integer \
   monitoring_years:integer \
