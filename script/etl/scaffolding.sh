@@ -32,7 +32,7 @@ rails g model SurveyAerialTotalCountStratum \
   population_estimate:integer \
   population_variance:float \
   population_standard_error:float \
-  population_value_of_t:float \
+  population_t:float \
   population_degrees_of_freedom:integer \
   population_confidence_limits:float \
   population_no_precision_estimate_available:boolean \
@@ -59,7 +59,7 @@ rails g model SurveyAerialSampleCountStratum \
   population_estimate:integer \
   population_variance:float \
   population_standard_error:float \
-  population_value_of_t:float \
+  population_t:float \
   population_degrees_of_freedom:integer \
   population_confidence_limits:float \
   population_no_precision_estimate_available:boolean \
@@ -84,7 +84,7 @@ rails g model SurveyGroundTotalCountStratum \
   population_estimate:integer \
   population_variance:float \
   population_standard_error:float \
-  population_value_of_t:float \
+  population_t:float \
   population_degrees_of_freedom:integer \
   population_confidence_limits:float \
   population_no_precision_estimate_available:boolean \
@@ -107,7 +107,7 @@ rails g model SurveyGroundSampleCountStratum \
   population_estimate:integer \
   population_variance:float \
   population_standard_error:float \
-  population_value_of_t:float \
+  population_t:float \
   population_degrees_of_freedom:integer \
   population_confidence_limits:float \
   population_no_precision_estimate_available:boolean \
@@ -127,7 +127,7 @@ rails g model SurveyDungCountLineTransectStratum \
   population_estimate:integer \
   population_variance:float \
   population_standard_error:float \
-  population_value_of_t:float \
+  population_t:float \
   population_degrees_of_freedom:integer \
   population_confidence_limits:float \
   population_no_precision_estimate_available:boolean \
@@ -148,7 +148,7 @@ rails g model SurveyDungCountLineTransectStratum \
   dung_decay_rate_reference:string \
   dung_decay_rate_variance:float \
   dung_decay_rate_standard_error:float \
-  dung_decay_rate_value_of_t:float \
+  dung_decay_rate_t:float \
   dung_decay_rate_degrees_of_freedom:integer \
   dung_decay_rate_confidence_limits:float \
   dung_decay_rate_no_precision_estimate_available:boolean \
@@ -159,14 +159,14 @@ rails g model SurveyDungCountLineTransectStratum \
   defecation_rate_reference:string \
   defecation_rate_variance:float \
   defecation_rate_standard_error:float \
-  defecation_rate_value_of_t:float \
+  defecation_rate_t:float \
   defecation_rate_degrees_of_freedom:integer \
   defecation_rate_confidence_limits:float \
   defecation_rate_no_precision_estimate_available:boolean \
   dung_density_estimate:integer \
   dung_density_variance:float \
   dung_density_standard_error:float \
-  dung_density_value_of_t:float \
+  dung_density_t:float \
   dung_density_degrees_of_freedom:integer \
   dung_density_confidence_limits:float \
   dung_density_no_precision_estimate_available:boolean \
@@ -183,7 +183,7 @@ rails g model SurveyFaecalDNAStratum \
   population_estimate:integer \
   population_variance:float \
   population_standard_error:float \
-  population_value_of_t:float \
+  population_t:float \
   population_degrees_of_freedom:integer \
   population_confidence_limits:float \
   population_no_precision_estimate_available:boolean \
