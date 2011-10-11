@@ -73,7 +73,7 @@ rails g scaffold SurveyAerialSampleCountStratum \
   transects_covered:integer \
   transects_covered_total_length:integer \
   seen_in_transects:integer \
-  seen_outside_transects:integer  
+  seen_outside_transects:integer \
   carcasses_fresh:integer \
   carcasses_old:integer \
   carcasses_very_old:integer
