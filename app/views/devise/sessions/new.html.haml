@@ -1,0 +1,13 @@
+%h2 Log in
+%p
+  Password encryption and required fields have changed since our first beta release.
+  If your account does not work as expected, please re-register.
+- semantic_form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
+  - f.inputs do
+    = f.input :email
+    = f.input :password
+    - if devise_mapping.rememberable?
+      = f.input :remember_me, :as => :boolean
+  - f.buttons do
+    = f.commit_button :log_in
+= render :partial => "devise/shared/links"

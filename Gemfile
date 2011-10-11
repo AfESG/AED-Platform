@@ -11,6 +11,8 @@ gem 'devise'
 
 gem 'haml'
 
+gem 'sass'
+
 gem 'flutie'
 
 gem 'formtastic'

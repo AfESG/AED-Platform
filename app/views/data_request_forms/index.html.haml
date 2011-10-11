@@ -1,0 +1,22 @@
+%h1= t('.title')
+%p= link_to t('.new'), new_data_request_form_path
+
+%table
+  %thead
+    %tr
+      %th= DataRequestForm.human_attribute_name :name
+      %th= DataRequestForm.human_attribute_name :organization
+      %th Status
+      %th Date Submitted
+      %th{:colspan => 3}= t 'actions'
+
+  %tbody
+    - for data_request_form in @data_request_forms
+      %tr{ :class => cycle(:odd, :even) }
+        %td= data_request_form.name
+        %td= data_request_form.organization
+        %td= data_request_form.status
+        %td= data_request_form.created_at
+        %td.action= link_to t('show'), data_request_form
+        %td.action= link_to t('edit'), edit_data_request_form_path(data_request_form)
+        %td.action= link_to t('destroy'), data_request_form, :confirm => t('are_you_sure'), :method => :delete

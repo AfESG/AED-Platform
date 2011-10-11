@@ -31,7 +31,15 @@ Aaed::Application.routes.draw do
 
   resources :submissions
 
+  match 'data_request_forms/thanks' => 'data_request_forms#thanks'
+  resources :data_request_forms
+
   devise_for :users
+
+  match 'about' => 'about#index'
+  match 'about/darp' => 'about#darp'
+
+  match 'superuser' => 'superuser#index'
 
   match 'report/:year/:continent/:region/:country' => 'report#country'
   match 'report/:year/:continent/:region' => 'report#region'
