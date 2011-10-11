@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111011191136) do
+ActiveRecord::Schema.define(:version => 20111011194201) do
 
   create_table "data_request_forms", :force => true do |t|
     t.string   "name"
@@ -30,6 +30,264 @@ ActiveRecord::Schema.define(:version => 20111011191136) do
     t.text     "research"
     t.text     "subset_other"
     t.string   "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "population_submissions", :force => true do |t|
+    t.integer  "submission_id"
+    t.string   "data_licensing"
+    t.date     "embargo_date"
+    t.string   "site_name"
+    t.string   "designate"
+    t.integer  "area"
+    t.integer  "completion_year"
+    t.integer  "completion_month"
+    t.string   "season"
+    t.string   "survey_type"
+    t.string   "survey_type_other"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "submissions", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "species"
+    t.string   "country"
+    t.string   "phenotype"
+    t.string   "phenotype_basis"
+    t.string   "data_type"
+    t.boolean  "right_to_grant_permission"
+    t.string   "permission_email"
+    t.boolean  "mike_site"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "survey_aerial_sample_count_strata", :force => true do |t|
+    t.integer  "survey_aerial_sample_count_id"
+    t.string   "stratum_name"
+    t.integer  "stratum_area"
+    t.integer  "population_estimate"
+    t.float    "population_variance"
+    t.float    "population_standard_error"
+    t.float    "population_t"
+    t.integer  "population_degrees_of_freedom"
+    t.float    "population_confidence_limits"
+    t.boolean  "population_no_precision_estimate_available"
+    t.float    "sampling_intensity"
+    t.integer  "transects_covered"
+    t.integer  "transects_covered_total_length"
+    t.integer  "seen_in_transects"
+    t.integer  "seen_outside_transects"
+    t.integer  "carcasses_fresh"
+    t.integer  "carcasses_old"
+    t.integer  "carcasses_very_old"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "survey_aerial_sample_counts", :force => true do |t|
+    t.integer  "population_submission_id"
+    t.integer  "total_possible_transects"
+    t.boolean  "surveyed_at_stratum_level"
+    t.boolean  "stratum_level_data_submitted"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "survey_aerial_total_count_strata", :force => true do |t|
+    t.integer  "survey_aerial_total_count_id"
+    t.string   "stratum_name"
+    t.integer  "stratum_area"
+    t.integer  "population_estimate"
+    t.float    "population_variance"
+    t.float    "population_standard_error"
+    t.float    "population_t"
+    t.integer  "population_degrees_of_freedom"
+    t.float    "population_confidence_limits"
+    t.boolean  "population_no_precision_estimate_available"
+    t.integer  "average_speed"
+    t.integer  "average_transect_spacing"
+    t.integer  "average_searching_rate"
+    t.integer  "transects_covered"
+    t.integer  "transects_covered_total_length"
+    t.integer  "observations"
+    t.integer  "carcasses_fresh"
+    t.integer  "carcasses_old"
+    t.integer  "carcasses_very_old"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "survey_aerial_total_counts", :force => true do |t|
+    t.integer  "population_submission_id"
+    t.boolean  "surveyed_at_stratum_level"
+    t.boolean  "stratum_level_data_submitted"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "survey_dung_count_line_transect_strata", :force => true do |t|
+    t.integer  "survey_dung_count_line_transect_id"
+    t.string   "stratum_name"
+    t.integer  "stratum_area"
+    t.integer  "population_estimate"
+    t.float    "population_variance"
+    t.float    "population_standard_error"
+    t.float    "population_t"
+    t.integer  "population_degrees_of_freedom"
+    t.float    "population_confidence_limits"
+    t.boolean  "population_no_precision_estimate_available"
+    t.integer  "asymmetric_upper_confidence_limit"
+    t.integer  "asymmetric_lower_confidence_limit"
+    t.integer  "transects_covered"
+    t.integer  "transects_covered_total_length"
+    t.float    "strip_width"
+    t.integer  "observations"
+    t.string   "observations_distance_method"
+    t.integer  "actually_seen"
+    t.integer  "dung_piles"
+    t.string   "dung_decay_rate_measurement_method"
+    t.integer  "dung_decay_rate_estimate_used"
+    t.string   "dung_decay_rate_measurement_site"
+    t.integer  "dung_decay_rate_measurement_year"
+    t.string   "dung_decay_rate_reference"
+    t.float    "dung_decay_rate_variance"
+    t.float    "dung_decay_rate_standard_error"
+    t.float    "dung_decay_rate_t"
+    t.integer  "dung_decay_rate_degrees_of_freedom"
+    t.float    "dung_decay_rate_confidence_limits"
+    t.boolean  "dung_decay_rate_no_precision_estimate_available"
+    t.boolean  "defecation_rate_measured_on_site"
+    t.integer  "defecation_rate_estimate_used"
+    t.string   "defecation_rate_measurement_site"
+    t.string   "defecation_rate_reference"
+    t.float    "defecation_rate_variance"
+    t.float    "defecation_rate_standard_error"
+    t.float    "defecation_rate_t"
+    t.integer  "defecation_rate_degrees_of_freedom"
+    t.float    "defecation_rate_confidence_limits"
+    t.boolean  "defecation_rate_no_precision_estimate_available"
+    t.integer  "dung_density_estimate"
+    t.float    "dung_density_variance"
+    t.float    "dung_density_standard_error"
+    t.float    "dung_density_t"
+    t.integer  "dung_density_degrees_of_freedom"
+    t.float    "dung_density_confidence_limits"
+    t.boolean  "dung_density_no_precision_estimate_available"
+    t.integer  "dung_encounter_rate"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "survey_dung_count_line_transects", :force => true do |t|
+    t.integer  "population_submission_id"
+    t.boolean  "surveyed_at_stratum_level"
+    t.boolean  "stratum_level_data_submitted"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "survey_faecal_dna_strata", :force => true do |t|
+    t.integer  "survey_faecal_dna_id"
+    t.string   "stratum_name"
+    t.integer  "stratum_area"
+    t.integer  "population_estimate"
+    t.float    "population_variance"
+    t.float    "population_standard_error"
+    t.float    "population_t"
+    t.integer  "population_degrees_of_freedom"
+    t.float    "population_confidence_limits"
+    t.boolean  "population_no_precision_estimate_available"
+    t.string   "method_of_analysis"
+    t.string   "area_calculation_method"
+    t.integer  "genotypes_identified"
+    t.integer  "samples_analyzed"
+    t.integer  "sampling_locations"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "survey_faecal_dnas", :force => true do |t|
+    t.integer  "population_submission_id"
+    t.boolean  "surveyed_at_stratum_level"
+    t.boolean  "stratum_level_data_submitted"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "survey_ground_sample_count_strata", :force => true do |t|
+    t.integer  "survey_ground_sample_count_id"
+    t.string   "stratum_name"
+    t.integer  "stratum_area"
+    t.integer  "population_estimate"
+    t.float    "population_variance"
+    t.float    "population_standard_error"
+    t.float    "population_t"
+    t.integer  "population_degrees_of_freedom"
+    t.float    "population_confidence_limits"
+    t.boolean  "population_no_precision_estimate_available"
+    t.integer  "transects_covered"
+    t.integer  "transects_covered_total_length"
+    t.integer  "person_hours"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "survey_ground_sample_counts", :force => true do |t|
+    t.integer  "population_submission_id"
+    t.boolean  "surveyed_at_stratum_level"
+    t.boolean  "stratum_level_data_submitted"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "survey_ground_total_count_strata", :force => true do |t|
+    t.integer  "survey_ground_total_count_id"
+    t.string   "stratum_name"
+    t.integer  "stratum_area"
+    t.integer  "population_estimate"
+    t.float    "population_variance"
+    t.float    "population_standard_error"
+    t.float    "population_t"
+    t.integer  "population_degrees_of_freedom"
+    t.float    "population_confidence_limits"
+    t.boolean  "population_no_precision_estimate_available"
+    t.integer  "transects_covered"
+    t.integer  "transects_covered_total_length"
+    t.integer  "person_hours"
+    t.float    "strip_width"
+    t.integer  "observations"
+    t.integer  "actually_seen"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "survey_ground_total_counts", :force => true do |t|
+    t.integer  "population_submission_id"
+    t.boolean  "surveyed_at_stratum_level"
+    t.boolean  "stratum_level_data_submitted"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "survey_individual_registrations", :force => true do |t|
+    t.integer  "population_submission_id"
+    t.integer  "population_estimate"
+    t.integer  "population_upper_range"
+    t.integer  "monitoring_years"
+    t.string   "monitoring_frequency"
+    t.boolean  "fenced_site"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "survey_others", :force => true do |t|
+    t.integer  "population_submission_id"
+    t.string   "other_method_description"
+    t.integer  "population_estimate_min"
+    t.integer  "population_estimate_max"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
