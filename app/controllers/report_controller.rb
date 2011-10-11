@@ -6,6 +6,11 @@ class ReportController < ApplicationController
     @region = params[:region].gsub('_',' ')
     @country = params[:country].gsub('_',' ')
 
+    @causes_of_change_by_country = ActiveRecord::Base.connection.execute <<-SQL
+      SELECT *
+      FROM aed#{@year}.causes_of_change_by_country where ccode='#{@country}'
+    SQL
+
     @summary_totals_by_country = ActiveRecord::Base.connection.execute <<-SQL
       SELECT *
       FROM aed#{@year}.summary_totals_by_country where ccode='#{@country}'
@@ -14,11 +19,6 @@ class ReportController < ApplicationController
     @summary_sums_by_country = ActiveRecord::Base.connection.execute <<-SQL
       SELECT *
       FROM aed#{@year}.summary_sums_by_country where ccode='#{@country}'
-    SQL
-
-    @causes_of_change_by_country = ActiveRecord::Base.connection.execute <<-SQL
-      SELECT *
-      FROM aed#{@year}.causes_of_change_by_country where ccode='#{@country}'
     SQL
 
     @area_of_range_covered_by_country = ActiveRecord::Base.connection.execute <<-SQL
