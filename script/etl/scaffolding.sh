@@ -1,4 +1,4 @@
-rails g model Submission \
+rails g scaffold Submission \
   species:string \
   country:string \
   phenotype:string \
@@ -8,7 +8,7 @@ rails g model Submission \
   permission_email:string \
   mike_site:boolean
 
-rails g model PopulationSubmission \
+rails g scaffold PopulationSubmission \
   submission_id:integer \
   data_licensing:string \
   embargo_date:date \
@@ -21,12 +21,12 @@ rails g model PopulationSubmission \
   survey_type:string \
   survey_type_other:string
 
-rails g model SurveyAerialTotalCount \
+rails g scaffold SurveyAerialTotalCount \
   population_submission_id:integer \
   surveyed_at_stratum_level:boolean \
   stratum_level_data_submitted:boolean
 
-rails g model SurveyAerialTotalCountStratum \
+rails g scaffold SurveyAerialTotalCountStratum \
   survey_aerial_total_count_id:integer \
   stratum_name:string \
   stratum_area:integer \
@@ -46,16 +46,16 @@ rails g model SurveyAerialTotalCountStratum \
   transects_covered_total_length:integer \
   observations:integer \
   carcasses_fresh:integer \
-  carcasses_old:integer \
+  carcasses_old:integer 
   carcasses_very_old:integer
 
-rails g model SurveyAerialSampleCount \
+rails g scaffold SurveyAerialSampleCount \
   population_submission_id:integer \
   total_possible_transects:integer \
   surveyed_at_stratum_level:boolean \
   stratum_level_data_submitted:boolean
 
-rails g model SurveyAerialSampleCountStratum \
+rails g scaffold SurveyAerialSampleCountStratum \
   survey_aerial_sample_count_id:integer \
   stratum_name:string \
   stratum_area:integer \
@@ -77,12 +77,12 @@ rails g model SurveyAerialSampleCountStratum \
   carcasses_old:integer \
   carcasses_very_old:integer
 
-rails g model SurveyGroundTotalCount \
+rails g scaffold SurveyGroundTotalCount \
   population_submission_id:integer \
   surveyed_at_stratum_level:boolean \
   stratum_level_data_submitted:boolean
 
-rails g model SurveyGroundTotalCountStratum \
+rails g scaffold SurveyGroundTotalCountStratum \
   survey_ground_total_count_id:integer \
   stratum_name:string \
   stratum_area:integer \
@@ -102,12 +102,12 @@ rails g model SurveyGroundTotalCountStratum \
   observations:integer \
   actually_seen:integer
 
-rails g model SurveyGroundSampleCount \
+rails g scaffold SurveyGroundSampleCount \
   population_submission_id:integer \
   surveyed_at_stratum_level:boolean \
   stratum_level_data_submitted:boolean
 
-rails g model SurveyGroundSampleCountStratum \
+rails g scaffold SurveyGroundSampleCountStratum \
   survey_ground_sample_count_id:integer \
   stratum_name:string \
   stratum_area:integer \
@@ -124,12 +124,12 @@ rails g model SurveyGroundSampleCountStratum \
   transects_covered_total_length:integer \
   person_hours:integer
 
-rails g model SurveyDungCountLineTransect \
+rails g scaffold SurveyDungCountLineTransect \
   population_submission_id:integer \
   surveyed_at_stratum_level:boolean \
   stratum_level_data_submitted:boolean
 
-rails g model SurveyDungCountLineTransectStratum \
+rails g scaffold SurveyDungCountLineTransectStratum \
   survey_dung_count_line_transect_id:integer \
   stratum_name:string \
   stratum_area:integer \
@@ -182,12 +182,12 @@ rails g model SurveyDungCountLineTransectStratum \
   dung_density_no_precision_estimate_available:boolean \
   dung_encounter_rate:integer
 
-rails g model SurveyFaecalDna \
+rails g scaffold SurveyFaecalDna \
   population_submission_id:integer \
   surveyed_at_stratum_level:boolean \
   stratum_level_data_submitted:boolean
 
-rails g model SurveyFaecalDnaStratum \
+rails g scaffold SurveyFaecalDnaStratum \
   survey_faecal_dna_id:integer \
   stratum_name:string \
   stratum_area:integer \
@@ -206,13 +206,13 @@ rails g model SurveyFaecalDnaStratum \
   samples_analyzed:integer \
   sampling_locations:integer
 
-rails g model SurveyOther \
+rails g scaffold SurveyOther \
   population_submission_id:integer \
   other_method_description:string \
   population_estimate_min:integer \
   population_estimate_max:integer
 
-rails g model SurveyIndividualRegistration \
+rails g scaffold SurveyIndividualRegistration \
   population_submission_id:integer \
   population_estimate:integer \
   population_upper_range:integer \
