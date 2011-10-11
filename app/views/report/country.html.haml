@@ -1,0 +1,13 @@
+%a{:href=>"/report/#{@year}"} #{@year}
+
+&gt;
+
+%a{:href=>"/report/#{@year}/#{@continent}"} #{@continent}
+
+&gt;
+
+%a{:href=>"/report/#{@year}/#{@continent}/#{@region.gsub(' ','_')}"} #{@region}
+
+&gt; #{@country}
+
+%h1 #{@year} Country Report for #{@country}
