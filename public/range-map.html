@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+    <head> 
+        <title>OpenLayers map preview</title> 
+        <!-- Import OL CSS, auto import does not work with our minified OL.js build --> 
+        <link rel="stylesheet" type="text/css" href="http://geo.elephantdatabase.org/geoserver/openlayers/theme/default/style.css"/> 
+        <!-- Basic CSS definitions --> 
+        <style type="text/css"> 
+            /* General settings */
+            body {
+                font-family: sans-serif;
+                font-size: small;
+                margin:0px;
+                padding:0px;
+            }
+            a {
+                color: #118300;
+            }
+            /* The map and the location bar */
+            #map {
+                clear: both;
+                position: relative;
+                width: 1000px;
+                height: 400px;
+                border: none;
+            }
+            #wrapper {
+                width: 512px;
+            }
+            #location {
+                float: right;
+            }
+            #options {
+                position: absolute;
+                left: 13px;
+                top: 7px;
+                z-index: 3000;
+            }
+            /* Styles used by the default GetFeatureInfo output, added to make IE happy */
+            table.featureInfo, table.featureInfo td, table.featureInfo th {
+                border: 1px solid #ddd;
+                border-collapse: collapse;
+                margin: 0;
+                padding: 0;
+                font-size: 90%;
+                padding: .2em .1em;
+            }
+            table.featureInfo th {
+                padding: .2em .2em;
+                text-transform: uppercase;
+                font-weight: bold;
+                background: #eee;
+            }
+            table.featureInfo td {
+                background: #fff;
+            }
+            table.featureInfo tr.odd td {
+                background: #eee;
+            }
+            table.featureInfo caption {
+                text-align: left;
+                font-size: 100%;
+                font-weight: bold;
+                text-transform: uppercase;
+                padding: .2em .2em;
+            }
+            #hoverhelp{
+              position: absolute;
+              top: 325px;
+              left: 10px;
+              background: #ffffff;
+              padding: 10px;
+              border: 1px solid #777777;
+              width: 950px;
+              height: 45px;
+              display: none;
+            }
+            .invisible{
+              display: none;
+            }
+        </style> 
+        <!-- Import OpenLayers, reduced, wms read only version --> 
+        <script src="http://openlayers.org/api/OpenLayers.js" type="text/javascript"> 
+        <!-- <script src="http://geo.elephantdatabase.org/geoserver/openlayers/OpenLayers.js" type="text/javascript"> --> 
+        </script> 
+        <script defer="defer" type="text/javascript"> 
+            var map;
+            // pink tile avoidance
+            OpenLayers.IMAGE_RELOAD_ATTEMPTS = 5;
+            // make OL compute scale according to WMS spec
+            OpenLayers.DOTS_PER_INCH = 25.4 / 0.28;
+            function init(){
+                format = 'image/png';
+                var bounds = new OpenLayers.Bounds(-2.003750834E7,-2.003750834E7,2.003750834E7,2.003750834E7);
+                var options = {
+                    controls: [],
+                    resolutions: [156543.03390625, 78271.516953125, 39135.7584765625, 19567.87923828125, 9783.939619140625, 4891.9698095703125, 2445.9849047851562, 1222.9924523925781, 611.4962261962891, 305.74811309814453, 152.87405654907226, 76.43702827453613, 38.218514137268066, 19.109257068634033, 9.554628534317017, 4.777314267158508, 2.388657133579254, 1.194328566789627, 0.5971642833948135, 0.29858214169740677, 0.14929107084870338, 0.07464553542435169, 0.037322767712175846, 0.018661383856087923, 0.009330691928043961, 0.004665345964021981],
+                    maxExtent: bounds,
+                    projection: new OpenLayers.Projection("EPSG:900913"),
+                    units: 'meters'
+                };
+                map = new OpenLayers.Map('map', options);
+                // setup range layer
+                var elephant_range = new OpenLayers.Layer.WMS(
+                    "elephant_ranges - Tiled", "http://geo.elephantdatabase.org/geoserver/gwc/service/wms",
+                    {
+                        layers: 'world',
+                        format: format,
+                        transparent: 'true'
+                    },
+                    {
+                        displayOutsideMaxExtent: true,
+                        tileSize: new OpenLayers.Size(256,256)
+                    }
+                );
+
+                // shove in a basic world map
+                var basic = new OpenLayers.Layer.OSM();
+
+                map.addLayers([basic,elephant_range]);
+
+                // build up all controls
+                map.addControl(new OpenLayers.Control.PanZoomBar());
+                map.addControl(new OpenLayers.Control.Navigation());
+
+                map.zoomToExtent(new OpenLayers.Bounds(-1896104.886417889,-4103165.173118722,1.3241119469544334E7,3557522.8885504403));
+            };
+
+            function hshow(k){
+              var h = document.getElementById('hoverhelp');
+              h.style.display='block';
+              h.innerHTML = document.getElementById('help_'+k).innerHTML;
+            }
+            function hhide(k){
+              document.getElementById('hoverhelp').style.display='none';
+            }
+        </script> 
+    </head> 
+    <body onload="init()"> 
+        <div id="map"> 
+        </div>
+        <div id="nodelist"> 
+        </div>
+        <div id="hoverhelp">
+          hover help
+        </div>
+        <div>
+          Key: &#160;
+          <span onmouseover="hshow('known_range')" onmouseout="hhide('known_range')">
+            <img src="known.png" style="vertical-align:middle"> Known Range &#160;
+          </span>
+          <span onmouseover="hshow('possible_range')" onmouseout="hhide('possible_range')">
+            <img src="possible.png" style="vertical-align:middle"> Possible Range &#160;
+          </span>
+          <span onmouseover="hshow('doubtful_range')" onmouseout="hhide('doubtful_range')"/>
+            <img src="doubtful.png" style="vertical-align:middle"> Doubtful Range &#160;
+          </span>
+          <span onmouseover="hshow('survey_zone')" onmouseout="hhide('survey_zone')"/>
+            <img src="survey.png" style="vertical-align:middle"> Survey Zone &#160;
+          </span>
+          <span onmouseover="hshow('protected_area')" onmouseout="hhide('protected_area')"/>
+            <img src="protected.png" style="vertical-align:middle"> Protected Area &#160;
+          </span>
+        </div>
+        <div>
+          <a href="http://geo.elephantdatabase.org/geoserver/gwc/service/kml/elephants.png8.kml">Download a network linked KML of this map for use in Google Earth</a> (2 KiB)
+        </div>
+        <div class="invisible" id="help_known_range">
+          <b>Known Range:</b> Areas in suitable habitat which, if searched with reasonable
+          intensity, are likely to yield signs of elephant presence. If no information
+          is obtained confirming the presence of elephants for a 10 year period, KNOWN
+          range is downgraded to POSSIBLE range.
+        </div>
+        <div class="invisible" id="help_possible_range">
+          <b>Possible Range:</b> Areas within historical range and in suitable habitat
+          where there are no negative data to rule out the presence of elephants, including
+          former areas of KNOWN range where the source information is more than 10 years
+          old. Areas of POSSIBLE range are considered to be a priority for studies to
+          establish the presence or absence of elephants.
+        </div>
+        <div class="invisible" id="help_doubtful_range">
+          <b>Doubtful Range:</b> Areas where there are reasons to believe that elephants
+          are no longer present, but which have not been formally surveyed. If further
+          corroborative evidence is obtained, areas of DOUBTFUL range are reclassified
+          as NON-RANGE. As with POSSIBLE range, areas of DOUBTFUL range are a priority for
+          absence/presence studies.
+        </div>
+        <div class="invisible" id="help_survey_zone">
+          <b>Survey Zone:</b> Input zones where formal surveys have been performed.
+        </div>
+        <div class="invisible" id="help_protected_area">
+          <b>Protected Area:</b> An area where wildlife populations are protected by
+          official designation and legislation.
+        </div>
+    </body> 
+</html> 
