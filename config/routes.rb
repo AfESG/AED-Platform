@@ -1,4 +1,6 @@
 Aaed::Application.routes.draw do
+  devise_for :users
+
   match 'report/:year/:continent/:region/:country' => 'report#country'
   # The priority is based upon order of creation:
   # first created -> highest priority.

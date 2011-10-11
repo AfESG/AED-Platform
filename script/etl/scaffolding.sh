@@ -1,4 +1,5 @@
 rails g scaffold Submission \
+  user_id:integer \
   species:string \
   country:string \
   phenotype:string \
