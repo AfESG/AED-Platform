@@ -15,26 +15,31 @@ TARGETDB = Sequel.connect("postgres://localhost/#{TARGETID}")
   begin
     SOURCEDB << "CREATE SCHEMA #{source}"
   rescue
-    puts "source schema already exists in #{source}".color(:yellow)
+    puts "#{source} schema already exists in #{source}".color(:yellow)
+  end
+  begin
+    TARGETDB << "CREATE SCHEMA #{source}"
+  rescue
+    puts "#{source} schema already exists in #{source}".color(:yellow)
   end
 
   SOURCEDB.tables.each do |table|
     puts "Copy #{table} in #{source} to #{source} schema".color(:green)
     SOURCEDB << "CREATE TABLE #{source}.\"#{table}\" AS SELECT * FROM \"#{table}\""
     puts "Dump #{source}.#{table} in #{source}".color(:green)
-    system "pg_dump -t \"#{source}.#{table}\" -f table.temp #{SISDBID}"
+    system "pg_dump -t \"\\\"#{source}\\\".\\\"#{table}\\\"\" -f table.temp #{source}"
 
     puts "Restore #{source}.#{table} to #{TARGETID}".color(:green)
     system "psql -f table.temp #{TARGETID}"
 
     puts "Drop copy of #{table} in #{source}.#{source} schema".color(:green)
-    SOURCEDB << "DROP TABLE #{source}.#{table}"
+    SOURCEDB << "DROP TABLE #{source}.\"#{table}\""
   end
 
   begin
     SOURCEDB << "DROP SCHEMA #{source}"
   rescue
-    puts "source schema not dropped in in #{source}".color(:yellow)
+    puts "#{source} schema not dropped in in #{source}".color(:yellow)
   end
 
 end
