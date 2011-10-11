@@ -1,0 +1,15 @@
+.wiki= t(:about_narrative)
+#header
+  %ul{:id => :primary}
+    %li{:id => :rangeMapLink}
+      %a{:href => 'javascript:showRangeMaps()'}
+        = t(:range_maps)
+    %li{:id => :populationTableLink}
+      %a{:href => 'javascript:showPopulationTables()'}
+        = t(:population_tables)
+#rangemap
+  %iframe{:frameborder => :none, :width => '1000px', :height => '1000px', :src => '/range-map.html'}
+#population{:style => 'display: none'}
+  %iframe{:frameborder => :none, :width => '1000px', :height => '1000px', :src => '/surveys'}
+%script
+  showRangeMaps();

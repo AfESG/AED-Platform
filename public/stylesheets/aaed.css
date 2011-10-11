@@ -1,0 +1,311 @@
+body,div,p,th,td{
+  font-family: sans-serif;
+  margin: 0px;
+  padding: 0px;
+}
+a{
+  color: #118300;
+}
+.user_section{
+  float: right;
+}
+.nav{
+  text-align: center;
+  margin-bottom: 20px;
+}
+#legal{
+  margin-top: 20px;
+  font-size: xx-small;
+}
+iframe{
+  border: none;
+}
+#iframepicker{
+  padding-top: 10px;
+}
+.navTab{
+  display: inline-block;
+  border-top: 1px solid #aaaaaa;
+  border-left: 1px solid #aaaaaa;
+  border-right: 1px solid #aaaaaa;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.navItem{
+  display: inline-block;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.help {
+  color: #555555;
+}
+
+.required {
+  border-color: red;
+}
+h1.pagetitle {
+  float: left;
+  font-family: sans-serif;
+  margin: 0px;
+  padding: 0px;
+}
+h1.pagetitle a{
+  text-decoration: none;
+  color: #000000;
+}
+
+body{
+  background: #521d00;
+}
+p {
+  padding-bottom: 10px;
+}
+input, textarea {
+  border: 1px solid #004400;
+  margin: 0 10px 10px 0;
+}
+.area{
+  float: left;
+  width: 440px;
+  margin: 10px;
+  padding: 20px;
+}
+.boxy{
+  background: #eeeeff;
+  height: 210px;
+  padding: 20px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+}
+.info{
+  background: #eeeeff;
+  padding: 20px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  margin-bottom: 10px;
+}
+.question{
+  border: 5px solid #eeeeff;
+  margin-bottom: 10px;
+  padding: 20px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+}
+.questionList tr:nth-child(odd) {
+  background-color: #fff;
+}
+
+.questionList tr:nth-child(even) {
+  background-color: #ddd;
+}
+.questionList th {
+  padding: 5px;
+}
+.questionList td {
+  text-align: center;
+  padding: 5px;
+}
+.questionList input, .questionList textarea {
+  margin: 0;
+}
+.prompt{
+  padding: 15px 0px 5px;
+}
+.prompt label {
+}
+#banner{
+  position: absolute;
+  top: 5px;
+  left: 20px;
+  color: #004400;
+}
+#beta{
+  color: #bc4100;
+  float: left;
+}
+#login,#register,#logout,#myaccount{
+  float: right;
+  padding-left: 10px;
+}
+#legalese{
+  margin: 10px;
+  clear: both;
+}
+#page {
+  background: #ffffff;
+  width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+}
+.count {
+  float: left;
+  padding-bottom: 10px;
+  clear: both;
+}
+.more {
+  clear: both;
+  float: right;
+}
+.undecorated {
+  text-decoration: none;
+  color: #004400;
+}
+.continue {
+  margin-top: 20px;
+  display: block;
+}
+
+/* Flutie Overrides */
+.inline-hints {
+  font-size: 0.9em;
+  font-weight: normal;
+  margin-bottom: 0.25em;
+}
+
+label abbr {
+	padding-left: 3px;
+	color: #cc0000;
+}
+
+/**<!-- SURVEY INFORMATION -->**/
+
+div.survey_results {
+	margin: 10px;
+}
+
+
+.survey_results table{
+	width: 850px;
+}
+
+
+.survey_results table td{
+	padding-right: 4px;
+	padding-left: 4px;
+	vertical-align: top;
+}
+
+.survey_results table td.total{
+}
+.survey_results table tr.totals{
+	background-color: #EEEEFF; 	
+}
+
+.survey_results table th{
+	padding-right: 4px;
+	padding-left: 4px;
+}
+
+.survey_results table td.description{
+	width: 200px;
+}
+
+.survey_results table th.description{
+	text-align: left;
+}
+
+.surveys_summary table th{
+  text-align: right;
+}
+
+.number_count{
+	text-align: right;
+}
+
+.summary_totals{
+	margin-bottom: 20px;
+}
+
+span.title{
+	margin: 4px;
+}
+
+div.surveys_summary span.title {
+	margin: 4px;
+}
+
+.survey_results table th.left {
+	text-align: left;
+}
+
+.survey_results table td.left {
+	text-align: left;
+}
+
+.individual_survey_table th {
+	width: 85px;
+}
+
+#header {
+	position: relative;
+	width: 100%;
+	height: 3em;
+}
+
+#header ul#primary {
+	margin: 0;
+	padding: 0;
+	position: absolute;
+        bottom: 0px;
+}
+
+#header ul#primary li  {
+	display: inline;
+	list-style: none;
+}
+
+#header ul#primary a,#header ul#primary span,#header ul#primary a.current {
+	font-size: small;
+        display: block;
+	float: left;
+	padding: 4px;
+	margin-bottom: 0px;
+        margin-right: 3px;
+	text-align: center;
+	text-decoration: none;
+	color: #333;
+}
+
+#header ul#primary span,#header ul#primary a.current,#header ul#primary a.current:hover {
+	border: 1px solid #666;
+	border-bottom: none;
+	background: #FFF3B3;
+}
+
+#header ul#primary a {
+	background: #FFFAE1;
+	border: 1px solid #AAA;
+	border-bottom: none;
+}
+
+#header ul#primary a:hover {
+	border-color: #666;
+	background: #FFF7CD;
+}
+
+.wiki {
+  line-height: 1.5em;
+  padding-left: 50px;
+  padding-top: 30px;
+  border: 1px solid #cccccc;
+  padding: 25px;
+}
+.wiki ul, .wiki ol {
+  margin-left: 15px;
+}
+.wiki ul li, .wiki ol li {
+  text-indent: -15px;
+}
+.wiki h1, .wiki h2 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.wiki div{
+  width: 70%;
+  margin-bottom: 10px;
+  line-height: 140%;
+}

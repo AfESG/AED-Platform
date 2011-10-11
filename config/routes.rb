@@ -34,6 +34,10 @@ Aaed::Application.routes.draw do
   devise_for :users
 
   match 'report/:year/:continent/:region/:country' => 'report#country'
+  match 'report/:year/:continent/:region' => 'report#region'
+  match 'report/:year/:continent' => 'report#continent'
+  match 'report/:year' => 'report#year'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -83,7 +87,8 @@ Aaed::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  # root :to => "welcome#index"
+
+  root :to => "welcome#index"
 
   # See how all your routes lay out with "rake routes"
 

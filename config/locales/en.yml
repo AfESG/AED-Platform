@@ -2,4 +2,291 @@
 # See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
+  formtastic:
+    titles:
+    labels:
+      survey_aerial_sample_block:
+        stratum_block_name: "Stratum/block name"
+        stratum_block_area: "Stratum/block area"
+        estimate:
+        precision:
+        estimate_of_precision: "Enter Estimate of precision here"
+        sampling_intensity: "Sampling intensity (%)"
+        transects_flown: "Number of transects flown"
+        t_value: "t.₀₂₅"
+        degrees_of_freedom:
+        seen_in_transects: "Number seen in transects"
+        seen_out: "Number seen out"
+        fresh_carcass: "Fresh & recent carcass estimate"
+        old_carcass: "Old carcass estimate"
+        very_old_carcass: "Very old carcass estimate"
+      survey_aerial_total_block:
+        block_name:
+        block_area: "Block area (km²)"
+        aircraft_speed: "Aircraft speed (km/h)"
+        transect_spacing: "Transect spacing (km)"
+        searching_rate: "Searching rate (km²/hr)"
+        estimate:
+        observations: "Number of observations (encounters)"
+        fresh_carcasses: "Number of Fresh and Recent Carcasses (Categ. 1 and 2)"
+        old_carcasses: "Number of Old Carcasses (Categ. 3)"
+        very_old_carcasses: "Number of very old carcasses (Categ. 4)"
+      survey_dung_count_block:
+        stratum_name:
+        stratum_area: "Stratum area (km2)"
+        estimate:
+        precision:
+        lower_interval: "Lower asymmetric Confidence Interval"
+        upper_interval: "Upper asymmetric Confidence Interval"
+        decay_measured_on_site: "Was dung decay rate measured on site, and if so, how?"
+        decay_estimate_used: "Dung decay estimate used (days)"
+        decay_precision_used: "Dung decay precision used (days)"
+        decay_rate: "Dung decay rate - bibliographical reference"
+        defecation_measured_on_site: "Was defecation rate measured on-site?"
+        defecation_estimate_rate: "Estimate of defecation rate used (days)"
+        precision_of_defecation_rate:
+        estimate_of_dung_density:
+        precision_of_dung_density:
+        number_of_transects:
+        dung_encounter_rate:
+      survey_faecal_dna_block:
+        block_name:
+        method_of_analysis:
+        block_area:
+        calculated: "How was area calculated"
+        estimate:
+        precision:
+        genotypes_identified: "No. of individual genotypes identified"
+        samples_analyzed: "No. of DNA samples analyzed"
+        sampling_locations: "No. of sampling locations"
+      survey_ground_sample_block:
+        block_name:
+        estimate:
+        transects: "Number of transects"
+        block_area:
+        total_transect_distance:
+        effective_strip_width:
+        observations: "Number of observations"
+        groups_encountered: "Number of elephants seen"
+        elephants_seen: "Number of elephants seen"
+        intensity: "Effective sampling intensity"
+        estimated: "How were distances to observations estimated?"
+      survey_ground_total_block:
+        block_name:
+        block_area:
+        estimate:
+        precision:
+        man_hours:
+      survey_submission:
+        data_licensing: "Data licensing options"
+        site_name: "Area/Site Name"
+        area_sqkm: "Surface area of the site in km2"
+        completion_year: "Year of survey completion"
+        completion_month: "Month of survey completion"
+        cseason: "Season over which the survey took place"
+      data_request_form:
+        extracts:
+          Please list and describe below the data extracts you would like to obtain from the
+          African Elephant Database.
+        research:
+          Research Outline
+    hints:
+      user:
+        current_password: "We need your current password to confirm your changes."
+        edit:
+          password: "Leave blank if you don't want to change it."
+      submission:
+        species: "Please state the species to which the information you wish to submit refers."
+        country: 
+          Select the country to which the information you wish to submit refers.  If you are
+          submitting information about a transboundary survey, you will have to enter it as
+          two separate entries, one for each survey.
+        data_type: "What type of information would you like to submit?"
+        data_licensing:
+          Any information you provide may be used for calculating pooled estimates at the
+          national, regional, continental or global levels.   The AfESG and AsESG support
+          the wide dissemination of accurate information for public use and as such we encourage
+          you to permit the sharing of and free access to your data.  However, we do recognize
+          that some data providers may want to place additional restrictions or a temporal
+          embargo on the use and further redistribution of their data.   Please select the
+          conditions under which you are supplying your data.
+        phenotype: "What type of elephants does the information refer to?"
+        phenotype_basis: "What is the basis for the answer to phenotype question?"
+        mike_sites: "ADMIN ONLY: Does the area include any mike sites?"
+      survey_aerial_sample_block:
+        precision: "Do you have an estimate of precision, and if so, which?"
+        t_value: "Value of t used to calculate 95% confidence interval"
+        degrees_of_freedom: "Value of t used to calculate 95% confidence interval"
+        seen_in_transects: "Number of elephants seen inside the transects"
+        seen_out: "Number of elephants seen outside the transects"
+        fresh_carcass: "Estimate of carcass numbers (categories 1 and 2)"
+        old_carcass: "Estimate of carcass numbers (category 3)"
+        very_old_carcass: "Estimate of carcass numbers (category 4)"
+      survey_aerial_total_block:
+        estimate: "Elephant population estimate"
+      survey_dung_count_block:
+        precision: "Var/SE/CL95"
+        decay_measured_on_site: "If dung decay rate measured on site, indicate whether this was done in the period leading up to the survey (retrospectively) or at some well before the survey (prospectively)"
+        precision_of_defecation_rate: "Var/SE/CL95"
+        precision_of_dung_density: "Var/SE/CL95"
+      survey_faecal_dna_block:
+      survey_ground_sample_block:
+        observations: "(i.e. number of groups encountered)"
+        groups_encountered: "(i.e. number of groups encountered)"
+        intensity: "(automatically calculated as no. seen divided by estimate)"
+      survey_ground_total_block:
+        precision:
+        man_hours: "Where each independent survey team is counted as one \"man\""
+      survey_submission:
+        designate: "(eg. national park, wildlife reserve etc)"
+      data_request_form:
+        email:
+          Enter your own email address, or the email address of an appropriate
+          contact in your organization.
+        research:
+          Outline below your proposed research, clearly describing how the data is to be used
+          and why it is required in digital form. Please note that digital data will only be
+          released if the Data Review Working Group (DRWG) of the African Elephant Specialist
+          Group considers the release not violate existing agreements with data providers, the
+          intended use is not anticipated to be detrimental to elephant conservation and takes
+          account of the limitations of AED data quality.
+    actions:
+      log_in: "Log In"
+      register: "Register"
+      send_me_reset_password_instructions: "Send me password reset instructions"
+      resend_confirmation_instructions: "Resend confirmation instructions"
+      change_my_password: "Change my password"
+      data_request_form:
+        create: Submit Data Request Form
+  data_request_forms:
+    index:
+      title: Active Data Request Forms
+      new: Create New Data Request Form
+    new:
+      title:
+        African Elephant Database Digital Data Request Form and User Agreement
+    show:
+      title:
+        Data Request Form
+    edit:
+      title:
+        Data Request Form
+  submissions:
+    index:
+      title: "Active Submissions"
+      new: "Contribute New Submission"
+    show:
+      title: "Data Submission"
+      new: "Contribute New Submission"
+    new:
+      title: "Data Submission Form"
+    edit:
+      title: "Edit Submission"
+  survey_aerial_sample_blocks:
+    new:
+      title: "New Aerial Sample Block"
+    show:
+      title: "Aerial Sample Block"
+    edit:
+      title: "Edit Aerial Sample Block"
+  survey_aerial_total_blocks:
+    new:
+      title: "New Aerial Total Block"
+    show:
+      title: "Aerial Sample Block"
+    edit:
+      title: "Edit Aerial Sample Block"
+  survey_dung_count_blocks:
+    new:
+      title: "New Dung Count Block"
+    show:
+      title: "Dung Count Block"
+    edit:
+      title: "Edit Aerial Sample Block"
+  survey_faecal_dna_blocks:
+    new:
+      title: "New Faecal DNA Block"
+    show:
+      title: "Faecal DNA Block"
+    edit:
+      title: "Edit Faecal DNA Block"
+  survey_ground_sample_blocks:
+    new:
+      title: "New Ground Sample Block"
+    show:
+      title: "Ground Sample Block"
+    edit:
+      title: "Edit Ground Sample Block"
+  survey_ground_total_blocks:
+    new:
+      title: "New Ground Total Block"
+    show:
+      title: "Ground Total Block"
+    edit:
+      title: "Edit Ground Total Block"
+  survey_submissions:
+    index:
+      title: "All Pending Population Estimates"
+    new:
+      title: "New Population Estimate"
+    show:
+      title: "Population Estimate"
+    edit:
+      title: "Edit Population Estimate"
+  back: "Back"
+  email_not_found:
+    Email address not found.  Please check your spelling, and ensure that you have entered the
+    correct email address.
+  african_elephants: "African Elephants (whether forest or savanna)"
+  asian_elephants: "Asian Elephants"
+  range_polygon: "Range Polygon"
+  point_observation: "Point Observation"
+  population_estimate: "Population Estimate"
+  variance: "Variance"
+  standard_error: "Standard error"
+  95_confidence_limit: "95% confidence limits"
+  no_estimate_of_precision: "No estimate of precision"
+  by_eye: "By eye"
+  using_instruments: "Using instruments"
+  capture_mark_recapture: "CMR (Capture-Mark-Recapture)"
+  accumulation_curves: "Accumulation curves - MNA (Minimum Number of Animals)"
+  x_yes: "Yes"
+  x_no: "No"
+  decay_not_measured: "Decay rate NOT measured on site"
+  prospectively: "Prospectively"
+  retrospectively: "Retrospectively"
+  about_narrative:
+    ElephantDatabase.org contains the most comprehensive data on elephant population and range worldwide.
+    Currently we have extensive data on African elephants, and are beginning to introduce some Asian
+    elephant data. Please explore our range data and population estimates using the map and tables below,
+    or click on one of the links above to share your own data.
+  range_maps: "Range Maps"
+  population_tables: "Population Tables"
+  legal: "All materials on this site are Copyright (C) 1995-$today$ IUCN - The International Union for the Conservation of Nature.  Use is permitted only under the Creative Commons Attribution-NonCommercial-ShareAlike license (http://creativecommons.org/licenses/by-nc-sa/3.0/)."
+  banner: "ElephantDatabase.org"
+  about: "About"
+  contribute: "Contribute"
+  elephant_observation: "Elephant Observation"
+  log_out: "Log Out"
+  my_account: "My Account"
+  log_in: "Log In"
+  register: "Register"
+  source: "Source"
+  edit: "Edit"
+  show: "Show"
+  up: "Up"
+  are_you_sure: "Are You Sure?"
+  destroy: "Delete"
+  actions: "Actions"
+  email: "email"
+  population_estimates_enclosed: "Population estimates enclosed"
+  new_population_estimate: "New population estimate"
+  blocks_enclosed: "Blocks enclosed"
+  new_survey_aerial_sample_block: "New Aerial Sample Block"
+  new_survey_aerial_total_block: "New Aerial Total Block"
+  new_survey_dung_count_block: "New Dung Count Block"
+  new_survey_faecal_dna_block: "New Faecal DNA Block"
+  new_survey_ground_sample_block: "New Ground Sample Block"
+  new_survey_ground_total_block: "New Ground Total Block"
+  new_point_observation: "New point observation"
+  all_submissions: "All Submissions"
