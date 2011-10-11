@@ -6,10 +6,14 @@ class ReportController < ApplicationController
     @region = params[:region].gsub('_',' ')
     @country = params[:country].gsub('_',' ')
 
-    @causes_of_change_by_country = ActiveRecord::Base.connection.execute <<-SQL
-      SELECT *
-      FROM aed#{@year}.causes_of_change_by_country where ccode='#{@country}'
-    SQL
+    begin
+      @causes_of_change_by_country = ActiveRecord::Base.connection.execute <<-SQL
+        SELECT *
+        FROM aed#{@year}.causes_of_change_by_country where ccode='#{@country}'
+      SQL
+    rescue
+      @causes_of_change_by_country = []
+    end
 
     @summary_totals_by_country = ActiveRecord::Base.connection.execute <<-SQL
       SELECT *
@@ -21,15 +25,20 @@ class ReportController < ApplicationController
       FROM aed#{@year}.summary_sums_by_country where ccode='#{@country}'
     SQL
 
-    @area_of_range_covered_by_country = ActiveRecord::Base.connection.execute <<-SQL
-      SELECT *
-      FROM aed#{@year}.area_of_range_covered_by_country where ccode='#{@country}'
-    SQL
+    begin
+      @area_of_range_covered_by_country = ActiveRecord::Base.connection.execute <<-SQL
+        SELECT *
+        FROM aed#{@year}.area_of_range_covered_by_country where ccode='#{@country}'
+      SQL
 
-    @area_of_range_covered_sum_by_country = ActiveRecord::Base.connection.execute <<-SQL
-      SELECT *
-      FROM aed#{@year}.area_of_range_covered_sum_by_country where ccode='#{@country}'
-    SQL
+      @area_of_range_covered_sum_by_country = ActiveRecord::Base.connection.execute <<-SQL
+        SELECT *
+        FROM aed#{@year}.area_of_range_covered_sum_by_country where ccode='#{@country}'
+      SQL
+    rescue
+      @area_of_range_covered_by_country = []
+      @area_of_range_covered_sum_by_country = []
+    end
 
     @elephant_estimates_by_country = ActiveRecord::Base.connection.execute <<-SQL
       SELECT *
