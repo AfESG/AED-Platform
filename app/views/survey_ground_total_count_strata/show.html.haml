@@ -1,0 +1,39 @@
+%h1= t '.title'
+%p
+  = link_to t('back'), survey_ground_total_count_strata_path
+  = link_to t('edit'), edit_survey_ground_total_count_stratum_path(@survey_ground_total_count_stratum)
+  = link_to t('.new'), new_survey_ground_total_count_stratum_path
+
+%dl
+  %dt= SurveyGroundTotalCountStratum.human_attribute_name :survey_ground_total_count_id
+  %dd= @survey_ground_total_count_stratum.survey_ground_total_count_id
+  %dt= SurveyGroundTotalCountStratum.human_attribute_name :stratum_name
+  %dd= @survey_ground_total_count_stratum.stratum_name
+  %dt= SurveyGroundTotalCountStratum.human_attribute_name :stratum_area
+  %dd= @survey_ground_total_count_stratum.stratum_area
+  %dt= SurveyGroundTotalCountStratum.human_attribute_name :population_estimate
+  %dd= @survey_ground_total_count_stratum.population_estimate
+  %dt= SurveyGroundTotalCountStratum.human_attribute_name :population_variance
+  %dd= @survey_ground_total_count_stratum.population_variance
+  %dt= SurveyGroundTotalCountStratum.human_attribute_name :population_standard_error
+  %dd= @survey_ground_total_count_stratum.population_standard_error
+  %dt= SurveyGroundTotalCountStratum.human_attribute_name :population_t
+  %dd= @survey_ground_total_count_stratum.population_t
+  %dt= SurveyGroundTotalCountStratum.human_attribute_name :population_degrees_of_freedom
+  %dd= @survey_ground_total_count_stratum.population_degrees_of_freedom
+  %dt= SurveyGroundTotalCountStratum.human_attribute_name :population_confidence_limits
+  %dd= @survey_ground_total_count_stratum.population_confidence_limits
+  %dt= SurveyGroundTotalCountStratum.human_attribute_name :population_no_precision_estimate_available
+  %dd= @survey_ground_total_count_stratum.population_no_precision_estimate_available
+  %dt= SurveyGroundTotalCountStratum.human_attribute_name :transects_covered
+  %dd= @survey_ground_total_count_stratum.transects_covered
+  %dt= SurveyGroundTotalCountStratum.human_attribute_name :transects_covered_total_length
+  %dd= @survey_ground_total_count_stratum.transects_covered_total_length
+  %dt= SurveyGroundTotalCountStratum.human_attribute_name :person_hours
+  %dd= @survey_ground_total_count_stratum.person_hours
+  %dt= SurveyGroundTotalCountStratum.human_attribute_name :strip_width
+  %dd= @survey_ground_total_count_stratum.strip_width
+  %dt= SurveyGroundTotalCountStratum.human_attribute_name :observations
+  %dd= @survey_ground_total_count_stratum.observations
+  %dt= SurveyGroundTotalCountStratum.human_attribute_name :actually_seen
+  %dd= @survey_ground_total_count_stratum.actually_seen

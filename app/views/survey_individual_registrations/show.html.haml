@@ -1,0 +1,19 @@
+%h1= t '.title'
+%p
+  = link_to t('back'), survey_individual_registrations_path
+  = link_to t('edit'), edit_survey_individual_registration_path(@survey_individual_registration)
+  = link_to t('.new'), new_survey_individual_registration_path
+
+%dl
+  %dt= SurveyIndividualRegistration.human_attribute_name :population_submission_id
+  %dd= @survey_individual_registration.population_submission_id
+  %dt= SurveyIndividualRegistration.human_attribute_name :population_estimate
+  %dd= @survey_individual_registration.population_estimate
+  %dt= SurveyIndividualRegistration.human_attribute_name :population_upper_range
+  %dd= @survey_individual_registration.population_upper_range
+  %dt= SurveyIndividualRegistration.human_attribute_name :monitoring_years
+  %dd= @survey_individual_registration.monitoring_years
+  %dt= SurveyIndividualRegistration.human_attribute_name :monitoring_frequency
+  %dd= @survey_individual_registration.monitoring_frequency
+  %dt= SurveyIndividualRegistration.human_attribute_name :fenced_site
+  %dd= @survey_individual_registration.fenced_site

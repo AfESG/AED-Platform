@@ -1,0 +1,36 @@
+%h1= t('.title')
+%p= link_to t('.new'), new_population_submission_path
+
+%table
+  %thead
+    %tr
+      %th= PopulationSubmission.human_attribute_name :submission_id
+      %th= PopulationSubmission.human_attribute_name :data_licensing
+      %th= PopulationSubmission.human_attribute_name :embargo_date
+      %th= PopulationSubmission.human_attribute_name :site_name
+      %th= PopulationSubmission.human_attribute_name :designate
+      %th= PopulationSubmission.human_attribute_name :area
+      %th= PopulationSubmission.human_attribute_name :completion_year
+      %th= PopulationSubmission.human_attribute_name :completion_month
+      %th= PopulationSubmission.human_attribute_name :season
+      %th= PopulationSubmission.human_attribute_name :survey_type
+      %th= PopulationSubmission.human_attribute_name :survey_type_other
+      %th{:colspan => 3}= t 'actions'
+  
+  %tbody
+    - for population_submission in @population_submissions
+      %tr{ :class => cycle(:odd, :even) }
+        %td= population_submission.submission_id
+        %td= population_submission.data_licensing
+        %td= population_submission.embargo_date
+        %td= population_submission.site_name
+        %td= population_submission.designate
+        %td= population_submission.area
+        %td= population_submission.completion_year
+        %td= population_submission.completion_month
+        %td= population_submission.season
+        %td= population_submission.survey_type
+        %td= population_submission.survey_type_other
+        %td.action= link_to t('show'), population_submission
+        %td.action= link_to t('edit'), edit_population_submission_path(population_submission)
+        %td.action= link_to t('destroy'), population_submission, :confirm => t('are_you_sure'), :method => :delete

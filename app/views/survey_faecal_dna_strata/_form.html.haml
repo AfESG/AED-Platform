@@ -1,0 +1,66 @@
+= form_for(@survey_faecal_dna_stratum) do |f|
+  = render "shared/error_messages", :target => @survey_faecal_dna_stratum
+  
+  .field
+    = f.label :survey_faecal_dna_id
+    %br
+    = f.text_field :survey_faecal_dna_id
+  .field
+    = f.label :stratum_name
+    %br
+    = f.text_field :stratum_name
+  .field
+    = f.label :stratum_area
+    %br
+    = f.text_field :stratum_area
+  .field
+    = f.label :population_estimate
+    %br
+    = f.text_field :population_estimate
+  .field
+    = f.label :population_variance
+    %br
+    = f.text_field :population_variance
+  .field
+    = f.label :population_standard_error
+    %br
+    = f.text_field :population_standard_error
+  .field
+    = f.label :population_t
+    %br
+    = f.text_field :population_t
+  .field
+    = f.label :population_degrees_of_freedom
+    %br
+    = f.text_field :population_degrees_of_freedom
+  .field
+    = f.label :population_confidence_limits
+    %br
+    = f.text_field :population_confidence_limits
+  .field
+    = f.label :population_no_precision_estimate_available
+    %br
+    = f.check_box :population_no_precision_estimate_available
+  .field
+    = f.label :method_of_analysis
+    %br
+    = f.text_field :method_of_analysis
+  .field
+    = f.label :area_calculation_method
+    %br
+    = f.text_field :area_calculation_method
+  .field
+    = f.label :genotypes_identified
+    %br
+    = f.text_field :genotypes_identified
+  .field
+    = f.label :samples_analyzed
+    %br
+    = f.text_field :samples_analyzed
+  .field
+    = f.label :sampling_locations
+    %br
+    = f.text_field :sampling_locations
+
+  .actions
+    = f.submit

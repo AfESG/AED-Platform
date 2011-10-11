@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  population_submission_id: 1
+  total_possible_transects: 1
+  surveyed_at_stratum_level: false
+  stratum_level_data_submitted: false
+
+two:
+  population_submission_id: 1
+  total_possible_transects: 1
+  surveyed_at_stratum_level: false
+  stratum_level_data_submitted: false

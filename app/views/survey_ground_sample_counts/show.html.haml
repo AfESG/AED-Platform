@@ -1,0 +1,13 @@
+%h1= t '.title'
+%p
+  = link_to t('back'), survey_ground_sample_counts_path
+  = link_to t('edit'), edit_survey_ground_sample_count_path(@survey_ground_sample_count)
+  = link_to t('.new'), new_survey_ground_sample_count_path
+
+%dl
+  %dt= SurveyGroundSampleCount.human_attribute_name :population_submission_id
+  %dd= @survey_ground_sample_count.population_submission_id
+  %dt= SurveyGroundSampleCount.human_attribute_name :surveyed_at_stratum_level
+  %dd= @survey_ground_sample_count.surveyed_at_stratum_level
+  %dt= SurveyGroundSampleCount.human_attribute_name :stratum_level_data_submitted
+  %dd= @survey_ground_sample_count.stratum_level_data_submitted

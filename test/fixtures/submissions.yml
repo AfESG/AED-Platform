@@ -1,0 +1,23 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  user_id: 1
+  species: MyString
+  country: MyString
+  phenotype: MyString
+  phenotype_basis: MyString
+  data_type: MyString
+  right_to_grant_permission: false
+  permission_email: MyString
+  mike_site: false
+
+two:
+  user_id: 1
+  species: MyString
+  country: MyString
+  phenotype: MyString
+  phenotype_basis: MyString
+  data_type: MyString
+  right_to_grant_permission: false
+  permission_email: MyString
+  mike_site: false

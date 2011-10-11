@@ -1,0 +1,27 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  submission_id: 1
+  data_licensing: MyString
+  embargo_date: 2011-10-11
+  site_name: MyString
+  designate: MyString
+  area: 1
+  completion_year: 1
+  completion_month: 1
+  season: MyString
+  survey_type: MyString
+  survey_type_other: MyString
+
+two:
+  submission_id: 1
+  data_licensing: MyString
+  embargo_date: 2011-10-11
+  site_name: MyString
+  designate: MyString
+  area: 1
+  completion_year: 1
+  completion_month: 1
+  season: MyString
+  survey_type: MyString
+  survey_type_other: MyString

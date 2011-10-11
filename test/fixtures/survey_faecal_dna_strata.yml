@@ -1,0 +1,35 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  survey_faecal_dna_id: 1
+  stratum_name: MyString
+  stratum_area: 1
+  population_estimate: 1
+  population_variance: 1.5
+  population_standard_error: 1.5
+  population_t: 1.5
+  population_degrees_of_freedom: 1
+  population_confidence_limits: 1.5
+  population_no_precision_estimate_available: false
+  method_of_analysis: MyString
+  area_calculation_method: MyString
+  genotypes_identified: 1
+  samples_analyzed: 1
+  sampling_locations: 1
+
+two:
+  survey_faecal_dna_id: 1
+  stratum_name: MyString
+  stratum_area: 1
+  population_estimate: 1
+  population_variance: 1.5
+  population_standard_error: 1.5
+  population_t: 1.5
+  population_degrees_of_freedom: 1
+  population_confidence_limits: 1.5
+  population_no_precision_estimate_available: false
+  method_of_analysis: MyString
+  area_calculation_method: MyString
+  genotypes_identified: 1
+  samples_analyzed: 1
+  sampling_locations: 1

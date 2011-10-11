@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  population_submission_id: 1
+  population_estimate: 1
+  population_upper_range: 1
+  monitoring_years: 1
+  monitoring_frequency: MyString
+  fenced_site: false
+
+two:
+  population_submission_id: 1
+  population_estimate: 1
+  population_upper_range: 1
+  monitoring_years: 1
+  monitoring_frequency: MyString
+  fenced_site: false

@@ -1,0 +1,30 @@
+= form_for(@survey_individual_registration) do |f|
+  = render "shared/error_messages", :target => @survey_individual_registration
+  
+  .field
+    = f.label :population_submission_id
+    %br
+    = f.text_field :population_submission_id
+  .field
+    = f.label :population_estimate
+    %br
+    = f.text_field :population_estimate
+  .field
+    = f.label :population_upper_range
+    %br
+    = f.text_field :population_upper_range
+  .field
+    = f.label :monitoring_years
+    %br
+    = f.text_field :monitoring_years
+  .field
+    = f.label :monitoring_frequency
+    %br
+    = f.text_field :monitoring_frequency
+  .field
+    = f.label :fenced_site
+    %br
+    = f.check_box :fenced_site
+
+  .actions
+    = f.submit

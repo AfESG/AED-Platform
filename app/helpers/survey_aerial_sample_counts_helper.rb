@@ -1,0 +1,2 @@
+module SurveyAerialSampleCountsHelper
+end

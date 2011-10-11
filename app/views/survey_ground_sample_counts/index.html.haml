@@ -1,0 +1,20 @@
+%h1= t('.title')
+%p= link_to t('.new'), new_survey_ground_sample_count_path
+
+%table
+  %thead
+    %tr
+      %th= SurveyGroundSampleCount.human_attribute_name :population_submission_id
+      %th= SurveyGroundSampleCount.human_attribute_name :surveyed_at_stratum_level
+      %th= SurveyGroundSampleCount.human_attribute_name :stratum_level_data_submitted
+      %th{:colspan => 3}= t 'actions'
+  
+  %tbody
+    - for survey_ground_sample_count in @survey_ground_sample_counts
+      %tr{ :class => cycle(:odd, :even) }
+        %td= survey_ground_sample_count.population_submission_id
+        %td= survey_ground_sample_count.surveyed_at_stratum_level
+        %td= survey_ground_sample_count.stratum_level_data_submitted
+        %td.action= link_to t('show'), survey_ground_sample_count
+        %td.action= link_to t('edit'), edit_survey_ground_sample_count_path(survey_ground_sample_count)
+        %td.action= link_to t('destroy'), survey_ground_sample_count, :confirm => t('are_you_sure'), :method => :delete

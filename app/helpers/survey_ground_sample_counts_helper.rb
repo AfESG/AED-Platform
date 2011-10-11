@@ -1,0 +1,2 @@
+module SurveyGroundSampleCountsHelper
+end

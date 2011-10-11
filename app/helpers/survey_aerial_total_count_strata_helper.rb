@@ -1,0 +1,2 @@
+module SurveyAerialTotalCountStrataHelper
+end

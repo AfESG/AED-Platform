@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  population_submission_id: 1
+  other_method_description: MyString
+  population_estimate_min: 1
+  population_estimate_max: 1
+
+two:
+  population_submission_id: 1
+  other_method_description: MyString
+  population_estimate_min: 1
+  population_estimate_max: 1

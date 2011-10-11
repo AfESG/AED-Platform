@@ -1,0 +1,46 @@
+%h1= t('.title')
+%p= link_to t('.new'), new_survey_ground_total_count_stratum_path
+
+%table
+  %thead
+    %tr
+      %th= SurveyGroundTotalCountStratum.human_attribute_name :survey_ground_total_count_id
+      %th= SurveyGroundTotalCountStratum.human_attribute_name :stratum_name
+      %th= SurveyGroundTotalCountStratum.human_attribute_name :stratum_area
+      %th= SurveyGroundTotalCountStratum.human_attribute_name :population_estimate
+      %th= SurveyGroundTotalCountStratum.human_attribute_name :population_variance
+      %th= SurveyGroundTotalCountStratum.human_attribute_name :population_standard_error
+      %th= SurveyGroundTotalCountStratum.human_attribute_name :population_t
+      %th= SurveyGroundTotalCountStratum.human_attribute_name :population_degrees_of_freedom
+      %th= SurveyGroundTotalCountStratum.human_attribute_name :population_confidence_limits
+      %th= SurveyGroundTotalCountStratum.human_attribute_name :population_no_precision_estimate_available
+      %th= SurveyGroundTotalCountStratum.human_attribute_name :transects_covered
+      %th= SurveyGroundTotalCountStratum.human_attribute_name :transects_covered_total_length
+      %th= SurveyGroundTotalCountStratum.human_attribute_name :person_hours
+      %th= SurveyGroundTotalCountStratum.human_attribute_name :strip_width
+      %th= SurveyGroundTotalCountStratum.human_attribute_name :observations
+      %th= SurveyGroundTotalCountStratum.human_attribute_name :actually_seen
+      %th{:colspan => 3}= t 'actions'
+  
+  %tbody
+    - for survey_ground_total_count_stratum in @survey_ground_total_count_strata
+      %tr{ :class => cycle(:odd, :even) }
+        %td= survey_ground_total_count_stratum.survey_ground_total_count_id
+        %td= survey_ground_total_count_stratum.stratum_name
+        %td= survey_ground_total_count_stratum.stratum_area
+        %td= survey_ground_total_count_stratum.population_estimate
+        %td= survey_ground_total_count_stratum.population_variance
+        %td= survey_ground_total_count_stratum.population_standard_error
+        %td= survey_ground_total_count_stratum.population_t
+        %td= survey_ground_total_count_stratum.population_degrees_of_freedom
+        %td= survey_ground_total_count_stratum.population_confidence_limits
+        %td= survey_ground_total_count_stratum.population_no_precision_estimate_available
+        %td= survey_ground_total_count_stratum.transects_covered
+        %td= survey_ground_total_count_stratum.transects_covered_total_length
+        %td= survey_ground_total_count_stratum.person_hours
+        %td= survey_ground_total_count_stratum.strip_width
+        %td= survey_ground_total_count_stratum.observations
+        %td= survey_ground_total_count_stratum.actually_seen
+        %td.action= link_to t('show'), survey_ground_total_count_stratum
+        %td.action= link_to t('edit'), edit_survey_ground_total_count_stratum_path(survey_ground_total_count_stratum)
+        %td.action= link_to t('destroy'), survey_ground_total_count_stratum, :confirm => t('are_you_sure'), :method => :delete

@@ -1,0 +1,44 @@
+%h1= t('.title')
+%p= link_to t('.new'), new_survey_faecal_dna_stratum_path
+
+%table
+  %thead
+    %tr
+      %th= SurveyFaecalDnaStratum.human_attribute_name :survey_faecal_dna_id
+      %th= SurveyFaecalDnaStratum.human_attribute_name :stratum_name
+      %th= SurveyFaecalDnaStratum.human_attribute_name :stratum_area
+      %th= SurveyFaecalDnaStratum.human_attribute_name :population_estimate
+      %th= SurveyFaecalDnaStratum.human_attribute_name :population_variance
+      %th= SurveyFaecalDnaStratum.human_attribute_name :population_standard_error
+      %th= SurveyFaecalDnaStratum.human_attribute_name :population_t
+      %th= SurveyFaecalDnaStratum.human_attribute_name :population_degrees_of_freedom
+      %th= SurveyFaecalDnaStratum.human_attribute_name :population_confidence_limits
+      %th= SurveyFaecalDnaStratum.human_attribute_name :population_no_precision_estimate_available
+      %th= SurveyFaecalDnaStratum.human_attribute_name :method_of_analysis
+      %th= SurveyFaecalDnaStratum.human_attribute_name :area_calculation_method
+      %th= SurveyFaecalDnaStratum.human_attribute_name :genotypes_identified
+      %th= SurveyFaecalDnaStratum.human_attribute_name :samples_analyzed
+      %th= SurveyFaecalDnaStratum.human_attribute_name :sampling_locations
+      %th{:colspan => 3}= t 'actions'
+  
+  %tbody
+    - for survey_faecal_dna_stratum in @survey_faecal_dna_strata
+      %tr{ :class => cycle(:odd, :even) }
+        %td= survey_faecal_dna_stratum.survey_faecal_dna_id
+        %td= survey_faecal_dna_stratum.stratum_name
+        %td= survey_faecal_dna_stratum.stratum_area
+        %td= survey_faecal_dna_stratum.population_estimate
+        %td= survey_faecal_dna_stratum.population_variance
+        %td= survey_faecal_dna_stratum.population_standard_error
+        %td= survey_faecal_dna_stratum.population_t
+        %td= survey_faecal_dna_stratum.population_degrees_of_freedom
+        %td= survey_faecal_dna_stratum.population_confidence_limits
+        %td= survey_faecal_dna_stratum.population_no_precision_estimate_available
+        %td= survey_faecal_dna_stratum.method_of_analysis
+        %td= survey_faecal_dna_stratum.area_calculation_method
+        %td= survey_faecal_dna_stratum.genotypes_identified
+        %td= survey_faecal_dna_stratum.samples_analyzed
+        %td= survey_faecal_dna_stratum.sampling_locations
+        %td.action= link_to t('show'), survey_faecal_dna_stratum
+        %td.action= link_to t('edit'), edit_survey_faecal_dna_stratum_path(survey_faecal_dna_stratum)
+        %td.action= link_to t('destroy'), survey_faecal_dna_stratum, :confirm => t('are_you_sure'), :method => :delete

@@ -1,0 +1,25 @@
+%h1= t '.title'
+%p
+  = link_to t('back'), submissions_path
+  = link_to t('edit'), edit_submission_path(@submission)
+  = link_to t('.new'), new_submission_path
+
+%dl
+  %dt= Submission.human_attribute_name :user_id
+  %dd= @submission.user_id
+  %dt= Submission.human_attribute_name :species
+  %dd= @submission.species
+  %dt= Submission.human_attribute_name :country
+  %dd= @submission.country
+  %dt= Submission.human_attribute_name :phenotype
+  %dd= @submission.phenotype
+  %dt= Submission.human_attribute_name :phenotype_basis
+  %dd= @submission.phenotype_basis
+  %dt= Submission.human_attribute_name :data_type
+  %dd= @submission.data_type
+  %dt= Submission.human_attribute_name :right_to_grant_permission
+  %dd= @submission.right_to_grant_permission
+  %dt= Submission.human_attribute_name :permission_email
+  %dd= @submission.permission_email
+  %dt= Submission.human_attribute_name :mike_site
+  %dd= @submission.mike_site

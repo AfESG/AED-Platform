@@ -1,0 +1,18 @@
+= form_for(@survey_faecal_dna) do |f|
+  = render "shared/error_messages", :target => @survey_faecal_dna
+  
+  .field
+    = f.label :population_submission_id
+    %br
+    = f.text_field :population_submission_id
+  .field
+    = f.label :surveyed_at_stratum_level
+    %br
+    = f.check_box :surveyed_at_stratum_level
+  .field
+    = f.label :stratum_level_data_submitted
+    %br
+    = f.check_box :stratum_level_data_submitted
+
+  .actions
+    = f.submit

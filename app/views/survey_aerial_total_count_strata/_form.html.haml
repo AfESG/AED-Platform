@@ -1,0 +1,82 @@
+= form_for(@survey_aerial_total_count_stratum) do |f|
+  = render "shared/error_messages", :target => @survey_aerial_total_count_stratum
+  
+  .field
+    = f.label :survey_aerial_total_count_id
+    %br
+    = f.text_field :survey_aerial_total_count_id
+  .field
+    = f.label :stratum_name
+    %br
+    = f.text_field :stratum_name
+  .field
+    = f.label :stratum_area
+    %br
+    = f.text_field :stratum_area
+  .field
+    = f.label :population_estimate
+    %br
+    = f.text_field :population_estimate
+  .field
+    = f.label :population_variance
+    %br
+    = f.text_field :population_variance
+  .field
+    = f.label :population_standard_error
+    %br
+    = f.text_field :population_standard_error
+  .field
+    = f.label :population_t
+    %br
+    = f.text_field :population_t
+  .field
+    = f.label :population_degrees_of_freedom
+    %br
+    = f.text_field :population_degrees_of_freedom
+  .field
+    = f.label :population_confidence_limits
+    %br
+    = f.text_field :population_confidence_limits
+  .field
+    = f.label :population_no_precision_estimate_available
+    %br
+    = f.check_box :population_no_precision_estimate_available
+  .field
+    = f.label :average_speed
+    %br
+    = f.text_field :average_speed
+  .field
+    = f.label :average_transect_spacing
+    %br
+    = f.text_field :average_transect_spacing
+  .field
+    = f.label :average_searching_rate
+    %br
+    = f.text_field :average_searching_rate
+  .field
+    = f.label :transects_covered
+    %br
+    = f.text_field :transects_covered
+  .field
+    = f.label :transects_covered_total_length
+    %br
+    = f.text_field :transects_covered_total_length
+  .field
+    = f.label :observations
+    %br
+    = f.text_field :observations
+  .field
+    = f.label :carcasses_fresh
+    %br
+    = f.text_field :carcasses_fresh
+  .field
+    = f.label :carcasses_old
+    %br
+    = f.text_field :carcasses_old
+  .field
+    = f.label :carcasses_very_old
+    %br
+    = f.text_field :carcasses_very_old
+
+  .actions
+    = f.submit

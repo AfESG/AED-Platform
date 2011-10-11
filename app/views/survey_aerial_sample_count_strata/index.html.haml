@@ -1,0 +1,50 @@
+%h1= t('.title')
+%p= link_to t('.new'), new_survey_aerial_sample_count_stratum_path
+
+%table
+  %thead
+    %tr
+      %th= SurveyAerialSampleCountStratum.human_attribute_name :survey_aerial_sample_count_id
+      %th= SurveyAerialSampleCountStratum.human_attribute_name :stratum_name
+      %th= SurveyAerialSampleCountStratum.human_attribute_name :stratum_area
+      %th= SurveyAerialSampleCountStratum.human_attribute_name :population_estimate
+      %th= SurveyAerialSampleCountStratum.human_attribute_name :population_variance
+      %th= SurveyAerialSampleCountStratum.human_attribute_name :population_standard_error
+      %th= SurveyAerialSampleCountStratum.human_attribute_name :population_t
+      %th= SurveyAerialSampleCountStratum.human_attribute_name :population_degrees_of_freedom
+      %th= SurveyAerialSampleCountStratum.human_attribute_name :population_confidence_limits
+      %th= SurveyAerialSampleCountStratum.human_attribute_name :population_no_precision_estimate_available
+      %th= SurveyAerialSampleCountStratum.human_attribute_name :sampling_intensity
+      %th= SurveyAerialSampleCountStratum.human_attribute_name :transects_covered
+      %th= SurveyAerialSampleCountStratum.human_attribute_name :transects_covered_total_length
+      %th= SurveyAerialSampleCountStratum.human_attribute_name :seen_in_transects
+      %th= SurveyAerialSampleCountStratum.human_attribute_name :seen_outside_transects
+      %th= SurveyAerialSampleCountStratum.human_attribute_name :carcasses_fresh
+      %th= SurveyAerialSampleCountStratum.human_attribute_name :carcasses_old
+      %th= SurveyAerialSampleCountStratum.human_attribute_name :carcasses_very_old
+      %th{:colspan => 3}= t 'actions'
+  
+  %tbody
+    - for survey_aerial_sample_count_stratum in @survey_aerial_sample_count_strata
+      %tr{ :class => cycle(:odd, :even) }
+        %td= survey_aerial_sample_count_stratum.survey_aerial_sample_count_id
+        %td= survey_aerial_sample_count_stratum.stratum_name
+        %td= survey_aerial_sample_count_stratum.stratum_area
+        %td= survey_aerial_sample_count_stratum.population_estimate
+        %td= survey_aerial_sample_count_stratum.population_variance
+        %td= survey_aerial_sample_count_stratum.population_standard_error
+        %td= survey_aerial_sample_count_stratum.population_t
+        %td= survey_aerial_sample_count_stratum.population_degrees_of_freedom
+        %td= survey_aerial_sample_count_stratum.population_confidence_limits
+        %td= survey_aerial_sample_count_stratum.population_no_precision_estimate_available
+        %td= survey_aerial_sample_count_stratum.sampling_intensity
+        %td= survey_aerial_sample_count_stratum.transects_covered
+        %td= survey_aerial_sample_count_stratum.transects_covered_total_length
+        %td= survey_aerial_sample_count_stratum.seen_in_transects
+        %td= survey_aerial_sample_count_stratum.seen_outside_transects
+        %td= survey_aerial_sample_count_stratum.carcasses_fresh
+        %td= survey_aerial_sample_count_stratum.carcasses_old
+        %td= survey_aerial_sample_count_stratum.carcasses_very_old
+        %td.action= link_to t('show'), survey_aerial_sample_count_stratum
+        %td.action= link_to t('edit'), edit_survey_aerial_sample_count_stratum_path(survey_aerial_sample_count_stratum)
+        %td.action= link_to t('destroy'), survey_aerial_sample_count_stratum, :confirm => t('are_you_sure'), :method => :delete

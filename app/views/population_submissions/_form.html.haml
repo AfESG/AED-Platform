@@ -1,0 +1,50 @@
+= form_for(@population_submission) do |f|
+  = render "shared/error_messages", :target => @population_submission
+  
+  .field
+    = f.label :submission_id
+    %br
+    = f.text_field :submission_id
+  .field
+    = f.label :data_licensing
+    %br
+    = f.text_field :data_licensing
+  .field
+    = f.label :embargo_date
+    %br
+    = f.date_select :embargo_date
+  .field
+    = f.label :site_name
+    %br
+    = f.text_field :site_name
+  .field
+    = f.label :designate
+    %br
+    = f.text_field :designate
+  .field
+    = f.label :area
+    %br
+    = f.text_field :area
+  .field
+    = f.label :completion_year
+    %br
+    = f.text_field :completion_year
+  .field
+    = f.label :completion_month
+    %br
+    = f.text_field :completion_month
+  .field
+    = f.label :season
+    %br
+    = f.text_field :season
+  .field
+    = f.label :survey_type
+    %br
+    = f.text_field :survey_type
+  .field
+    = f.label :survey_type_other
+    %br
+    = f.text_field :survey_type_other
+
+  .actions
+    = f.submit

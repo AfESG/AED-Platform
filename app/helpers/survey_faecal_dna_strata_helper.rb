@@ -1,0 +1,2 @@
+module SurveyFaecalDnaStrataHelper
+end

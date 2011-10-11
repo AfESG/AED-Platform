@@ -1,4 +1,36 @@
 Aaed::Application.routes.draw do
+  resources :survey_individual_registrations
+
+  resources :survey_others
+
+  resources :survey_faecal_dna_strata
+
+  resources :survey_faecal_dnas
+
+  resources :survey_dung_count_line_transect_strata
+
+  resources :survey_dung_count_line_transects
+
+  resources :survey_ground_sample_count_strata
+
+  resources :survey_ground_sample_counts
+
+  resources :survey_ground_total_count_strata
+
+  resources :survey_ground_total_counts
+
+  resources :survey_aerial_sample_count_strata
+
+  resources :survey_aerial_sample_counts
+
+  resources :survey_aerial_total_count_strata
+
+  resources :survey_aerial_total_counts
+
+  resources :population_submissions
+
+  resources :submissions
+
   devise_for :users
 
   match 'report/:year/:continent/:region/:country' => 'report#country'
