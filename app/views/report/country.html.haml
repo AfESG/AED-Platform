@@ -53,7 +53,7 @@
       %td= row['possible']
       %td= row['specul']
 
-%h2 Area of Range Covered by Each Data Category (km^2)
+%h2 Area of Range Covered by Each Data Category (km²)
 %table
   %tr
     %th Data Category
@@ -94,16 +94,14 @@
     %th 95% C.L.
     %th
     %th
-    %th km^2
+    %th km²
     %th Lon.
     %th Lat.
   - @elephant_estimates_by_country.each do |row|
     %tr
       %td= row['survey_zone']
       %td= row['ReasonForChange']
-      %td
-        = row['SURVEYTYPE']
-        = row['QUALITY']
+      %td= row['method_and_quality']
       %td= row['CATEGORY']
       %td= row['CYEAR']
       %td= row['ESTIMATE']
@@ -111,5 +109,5 @@
       %td= row['REFERENCE']
       %td= row['PFS']
       %td= row['AREA_SQKM']
-      %td= row['LON']
-      %td= row['LAT']
+      %td= "%3.1f" % row['LON']
+      %td= "%3.1f" % row['LAT']

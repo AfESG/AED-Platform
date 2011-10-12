@@ -52,7 +52,6 @@ rails g scaffold SurveyAerialTotalCountStratum \
 
 rails g scaffold SurveyAerialSampleCount \
   population_submission_id:integer \
-  total_possible_transects:integer \
   surveyed_at_stratum_level:boolean \
   stratum_level_data_submitted:boolean
 
@@ -69,6 +68,7 @@ rails g scaffold SurveyAerialSampleCountStratum \
   population_confidence_limits:float \
   population_no_precision_estimate_available:boolean \
   \
+  total_possible_transects:integer \
   sampling_intensity:float \
   transects_covered:integer \
   transects_covered_total_length:integer \
@@ -174,6 +174,7 @@ rails g scaffold SurveyDungCountLineTransectStratum \
   defecation_rate_degrees_of_freedom:integer \
   defecation_rate_confidence_limits:float \
   defecation_rate_no_precision_estimate_available:boolean \
+  \
   dung_density_estimate:integer \
   dung_density_variance:float \
   dung_density_standard_error:float \

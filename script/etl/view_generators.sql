@@ -167,7 +167,7 @@ create or replace view aed2007.area_of_range_covered_sum_by_country as
 select ccode, sum(known) known, sum(possible) possible, sum(total) total from aed2007.area_of_range_covered_by_country group by ccode order by ccode;
 
 create or replace view aed2007.elephant_estimates_by_country as
-select
+select distinct
   "CCODE" ccode,
   "OBJECTID",
   "ReasonForChange",
@@ -176,22 +176,24 @@ select
   ELSE
     "SURVEYZONE" || ' ' || "DESIGNATE"
   END as survey_zone,
-  "SURVEYTYPE",
-  "QUALITY",
+  "METHOD" || "QUALITY" method_and_quality,
   "CATEGORY",
   "CYEAR",
   "ESTIMATE",
-  "CL95",
-  "UPRANGE",
+  CASE WHEN "METHOD"='IG' THEN
+    "UPRANGE"::text||'*'
+  ELSE
+    ROUND("CL95")
+  END "CL95",
   "REFERENCE",
   "PFS",
-  "AREA_SQKM",
+  ROUND("AREA_SQKM") "AREA_SQKM",
   "LON",
   "LAT"
 from aed2007."Surveydata"
 left join aed2007."ChangesTracker" on
   "OBJECTID"="CurrentOID"
-order by "CCODE", "SURVEYZONE";
+order by "CCODE", survey_zone;
 
 create or replace view aed2002.elephant_estimates_by_country as
 select
@@ -203,16 +205,15 @@ select
   ELSE
     "SURVEYZONE" || ' ' || "DESIGNATE"
   END as survey_zone,
-  "SURVEYTYPE",
-  "QUALITY",
+  "METHOD" || "QUALITY" method_and_quality,
   "CATEGORY",
   "CYEAR",
   "ESTIMATE",
-  "CL95",
+  "CL95"::integer,
   "UPRANGE",
   "REFERENCE",
   '-' as "PFS",
-  "AREA_SQKM",
+  "AREA_SQKM"::integer,
   "LON",
   "LAT"
 from aed2002."Surveydata"
