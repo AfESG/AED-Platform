@@ -181,22 +181,34 @@ select distinct
   "CYEAR",
   "ESTIMATE",
   CASE WHEN "METHOD"='IG' THEN
-    "UPRANGE"::text||'*'
+    to_char("UPRANGE",'9999999') || '*'
   ELSE
-    ROUND("CL95")
+    to_char(ROUND("CL95"),'9999999')
   END "CL95",
   "REFERENCE",
   "PFS",
   ROUND("AREA_SQKM") "AREA_SQKM",
-  "LON",
-  "LAT"
+  CASE WHEN "LON"<0 THEN
+    to_char(abs("LON"),'999D9')||'W'
+  WHEN "LON"=0 THEN
+    '0.0'
+  ELSE
+    to_char(abs("LON"),'999D9')||'E'
+  END "LON",
+  CASE WHEN "LAT"<0 THEN
+    to_char(abs("LAT"),'990D9')||'S'
+  WHEN "LAT"=0 THEN
+    '0.0'
+  ELSE
+    to_char(abs("LAT"),'990D9')||'N'
+  END "LAT"
 from aed2007."Surveydata"
 left join aed2007."ChangesTracker" on
   "OBJECTID"="CurrentOID"
 order by "CCODE", survey_zone;
 
 create or replace view aed2002.elephant_estimates_by_country as
-select
+select distinct
   "CCODE" ccode,
   "OBJECTID",
   '-' as "ReasonForChange",
@@ -209,15 +221,30 @@ select
   "CATEGORY",
   "CYEAR",
   "ESTIMATE",
-  "CL95"::integer,
-  "UPRANGE",
+  CASE WHEN "METHOD"='IG' THEN
+    to_char("UPRANGE",'9999999') || '*'
+  ELSE
+    to_char(ROUND("CL95"),'9999999')
+  END "CL95",
   "REFERENCE",
   '-' as "PFS",
-  "AREA_SQKM"::integer,
-  "LON",
-  "LAT"
+  ROUND("AREA_SQKM") "AREA_SQKM",
+  CASE WHEN "LON"<0 THEN
+    to_char(abs("LON"),'999D9')||'W'
+  WHEN "LON"=0 THEN
+    '0.0'
+  ELSE
+    to_char(abs("LON"),'999D9')||'E'
+  END "LON",
+  CASE WHEN "LAT"<0 THEN
+    to_char(abs("LAT"),'990D9')||'S'
+  WHEN "LAT"=0 THEN
+    '0.0'
+  ELSE
+    to_char(abs("LAT"),'990D9')||'N'
+  END "LAT"
 from aed2002."Surveydata"
-order by "CCODE", "SURVEYZONE";
+order by "CCODE", survey_zone;
 
 ### THE BELOW DOES NOT WORK BECAUSE 2002 SurvRang does not exist
 

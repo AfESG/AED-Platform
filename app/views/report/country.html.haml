@@ -10,104 +10,102 @@
 
 &gt; #{@country}
 
-%h1 #{@year} Country Report for #{@country}
+- if @summary_totals_by_country.num_tuples > 0
+  %h2 Summary Totals for #{@country}
 
-%h2 Summary Totals for #{@country}
-
-%table
-  %tr
-    %th Data Category
-    %th Definite
-    %th Probable
-    %th Possible
-    %th Speculative
-  -@summary_totals_by_country.each do |row|
+  %table
     %tr
-      %td= row['SURVEYTYPE']
-      %td= row['DEFINITE']
-      %td= row['PROBABLE']
-      %td= row['POSSIBLE']
-      %td= row['SPECUL']
-  -@summary_sums_by_country.each do |row|
-    %tr.totals
-      %td Totals #{@year}
-      %td= row['DEFINITE']
-      %td= row['PROBABLE']
-      %td= row['POSSIBLE']
-      %td= row['SPECUL']
+      %th Data Category
+      %th Definite
+      %th Probable
+      %th Possible
+      %th Speculative
+    -@summary_totals_by_country.each do |row|
+      %tr
+        %td= row['SURVEYTYPE']
+        %td.numeric= number_with_delimiter row['DEFINITE']
+        %td.numeric= number_with_delimiter row['PROBABLE']
+        %td.numeric= number_with_delimiter row['POSSIBLE']
+        %td.numeric= number_with_delimiter row['SPECUL']
+    -@summary_sums_by_country.each do |row|
+      %tr.totals
+        %td Totals #{@year}
+        %td.numeric= number_with_delimiter row['DEFINITE']
+        %td.numeric= number_with_delimiter row['PROBABLE']
+        %td.numeric= number_with_delimiter row['POSSIBLE']
+        %td.numeric= number_with_delimiter row['SPECUL']
 
-%h2 Interpretation of Changes in Estimates from Previous Report
+- if @causes_of_change_by_country.num_tuples > 0
+  %h2 Interpretation of Changes in Estimates from Previous Report
 
-%table
-  %tr
-    %th Cause of Change
-    %th Definite
-    %th Possible
-    %th Probable
-    %th Speculative
-  - @causes_of_change_by_country.each do |row|
+  %table
     %tr
-      %td= row['CauseofChange']
-      %td= row['definite']
-      %td= row['probable']
-      %td= row['possible']
-      %td= row['specul']
+      %th Cause of Change
+      %th Definite
+      %th Possible
+      %th Probable
+      %th Speculative
+    - @causes_of_change_by_country.each do |row|
+      %tr
+        %td= row['CauseofChange']
+        - ['definite','probable','possible','specul'].each do |key|
+          %td.numeric= number_with_delimiter row[key]
 
-%h2 Area of Range Covered by Each Data Category (km²)
-%table
-  %tr
-    %th Data Category
-    %th Known Range
-    %th Possible Range
-    %th Total Range
-  - @area_of_range_covered_by_country.each do |row|
+- if @area_of_range_covered_by_country.num_tuples > 0
+  %h2 Area of Range Covered by Each Data Category (km²)
+  %table
     %tr
-      %td= row['surveytype']
-      %td= row['known']
-      %td= row['possible']
-      %td= row['total']
-  - @area_of_range_covered_sum_by_country.each do |row|
-    %tr.totals
-      %td Totals
-      %td= row['known']
-      %td= row['possible']
-      %td= row['total']
+      %th Data Category
+      %th Known Range
+      %th Possible Range
+      %th Total Range
+    - @area_of_range_covered_by_country.each do |row|
+      %tr
+        %td= number_with_delimiter row['surveytype']
+        - ['known','possible','total'].each do |key|
+          %td.numeric= number_with_delimiter row[key]
+    - @area_of_range_covered_sum_by_country.each do |row|
+      %tr.totals
+        %td Totals
+        - ['known','possible','total'].each do |key|
+          %td.numeric= number_with_delimiter row[key]
 
-%h2 #{@country}: Elephant Estimates
-%table
-  %tr
-    %th Input Zone
-    %th Cause of Change
-    %th{:colspan => 3} Survey Details
-    %th{:colspan => 2} Number of Elephants
-    %th Source
-    %th PFS
-    %th Area
-    %th{:colspan => 2} Map Location
-  %tr
-    %th
-    %th
-    %th Type
-    %th Reliab.
-    %th Year
-    %th Estimate
-    %th 95% C.L.
-    %th
-    %th
-    %th km²
-    %th Lon.
-    %th Lat.
-  - @elephant_estimates_by_country.each do |row|
+- if @elephant_estimates_by_country.num_tuples > 0
+  %h2 #{@country}: Elephant Estimates
+  %table
     %tr
-      %td= row['survey_zone']
-      %td= row['ReasonForChange']
-      %td= row['method_and_quality']
-      %td= row['CATEGORY']
-      %td= row['CYEAR']
-      %td= row['ESTIMATE']
-      %td= row['CL95']
-      %td= row['REFERENCE']
-      %td= row['PFS']
-      %td= row['AREA_SQKM']
-      %td= "%3.1f" % row['LON']
-      %td= "%3.1f" % row['LAT']
+      %th Input Zone
+      %th Cause of Change
+      %th{:colspan => 3} Survey Details
+      %th{:colspan => 2} Number of Elephants
+      %th Source
+      %th PFS
+      %th Area
+      %th{:colspan => 2} Map Location
+    %tr
+      %th
+      %th
+      %th Type
+      %th Reliab.
+      %th Year
+      %th Estimate
+      %th 95% C.L.
+      %th
+      %th
+      %th km²
+      %th Lon.
+      %th Lat.
+    - @elephant_estimates_by_country.each do |row|
+      %tr
+        %td= row['survey_zone']
+        %td= row['ReasonForChange']
+        %td= row['method_and_quality']
+        %td= row['CATEGORY']
+        %td= row['CYEAR']
+        %td.numeric= number_with_delimiter row['ESTIMATE']
+        %td.numeric= number_with_delimiter row['CL95']
+        %td= row['REFERENCE']
+        %td= row['PFS']
+        %td= row['AREA_SQKM']
+        %td= row['LON']
+        %td= row['LAT']
