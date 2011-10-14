@@ -1,7 +1,7 @@
 = semantic_form_for @survey_faecal_dna_stratum do |f|
   = render "shared/error_messages", :target => @survey_faecal_dna_stratum
   - f.inputs do
-    = f.input :survey_faecal_dna_id
+    = f.input :survey_faecal_dna_id, :as => :hidden
     = f.input :stratum_name
     = f.input :stratum_area
     = f.input :population_estimate
@@ -11,7 +11,7 @@
     = f.input :population_degrees_of_freedom
     = f.input :population_confidence_limits
     = f.input :population_no_precision_estimate_available
-    = f.input :method_of_analysis
+    = f.input :method_of_analysis, :as => :select, :collection => ["CMR (Capture-Mark-Recapture)", "Accumulation curves - MNA (minimum number of animals)"]
     = f.input :area_calculation_method
     = f.input :genotypes_identified
     = f.input :samples_analyzed
