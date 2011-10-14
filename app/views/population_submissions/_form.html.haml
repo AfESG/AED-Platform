@@ -1,50 +1,15 @@
-= form_for(@population_submission) do |f|
+= semantic_form_for @population_submission do |f|
   = render "shared/error_messages", :target => @population_submission
-  
-  .field
-    = f.label :submission_id
-    %br
-    = f.text_field :submission_id
-  .field
-    = f.label :data_licensing
-    %br
-    = f.text_field :data_licensing
-  .field
-    = f.label :embargo_date
-    %br
-    = f.date_select :embargo_date
-  .field
-    = f.label :site_name
-    %br
-    = f.text_field :site_name
-  .field
-    = f.label :designate
-    %br
-    = f.text_field :designate
-  .field
-    = f.label :area
-    %br
-    = f.text_field :area
-  .field
-    = f.label :completion_year
-    %br
-    = f.text_field :completion_year
-  .field
-    = f.label :completion_month
-    %br
-    = f.text_field :completion_month
-  .field
-    = f.label :season
-    %br
-    = f.text_field :season
-  .field
-    = f.label :survey_type
-    %br
-    = f.text_field :survey_type
-  .field
-    = f.label :survey_type_other
-    %br
-    = f.text_field :survey_type_other
-
-  .actions
-    = f.submit
+  - f.inputs do
+    = f.input :submission_id, :as => :hidden
+    = f.input :data_licensing, :as => :radio, :collection => ["CC NC-BY-SA license", "Embargoed until (give date)", "No redistribution"]
+    = f.input :embargo_date, :as => :date
+    = f.input :site_name
+    = f.input :designate
+    = f.input :area
+    = f.input :completion_year, :as => :select, :collection => ["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012"]
+    = f.input :completion_month, :as => :select, :collection => ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    = f.input :season, :as => :select, :collection => ["Wet", "Dry", "Both", "Unknown"]
+    = f.input :survey_type, :as => :select, :collection => ["Aerial total count (AT)", "Aerial sample count (AS)", "Ground total count (GT)", "Ground sample count (GS)", "Dung count, mark recapture (MR) (GD in previous AEDs)", "Individual registration (IR)", "Other"]
+    = f.input :survey_type_other
+  = f.buttons
