@@ -1,7 +1,7 @@
-= form_for(@survey_other) do |f|
+= semantic_form_for @survey_other do |f|
   = render "shared/error_messages", :target => @survey_other
   - f.inputs do
-    = f.input :population_submission_id
+    = f.input :population_submission_id, :as => :hidden
     = f.input :other_method_description
     = f.input :population_estimate_min
     = f.input :population_estimate_max
