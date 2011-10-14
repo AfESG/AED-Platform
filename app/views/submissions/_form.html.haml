@@ -1,42 +1,13 @@
-= form_for(@submission) do |f|
+= semantic_form_for @submission do |f|
   = render "shared/error_messages", :target => @submission
-  
-  .field
-    = f.label :user_id
-    %br
-    = f.text_field :user_id
-  .field
-    = f.label :species
-    %br
-    = f.text_field :species
-  .field
-    = f.label :country
-    %br
-    = f.text_field :country
-  .field
-    = f.label :phenotype
-    %br
-    = f.text_field :phenotype
-  .field
-    = f.label :phenotype_basis
-    %br
-    = f.text_field :phenotype_basis
-  .field
-    = f.label :data_type
-    %br
-    = f.text_field :data_type
-  .field
-    = f.label :right_to_grant_permission
-    %br
-    = f.check_box :right_to_grant_permission
-  .field
-    = f.label :permission_email
-    %br
-    = f.text_field :permission_email
-  .field
-    = f.label :mike_site
-    %br
-    = f.check_box :mike_site
-
-  .actions
-    = f.submit
+  - f.inputs do
+    = f.input :user_id
+    = f.input :species
+    = f.input :country
+    = f.input :phenotype
+    = f.input :phenotype_basis
+    = f.input :data_type
+    = f.input :right_to_grant_permission
+    = f.input :permission_email
+    = f.input :mike_site
+  = f.buttons

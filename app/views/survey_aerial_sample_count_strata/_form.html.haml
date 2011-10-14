@@ -1,78 +1,22 @@
-= form_for(@survey_aerial_sample_count_stratum) do |f|
+= semantic_form_for @survey_aerial_sample_count_stratum do |f|
   = render "shared/error_messages", :target => @survey_aerial_sample_count_stratum
-  
-  .field
-    = f.label :survey_aerial_sample_count_id
-    %br
-    = f.text_field :survey_aerial_sample_count_id
-  .field
-    = f.label :stratum_name
-    %br
-    = f.text_field :stratum_name
-  .field
-    = f.label :stratum_area
-    %br
-    = f.text_field :stratum_area
-  .field
-    = f.label :population_estimate
-    %br
-    = f.text_field :population_estimate
-  .field
-    = f.label :population_variance
-    %br
-    = f.text_field :population_variance
-  .field
-    = f.label :population_standard_error
-    %br
-    = f.text_field :population_standard_error
-  .field
-    = f.label :population_t
-    %br
-    = f.text_field :population_t
-  .field
-    = f.label :population_degrees_of_freedom
-    %br
-    = f.text_field :population_degrees_of_freedom
-  .field
-    = f.label :population_confidence_limits
-    %br
-    = f.text_field :population_confidence_limits
-  .field
-    = f.label :population_no_precision_estimate_available
-    %br
-    = f.check_box :population_no_precision_estimate_available
-  .field
-    = f.label :sampling_intensity
-    %br
-    = f.text_field :sampling_intensity
-  .field
-    = f.label :transects_covered
-    %br
-    = f.text_field :transects_covered
-  .field
-    = f.label :transects_covered_total_length
-    %br
-    = f.text_field :transects_covered_total_length
-  .field
-    = f.label :seen_in_transects
-    %br
-    = f.text_field :seen_in_transects
-  .field
-    = f.label :seen_outside_transects
-    %br
-    = f.text_field :seen_outside_transects
-  .field
-    = f.label :carcasses_fresh
-    %br
-    = f.text_field :carcasses_fresh
-  .field
-    = f.label :carcasses_old
-    %br
-    = f.text_field :carcasses_old
-  .field
-    = f.label :carcasses_very_old
-    %br
-    = f.text_field :carcasses_very_old
-
-  .actions
-    = f.submit
+  - f.inputs do
+    = f.input :survey_aerial_sample_count_id
+    = f.input :stratum_name
+    = f.input :stratum_area
+    = f.input :population_estimate
+    = f.input :population_variance
+    = f.input :population_standard_error
+    = f.input :population_t
+    = f.input :population_degrees_of_freedom
+    = f.input :population_confidence_limits
+    = f.input :population_no_precision_estimate_available
+    = f.input :sampling_intensity
+    = f.input :transects_covered
+    = f.input :transects_covered_total_length
+    = f.input :seen_in_transects
+    = f.input :seen_outside_transects
+    = f.input :carcasses_fresh
+    = f.input :carcasses_old
+    = f.input :carcasses_very_old
+  = f.buttons
