@@ -1,13 +1,13 @@
 = semantic_form_for @submission do |f|
   = render "shared/error_messages", :target => @submission
   - f.inputs do
-    = f.input :user_id
-    = f.input :species
+    = f.input :user_id, :as => :hidden
+    = f.input :species, :as => :select, :collection => ["African elephants", "Asian elephants"]
     = f.input :country
-    = f.input :phenotype
-    = f.input :phenotype_basis
-    = f.input :data_type
-    = f.input :right_to_grant_permission
-    = f.input :permission_email
-    = f.input :mike_site
+    = f.input :phenotype, :as => :select, :collection => ["Savana", "Forest", "Both", "Don't know"]
+    = f.input :phenotype_basis, :as => :select, :collection => ["Genetic evidence gathered on-site", "Appearance of elephants", "Geographical location", "Habitat"]
+    = f.input :data_type, :as => :radio, :collection => ["Range polygon", "Point observations", "Population estimate"]
+    = f.input :right_to_grant_permission, :as => :radio, :collection => ["Yes, I have the right to grant permission to IUCN to use the data as specified", "No, I do not have the right to grant permission, please email the following person:"]
+    = f.input :permission_email, :as => :email
+    = f.input :mike_site, :as => :radio
   = f.buttons
