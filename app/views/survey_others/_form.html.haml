@@ -1,22 +1,8 @@
 = form_for(@survey_other) do |f|
   = render "shared/error_messages", :target => @survey_other
-  
-  .field
-    = f.label :population_submission_id
-    %br
-    = f.text_field :population_submission_id
-  .field
-    = f.label :other_method_description
-    %br
-    = f.text_field :other_method_description
-  .field
-    = f.label :population_estimate_min
-    %br
-    = f.text_field :population_estimate_min
-  .field
-    = f.label :population_estimate_max
-    %br
-    = f.text_field :population_estimate_max
-
-  .actions
-    = f.submit
+  - f.inputs do
+    = f.input :population_submission_id
+    = f.input :other_method_description
+    = f.input :population_estimate_min
+    = f.input :population_estimate_max
+  = f.buttons

@@ -1,70 +1,20 @@
-= form_for(@survey_ground_total_count_stratum) do |f|
+= semantic_form_for @survey_ground_total_count_stratum do |f|
   = render "shared/error_messages", :target => @survey_ground_total_count_stratum
-  
-  .field
-    = f.label :survey_ground_total_count_id
-    %br
-    = f.text_field :survey_ground_total_count_id
-  .field
-    = f.label :stratum_name
-    %br
-    = f.text_field :stratum_name
-  .field
-    = f.label :stratum_area
-    %br
-    = f.text_field :stratum_area
-  .field
-    = f.label :population_estimate
-    %br
-    = f.text_field :population_estimate
-  .field
-    = f.label :population_variance
-    %br
-    = f.text_field :population_variance
-  .field
-    = f.label :population_standard_error
-    %br
-    = f.text_field :population_standard_error
-  .field
-    = f.label :population_t
-    %br
-    = f.text_field :population_t
-  .field
-    = f.label :population_degrees_of_freedom
-    %br
-    = f.text_field :population_degrees_of_freedom
-  .field
-    = f.label :population_confidence_limits
-    %br
-    = f.text_field :population_confidence_limits
-  .field
-    = f.label :population_no_precision_estimate_available
-    %br
-    = f.check_box :population_no_precision_estimate_available
-  .field
-    = f.label :transects_covered
-    %br
-    = f.text_field :transects_covered
-  .field
-    = f.label :transects_covered_total_length
-    %br
-    = f.text_field :transects_covered_total_length
-  .field
-    = f.label :person_hours
-    %br
-    = f.text_field :person_hours
-  .field
-    = f.label :strip_width
-    %br
-    = f.text_field :strip_width
-  .field
-    = f.label :observations
-    %br
-    = f.text_field :observations
-  .field
-    = f.label :actually_seen
-    %br
-    = f.text_field :actually_seen
-
-  .actions
-    = f.submit
+  - f.inputs do
+    = f.input :survey_ground_total_count_id
+    = f.input :stratum_name
+    = f.input :stratum_area
+    = f.input :population_estimate
+    = f.input :population_variance
+    = f.input :population_standard_error
+    = f.input :population_t
+    = f.input :population_degrees_of_freedom
+    = f.input :population_confidence_limits
+    = f.input :population_no_precision_estimate_available
+    = f.input :transects_covered
+    = f.input :transects_covered_total_length
+    = f.input :person_hours
+    = f.input :strip_width
+    = f.input :observations
+    = f.input :actually_seen
+  = f.buttons

@@ -1,18 +1,7 @@
-= form_for(@survey_ground_sample_count) do |f|
+= semantic_form_for @survey_ground_sample_count do |f|
   = render "shared/error_messages", :target => @survey_ground_sample_count
-  
-  .field
-    = f.label :population_submission_id
-    %br
-    = f.text_field :population_submission_id
-  .field
-    = f.label :surveyed_at_stratum_level
-    %br
-    = f.check_box :surveyed_at_stratum_level
-  .field
-    = f.label :stratum_level_data_submitted
-    %br
-    = f.check_box :stratum_level_data_submitted
-
-  .actions
-    = f.submit
+  - f.inputs do
+    = f.input :population_submission_id
+    = f.input :surveyed_at_stratum_level
+    = f.input :stratum_level_data_submitted
+  = f.buttons

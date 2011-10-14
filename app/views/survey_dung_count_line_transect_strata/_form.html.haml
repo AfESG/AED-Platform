@@ -1,198 +1,52 @@
-= form_for(@survey_dung_count_line_transect_stratum) do |f|
+= semantic_form_for @survey_dung_count_line_transect_stratum do |f|
   = render "shared/error_messages", :target => @survey_dung_count_line_transect_stratum
-  
-  .field
-    = f.label :survey_dung_count_line_transect_id
-    %br
-    = f.text_field :survey_dung_count_line_transect_id
-  .field
-    = f.label :stratum_name
-    %br
-    = f.text_field :stratum_name
-  .field
-    = f.label :stratum_area
-    %br
-    = f.text_field :stratum_area
-  .field
-    = f.label :population_estimate
-    %br
-    = f.text_field :population_estimate
-  .field
-    = f.label :population_variance
-    %br
-    = f.text_field :population_variance
-  .field
-    = f.label :population_standard_error
-    %br
-    = f.text_field :population_standard_error
-  .field
-    = f.label :population_t
-    %br
-    = f.text_field :population_t
-  .field
-    = f.label :population_degrees_of_freedom
-    %br
-    = f.text_field :population_degrees_of_freedom
-  .field
-    = f.label :population_confidence_limits
-    %br
-    = f.text_field :population_confidence_limits
-  .field
-    = f.label :population_no_precision_estimate_available
-    %br
-    = f.check_box :population_no_precision_estimate_available
-  .field
-    = f.label :asymmetric_upper_confidence_limit
-    %br
-    = f.text_field :asymmetric_upper_confidence_limit
-  .field
-    = f.label :asymmetric_lower_confidence_limit
-    %br
-    = f.text_field :asymmetric_lower_confidence_limit
-  .field
-    = f.label :transects_covered
-    %br
-    = f.text_field :transects_covered
-  .field
-    = f.label :transects_covered_total_length
-    %br
-    = f.text_field :transects_covered_total_length
-  .field
-    = f.label :strip_width
-    %br
-    = f.text_field :strip_width
-  .field
-    = f.label :observations
-    %br
-    = f.text_field :observations
-  .field
-    = f.label :observations_distance_method
-    %br
-    = f.text_field :observations_distance_method
-  .field
-    = f.label :actually_seen
-    %br
-    = f.text_field :actually_seen
-  .field
-    = f.label :dung_piles
-    %br
-    = f.text_field :dung_piles
-  .field
-    = f.label :dung_decay_rate_measurement_method
-    %br
-    = f.text_field :dung_decay_rate_measurement_method
-  .field
-    = f.label :dung_decay_rate_estimate_used
-    %br
-    = f.text_field :dung_decay_rate_estimate_used
-  .field
-    = f.label :dung_decay_rate_measurement_site
-    %br
-    = f.text_field :dung_decay_rate_measurement_site
-  .field
-    = f.label :dung_decay_rate_measurement_year
-    %br
-    = f.text_field :dung_decay_rate_measurement_year
-  .field
-    = f.label :dung_decay_rate_reference
-    %br
-    = f.text_field :dung_decay_rate_reference
-  .field
-    = f.label :dung_decay_rate_variance
-    %br
-    = f.text_field :dung_decay_rate_variance
-  .field
-    = f.label :dung_decay_rate_standard_error
-    %br
-    = f.text_field :dung_decay_rate_standard_error
-  .field
-    = f.label :dung_decay_rate_t
-    %br
-    = f.text_field :dung_decay_rate_t
-  .field
-    = f.label :dung_decay_rate_degrees_of_freedom
-    %br
-    = f.text_field :dung_decay_rate_degrees_of_freedom
-  .field
-    = f.label :dung_decay_rate_confidence_limits
-    %br
-    = f.text_field :dung_decay_rate_confidence_limits
-  .field
-    = f.label :dung_decay_rate_no_precision_estimate_available
-    %br
-    = f.check_box :dung_decay_rate_no_precision_estimate_available
-  .field
-    = f.label :defecation_rate_measured_on_site
-    %br
-    = f.check_box :defecation_rate_measured_on_site
-  .field
-    = f.label :defecation_rate_estimate_used
-    %br
-    = f.text_field :defecation_rate_estimate_used
-  .field
-    = f.label :defecation_rate_measurement_site
-    %br
-    = f.text_field :defecation_rate_measurement_site
-  .field
-    = f.label :defecation_rate_reference
-    %br
-    = f.text_field :defecation_rate_reference
-  .field
-    = f.label :defecation_rate_variance
-    %br
-    = f.text_field :defecation_rate_variance
-  .field
-    = f.label :defecation_rate_standard_error
-    %br
-    = f.text_field :defecation_rate_standard_error
-  .field
-    = f.label :defecation_rate_t
-    %br
-    = f.text_field :defecation_rate_t
-  .field
-    = f.label :defecation_rate_degrees_of_freedom
-    %br
-    = f.text_field :defecation_rate_degrees_of_freedom
-  .field
-    = f.label :defecation_rate_confidence_limits
-    %br
-    = f.text_field :defecation_rate_confidence_limits
-  .field
-    = f.label :defecation_rate_no_precision_estimate_available
-    %br
-    = f.check_box :defecation_rate_no_precision_estimate_available
-  .field
-    = f.label :dung_density_estimate
-    %br
-    = f.text_field :dung_density_estimate
-  .field
-    = f.label :dung_density_variance
-    %br
-    = f.text_field :dung_density_variance
-  .field
-    = f.label :dung_density_standard_error
-    %br
-    = f.text_field :dung_density_standard_error
-  .field
-    = f.label :dung_density_t
-    %br
-    = f.text_field :dung_density_t
-  .field
-    = f.label :dung_density_degrees_of_freedom
-    %br
-    = f.text_field :dung_density_degrees_of_freedom
-  .field
-    = f.label :dung_density_confidence_limits
-    %br
-    = f.text_field :dung_density_confidence_limits
-  .field
-    = f.label :dung_density_no_precision_estimate_available
-    %br
-    = f.check_box :dung_density_no_precision_estimate_available
-  .field
-    = f.label :dung_encounter_rate
-    %br
-    = f.text_field :dung_encounter_rate
-
-  .actions
-    = f.submit
+  - f.inputs do
+    = f.input :survey_dung_count_line_transect_id
+    = f.input :stratum_name
+    = f.input :stratum_area
+    = f.input :population_estimate
+    = f.input :population_variance
+    = f.input :population_standard_error
+    = f.input :population_t
+    = f.input :population_degrees_of_freedom
+    = f.input :population_confidence_limits
+    = f.input :population_no_precision_estimate_available
+    = f.input :asymmetric_upper_confidence_limit
+    = f.input :asymmetric_lower_confidence_limit
+    = f.input :transects_covered
+    = f.input :transects_covered_total_length
+    = f.input :strip_width
+    = f.input :observations
+    = f.input :observations_distance_method
+    = f.input :actually_seen
+    = f.input :dung_piles
+    = f.input :dung_decay_rate_measurement_method
+    = f.input :dung_decay_rate_estimate_used
+    = f.input :dung_decay_rate_measurement_site
+    = f.input :dung_decay_rate_measurement_year
+    = f.input :dung_decay_rate_reference
+    = f.input :dung_decay_rate_variance
+    = f.input :dung_decay_rate_standard_error
+    = f.input :dung_decay_rate_t
+    = f.input :dung_decay_rate_degrees_of_freedom
+    = f.input :dung_decay_rate_confidence_limits
+    = f.input :dung_decay_rate_no_precision_estimate_available
+    = f.input :defecation_rate_measured_on_site
+    = f.input :defecation_rate_estimate_used
+    = f.input :defecation_rate_measurement_site
+    = f.input :defecation_rate_reference
+    = f.input :defecation_rate_variance
+    = f.input :defecation_rate_standard_error
+    = f.input :defecation_rate_t
+    = f.input :defecation_rate_degrees_of_freedom
+    = f.input :defecation_rate_confidence_limits
+    = f.input :defecation_rate_no_precision_estimate_available
+    = f.input :dung_density_estimate
+    = f.input :dung_density_variance
+    = f.input :dung_density_standard_error
+    = f.input :dung_density_t
+    = f.input :dung_density_degrees_of_freedom
+    = f.input :dung_density_confidence_limits
+    = f.input :dung_density_no_precision_estimate_available
+    = f.input :dung_encounter_rate
+  = f.buttons
