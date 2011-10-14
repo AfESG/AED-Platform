@@ -35,7 +35,7 @@
         %td.numeric= number_with_delimiter row['POSSIBLE']
         %td.numeric= number_with_delimiter row['SPECUL']
 
-- if @causes_of_change_by_country.num_tuples > 0
+- if !@causes_of_change_by_country.nil? && @causes_of_change_by_country.num_tuples > 0
   %h2 Interpretation of Changes in Estimates from Previous Report
 
   %table
@@ -51,7 +51,7 @@
         - ['definite','probable','possible','specul'].each do |key|
           %td.numeric= number_with_delimiter row[key]
 
-- if @area_of_range_covered_by_country.num_tuples > 0
+- if !@area_of_range_covered_by_country.nil? && @area_of_range_covered_by_country.num_tuples > 0
   %h2 Area of Range Covered by Each Data Category (km²)
   %table
     %tr
