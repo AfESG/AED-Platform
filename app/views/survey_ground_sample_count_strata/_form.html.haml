@@ -1,7 +1,7 @@
 = semantic_form_for @survey_ground_sample_count_stratum do |f|
   = render "shared/error_messages", :target => @survey_ground_sample_count_stratum
   - f.inputs do
-    = f.input :survey_ground_sample_count_id
+    = f.input :survey_ground_sample_count_id, :as => :hidden
     = f.input :stratum_name
     = f.input :stratum_area
     = f.input :population_estimate
