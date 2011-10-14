@@ -1,12 +1,20 @@
-%a{:href=>"/report/#{@year}"} #{@year}
+Reports
 
 &gt;
 
-%a{:href=>"/report/#{@year}/#{@continent}"} #{@continent}
+%a{:href=>"/report/#{@species.gsub(' ','_')}"} #{@species}
 
 &gt;
 
-%a{:href=>"/report/#{@year}/#{@continent}/#{@region.gsub(' ','_')}"} #{@region}
+%a{:href=>"/report/#{@species}/#{@year}"} #{@year}
+
+&gt;
+
+%a{:href=>"/report/#{@species}/#{@year}/#{@continent}"} #{@continent}
+
+&gt;
+
+%a{:href=>"/report/#{@species}/#{@year}/#{@continent}/#{@region.gsub(' ','_')}"} #{@region}
 
 &gt; #{@country}
 

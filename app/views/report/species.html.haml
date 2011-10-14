@@ -1,0 +1,14 @@
+%a{:href=>'/report'}Reports
+
+&gt;
+
+#{@species}
+
+%h2{:style => 'margin-top:16px'}
+  Available Reports for
+  %em #{@species}
+
+-['2007','2002','1998','1995'].each do |r|
+  %p
+    %a{:href=>"/report/#{@species.gsub(' ','_')}/#{r}"} #{r} African Elephant Status Report
+

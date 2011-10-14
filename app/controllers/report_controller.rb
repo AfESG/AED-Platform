@@ -1,6 +1,43 @@
 class ReportController < ApplicationController
 
+  def species
+    @species = params[:species].gsub('_',' ')
+  end
+
+  def year
+    @species = params[:species].gsub('_',' ')
+    @year = params[:year]
+  end
+
+  def continent
+    @species = params[:species].gsub('_',' ')
+    @year = params[:year]
+    @continent = params[:continent]
+    begin
+      @regions = ActiveRecord::Base.connection.execute <<-SQL
+        select distinct "REGION" from aed2007."Country" where "REGION"!='';
+      SQL
+    rescue
+      @regions = nil
+    end
+  end
+
+  def region
+    @species = params[:species].gsub('_',' ')
+    @year = params[:year]
+    @continent = params[:continent]
+    @region = params[:region].gsub('_',' ')
+    begin
+      @countries = ActiveRecord::Base.connection.execute <<-SQL
+        select distinct "CNTRYNAME" from aed2007."Country" where "REGION"='#{@region}' order by "CNTRYNAME";
+      SQL
+    rescue
+      @countries = nil
+    end
+  end
+
   def country
+    @species = params[:species].gsub('_',' ')
     @year = params[:year]
     @continent = params[:continent]
     @region = params[:region].gsub('_',' ')

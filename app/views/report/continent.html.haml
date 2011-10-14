@@ -1,0 +1,21 @@
+%a{:href=>'/report'}Reports
+
+&gt;
+
+%a{:href=>"/report/#{@species.gsub(' ','_')}"} #{@species}
+
+&gt;
+
+%a{:href=>"/report/#{@species.gsub(' ','_')}/#{@year}"} #{@year}
+
+&gt;
+
+#{@continent}
+
+%h2{:style => 'margin-top:16px'} Continental totals for #{@continent}
+
+-unless @regions.nil?
+  -@regions.each do |row|
+    %p
+      %a{:href=>"/report/#{@species.gsub(' ','_')}/#{@year}/#{@continent}/#{row['REGION'].gsub(' ','_')}"} #{row['REGION']}
+
