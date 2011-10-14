@@ -127,8 +127,16 @@ Reports
         %td{:style=>"padding-left:10px"}= row['REFERENCE']
         %td{:style=>'text-align:center'}= row['PFS']
         %td.numeric{:style=>"padding-right:10px"}= number_with_delimiter row['AREA_SQKM']
-        %td{:style=>'text-align:center'}= row['LON']
-        %td{:style=>'text-align:center'}= row['LAT']
+        %td{:style=>'text-align:center'}
+          - if row['INPCODE'].nil?
+            = row['LON']
+          - else
+            %a{:target=>"blank",:href=>"https://www.google.com/fusiontables/embedviz?viz=MAP&q=select+col59+from+1845019+where+col2+%3D+'#{row['INPCODE']}'&h=false&lat=#{row['numeric_lat']}&lng=#{row['numeric_lon']}&z=8&t=1&l=col59"}= row['LON']
+        %td{:style=>'text-align:center'}
+          - if row['INPCODE'].nil?
+            = row['LAT']
+          - else
+            %a{:target=>"blank",:href=>"https://www.google.com/fusiontables/embedviz?viz=MAP&q=select+col59+from+1845019+where+col2+%3D+'#{row['INPCODE']}'&h=false&lat=#{row['numeric_lat']}&lng=#{row['numeric_lon']}&z=8&t=1&l=col59"}= row['LAT']
 %p
   * Range of informed guess
 %p

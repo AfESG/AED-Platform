@@ -201,6 +201,7 @@ select ccode, sum(known) known, sum(possible) possible, sum(total) total from ae
 
 create or replace view aed2007.elephant_estimates_by_country as
 select distinct
+  "INPCODE",
   "CCODE" ccode,
   "OBJECTID",
   "ReasonForChange",
@@ -221,6 +222,8 @@ select distinct
   "REFERENCE",
   "PFS",
   ROUND("AREA_SQKM") "AREA_SQKM",
+  "LON" numeric_lon,
+  "LAT" numeric_lat,
   CASE WHEN "LON"<0 THEN
     to_char(abs("LON"),'999D9')||'W'
   WHEN "LON"=0 THEN
@@ -278,37 +281,3 @@ select distinct
   END "LAT"
 from aed2002."Surveydata"
 order by "CCODE", survey_zone;
-
-### THE BELOW DOES NOT WORK BECAUSE 2002 SurvRang does not exist
-
-create or replace view aed2002.area_of_range_covered_by_country as
-select
-  t1.ccode,
-  t1.surveytype,
-  t1.known,
-  t2.possible,
-  t3.total
-from
-
-(select aed2002."Country"."CCODE" ccode,
-CASE WHEN "SURVEYTYPE" is null THEN 'Unassessed Range' ELSE "SURVEYTYPE" END
-as surveytype, ROUND(SUM("SurvRang"."Shape_Area")) as known from aed2002."SurvRang" join aed2002."Country" on "CNTRYNAME_1"=aed2002."Country"."CNTRYNAME" and "Range"=1 and "RangeQuality"='Known' group by aed2002."Country"."CCODE","SURVEYTYPE" order by aed2002."Country"."CCODE","SURVEYTYPE") t1
-
-left join
-
-(select aed2002."Country"."CCODE" ccode,
-CASE WHEN "SURVEYTYPE" is null THEN 'Unassessed Range' ELSE "SURVEYTYPE" END
-as surveytype, ROUND(SUM("SurvRang"."Shape_Area")) as possible from aed2002."SurvRang" join aed2002."Country" on "CNTRYNAME_1"=aed2002."Country"."CNTRYNAME" and "Range"=1 and "RangeQuality"='Possible' group by aed2002."Country"."CCODE","SURVEYTYPE" order by aed2002."Country"."CCODE","SURVEYTYPE") t2
-
-on t1.surveytype = t2.surveytype and t1.ccode = t2.ccode
-
-left join
-
-(select aed2002."Country"."CCODE" ccode,
-CASE WHEN "SURVEYTYPE" is null THEN 'Unassessed Range' ELSE "SURVEYTYPE" END
-as surveytype, ROUND(SUM("SurvRang"."Shape_Area")) as total from aed2002."SurvRang" join aed2002."Country" on "CNTRYNAME_1"=aed2002."Country"."CNTRYNAME" and "Range"=1 group by aed2002."Country"."CCODE","SURVEYTYPE" order by aed2002."Country"."CCODE","SURVEYTYPE") t3
-
-on t1.surveytype = t3.surveytype and t1.ccode = t3.ccode;
-
-create or replace view aed2002.area_of_range_covered_sum_by_country as
-select ccode, sum(known) known, sum(possible) possible, sum(total) total from aed2002.area_of_range_covered_by_country group by ccode order by ccode;
