@@ -50,6 +50,12 @@
         %td= row['CauseofChange']
         - ['definite','probable','possible','specul'].each do |key|
           %td.numeric= number_with_delimiter row[key]
+    - unless @causes_of_change_sums_by_country.nil?
+      - @causes_of_change_sums_by_country.each do |row|
+        %tr.totals{:style => 'height: 24px; font-weight: bold'}
+          %td Totals
+          - ['definite','probable','possible','specul'].each do |key|
+            %td.numeric= number_with_delimiter row[key]
 
 - if !@area_of_range_covered_by_country.nil? && @area_of_range_covered_by_country.num_tuples > 0
   %h2 Area of Range Covered by Each Data Category (km²)
@@ -102,7 +108,7 @@
       %th{:style=>'text-align:center'} Lon.
       %th{:style=>'text-align:center'} Lat.
     - @elephant_estimates_by_country.each do |row|
-      %tr
+      %tr{:style=>'height:18px'}
         %td= row['survey_zone']
         %td= row['ReasonForChange']
         %td= row['method_and_quality']
@@ -117,7 +123,6 @@
         %td{:style=>'text-align:center'}= row['LAT']
 %p
   * Range of informed guess
-
 %p
   %sup 1
   Key to Causes of Change: DA: Different Area; DD: Data Degraded; DT: Different Technique; NA: New Analysis; NG: New Guess; NP: New population; PL: Population Lost; RS: Repeat Survey (RS ́ denotes a repeat survey that is not statistically comparable for reasons such as different season); –––: No Change

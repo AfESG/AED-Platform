@@ -92,6 +92,39 @@ join aed2007."CausesOfChange" on
 group by "CCODE", "CauseofChange", def_factor, prob_factor, poss_factor, spec_factor
 order by "CCODE", "CauseofChange";
 
+create or replace view aed2007.fractional_causes_of_change_by_country as
+select
+  "CCODE" ccode,
+  "CauseofChange",
+  def_factor * sum(sumofdefinite) as definite,
+  prob_factor * sum(sumofprobable) as probable,
+  poss_factor * sum(sumofpossible) as possible,
+  spec_factor * sum(sumofspecul) as specul
+from aed2007.changesgrp
+join aed2007.def_factor on
+  "CCODE"=aed2007.def_factor.ccode
+join aed2007.prob_factor on
+  "CCODE"=aed2007.prob_factor.ccode
+join aed2007.poss_factor on
+  "CCODE"=aed2007.poss_factor.ccode
+join aed2007.spec_factor on
+  "CCODE"=aed2007.spec_factor.ccode
+join aed2007."CausesOfChange" on
+  "ReasonForChange"="ChangeCODE"
+group by "CCODE", "CauseofChange", def_factor, prob_factor, poss_factor, spec_factor
+order by "CCODE", "CauseofChange";
+
+create or replace view aed2007.causes_of_change_sums_by_country as
+select
+  ccode,
+  round(sum(definite)) definite,
+  round(sum(probable)) probable,
+  round(sum(possible)) possible,
+  round(sum(specul)) specul
+from
+  aed2007.fractional_causes_of_change_by_country
+group by ccode;
+
 create or replace view aed2007.summary_totals_by_country as
 select
   "CCODE" ccode,

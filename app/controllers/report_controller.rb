@@ -25,6 +25,15 @@ class ReportController < ApplicationController
       @causes_of_change_by_country = nil
     end
 
+    begin
+      @causes_of_change_sums_by_country = ActiveRecord::Base.connection.execute <<-SQL
+        SELECT *
+        FROM aed#{@year}.causes_of_change_sums_by_country where ccode='#{@ccode}'
+      SQL
+    rescue
+      @causes_of_change_sums_by_country = nil
+    end
+
     @summary_totals_by_country = ActiveRecord::Base.connection.execute <<-SQL
       SELECT *
       FROM aed#{@year}.summary_totals_by_country where ccode='#{@ccode}'
