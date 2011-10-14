@@ -1,8 +1,8 @@
 = semantic_form_for @survey_aerial_sample_count do |f|
   = render "shared/error_messages", :target => @survey_aerial_sample_count
   - f.inputs do
-    = f.input :population_submission_id
+    = f.input :population_submission_id, :as => :hidden
     = f.input :total_possible_transects
-    = f.input :surveyed_at_stratum_level
-    = f.input :stratum_level_data_submitted
+    = f.input :surveyed_at_stratum_level, :as => :radio
+    = f.input :stratum_level_data_submitted, :as => :radio
   = f.buttons
