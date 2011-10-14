@@ -3,6 +3,16 @@ body,div,p,th,td{
   margin: 0px;
   padding: 0px;
 }
+sup {
+  vertical-align: super;
+  font-size: smaller;
+}
+th.numeric {
+  text-align: right;
+}
+td.numeric {
+  text-align: right;
+}
 a{
   color: #118300;
 }
