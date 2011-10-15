@@ -1,4 +1,8 @@
 class SubmissionsController < ApplicationController
+
+  before_filter :authenticate_user!, :except => [:index]
+  before_filter :authenticate_superuser!, :only => [:index]
+
   # GET /submissions
   # GET /submissions.xml
   def index
@@ -41,10 +45,11 @@ class SubmissionsController < ApplicationController
   # POST /submissions.xml
   def create
     @submission = Submission.new(params[:submission])
+    @submission.user = current_user
 
     respond_to do |format|
       if @submission.save
-        format.html { redirect_to(@submission, :notice => 'Submission was successfully created.') }
+        format.html { redirect_to(edit_submission_path(@submission), :notice => 'Submission was successfully created.') }
         format.xml  { render :xml => @submission, :status => :created, :location => @submission }
       else
         format.html { render :action => "new" }
