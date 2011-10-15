@@ -17,14 +17,16 @@ en:
       population_confidence_limits: "95% confidence limits"
       population_no_precision_estimate_available: "Check if no estimate of precision available"
       observations: "Number of observations (encounters)"
+      actually_seen: "Number of elephants seen"
       transects_covered: "Number of transects covered"
       transects_covered_total_length: "Total length of transects covered (in km)"
       strip_width: "Effective strip width"
       carcasses_fresh: "Number of Fresh or Recent Carcasses (Categ. 1 and 2)"
       carcasses_old: "Number of Old Carcasses (Categ. 3)"
       carcasses_very_old: "Number of Very Old Carcasses (Categ. 4)"
+      person_hours: "Person hours: Where each independent survey team is counted as one 'person'"
       submission:
-        mike_site: "MIKE site?"
+        mike_site: "ADMIN ONLY: MIKE site?"
       population_submission:
         data_type: "Type of data"
         area: "Surface area of the site (km²)"
@@ -82,20 +84,8 @@ en:
         genotypes_identified: "No. of individual genotypes identified"
         samples_analyzed: "No. of DNA samples analyzed"
         sampling_locations: "No. of sampling locations"
-      survey_ground_sample_block:        
-        estimate:
-        transects: "Number of transects"        
-        total_transect_distance:
-        effective_strip_width:
-        observations: "Number of observations"
-        groups_encountered: "Number of elephants seen"
-        elephants_seen: "Number of elephants seen"
-        intensity: "Effective sampling intensity"
-        estimated: "How were distances to observations estimated?"
-      survey_ground_total_block:        
-        estimate:
-        precision:
-        man_hours:
+      survey_ground_sample_count_stratum:              
+      survey_ground_total_count_stratum:              
       survey_submission:
         data_licensing: "Data licensing options"
         site_name: "Area/Site Name"
