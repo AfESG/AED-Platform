@@ -175,49 +175,91 @@ en:
       title: "Data Submission Form"
     edit:
       title: "Edit Submission"
-  survey_aerial_sample_blocks:
+  survey_aerial_sample_counts:
     new:
-      title: "New Aerial Sample Block"
+      title: "New Aerial Sample Count"
     show:
-      title: "Aerial Sample Block"
+      title: "Aerial Sample Count"
     edit:
-      title: "Edit Aerial Sample Block"
-  survey_aerial_total_blocks:
+      title: "Edit Aerial Sample Count"
+  survey_aerial_sample_count_strata:
     new:
-      title: "New Aerial Total Block"
+      title: "New Aerial Sample Stratum/Block"
     show:
-      title: "Aerial Sample Block"
+      title: "Aerial Sample Stratum/Block"
     edit:
-      title: "Edit Aerial Sample Block"
+      title: "Edit Aerial Sample Stratum/Block"
+  survey_aerial_total_counts:
+    new:
+      title: "New Aerial Total Count"
+    show:
+      title: "Aerial Total Count"
+    edit:
+      title: "Edit Aerial Total Count"
+  survey_aerial_total_count_strata:
+    new:
+      title: "New Aerial Total Stratum/Block"
+    show:
+      title: "Aerial Total Stratum/Block"
+    edit:
+      title: "Edit Aerial Total Stratum/Block"
+  survey_dung_count_line_transects:
+    new:
+      title: "New Dung Count (Line Transects)"
+    show:
+      title: "Dung Count (Line Transects)"
+    edit:
+      title: "Edit Dung Count (Line Transects)"
   survey_dung_count_blocks:
     new:
-      title: "New Dung Count Block"
+      title: "New Dung Count (Line Transects) Stratum/Block"
     show:
-      title: "Dung Count Block"
+      title: "Dung Count (Line Transects) Stratum/Block"
     edit:
-      title: "Edit Aerial Sample Block"
-  survey_faecal_dna_blocks:
+      title: "Edit Dung Count (Line Transects) Stratum/Block"
+  survey_faecal_dnas:
     new:
-      title: "New Faecal DNA Block"
+      title: "New Faecal DNA Survey"
     show:
-      title: "Faecal DNA Block"
+      title: "Faecal DNA Survey"
     edit:
-      title: "Edit Faecal DNA Block"
-  survey_ground_sample_blocks:
+      title: "Edit Faecal DNA Survey"
+  survey_faecal_dna_strata:
     new:
-      title: "New Ground Sample Block"
+      title: "New Faecal DNA Stratum/Block"
     show:
-      title: "Ground Sample Block"
+      title: "Faecal DNA Stratum/Block"
     edit:
-      title: "Edit Ground Sample Block"
-  survey_ground_total_blocks:
+      title: "Edit Faecal DNA Stratum/Block"
+  survey_ground_sample_counts:
     new:
-      title: "New Ground Total Block"
+      title: "New Ground Sample Count"
     show:
-      title: "Ground Total Block"
+      title: "Ground Sample Count"
     edit:
-      title: "Edit Ground Total Block"
-  survey_submissions:
+      title: "Edit Ground Sample Count"
+  survey_ground_sample_count_strata:
+    new:
+      title: "New Ground Sample Stratum/Block"
+    show:
+      title: "Ground Sample Stratum/Block"
+    edit:
+      title: "Edit Ground Sample Stratum/Block"
+  survey_ground_total_counts:
+    new:
+      title: "New Ground Total Count"
+    show:
+      title: "Ground Total Count"
+    edit:
+      title: "Edit Ground Total Count"
+  survey_ground_total_count_strata:
+    new:
+      title: "New Ground Total Stratum/Block"
+    show:
+      title: "Ground Total Stratum/Block"
+    edit:
+      title: "Edit Ground Total Stratum/Block"
+  population_submissions:
     index:
       title: "All Pending Population Estimates"
     new:
