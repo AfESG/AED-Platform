@@ -23,6 +23,8 @@ en:
       carcasses_fresh: "Number of Fresh or Recent Carcasses (Categ. 1 and 2)"
       carcasses_old: "Number of Old Carcasses (Categ. 3)"
       carcasses_very_old: "Number of Very Old Carcasses (Categ. 4)"
+      survey_aerial_sample_count:
+        total_possible_transects: "Total possible number of sampling units (transects)"
       survey_aerial_sample_block:
         estimate:
         precision:
