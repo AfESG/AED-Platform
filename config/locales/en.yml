@@ -76,11 +76,9 @@ en:
         dung_density_confidence_limits: "Confidence limits"
         dung_density_no_precision_estimate_available: "Check if no estimate of precision available"
         dung_encounter_rate: "Dung encounter rate"
-      survey_faecal_dna_block:        
+      survey_faecal_dna_stratum:        
         method_of_analysis:          
-        calculated: "How was area calculated"
-        estimate:
-        precision:
+        area_calculation_method: "How was the area calculated?"
         genotypes_identified: "No. of individual genotypes identified"
         samples_analyzed: "No. of DNA samples analyzed"
         sampling_locations: "No. of sampling locations"
