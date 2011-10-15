@@ -12,7 +12,7 @@ en:
       population_estimate:
       population_variance: "Variance"
       population_standard_error: "Standard error"
-      population_t: "Value of t.₀₂₅"
+      population_t: "Value of t used to calculate 95% confidence interval"
       population_degrees_of_freedom: "Degrees of freedom"
       population_confidence_limits: "95% confidence limits"
       population_no_precision_estimate_available: "Check if no estimate of precision available"
@@ -34,15 +34,9 @@ en:
         survey_type_other: "Other"
       survey_aerial_sample_count:
         total_possible_transects: "Total possible number of sampling units (transects)"
-      survey_aerial_sample_block:
-        estimate:
-        precision:
-        estimate_of_precision: "Enter Estimate of precision here"
-        sampling_intensity: "Sampling intensity (%)"
-        transects_flown: "Number of transects flown"  
-        degrees_of_freedom:
-        seen_in_transects: "Number seen in transects"
-        seen_out: "Number seen out"
+      survey_aerial_sample_count_stratum:
+        seen_in_transects: "Number of elephants seen inside the transects"
+        seen_outside_transects: "Number of elephants seen outside the transects"
       survey_aerial_total_count_stratum:        
         average_speed: "Average aircraft speed (km/h)"
         average_transect_spacing: "Average transect spacing (km)"
@@ -140,24 +134,7 @@ en:
         phenotype: "What type of elephants does the information refer to?"
         phenotype_basis: "What is the basis for the answer to phenotype question?"
         permission_email: "Email address"
-        mike_sites: "ADMIN ONLY: Does the area include any MIKE sites?"
-      survey_aerial_sample_block:
-        precision: "Do you have an estimate of precision, and if so, which?"
-        t_value: "Value of t used to calculate 95% confidence interval"
-        degrees_of_freedom: "Value of t used to calculate 95% confidence interval"
-        seen_in_transects: "Number of elephants seen inside the transects"
-        seen_out: "Number of elephants seen outside the transects"
-        fresh_carcass: "Estimate of carcass numbers (categories 1 and 2)"
-        old_carcass: "Estimate of carcass numbers (category 3)"
-        very_old_carcass: "Estimate of carcass numbers (category 4)"
-      survey_aerial_total_block:
-        estimate: "Elephant population estimate"
-      survey_dung_count_block:
-        precision: "Var/SE/CL95"
-        decay_measured_on_site: "If dung decay rate measured on site, indicate whether this was done in the period leading up to the survey (retrospectively) or at some well before the survey (prospectively)"
-        precision_of_defecation_rate: "Var/SE/CL95"
-        precision_of_dung_density: "Var/SE/CL95"
-      survey_faecal_dna_block:
+        mike_sites: "ADMIN ONLY: Does the area include any MIKE sites?"                
       survey_ground_sample_block:
         observations: "(i.e. number of groups encountered)"
         groups_encountered: "(i.e. number of groups encountered)"
