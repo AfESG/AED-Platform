@@ -14,7 +14,7 @@ en:
       population_standard_error: "Standard error"
       population_t: "Value of t.₀₂₅"
       population_degrees_of_freedom: "Degrees of freedom"
-      population_confidence_limits: "Confidence limits"
+      population_confidence_limits: "95% confidence limits"
       population_no_precision_estimate_available: "Check if no estimate of precision available"
       observations: "Number of observations (encounters)"
       transects_covered: "Number of transects covered"
@@ -23,6 +23,15 @@ en:
       carcasses_fresh: "Number of Fresh or Recent Carcasses (Categ. 1 and 2)"
       carcasses_old: "Number of Old Carcasses (Categ. 3)"
       carcasses_very_old: "Number of Very Old Carcasses (Categ. 4)"
+      submission:
+        mike_site: "MIKE site?"
+      population_submission:
+        data_type: "Type of data"
+        area: "Surface area of the site (km²)"
+        completion_year: "Year of survey completion"
+        completion_month: "Month of survey completion"
+        season: "Season over which the survey took place"
+        survey_type_other: "Other"
       survey_aerial_sample_count:
         total_possible_transects: "Total possible number of sampling units (transects)"
       survey_aerial_sample_block:
@@ -57,7 +66,7 @@ en:
         dung_decay_rate_no_precision_estimate_available: "Check if no estimate of precision available" 
         defecation_rate_measured_on_site: "Was defecation rate measured on-site?"
         defecation_rate_estimate_used: "Estimate of defecation rate used (days)"
-        defecation_rate_measurement_site: "Was the defecation rate measured on-site?"
+        defecation_rate_measurement_site: "Site where the defecation rate was measured"
         defecation_rate_reference: "Defecation rate - bibliographical reference"
         defecation_rate_variance: "Variance"
         defecation_rate_standard_error: "Standard error"
@@ -156,7 +165,7 @@ en:
       survey_ground_total_block:
         precision:
         man_hours: "Where each independent survey team is counted as one \"man\""
-      submission:
+      population_submission:
         designate: "(eg. national park, wildlife reserve etc)"
       data_request_form:
         email:
