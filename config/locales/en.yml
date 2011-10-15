@@ -5,9 +5,11 @@ en:
   formtastic:
     titles:
     labels:
+      surveyed_at_stratum_level: "Was the survey zone divided into strata/blocks?"
+      stratum_level_data_submitted: "Can you submit data at the stratum/block level?"
+      stratum_name: "Stratum/block name"
+      stratum_area: "Stratum/block area (km²)"
       survey_aerial_sample_block:
-        stratum_block_name: "Stratum/block name"
-        stratum_block_area: "Stratum/block area"
         estimate:
         precision:
         estimate_of_precision: "Enter Estimate of precision here"
@@ -20,9 +22,7 @@ en:
         fresh_carcass: "Fresh & recent carcass estimate"
         old_carcass: "Old carcass estimate"
         very_old_carcass: "Very old carcass estimate"
-      survey_aerial_total_block:
-        stratum_name:
-        stratum_area: "Stratum area (km²)"
+      survey_aerial_total_block:        
         aircraft_speed: "Aircraft speed (km/h)"
         transect_spacing: "Transect spacing (km)"
         searching_rate: "Searching rate (km²/hr)"
@@ -31,9 +31,7 @@ en:
         fresh_carcasses: "Number of Fresh and Recent Carcasses (Categ. 1 and 2)"
         old_carcasses: "Number of Old Carcasses (Categ. 3)"
         very_old_carcasses: "Number of very old carcasses (Categ. 4)"
-      survey_dung_count_line_transect_stratum:
-        stratum_name:
-        stratum_area: "Stratum area (km2)"
+      survey_dung_count_line_transect_stratum:        
         population_estimate:
         population_variance: "Variance"
         population_standard_error: "Standard error"
@@ -79,21 +77,17 @@ en:
         dung_density_confidence_limits: "Confidence limits"
         dung_density_no_precision_estimate_available: "Check if no estimate of precision available"
         dung_encounter_rate: "Dung encounter rate"
-      survey_faecal_dna_block:
-        block_name:
-        method_of_analysis:
-        block_area:
+      survey_faecal_dna_block:        
+        method_of_analysis:          
         calculated: "How was area calculated"
         estimate:
         precision:
         genotypes_identified: "No. of individual genotypes identified"
         samples_analyzed: "No. of DNA samples analyzed"
         sampling_locations: "No. of sampling locations"
-      survey_ground_sample_block:
-        block_name:
+      survey_ground_sample_block:        
         estimate:
-        transects: "Number of transects"
-        block_area:
+        transects: "Number of transects"        
         total_transect_distance:
         effective_strip_width:
         observations: "Number of observations"
@@ -101,9 +95,7 @@ en:
         elephants_seen: "Number of elephants seen"
         intensity: "Effective sampling intensity"
         estimated: "How were distances to observations estimated?"
-      survey_ground_total_block:
-        block_name:
-        block_area:
+      survey_ground_total_block:        
         estimate:
         precision:
         man_hours:
