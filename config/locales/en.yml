@@ -12,28 +12,33 @@ en:
       population_estimate:
       population_variance: "Variance"
       population_standard_error: "Standard error"
-      population_t: "Value of t.₀₂₅"
+      population_t: "Value of t used to calculate 95% confidence interval"
       population_degrees_of_freedom: "Degrees of freedom"
-      population_confidence_limits: "Confidence limits"
+      population_confidence_limits: "95% confidence limits"
       population_no_precision_estimate_available: "Check if no estimate of precision available"
       observations: "Number of observations (encounters)"
+      actually_seen: "Number of elephants seen"
       transects_covered: "Number of transects covered"
       transects_covered_total_length: "Total length of transects covered (in km)"
       strip_width: "Effective strip width"
       carcasses_fresh: "Number of Fresh or Recent Carcasses (Categ. 1 and 2)"
       carcasses_old: "Number of Old Carcasses (Categ. 3)"
       carcasses_very_old: "Number of Very Old Carcasses (Categ. 4)"
+      person_hours: "Person hours: Where each independent survey team is counted as one 'person'"
+      submission:
+        mike_site: "ADMIN ONLY: MIKE site?"
+      population_submission:
+        data_type: "Type of data"
+        area: "Surface area of the site (km²)"
+        completion_year: "Year of survey completion"
+        completion_month: "Month of survey completion"
+        season: "Season over which the survey took place"
+        survey_type_other: "Other"
       survey_aerial_sample_count:
         total_possible_transects: "Total possible number of sampling units (transects)"
-      survey_aerial_sample_block:
-        estimate:
-        precision:
-        estimate_of_precision: "Enter Estimate of precision here"
-        sampling_intensity: "Sampling intensity (%)"
-        transects_flown: "Number of transects flown"  
-        degrees_of_freedom:
-        seen_in_transects: "Number seen in transects"
-        seen_out: "Number seen out"
+      survey_aerial_sample_count_stratum:
+        seen_in_transects: "Number of elephants seen inside the transects"
+        seen_outside_transects: "Number of elephants seen outside the transects"
       survey_aerial_total_count_stratum:        
         average_speed: "Average aircraft speed (km/h)"
         average_transect_spacing: "Average transect spacing (km)"
@@ -57,7 +62,7 @@ en:
         dung_decay_rate_no_precision_estimate_available: "Check if no estimate of precision available" 
         defecation_rate_measured_on_site: "Was defecation rate measured on-site?"
         defecation_rate_estimate_used: "Estimate of defecation rate used (days)"
-        defecation_rate_measurement_site: "Was the defecation rate measured on-site?"
+        defecation_rate_measurement_site: "Site where the defecation rate was measured"
         defecation_rate_reference: "Defecation rate - bibliographical reference"
         defecation_rate_variance: "Variance"
         defecation_rate_standard_error: "Standard error"
@@ -73,28 +78,14 @@ en:
         dung_density_confidence_limits: "Confidence limits"
         dung_density_no_precision_estimate_available: "Check if no estimate of precision available"
         dung_encounter_rate: "Dung encounter rate"
-      survey_faecal_dna_block:        
+      survey_faecal_dna_stratum:        
         method_of_analysis:          
-        calculated: "How was area calculated"
-        estimate:
-        precision:
+        area_calculation_method: "How was the area calculated?"
         genotypes_identified: "No. of individual genotypes identified"
         samples_analyzed: "No. of DNA samples analyzed"
         sampling_locations: "No. of sampling locations"
-      survey_ground_sample_block:        
-        estimate:
-        transects: "Number of transects"        
-        total_transect_distance:
-        effective_strip_width:
-        observations: "Number of observations"
-        groups_encountered: "Number of elephants seen"
-        elephants_seen: "Number of elephants seen"
-        intensity: "Effective sampling intensity"
-        estimated: "How were distances to observations estimated?"
-      survey_ground_total_block:        
-        estimate:
-        precision:
-        man_hours:
+      survey_ground_sample_count_stratum:              
+      survey_ground_total_count_stratum:              
       survey_submission:
         data_licensing: "Data licensing options"
         site_name: "Area/Site Name"
@@ -131,24 +122,7 @@ en:
         phenotype: "What type of elephants does the information refer to?"
         phenotype_basis: "What is the basis for the answer to phenotype question?"
         permission_email: "Email address"
-        mike_sites: "ADMIN ONLY: Does the area include any MIKE sites?"
-      survey_aerial_sample_block:
-        precision: "Do you have an estimate of precision, and if so, which?"
-        t_value: "Value of t used to calculate 95% confidence interval"
-        degrees_of_freedom: "Value of t used to calculate 95% confidence interval"
-        seen_in_transects: "Number of elephants seen inside the transects"
-        seen_out: "Number of elephants seen outside the transects"
-        fresh_carcass: "Estimate of carcass numbers (categories 1 and 2)"
-        old_carcass: "Estimate of carcass numbers (category 3)"
-        very_old_carcass: "Estimate of carcass numbers (category 4)"
-      survey_aerial_total_block:
-        estimate: "Elephant population estimate"
-      survey_dung_count_block:
-        precision: "Var/SE/CL95"
-        decay_measured_on_site: "If dung decay rate measured on site, indicate whether this was done in the period leading up to the survey (retrospectively) or at some well before the survey (prospectively)"
-        precision_of_defecation_rate: "Var/SE/CL95"
-        precision_of_dung_density: "Var/SE/CL95"
-      survey_faecal_dna_block:
+        mike_sites: "ADMIN ONLY: Does the area include any MIKE sites?"                
       survey_ground_sample_block:
         observations: "(i.e. number of groups encountered)"
         groups_encountered: "(i.e. number of groups encountered)"
@@ -156,7 +130,7 @@ en:
       survey_ground_total_block:
         precision:
         man_hours: "Where each independent survey team is counted as one \"man\""
-      submission:
+      population_submission:
         designate: "(eg. national park, wildlife reserve etc)"
       data_request_form:
         email:

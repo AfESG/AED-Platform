@@ -7,9 +7,9 @@
     = f.input :site_name
     = f.input :designate
     = f.input :area
-    = f.input :completion_year, :as => :select, :collection => ["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012"]
+    = f.input :completion_year, :as => :select, :collection => Time.now.year.downto(2000)
     = f.input :completion_month, :as => :select, :collection => ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     = f.input :season, :as => :select, :collection => ["Wet", "Dry", "Both", "Unknown"]
-    = f.input :survey_type, :as => :select, :collection => ["Aerial total count (AT)", "Aerial sample count (AS)", "Ground total count (GT)", "Ground sample count (GS)", "Dung count, mark recapture (MR) (GD in previous AEDs)", "Individual registration (IR)", "Other"]
+    = f.input :survey_type, :as => :select, :collection => ["Aerial total count (AT)", "Aerial sample count (AS)", "Ground total count (GT)", "Ground sample count (GS)", "Dung count (DC)", "Faecal DNA survey (GD in previous AEDs)", "Individual registration (IR)", "Other"]
     = f.input :survey_type_other
   = f.buttons
