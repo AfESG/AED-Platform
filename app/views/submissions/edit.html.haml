@@ -1,5 +1,11 @@
 %h1= t '.title'
 %p
-  = link_to t('back'), submissions_path
-  = link_to t('show'), @submission
+  = link_to t('submissions.index.title'), submissions_path
+  &gt;
+  = t '.title'
+
 = render 'form'
+%h4= t('population_estimates_enclosed')
+- for population_submission in @submission.population_submissions do
+  %div= link_to "Population Estimate ##{population_submission.id} (total #)", population_submission
+%p= link_to t('new_population_estimate'), new_population_submission_path(@submission)

@@ -1,40 +1,52 @@
 Aaed::Application.routes.draw do
-  resources :survey_individual_registrations
-
-  resources :survey_others
-
-  resources :survey_faecal_dna_strata
-
-  resources :survey_faecal_dnas
-
-  resources :survey_dung_count_line_transect_strata
-
-  resources :survey_dung_count_line_transects
-
-  resources :survey_ground_sample_count_strata
-
-  resources :survey_ground_sample_counts
-
-  resources :survey_ground_total_count_strata
-
-  resources :survey_ground_total_counts
-
-  resources :survey_aerial_sample_count_strata
-
-  resources :survey_aerial_sample_counts
-
-  resources :survey_aerial_total_count_strata
-
-  resources :survey_aerial_total_counts
-
-  resources :population_submissions
-
-  resources :submissions
-
-  match 'data_request_forms/thanks' => 'data_request_forms#thanks'
-  resources :data_request_forms
 
   devise_for :users
+
+  resources :submissions do
+    resources :population_submissions
+  end
+
+  resources :population_submissions do
+    resources :survey_aerial_sample_counts do
+      resources :survey_aerial_sample_count_stratadd
+    end
+    resources :survey_aerial_total_counts do
+      resources :survey_aerial_total_count_strata
+    end
+    resources :survey_dung_count_line_transects do
+      resources :survey_dung_count_line_transect_strata
+    end
+    resources :survey_faecal_dnas do
+      resources :survey_faecal_dna_strata
+    end
+    resources :survey_ground_sample_counts do
+      resources :survey_ground_sample_count_strata
+    end
+    resources :survey_ground_total_counts do
+      resources :survey_ground_total_count_strata
+    end
+    resources :survey_individual_registrations
+    resources :survey_others
+  end
+
+  resources :survey_individual_registrations
+  resources :survey_others
+  resources :survey_faecal_dna_strata
+  resources :survey_faecal_dnas
+  resources :survey_dung_count_line_transect_strata
+  resources :survey_dung_count_line_transects
+  resources :survey_ground_sample_count_strata
+  resources :survey_ground_sample_counts
+  resources :survey_ground_total_count_strata
+  resources :survey_ground_total_counts
+  resources :survey_aerial_sample_count_strata
+  resources :survey_aerial_sample_counts
+  resources :survey_aerial_total_count_strata
+  resources :survey_aerial_total_counts
+
+  resources :data_request_forms
+
+  match 'data_request_forms/thanks' => 'data_request_forms#thanks'
 
   match 'about' => 'about#index'
   match 'about/darp' => 'about#darp'
