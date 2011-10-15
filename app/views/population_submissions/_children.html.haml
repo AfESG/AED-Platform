@@ -1,0 +1,17 @@
+%h4= t('.children')
+- if @population_submission.survey_type == "Aerial total count (AT)"
+  - for c in @population_submission.survey_aerial_total_counts do
+    %div= link_to "Aerial Sample Count ##{c.id}", c
+  %p= link_to t('new_survey_aerial_total_count'), new_population_submission_survey_aerial_total_count_path(@population_submission)
+- if @population_submission.survey_type == "Aerial sample count (AS)"
+  - for c in @population_submission.survey_aerial_sample_counts do
+    %div= link_to "Aerial Sample Count ##{c.id}", c
+  %p= link_to t('new_survey_aerial_sample_count'), new_population_submission_survey_aerial_sample_count_path(@population_submission)
+- if @population_submission.survey_type == "Ground total count (GT)"
+  - for c in @population_submission.survey_ground_total_counts do
+    %div= link_to "Ground Total Count ##{c.id}", c
+  %p= link_to t('new_survey_ground_total_count'), new_population_submission_survey_ground_total_count_path(@population_submission)
+- if @population_submission.survey_type == "Ground sample count (GS)"
+  - for c in @population_submission.survey_ground_sample_counts do
+    %div= link_to "Ground Sample Count ##{c.id}", c
+  %p= link_to t('new_survey_ground_sample_count'), new_population_submission_survey_ground_sample_count_path(@population_submission)
