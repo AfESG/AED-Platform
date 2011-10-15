@@ -259,6 +259,20 @@ en:
       title: "Ground Total Stratum/Block"
     edit:
       title: "Edit Ground Total Stratum/Block"
+  survey_individual_registrations:
+    new:
+      title: "New Individual Registration"
+    show:
+      title: "Individual Registration"
+    edit:
+      title: "Edit Individual Registration"
+  survey_others:
+    new:
+      title: "New Other Survey"
+    show:
+      title: "Other Survey"
+    edit:
+      title: "Edit Other Survey"
   population_submissions:
     index:
       title: "All Pending Population Estimates"
