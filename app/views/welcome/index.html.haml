@@ -1,15 +1,23 @@
-.wiki= t(:about_narrative)
-#header
-  %ul{:id => :primary}
-    %li{:id => :rangeMapLink}
-      %a{:href => 'javascript:showRangeMaps()'}
-        = t(:range_maps)
-    %li{:id => :populationTableLink}
-      %a{:href => 'javascript:showPopulationTables()'}
-        = t(:population_tables)
-#rangemap
-  %iframe{:frameborder => :none, :width => '1000px', :height => '1000px', :src => '/range-map.html'}
-#population{:style => 'display: none'}
-  %iframe{:frameborder => :none, :width => '1000px', :height => '1000px', :src => '/surveys'}
-%script
-  showRangeMaps();
+.ticker_bar
+  .ticker_item
+    .ticker_no
+      4
+    .ticker_legend
+      new users
+  .ticker_item
+    .ticker_no
+      6
+    .ticker_legend
+      new surveys
+  .ticker_text
+    Survey here ... Another survey here ... And one more here
+
+%img.gallery{:src=>'images/gallery.png', :alt=>'Gallery'}
+
+.feature_legend
+  featured map:
+.feature_name
+  AESR 2007 Input Zones
+
+<iframe width="100%" height="500px" scrolling="no"  src="https://www.google.com/fusiontables/embedviz?viz=MAP&q=select+col59+from+1855116+&h=false&lat=-4.432774755925643&lng=11.540595250000031&z=4&t=1&l=col59"></iframe>
+

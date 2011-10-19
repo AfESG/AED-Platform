@@ -4,12 +4,15 @@
     %title= t('banner')
     = csrf_meta_tag
     = stylesheet_link_tag 'flutie', 'aaed'
+    %link{:href=>'http://fonts.googleapis.com/css?family=Droid+Sans:regular,bold', :rel=>'stylesheet', :type=>'text/css'}
     = javascript_include_tag :defaults
     = yield(:javascript_includes)
   %body
     #page
-      %h1.pagetitle= link_to (t'banner'), '/'
-      .beta beta3
+      %a{:href=>'/'}
+        %img{:src=>'/images/elephant-database-logo.png',:alt=>'Elephant Database'}
+      .strapline
+        The most comprehensive data on elephant population and range worldwide.
       - if user_signed_in?
         #myaccount= link_to t('my_account'), edit_user_registration_path
         #logout= link_to t('log_out'), destroy_user_session_path
@@ -17,8 +20,9 @@
         #register= link_to t('register'), new_user_registration_path
         #login= link_to t('log_in'), new_user_session_path
       .nav
-        .navItem= raw(get_nav_item(t('about'), '/about'))
-        .navItem= raw(get_nav_item(t('contribute'), '/submissions/new'))
+        .navItem= raw(get_nav_item('Explore', '/report'))
+        .navItem= raw(get_nav_item('Add Data', '/submissions/new'))
+        .navItem= raw(get_nav_item('About', '/about'))
       %p
         - if(!flash[:notice].nil?)
           .notice= flash[:notice]
