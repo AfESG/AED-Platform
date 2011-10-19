@@ -85,7 +85,14 @@ en:
         samples_analyzed: "No. of DNA samples analyzed"
         sampling_locations: "No. of sampling locations"
       survey_ground_sample_count_stratum:              
-      survey_ground_total_count_stratum:              
+      survey_ground_total_count_stratum:
+      survey_individual_registration:
+        population_upper_range: "Give the upper range of the population estimated at the site."
+        monitoring_years: "In what year did individual monitoring of this population start?"
+        monitoring_frequency: "On average, how frequently is every individual in the population re-sighted?"
+        fenced_site: "Is the site fenced? Is there a possiblity of elephants entering or leaving the site?"
+      survey_other:
+        other_method_description: "Give a short description of the method used to arrive at the estimate"
       survey_submission:
         data_licensing: "Data licensing options"
         site_name: "Area/Site Name"
