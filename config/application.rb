@@ -43,5 +43,7 @@ module Aaed
       g.template_engine :haml
     end
 
+    config.cache_store = :dalli_store
+
   end
 end

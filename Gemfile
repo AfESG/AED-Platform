@@ -19,6 +19,10 @@ gem 'formtastic'
 
 gem 'maruku'
 
+gem 'dalli'
+
+gem 'rack-cache'
+
 # gem 'sqlite3'
 
 # Use unicorn as the web server
