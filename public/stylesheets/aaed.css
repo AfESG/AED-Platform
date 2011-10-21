@@ -408,6 +408,10 @@ h1 {
 }
 .ticker_text {
   float: right;
+  width: 700px;
+  height: 18px;
+  white-space: nowrap;
+  overflow: hidden;
   color: #fff;
   font-family: "Droid Sans";
   font-size: 16px;
