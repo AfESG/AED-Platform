@@ -1,3 +1,4 @@
+%h1 #{@year} Continental Totals for #{@continent}
 %a{:href=>'/report'}Reports
 
 &gt;
@@ -12,10 +13,10 @@
 
 #{@continent}
 
-%h2{:style => 'margin-top:16px'} Continental totals for #{@continent}
+%div{:style => 'margin-top:20px'}
 
 -unless @regions.nil?
   -@regions.each do |row|
-    %p
+    %div
       %a{:href=>"/report/#{@species.gsub(' ','_')}/#{@year}/#{@continent}/#{row['REGION'].gsub(' ','_')}"} #{row['REGION']}
 

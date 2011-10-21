@@ -1,3 +1,4 @@
+%h1 #{@year} Regional Totals for #{@region}
 %a{:href=>'/report'}Reports
 
 &gt;
@@ -16,11 +17,11 @@
 
 #{@region}
 
-%h2{:style => 'margin-top:16px'} Regional totals for #{@region}
+%div{:style=>'margin-top: 20px'}
 
 -unless @countries.nil?
   -@countries.each do |row|
-    %p
+    %div
       %a{:href=>"#{@region.gsub(' ','_')}/#{row['CNTRYNAME'].gsub(' ','_')}"} #{row['CNTRYNAME']}
 
 

@@ -1,11 +1,11 @@
-body,div,p,th,td{
+body{
   font-family: sans-serif;
   margin: 0px;
   padding: 0px;
 }
 .strapline {
   position: absolute;
-  top: 95px;
+  top: 82px;
   left: 390px;
   width: 300px;
   font-family: "Droid Sans";
@@ -25,6 +25,10 @@ td.numeric {
 }
 a{
   color: #118300;
+}
+.logo{
+  margin-top: 10px;
+  padding-bottom: 10px;
 }
 .user_section{
   float: right;
@@ -51,6 +55,9 @@ a{
 .navItem a {
   color: #fff;
   text-decoration: none;
+}
+.navItem .selected {
+  color: #777;
 }
 #legal{
   margin-top: 20px;
@@ -206,6 +213,15 @@ label abbr {
 	color: #cc0000;
 }
 
+fieldset {
+  border: none;
+  background: none;
+  padding: 0px;
+}
+
+form {
+  padding: none;
+}
 /**<!-- SURVEY INFORMATION -->**/
 
 div.survey_results {
@@ -341,10 +357,9 @@ div.surveys_summary span.title {
 
 .wiki {
   line-height: 1.5em;
-  padding-left: 50px;
-  padding-top: 30px;
-  border: 1px solid #cccccc;
-  padding: 25px;
+  padding: 15px;
+  padding-left: 250px;
+  padding-right: 75px;
 }
 .wiki ul, .wiki ol {
   margin-left: 15px;
@@ -360,6 +375,14 @@ div.surveys_summary span.title {
   width: 70%;
   margin-bottom: 10px;
   line-height: 140%;
+}
+h1 {
+  font-family: "Droid Sans";
+  font-weight: normal;
+  font-size: 30px;
+  padding: 10px;
+  color: #fff;
+  background-color: #2b1100;
 }
 .ticker_bar {
   width: 100%;

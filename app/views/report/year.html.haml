@@ -1,3 +1,5 @@
+%h1 African Elephant Status Report #{@year}
+
 %a{:href=>'/report'}Reports
 
 &gt;
@@ -8,6 +10,6 @@
 
 #{@year}
 
-%h2{:style => 'margin-top:16px'} African Elephant Status Report #{@year}
+%div{:style => 'margin-top:20px'}
 
 %a{:href=>"/report/#{@species.gsub(' ','_')}/#{@year}/Africa"} Continental totals for Africa
