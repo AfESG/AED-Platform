@@ -16,6 +16,6 @@
     %div= link_to "Ground Sample Count ##{c.id}", c
   %p= link_to t('new_survey_ground_sample_count'), new_population_submission_survey_ground_sample_count_path(@population_submission)
 - if @population_submission.survey_type == "Individual registration (IR)"
-  - for c in @population_submission.individual_registrations do
+  - for c in @population_submission.survey_individual_registrations do
     %div= link_to "Individual Registration ##{c.id}", c
   %p= link_to t('new_survey_individual_registration'), new_population_submission_survey_individual_registration_path(@population_submission)
