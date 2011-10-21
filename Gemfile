@@ -41,6 +41,10 @@ gem 'maruku'
 # put test-only gems in this group so their generators
 # and rake tasks are available in development mode:
 group :development, :test do
-   gem 'ruby_parser'
-   gem 'hpricot'
+  gem 'ruby_parser'
+  gem 'hpricot'
+end
+
+group :production do
+  gem 'thin'
 end
