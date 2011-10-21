@@ -1,0 +1,5 @@
+%a{:target => '_top', :href => "/report/#{@species}/#{@year}/#{@continent}/#{@region}/#{@country}/#{@inpcode}"}
+  If you aren't redirected, click here.
+
+:javascript
+  window.parent.location.href = "/report/#{@species}/#{@year}/#{@continent}/#{@region}/#{@country}/#{@inpcode}"

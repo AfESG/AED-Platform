@@ -103,4 +103,20 @@ class ReportController < ApplicationController
 
   end
 
+  def survey
+    @species = params[:species].gsub('_',' ')
+    @year = params[:year]
+    @continent = params[:continent]
+    @region = params[:region].gsub('_',' ')
+    @country = params[:country].gsub('_',' ')
+    @survey = params[:survey]
+    survey_zones = ActiveRecord::Base.connection.execute <<-SQL
+      SELECT *
+      FROM aed#{@year}.elephant_estimates_by_country where "INPCODE"='#{@survey}'
+    SQL
+    survey_zones.each do |survey_zone|
+      @survey_zone = survey_zone
+      break
+    end
+  end
 end

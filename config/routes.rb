@@ -59,12 +59,15 @@ Aaed::Application.routes.draw do
 
   match 'superuser' => 'superuser#index'
 
+  match 'report/:species/:year/:continent/:region/:country/:survey' => 'report#survey'
   match 'report/:species/:year/:continent/:region/:country' => 'report#country'
   match 'report/:species/:year/:continent/:region' => 'report#region'
   match 'report/:species/:year/:continent' => 'report#continent'
   match 'report/:species/:year' => 'report#year'
   match 'report/:species' => 'report#species'
   match 'report' => 'report#index'
+
+  match 'find/:year/:inpcode' => 'find#historical'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
