@@ -23,5 +23,14 @@ module ApplicationHelper
     result
   end
 
+  # this shows all PS in the new model ... they're all new
+  def new_surveys
+    PopulationSubmission.find(:all).count
+  end
+
+  # this shows all users ... everybody's new
+  def contributors
+    User.find(:all).count
+  end
 
 end
