@@ -10,7 +10,13 @@
     .ticker_legend
       new surveys
   .ticker_text
-    Survey here ... Another survey here ... And one more here
+    - last_three_surveys.each do |population_submission|
+      - unless population_submission.site_name == ''
+        = population_submission.site_name
+        = population_submission.designate
+        - unless population_submission.completion_year == ''
+          ( #{population_submission.completion_year} )
+        %span ...
 
 %img.gallery{:src=>'images/gallery.png', :alt=>'Gallery'}
 

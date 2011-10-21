@@ -11,4 +11,17 @@ module ApplicationHelper
     return link_to text, path
   end
 
+  def last_three_surveys # inefficient!
+    displayed = 0
+    max = 3
+    result = []
+    PopulationSubmission.find(:all, :order => 'id DESC').each do |population_submission|
+      result << population_submission
+      displayed = displayed + 1
+      break if displayed > max
+    end
+    result
+  end
+
+
 end
