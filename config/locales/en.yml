@@ -348,3 +348,31 @@ en:
   new_survey_ground_total_block: "New Ground Total Block"
   new_point_observation: "New point observation"
   all_submissions: "All Submissions"
+  embargoed_until: 
+    <strong>Embargoed until</strong><br/> Your survey data will be used to create pooled estimates at the national, 
+    sub-regional and continental level, and any GIS boundaries will be used for making maps of elephant 
+    range and survey zones to be featured on this website and IUCN publications.   Your contribution 
+    will be explicitly acknowledged. The embargo will be lifted on the date you specify, and the survey 
+    report and any associated data will then be available for download on this website under the 
+    Creative Commons BY-NC-SA license, which ensures proper attribution and non-commercial use of the data. 
+    See <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank">http://creativecommons.org/licenses/by-nc-sa/3.0/</a> 
+    for more details.
+  creative_commons:
+    <strong>Creative Commons License BY-NC-SA</strong><br/> Your survey data will be used to create pooled estimates at the
+    national, sub-regional and continental level, and any GIS boundaries will be used for making maps of
+    elephant range and survey zones to be featured on this website and IUCN publications.  Your contribution
+    will be explicitly acknowledged. Additionally, your survey report and any associated range data will be
+    available for download on this website under a Creative Commons (BY-NC-SA) license, which ensures proper
+    attribution and non-commercial use of the data. See  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" 
+    target="_blank">http://creativecommons.org/licenses/by-nc-sa/3.0/</a>
+    for more details.  
+  controlled_redistribution:
+    <strong>Controlled redistribution</strong><br/> Your survey data will be used to create pooled estimates 
+    at the national, sub-regional and continental level, and any GIS boundaries will be used for making maps 
+    of elephant range and survey zones to be featured on this website and on IUCN publications. Your contribution 
+    will be explicitly acknowledged. The survey report and digital data will only be redistributed to third parties
+    after review by and with the express consent of the African Elephant Specialist Group, and no further 
+    redistribution will be permitted. GIS survey zone boundaries may be used to improve the distribution map, 
+    and if so they would be shared, stripped of tabular attributes, under the Creative Commons BY-NC-SA license, 
+    which ensures proper attribution and non-commercial use of the data. See  
+    <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank">http://creativecommons.org/licenses/by-nc-sa/3.0/</a> for more details.

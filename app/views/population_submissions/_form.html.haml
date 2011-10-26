@@ -2,7 +2,7 @@
   = render "shared/error_messages", :target => @population_submission
   - f.inputs do
     = f.input :submission_id, :as => :hidden, :value => params[:submission_id]
-    = f.input :data_licensing, :as => :radio, :collection => ["CC NC-BY-SA license", "Embargoed until (give date)", "No redistribution"]
+    = f.input :data_licensing, :as => :radio, :collection => {raw(t("creative_commons")) => "Creative Commons", raw(t("embargoed_until")) => "Embargoed Until", raw(t("controlled_redistribution")) => "Controlled redistribution"}
     = f.input :embargo_date, :as => :date
     = f.input :site_name
     = f.input :designate
