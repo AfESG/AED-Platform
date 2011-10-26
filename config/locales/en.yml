@@ -93,6 +93,8 @@ en:
         fenced_site: "Is the site fenced? Is there a possiblity of elephants entering or leaving the site?"
       survey_other:
         other_method_description: "Give a short description of the method used to arrive at the estimate"
+        population_estimate_min: "Population estimate - minimum"
+        population_estimate_max: "Population estimate - maximum"
       survey_submission:
         data_licensing: "Data licensing options"
         site_name: "Area/Site Name"
@@ -138,7 +140,7 @@ en:
         precision:
         man_hours: "Where each independent survey team is counted as one \"man\""
       population_submission:
-        designate: "(eg. national park, wildlife reserve etc)"
+        designate: "(e.g. National Park, Wildlife Reserve, etc.)"
       data_request_form:
         email:
           Enter your own email address, or the email address of an appropriate
@@ -217,7 +219,7 @@ en:
       title: "Dung Count (Line Transects)"
     edit:
       title: "Edit Dung Count (Line Transects)"
-  survey_dung_count_blocks:
+  survey_dung_count_line_transect_strata:
     new:
       title: "New Dung Count (Line Transects) Stratum/Block"
     show:
