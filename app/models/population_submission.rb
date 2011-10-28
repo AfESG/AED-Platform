@@ -1,4 +1,12 @@
 class PopulationSubmission < ActiveRecord::Base
+  validates_presence_of :data_licensing
+  validates_presence_of :site_name
+  validates_presence_of :designate
+  validates_presence_of :area
+  validates_presence_of :completion_year
+  validates_presence_of :completion_month
+  validates_presence_of :season
+  validates_presence_of :survey_type
 
   belongs_to :submission
 

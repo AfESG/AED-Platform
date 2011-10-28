@@ -1,4 +1,7 @@
 class Submission < ActiveRecord::Base
+  validates_presence_of :species
+  validates_presence_of :country
+  validates_presence_of :data_type
 
   belongs_to :user
 
