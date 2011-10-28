@@ -9,7 +9,7 @@
   %body
     #page
       %a{:href=>'/'}
-        %img.logo{:src=>'/assets/elephant-database-logo.png',:alt=>'Elephant Database'}
+        = image_tag 'elephant-database-logo.png', :alt=>'Elephant Database'
       .strapline
         The most comprehensive data on elephant population and range worldwide.
       - if user_signed_in?
