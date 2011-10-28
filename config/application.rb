@@ -45,7 +45,7 @@ module Aaed
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
-    # Compatibility with Heroku; templates cannot see application objects
-    config.assets.initialize_on_precompile = false
+    # Settings for static assets
+    config.static_cache_control = "public, max-age=3600"
   end
 end
