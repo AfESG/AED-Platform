@@ -245,6 +245,7 @@ order by "CCODE", survey_zone;
 
 create or replace view aed2002.elephant_estimates_by_country as
 select distinct
+  "INPCODE",
   "CCODE" ccode,
   "OBJECTID",
   '-' as "ReasonForChange",
@@ -265,6 +266,8 @@ select distinct
   "REFERENCE",
   '-' as "PFS",
   ROUND("AREA_SQKM") "AREA_SQKM",
+  "LON" numeric_lon,
+  "LAT" numeric_lat,
   CASE WHEN "LON"<0 THEN
     to_char(abs("LON"),'999D9')||'W'
   WHEN "LON"=0 THEN

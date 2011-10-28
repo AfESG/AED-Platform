@@ -1,6 +1,6 @@
 = semantic_form_for @submission do |f|
   = render "shared/error_messages", :target => @submission
-  - f.inputs do
+  = f.inputs do
     = f.input :species, :as => :select, :collection => ["African elephants", "Asian elephants"]
     = f.input :country
     = f.input :phenotype, :as => :select, :collection => ["Savanna", "Forest", "Both", "Don't know"]

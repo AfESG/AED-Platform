@@ -1,6 +1,6 @@
 = semantic_form_for @data_request_form do |f|
   = render "shared/error_messages", :target => @data_request_form
-  - f.inputs do
+  = f.inputs do
     = f.input :name
     = f.input :title
     = f.input :department

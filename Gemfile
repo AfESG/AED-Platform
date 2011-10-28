@@ -2,6 +2,15 @@ source 'http://rubygems.org'
 
 gem 'rails'
 
+# Rails 3.1 - Asset Pipeline
+group :assets do
+  gem 'sass-rails'
+  gem 'coffee-rails'
+  gem 'uglifier'
+end
+
+gem 'jquery-rails'
+
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
@@ -11,11 +20,9 @@ gem 'devise'
 
 gem 'haml'
 
-gem 'sass'
-
-gem 'flutie'
-
 gem 'formtastic'
+
+gem 'flutie', :git => 'https://github.com/thoughtbot/flutie.git'
 
 gem 'maruku'
 
@@ -44,6 +51,10 @@ gem 'rack-cache'
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
 # and rake tasks are available in development mode:
+group :test do
+  gem 'turn', :require => false
+end
+
 group :development, :test do
   gem 'ruby_parser'
   gem 'hpricot'

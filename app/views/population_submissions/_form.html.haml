@@ -1,6 +1,6 @@
 = semantic_form_for @population_submission do |f|
   = render "shared/error_messages", :target => @population_submission
-  - f.inputs do
+  = f.inputs do
     = f.input :submission_id, :as => :hidden, :value => params[:submission_id]
     = f.input :data_licensing, :as => :radio, :collection => {raw(t("creative_commons")) => "Creative Commons", raw(t("embargoed_until")) => "Embargoed Until", raw(t("controlled_redistribution")) => "Controlled redistribution"}
     = f.input :embargo_date, :as => :date

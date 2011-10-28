@@ -1,6 +1,6 @@
 = semantic_form_for @survey_dung_count_line_transect do |f|
   = render "shared/error_messages", :target => @survey_dung_count_line_transect
-  - f.inputs do
+  = f.inputs do
     = f.input :population_submission_id, :as => :hidden, :value => params[:population_submission_id]
     = f.input :surveyed_at_stratum_level, :as => :radio
     = f.input :stratum_level_data_submitted, :as => :radio
