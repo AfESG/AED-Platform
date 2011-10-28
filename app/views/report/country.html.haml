@@ -59,13 +59,13 @@ Reports
       %tr{:style => 'height: 24px;'}
         %td= row['CauseofChange']
         - ['definite','probable','possible','specul'].each do |key|
-          %td.numeric= number_with_delimiter row[key]
+          %td.numeric= signed_number row[key]
     - unless @causes_of_change_sums_by_country.nil?
       - @causes_of_change_sums_by_country.each do |row|
         %tr.totals{:style => 'height: 24px; font-weight: bold'}
           %td Totals
           - ['definite','probable','possible','specul'].each do |key|
-            %td.numeric= number_with_delimiter row[key]
+            %td.numeric= signed_number row[key]
 
 - if !@area_of_range_covered_by_country.nil? && @area_of_range_covered_by_country.num_tuples > 0
   %h2 Area of Range Covered by Each Data Category (km²)
