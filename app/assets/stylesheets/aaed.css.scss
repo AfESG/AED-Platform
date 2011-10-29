@@ -39,6 +39,30 @@ a{
   top: 70px;
   width: 73px;
 }
+.report_cover {
+  clear: left;
+}
+.report_cover img {
+  vertical-align: middle;
+  margin-right: 30px;
+  margin-bottom: 20px;
+  box-shadow: 5px 5px 5px #ccc;
+  -moz-box-shadow: 5px 5px 5px #ccc;
+  -webkit-box-shadow: 5px 5px 5px #ccc;
+  border: 1px solid #ccc;
+  padding: 5px;
+}
+.report_cover a {
+  text-decoration: none;
+  font-size: 20px;
+}
+.report_cover .more {
+  float: right;
+  width: 800px;
+}
+.report_cover .more div {
+  margin-top: 10px;
+}
 .navItem {
   display: block;
   color: #fff;

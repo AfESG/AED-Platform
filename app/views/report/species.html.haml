@@ -10,7 +10,43 @@
 
 %div{:style => 'margin-top: 20px'}
 
--['2007','2002','1998','1995'].each do |r|
-  %div
-    %a{:href=>"/report/#{@species.gsub(' ','_')}/#{r}"} #{r} African Elephant Status Report
+-['2007'].each do |r|
+  .report_cover
+    = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
+      = image_tag "aesr#{r}_cover_150w.png"
+    .more
+      = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
+        #{r} African Elephant Status Report
+      .authors Authors go here
+      .links PDF Links go here <em>use HTML if you want</em>
+
+-['2002'].each do |r|
+  .report_cover
+    = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
+      = image_tag "aesr#{r}_cover_150w.png"
+    .more
+      = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
+        #{r} African Elephant Status Report
+      .authors Authors go here
+      .links PDF Links go here <em>use HTML if you want</em>
+
+-['1998'].each do |r|
+  .report_cover
+    = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
+      = image_tag "aesr#{r}_cover_150w.png"
+    .more
+      = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
+        #{r} African Elephant Status Report
+      .authors Authors go here
+      .links PDF Links go here <em>use HTML if you want</em>
+
+-['1995'].each do |r|
+  .report_cover
+    = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
+      = image_tag "aesr#{r}_cover_150w.png"
+    .more
+      = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
+        #{r} African Elephant Status Report
+      .authors Authors go here
+      .links PDF Links go here <em>use HTML if you want</em>
 
