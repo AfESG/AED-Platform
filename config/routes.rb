@@ -50,9 +50,9 @@ Aaed::Application.routes.draw do
   resources :survey_individual_registrations
   resources :survey_others
 
-  resources :data_request_forms
-
   match 'data_request_forms/thanks' => 'data_request_forms#thanks'
+
+  resources :data_request_forms
 
   match 'about' => 'about#index'
   match 'about/darp' => 'about#darp'
