@@ -4,18 +4,20 @@
       = contributors
     .ticker_legend
       contributors
-  .ticker_item
-    .ticker_no
-      = link_to new_surveys, population_submissions_path
-    .ticker_legend
-      new surveys
+  = link_to population_submissions_path do
+    .ticker_item
+      .ticker_no
+        = new_surveys
+      .ticker_legend
+        new surveys
   .ticker_text
     - last_three_surveys.each do |population_submission|
       - unless population_submission.site_name == ''
-        = population_submission.site_name
-        = population_submission.designate
-        - unless population_submission.completion_year == ''
-          ( #{population_submission.completion_year} )
+        = link_to url_for(population_submission) do
+          = population_submission.site_name
+          = population_submission.designate
+          - unless population_submission.completion_year == ''
+            ( #{population_submission.completion_year} )
         %span ...
 
 =image_tag 'gallery.png', :class => 'gallery', :alt => 'Gallery'

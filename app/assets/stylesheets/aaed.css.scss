@@ -430,9 +430,12 @@ h1 {
   font-weight: bold;
   font-size: 24px;
 }
-.ticker_no a {
+.ticker_bar a  {
   text-decoration: none;
   color: #2b1100;
+}
+.ticker_text a {
+  color: #fff;
 }
 .ticker_legend{
   font-family: "Droid Sans";
