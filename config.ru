@@ -5,6 +5,5 @@ require 'dalli'
 require ::File.expand_path('../config/environment',  __FILE__)
 
 use Rack::Cache, :verbose => true
-use Rack::Deflater
 
 run Aaed::Application
