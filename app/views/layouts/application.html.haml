@@ -14,7 +14,7 @@
         The most comprehensive data on elephant population and range worldwide.
       - if user_signed_in?
         #myaccount= link_to t('my_account'), edit_user_registration_path
-        #logout= link_to t('log_out'), destroy_user_session_path
+        #logout= link_to t('log_out'), destroy_user_session_path, :method => :delete
       - else
         #register= link_to t('register'), new_user_registration_path
         #login= link_to t('log_in'), new_user_session_path
