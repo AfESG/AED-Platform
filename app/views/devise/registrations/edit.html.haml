@@ -1,7 +1,7 @@
 %h1 My Account
-- semantic_form_for resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put } do |f|
+= semantic_form_for resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put } do |f|
   = devise_error_messages!
-  - f.inputs do
+  = f.inputs do
     = f.input :email
     = f.input :password
     = f.input :password_confirmation
@@ -17,9 +17,9 @@
     = f.input :address_3
     = f.input :city
     = f.input :country
-  - f.buttons do
+  = f.buttons do
     = f.commit_button :update
-    
+
 %h3 Cancel my account
 %p= button_to "Cancel my account", registration_path(resource_name), :confirm => "Are you sure?", :method => :delete
 %p= link_to "Back", :back
