@@ -14,6 +14,24 @@ class ReportController < ApplicationController
     @year = params[:year]
     @continent = params[:continent]
     begin
+      @summary_totals_by_continent = ActiveRecord::Base.connection.execute <<-SQL
+        SELECT *
+        FROM aed#{@year}.summary_totals_by_continent where "CONTINENT"='#{@continent}'
+      SQL
+    rescue
+      @summary_totals_by_continent = nil
+    end
+
+    begin
+      @summary_sums_by_continent = ActiveRecord::Base.connection.execute <<-SQL
+        SELECT *
+        FROM aed#{@year}.summary_sums_by_continent where "CONTINENT"='#{@continent}'
+      SQL
+    rescue
+      @summary_sums_by_continent = nil
+    end
+
+    begin
       @regions = ActiveRecord::Base.connection.execute <<-SQL
         select distinct "REGION" from aed2007."Country" where "REGION"!='';
       SQL
@@ -27,6 +45,24 @@ class ReportController < ApplicationController
     @year = params[:year]
     @continent = params[:continent]
     @region = params[:region].gsub('_',' ')
+    begin
+      @summary_totals_by_region = ActiveRecord::Base.connection.execute <<-SQL
+        SELECT *
+        FROM aed#{@year}.summary_totals_by_region where "REGION"='#{@region}'
+      SQL
+    rescue
+      @summary_totals_by_region = nil
+    end
+
+    begin
+      @summary_sums_by_region = ActiveRecord::Base.connection.execute <<-SQL
+        SELECT *
+        FROM aed#{@year}.summary_sums_by_region where "REGION"='#{@region}'
+      SQL
+    rescue
+      @summary_sums_by_region = nil
+    end
+
     begin
       @countries = ActiveRecord::Base.connection.execute <<-SQL
         select distinct "CNTRYNAME" from aed2007."Country" where "REGION"='#{@region}' order by "CNTRYNAME";

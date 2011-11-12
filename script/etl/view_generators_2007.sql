@@ -1,16 +1,16 @@
-create or replace view aed2007.actual_dif_def as
+create or replace view aed2007.actual_dif_def_country as
 select
   aed2007."Country"."CCODE" ccode,
-  aed2007."Country"."DEFINITE"-aed2002."Country"."DEFINITE" actual_dif_def
+  aed2007."Country"."DEFINITE"-aed2002."Country"."DEFINITE" actual_dif_def_country
 from aed2007."Country" 
 join aed2002."Country" on
   aed2007."Country"."CCODE" = aed2002."Country"."CCODE"
 ;
 
-create or replace view aed2007.actual_dif_prob as
+create or replace view aed2007.actual_dif_prob_country as
 select
   aed2007."Country"."CCODE" ccode,
-  aed2007."Country"."PROBABLE"-aed2002."Country"."PROBABLE" actual_dif_prob
+  aed2007."Country"."PROBABLE"-aed2002."Country"."PROBABLE" actual_dif_prob_country
 from aed2007."Country" 
 join aed2002."Country" on
   aed2007."Country"."CCODE" = aed2002."Country"."CCODE"
@@ -25,93 +25,93 @@ join aed2002."Country" on
   aed2007."Country"."CCODE" = aed2002."Country"."CCODE"
 ;
 
-create or replace view aed2007.actual_dif_spec as
+create or replace view aed2007.actual_dif_spec_country as
 select
   aed2007."Country"."CCODE" ccode,
-  aed2007."Country"."SPECUL"-aed2002."Country"."SPECUL" actual_dif_spec
+  aed2007."Country"."SPECUL"-aed2002."Country"."SPECUL" actual_dif_spec_country
 from aed2007."Country" 
 join aed2002."Country" on
   aed2007."Country"."CCODE" = aed2002."Country"."CCODE"
 ;
 
-create or replace view aed2007.def_factor as
+create or replace view aed2007.def_factor_country as
 select 
   "CCODE" ccode,
-  actual_dif_def / CASE WHEN sum(sumofdefinite)=0 THEN 1 ELSE sum(sumofdefinite) END def_factor
+  actual_dif_def_country / CASE WHEN sum(sumofdefinite)=0 THEN 1 ELSE sum(sumofdefinite) END def_factor_country
 from aed2007.changesgrp
-join aed2007.actual_dif_def on
+join aed2007.actual_dif_def_country on
   "CCODE"=ccode
-group by "CCODE", actual_dif_def;
+group by "CCODE", actual_dif_def_country;
 
-create or replace view aed2007.prob_factor as
+create or replace view aed2007.prob_factor_country as
 select 
   "CCODE" ccode,
-  actual_dif_prob / CASE WHEN sum(sumofprobable)=0 THEN 1 ELSE sum(sumofprobable) END prob_factor
+  actual_dif_prob_country / CASE WHEN sum(sumofprobable)=0 THEN 1 ELSE sum(sumofprobable) END prob_factor_country
 from aed2007.changesgrp
-join aed2007.actual_dif_prob on
+join aed2007.actual_dif_prob_country on
   "CCODE"=ccode
-group by "CCODE", actual_dif_prob;
+group by "CCODE", actual_dif_prob_country;
 
-create or replace view aed2007.poss_factor as
+create or replace view aed2007.poss_factor_country as
 select 
   "CCODE" ccode,
-  actual_dif_poss / CASE WHEN sum(sumofpossible)=0 THEN 1 ELSE sum(sumofpossible) END poss_factor
+  actual_dif_poss / CASE WHEN sum(sumofpossible)=0 THEN 1 ELSE sum(sumofpossible) END poss_factor_country
 from aed2007.changesgrp
 join aed2007.actual_dif_poss on
   "CCODE"=ccode
 group by "CCODE", actual_dif_poss;
 
-create or replace view aed2007.spec_factor as
+create or replace view aed2007.spec_factor_country as
 select 
   "CCODE" ccode,
-  actual_dif_spec / CASE WHEN sum(sumofspecul)=0 THEN 1 ELSE sum(sumofspecul) END spec_factor
+  actual_dif_spec_country / CASE WHEN sum(sumofspecul)=0 THEN 1 ELSE sum(sumofspecul) END spec_factor_country
 from aed2007.changesgrp
-join aed2007.actual_dif_spec on
+join aed2007.actual_dif_spec_country on
   "CCODE"=ccode
-group by "CCODE", actual_dif_spec;
+group by "CCODE", actual_dif_spec_country;
 
 create or replace view aed2007.causes_of_change_by_country as
 select
   "CCODE" ccode,
   "CauseofChange",
-  round(def_factor * sum(sumofdefinite)) as definite,
-  round(prob_factor * sum(sumofprobable)) as probable,
-  round(poss_factor * sum(sumofpossible)) as possible,
-  round(spec_factor * sum(sumofspecul)) as specul
+  round(def_factor_country * sum(sumofdefinite)) as definite,
+  round(prob_factor_country * sum(sumofprobable)) as probable,
+  round(poss_factor_country * sum(sumofpossible)) as possible,
+  round(spec_factor_country * sum(sumofspecul)) as specul
 from aed2007.changesgrp
-join aed2007.def_factor on
-  "CCODE"=aed2007.def_factor.ccode
-join aed2007.prob_factor on
-  "CCODE"=aed2007.prob_factor.ccode
-join aed2007.poss_factor on
-  "CCODE"=aed2007.poss_factor.ccode
-join aed2007.spec_factor on
-  "CCODE"=aed2007.spec_factor.ccode
+join aed2007.def_factor_country on
+  "CCODE"=aed2007.def_factor_country.ccode
+join aed2007.prob_factor_country on
+  "CCODE"=aed2007.prob_factor_country.ccode
+join aed2007.poss_factor_country on
+  "CCODE"=aed2007.poss_factor_country.ccode
+join aed2007.spec_factor_country on
+  "CCODE"=aed2007.spec_factor_country.ccode
 join aed2007."CausesOfChange" on
   "ReasonForChange"="ChangeCODE"
-group by "CCODE", "CauseofChange", def_factor, prob_factor, poss_factor, spec_factor
+group by "CCODE", "CauseofChange", def_factor_country, prob_factor_country, poss_factor_country, spec_factor_country
 order by "CCODE", "CauseofChange";
 
 create or replace view aed2007.fractional_causes_of_change_by_country as
 select
   "CCODE" ccode,
   "CauseofChange",
-  def_factor * sum(sumofdefinite) as definite,
-  prob_factor * sum(sumofprobable) as probable,
-  poss_factor * sum(sumofpossible) as possible,
-  spec_factor * sum(sumofspecul) as specul
+  def_factor_country * sum(sumofdefinite) as definite,
+  prob_factor_country * sum(sumofprobable) as probable,
+  poss_factor_country * sum(sumofpossible) as possible,
+  spec_factor_country * sum(sumofspecul) as specul
 from aed2007.changesgrp
-join aed2007.def_factor on
-  "CCODE"=aed2007.def_factor.ccode
-join aed2007.prob_factor on
-  "CCODE"=aed2007.prob_factor.ccode
-join aed2007.poss_factor on
-  "CCODE"=aed2007.poss_factor.ccode
-join aed2007.spec_factor on
-  "CCODE"=aed2007.spec_factor.ccode
+join aed2007.def_factor_country on
+  "CCODE"=aed2007.def_factor_country.ccode
+join aed2007.prob_factor_country on
+  "CCODE"=aed2007.prob_factor_country.ccode
+join aed2007.poss_factor_country on
+  "CCODE"=aed2007.poss_factor_country.ccode
+join aed2007.spec_factor_country on
+  "CCODE"=aed2007.spec_factor_country.ccode
 join aed2007."CausesOfChange" on
   "ReasonForChange"="ChangeCODE"
-group by "CCODE", "CauseofChange", def_factor, prob_factor, poss_factor, spec_factor
+group by "CCODE", "CauseofChange", def_factor_country, prob_factor_country, poss_factor_country, spec_factor_country
 order by "CCODE", "CauseofChange";
 
 create or replace view aed2007.causes_of_change_sums_by_country as
@@ -125,6 +125,30 @@ from
   aed2007.fractional_causes_of_change_by_country
 group by ccode;
 
+create or replace view aed2007.summary_totals_by_continent as
+select
+  'Africa'::text "CONTINENT",
+  "CATEGORY",
+  "SURVEYTYPE",
+  ROUND("DEFINITE") "DEFINITE",
+  ROUND("PROBABLE") "PROBABLE",
+  ROUND("POSSIBLE") "POSSIBLE",
+  ROUND("SPECUL") "SPECUL"
+from aed2007."Contingrp"
+order by "CATEGORY";
+
+create or replace view aed2007.summary_totals_by_region as
+select
+  "REGION",
+  "CATEGORY",
+  "SURVEYTYPE",
+  ROUND("DEFINITE") "DEFINITE",
+  ROUND("PROBABLE") "PROBABLE",
+  ROUND("POSSIBLE") "POSSIBLE",
+  ROUND("SPECUL") "SPECUL"
+from aed2007."Regiongrp"
+order by "CATEGORY";
+
 create or replace view aed2007.summary_totals_by_country as
 select
   "CCODE" ccode,
@@ -137,17 +161,23 @@ select
 from aed2007."Countrygrp"
 order by "CATEGORY";
 
-create or replace view aed2002.summary_totals_by_country as
+create or replace view aed2007.summary_sums_by_continent as
 select
-  "CCODE" ccode,
-  "CATEGORY",
-  "SURVEYTYPE",
+  "CONTINENT",
   "DEFINITE",
   "PROBABLE",
   "POSSIBLE",
   "SPECUL"
-from aed2002."Countrygrp"
-order by "CATEGORY";
+from aed2007."Continent";
+
+create or replace view aed2007.summary_sums_by_region as
+select
+  "REGION",
+  "DEFINITE",
+  "PROBABLE",
+  "POSSIBLE",
+  "SPECUL"
+from aed2007."Regions";
 
 create or replace view aed2007.summary_sums_by_country as
 select
@@ -157,15 +187,6 @@ select
   "POSSIBLE",
   "SPECUL"
 from aed2007."Country";
-
-create or replace view aed2002.summary_sums_by_country as
-select
-  "CCODE" ccode,
-  "DEFINITE",
-  "PROBABLE",
-  "POSSIBLE",
-  "SPECUL"
-from aed2002."Country";
 
 create or replace view aed2007.area_of_range_covered_by_country as
 select
@@ -241,46 +262,4 @@ select distinct
 from aed2007."Surveydata"
 left join aed2007."ChangesTracker" on
   "OBJECTID"="CurrentOID"
-order by "CCODE", survey_zone;
-
-create or replace view aed2002.elephant_estimates_by_country as
-select distinct
-  "INPCODE",
-  "CCODE" ccode,
-  "OBJECTID",
-  '-' as "ReasonForChange",
-  CASE WHEN "DESIGNATE" IS NULL THEN
-    "SURVEYZONE"
-  ELSE
-    "SURVEYZONE" || ' ' || "DESIGNATE"
-  END as survey_zone,
-  "METHOD" || "QUALITY" method_and_quality,
-  "CATEGORY",
-  "CYEAR",
-  "ESTIMATE",
-  CASE WHEN "METHOD"='IG' THEN
-    to_char("UPRANGE",'9999999') || '*'
-  ELSE
-    to_char(ROUND("CL95"),'9999999')
-  END "CL95",
-  "REFERENCE",
-  '-' as "PFS",
-  ROUND("AREA_SQKM") "AREA_SQKM",
-  "LON" numeric_lon,
-  "LAT" numeric_lat,
-  CASE WHEN "LON"<0 THEN
-    to_char(abs("LON"),'999D9')||'W'
-  WHEN "LON"=0 THEN
-    '0.0'
-  ELSE
-    to_char(abs("LON"),'999D9')||'E'
-  END "LON",
-  CASE WHEN "LAT"<0 THEN
-    to_char(abs("LAT"),'990D9')||'S'
-  WHEN "LAT"=0 THEN
-    '0.0'
-  ELSE
-    to_char(abs("LAT"),'990D9')||'N'
-  END "LAT"
-from aed2002."Surveydata"
 order by "CCODE", survey_zone;
