@@ -1,4 +1,4 @@
-DROP VIEW aed2007.changesgrp;
+DROP VIEW IF EXISTS aed2007.changesgrp CASCADE;
 CREATE VIEW aed2007.changesgrp AS
 
 SELECT * FROM (
@@ -326,3 +326,29 @@ HAVING
 ) as a
 
 ORDER BY "CCODE", "CATEGORY", "ReasonForChange";
+
+DROP VIEW IF EXISTS aed2007."ChangesInterpreter";
+create or replace view aed2007."ChangesInterpreter" as
+select
+  aed2007."Regions"."REGION",
+  aed2007."Country"."CNTRYNAME",
+  aed2007."CausesOfChange"."CauseofChange",
+  sum(aed2007.changesgrp.sumofdefinite) "DIFDEF",
+  sum(aed2007.changesgrp.sumofprobable) "DIFPROB",
+  sum(aed2007.changesgrp.sumofpossible) "DIFPOSS",
+  sum(aed2007.changesgrp.sumofspecul) "DIFSPEC"
+from
+  aed2007."CausesOfChange"
+  join ((aed2007."Regions" join aed2007."Country" on aed2007."Regions"."REGIONID" = aed2007."Country"."REGIONID")
+    join aed2007.changesgrp on aed2007."Country"."CCODE"=aed2007.changesgrp."CCODE")
+    on aed2007."CausesOfChange"."ChangeCODE"=aed2007.changesgrp."ReasonForChange"
+where
+  aed2007."CausesOfChange"."ChangeCODE"!='nc'
+group by
+  aed2007."Regions"."REGION",
+  aed2007."Country"."CNTRYNAME",
+  aed2007."CausesOfChange"."CauseofChange"
+order by
+  aed2007."Regions"."REGION",
+  aed2007."Country"."CNTRYNAME";
+

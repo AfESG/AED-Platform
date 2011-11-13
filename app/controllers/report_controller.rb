@@ -32,6 +32,21 @@ class ReportController < ApplicationController
     end
 
     begin
+      @area_of_range_covered_by_continent = ActiveRecord::Base.connection.execute <<-SQL
+        SELECT *
+        FROM aed#{@year}.area_of_range_covered_by_continent where "CONTINENT"='#{@continent}'
+      SQL
+
+      @area_of_range_covered_sum_by_continent = ActiveRecord::Base.connection.execute <<-SQL
+        SELECT *
+        FROM aed#{@year}.area_of_range_covered_sum_by_continent where "CONTINENT"='#{@continent}'
+      SQL
+    rescue
+      @area_of_range_covered_by_continent = nil
+      @area_of_range_covered_sum_by_continent = nil
+    end
+
+    begin
       @regions = ActiveRecord::Base.connection.execute <<-SQL
         select distinct "REGION" from aed2007."Country" where "REGION"!='';
       SQL
@@ -61,6 +76,39 @@ class ReportController < ApplicationController
       SQL
     rescue
       @summary_sums_by_region = nil
+    end
+
+    begin
+      @causes_of_change_by_region = ActiveRecord::Base.connection.execute <<-SQL
+        SELECT *
+        FROM aed#{@year}.causes_of_change_by_region where "REGION"='#{@region}'
+      SQL
+    rescue
+      @causes_of_change_by_region = nil
+    end
+
+    begin
+      @causes_of_change_sums_by_region = ActiveRecord::Base.connection.execute <<-SQL
+        SELECT *
+        FROM aed#{@year}.causes_of_change_sums_by_region where "REGION"='#{@region}'
+      SQL
+    rescue
+      @causes_of_change_sums_by_region = nil
+    end
+
+    begin
+      @area_of_range_covered_by_region = ActiveRecord::Base.connection.execute <<-SQL
+        SELECT *
+        FROM aed#{@year}.area_of_range_covered_by_region where "REGION"='#{@region}'
+      SQL
+
+      @area_of_range_covered_sum_by_region = ActiveRecord::Base.connection.execute <<-SQL
+        SELECT *
+        FROM aed#{@year}.area_of_range_covered_sum_by_region where "REGION"='#{@region}'
+      SQL
+    rescue
+      @area_of_range_covered_by_region = nil
+      @area_of_range_covered_sum_by_region = nil
     end
 
     begin
