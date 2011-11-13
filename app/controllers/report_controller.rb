@@ -32,6 +32,24 @@ class ReportController < ApplicationController
     end
 
     begin
+      @causes_of_change_by_continent = ActiveRecord::Base.connection.execute <<-SQL
+        SELECT *
+        FROM aed#{@year}.causes_of_change_by_continent where "CONTINENT"='#{@continent}'
+      SQL
+    rescue
+      @causes_of_change_by_continent = nil
+    end
+
+    begin
+      @causes_of_change_sums_by_continent = ActiveRecord::Base.connection.execute <<-SQL
+        SELECT *
+        FROM aed#{@year}.causes_of_change_sums_by_continent where "CONTINENT"='#{@continent}'
+      SQL
+    rescue
+      @causes_of_change_sums_by_continent = nil
+    end
+
+    begin
       @area_of_range_covered_by_continent = ActiveRecord::Base.connection.execute <<-SQL
         SELECT *
         FROM aed#{@year}.area_of_range_covered_by_continent where "CONTINENT"='#{@continent}'

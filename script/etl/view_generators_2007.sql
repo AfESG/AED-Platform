@@ -1,3 +1,5 @@
+-- Continental Change interpreters
+
 create or replace view aed2007.actual_diff_continent as
 select
   a."CONTINENT",
@@ -9,6 +11,55 @@ from aed2007."Continent" a
 join (select 'Africa'::text "CONTINENT",aed2002."Continent".* from aed2002."Continent") o on
   a."CONTINENT" = o."CONTINENT"
 ;
+
+create or replace view aed2007.factor_continent as
+select
+  a."CONTINENT",
+  actual_dif_def / CASE WHEN sum("DIFDEF")=0 THEN 1 ELSE sum("DIFDEF") END def_factor,
+  actual_dif_prob / CASE WHEN sum("DIFPROB")=0 THEN 1 ELSE sum("DIFPROB") END prob_factor,
+  actual_dif_poss / CASE WHEN sum("DIFPOSS")=0 THEN 1 ELSE sum("DIFPOSS") END poss_factor,
+  actual_dif_spec / CASE WHEN sum("DIFSPEC")=0 THEN 1 ELSE sum("DIFSPEC") END spec_factor
+from aed2007."ChangesInterpreter" i,
+  aed2007.actual_diff_continent a
+group by a."CONTINENT",
+  actual_dif_def,
+  actual_dif_prob,
+  actual_dif_poss,
+  actual_dif_spec;
+
+create or replace view aed2007.fractional_causes_of_change_by_continent as
+select
+  f."CONTINENT",
+  "CauseofChange",
+  def_factor * sum("DIFDEF") as definite,
+  prob_factor * sum("DIFPROB") as probable,
+  poss_factor * sum("DIFPOSS") as possible,
+  spec_factor * sum("DIFSPEC") as specul
+from aed2007."ChangesInterpreter" i,
+  aed2007.factor_continent f
+group by f."CONTINENT", "CauseofChange", def_factor, prob_factor, poss_factor, spec_factor
+order by f."CONTINENT", "CauseofChange";
+
+create or replace view aed2007.causes_of_change_by_continent as
+select
+  "CONTINENT",
+  "CauseofChange",
+  round(definite) definite,
+  round(probable) probable,
+  round(possible) possible,
+  round(specul) specul
+from aed2007.fractional_causes_of_change_by_continent;
+
+create or replace view aed2007.causes_of_change_sums_by_continent as
+select
+  "CONTINENT",
+  round(sum(definite)) definite,
+  round(sum(probable)) probable,
+  round(sum(possible)) possible,
+  round(sum(specul)) specul
+from
+  aed2007.fractional_causes_of_change_by_continent
+group by "CONTINENT";
 
 
 -- Regional Change interpreters
