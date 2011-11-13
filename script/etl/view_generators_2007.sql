@@ -264,24 +264,26 @@ from aed2007."Country";
 
 -- Area of range
 
-create or replace view aed2007.area_of_range_covered_by_country as
+create or replace view aed2007.fractional_area_of_range_covered_by_country as
 select
+  'Africa'::text "CONTINENT",
   t1.ccode,
+  t1."REGION",
   t1.surveytype,
   t1.known,
   t2.possible,
   t3.total
 from
 
-(select aed2007."Country"."CCODE" ccode,
+(select aed2007."Country"."CCODE" ccode, aed2007."Country"."REGION",
 CASE WHEN "SURVEYTYPE" is null THEN 'Unassessed Range' ELSE "SURVEYTYPE" END
-as surveytype, ROUND(SUM("SurvRang"."Shape_Area")) as known from aed2007."SurvRang" join aed2007."Country" on "CNTRYNAME_1"=aed2007."Country"."CNTRYNAME" and "Range"=1 and "RangeQuality"='Known' group by aed2007."Country"."CCODE","SURVEYTYPE" order by aed2007."Country"."CCODE","SURVEYTYPE") t1
+as surveytype, SUM("SurvRang"."Shape_Area") as known from aed2007."SurvRang" join aed2007."Country" on "CNTRYNAME_1"=aed2007."Country"."CNTRYNAME" and "Range"=1 and "RangeQuality"='Known' group by aed2007."Country"."CCODE",aed2007."Country"."REGION","SURVEYTYPE" order by aed2007."Country"."CCODE","SURVEYTYPE") t1
 
 left join
 
 (select aed2007."Country"."CCODE" ccode,
 CASE WHEN "SURVEYTYPE" is null THEN 'Unassessed Range' ELSE "SURVEYTYPE" END
-as surveytype, ROUND(SUM("SurvRang"."Shape_Area")) as possible from aed2007."SurvRang" join aed2007."Country" on "CNTRYNAME_1"=aed2007."Country"."CNTRYNAME" and "Range"=1 and "RangeQuality"='Possible' group by aed2007."Country"."CCODE","SURVEYTYPE" order by aed2007."Country"."CCODE","SURVEYTYPE") t2
+as surveytype, SUM("SurvRang"."Shape_Area") as possible from aed2007."SurvRang" join aed2007."Country" on "CNTRYNAME_1"=aed2007."Country"."CNTRYNAME" and "Range"=1 and "RangeQuality"='Possible' group by aed2007."Country"."CCODE","SURVEYTYPE" order by aed2007."Country"."CCODE","SURVEYTYPE") t2
 
 on t1.surveytype = t2.surveytype and t1.ccode = t2.ccode
 
@@ -289,24 +291,73 @@ left join
 
 (select aed2007."Country"."CCODE" ccode,
 CASE WHEN "SURVEYTYPE" is null THEN 'Unassessed Range' ELSE "SURVEYTYPE" END
-as surveytype, ROUND(SUM("SurvRang"."Shape_Area")) as total from aed2007."SurvRang" join aed2007."Country" on "CNTRYNAME_1"=aed2007."Country"."CNTRYNAME" and "Range"=1 group by aed2007."Country"."CCODE","SURVEYTYPE" order by aed2007."Country"."CCODE","SURVEYTYPE") t3
+as surveytype, SUM("SurvRang"."Shape_Area") as total from aed2007."SurvRang" join aed2007."Country" on "CNTRYNAME_1"=aed2007."Country"."CNTRYNAME" and "Range"=1 group by aed2007."Country"."CCODE","SURVEYTYPE" order by aed2007."Country"."CCODE","SURVEYTYPE") t3
 
 on t1.surveytype = t3.surveytype and t1.ccode = t3.ccode;
 
+create or replace view aed2007.area_of_range_covered_by_country as
+select
+  ccode,
+  surveytype,
+  round(known) known,
+  round(possible) possible,
+  round(total) total
+from aed2007.fractional_area_of_range_covered_by_country;
+
 create or replace view aed2007.area_of_range_covered_sum_by_country as
-select ccode, sum(known) known, sum(possible) possible, sum(total) total from aed2007.area_of_range_covered_by_country group by ccode order by ccode;
+select ccode, round(sum(known)) known, round(sum(possible)) possible, round(sum(total)) total from aed2007.fractional_area_of_range_covered_by_country group by ccode order by ccode;
 
 create or replace view aed2007.area_of_range_covered_by_region as
-select c."REGION", v.surveytype, sum(v.known) known, sum(v.possible) possible, sum(v.total) total from aed2007."Country" c join aed2007.area_of_range_covered_by_country v on c."CCODE"=v.ccode group by c."REGION", v.surveytype order by c."REGION", v.surveytype;
+select c."REGION", v.surveytype, round(sum(v.known)) known, round(sum(v.possible)) possible, round(sum(v.total)) total from aed2007."Country" c join aed2007.fractional_area_of_range_covered_by_country v on c."CCODE"=v.ccode group by c."REGION", v.surveytype order by c."REGION", v.surveytype;
 
 create or replace view aed2007.area_of_range_covered_sum_by_region as
-select "REGION", sum(known) known, sum(possible) possible, sum(total) total from aed2007.area_of_range_covered_by_region group by "REGION" order by "REGION";
+select "REGION", round(sum(known)) known, round(sum(possible)) possible, round(sum(total)) total from aed2007.fractional_area_of_range_covered_by_country group by "REGION" order by "REGION";
 
 create or replace view aed2007.area_of_range_covered_by_continent as
-select 'Africa'::text "CONTINENT", v.surveytype, sum(v.known) known, sum(v.possible) possible, sum(v.total) total from aed2007.area_of_range_covered_by_country v group by v.surveytype order by v.surveytype;
+select "CONTINENT", v.surveytype, round(sum(v.known)) known, round(sum(v.possible)) possible, round(sum(v.total)) total from aed2007.fractional_area_of_range_covered_by_country v group by "CONTINENT", v.surveytype order by v.surveytype;
 
 create or replace view aed2007.area_of_range_covered_sum_by_continent as
-select "CONTINENT", sum(known) known, sum(possible) possible, sum(total) total from aed2007.area_of_range_covered_by_continent group by "CONTINENT" order by "CONTINENT";
+select "CONTINENT", round(sum(known)) known, round(sum(possible)) possible, round(sum(total)) total from aed2007.fractional_area_of_range_covered_by_country group by "CONTINENT" order by "CONTINENT";
+
+
+-- Totals and Data Quality
+
+create or replace view aed2007.continental_and_regional_totals_and_data_quality as
+select
+  "CONTINENT",
+  "REGION",
+  "DEFINITE",
+  "POSSIBLE",
+  "PROBABLE",
+  "SPECUL",
+  "RANGEAREA",
+  round(("RANGEAREA"::float/continental_rangearea::float)*100) "RANGEPERC",
+  round("SURVRANGPERC"*100) "SURVRANGPERC",
+  to_char("INFQLTYIDX",'999999D99') "INFQLTYIDX",
+  round(ln(("INFQLTYIDX"+1)/("RANGEAREA"::float/continental_rangearea::float))) "PFS"
+from
+  aed2007."Regions" r,
+  (select "RANGEAREA" continental_rangearea from aed2007."Continent") c
+order by "REGION";
+
+create or replace view aed2007.country_and_regional_totals_and_data_quality as
+select
+  c."REGION",
+  "CNTRYNAME",
+  c."DEFINITE",
+  c."POSSIBLE",
+  c."PROBABLE",
+  c."SPECUL",
+  c."RANGEAREA",
+  round((c."RANGEAREA"::float/r."RANGEAREA"::float)*100) "RANGEPERC",
+  round(c."SURVRANGPERC"*100) "SURVRANGPERC",
+  to_char(c."INFQLTYIDX",'999999D99') "INFQLTYIDX",
+  round(log((c."INFQLTYIDX"::float+1)::float/(c."RANGEAREA"::float/continental_rangearea::float))) "PFS"
+from
+  (select "RANGEAREA" continental_rangearea from aed2007."Continent") a,
+  aed2007."Country" c join
+  aed2007."Regions" r on c."REGION"=r."REGION"
+order by c."REGION","CNTRYNAME";
 
 
 -- Elephant Estimates by Country

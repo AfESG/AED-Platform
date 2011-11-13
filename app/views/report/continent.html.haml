@@ -81,8 +81,25 @@
         - ['known','possible','total'].each do |key|
           %td.numeric= number_with_delimiter row[key]
 
--unless @regions.nil?
-  -@regions.each do |row|
-    %div
-      %a{:href=>"/report/#{@species.gsub(' ','_')}/#{@year}/#{@continent}/#{row['REGION'].gsub(' ','_')}"} #{row['REGION']}
+- if !@regions.nil? && @regions.num_tuples > 0
+  %h2 Continental and Regional Totals and Data Quality
+  %table{:style => 'font-size:16px'}
+    %tr
+      %th Region
+      %th.numeric Definite
+      %th.numeric Possible
+      %th.numeric Probable
+      %th.numeric Speculative
+      %th.numeric Range Area (km²)
+      %th.numeric % of Continental Range
+      %th.numeric % of Range Assessed
+      %th.numeric IQI
+      %th.numeric PFS
+    - @regions.each do |row|
+      - unless row['RANGEAREA'].nil?
+        %tr{:style => 'height: 24px;'}
+          %td
+            %a{:href=>"/report/#{@species.gsub(' ','_')}/#{@year}/#{@continent}/#{row['REGION'].gsub(' ','_')}"} #{row['REGION']}
+          - ['DEFINITE','POSSIBLE','PROBABLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX','PFS'].each do |key|
+            %td.numeric= number_with_delimiter row[key]
 

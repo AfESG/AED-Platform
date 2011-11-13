@@ -85,9 +85,25 @@
         - ['known','possible','total'].each do |key|
           %td.numeric= number_with_delimiter row[key]
 
--unless @countries.nil?
-  -@countries.each do |row|
-    %div
-      %a{:href=>"#{@region.gsub(' ','_')}/#{row['CNTRYNAME'].gsub(' ','_')}"} #{row['CNTRYNAME']}
-
+- if !@countries.nil? && @countries.num_tuples > 0
+  %h2 Country and Regional Totals and Data Quality
+  %table{:style => 'font-size:16px'}
+    %tr
+      %th Country
+      %th.numeric Definite
+      %th.numeric Possible
+      %th.numeric Probable
+      %th.numeric Speculative
+      %th.numeric Range Area (km²)
+      %th.numeric % of Regional Range
+      %th.numeric % of Range Assessed
+      %th.numeric IQI
+      %th.numeric PFS
+    - @countries.each do |row|
+      - unless row['RANGEAREA'].nil?
+        %tr{:style => 'height: 24px;'}
+          %td
+            %a{:href=>"#{@region.gsub(' ','_')}/#{row['CNTRYNAME'].gsub(' ','_')}"} #{row['CNTRYNAME']}
+          - ['DEFINITE','POSSIBLE','PROBABLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX','PFS'].each do |key|
+            %td.numeric= number_with_delimiter row[key]
 

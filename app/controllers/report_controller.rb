@@ -66,11 +66,13 @@ class ReportController < ApplicationController
 
     begin
       @regions = ActiveRecord::Base.connection.execute <<-SQL
-        select distinct "REGION" from aed2007."Country" where "REGION"!='';
+        SELECT *
+        FROM aed#{@year}.continental_and_regional_totals_and_data_quality where "CONTINENT"='#{@continent}';
       SQL
     rescue
       @regions = nil
     end
+
   end
 
   def region
@@ -131,7 +133,8 @@ class ReportController < ApplicationController
 
     begin
       @countries = ActiveRecord::Base.connection.execute <<-SQL
-        select distinct "CNTRYNAME" from aed2007."Country" where "REGION"='#{@region}' order by "CNTRYNAME";
+        SELECT *
+        FROM aed#{@year}.country_and_regional_totals_and_data_quality where "REGION"='#{@region}';
       SQL
     rescue
       @countries = nil
