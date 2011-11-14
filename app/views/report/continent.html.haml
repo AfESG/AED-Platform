@@ -102,4 +102,9 @@
             %a{:href=>"/report/#{@species.gsub(' ','_')}/#{@year}/#{@continent}/#{row['REGION'].gsub(' ','_')}"} #{row['REGION']}
           - ['DEFINITE','POSSIBLE','PROBABLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX','PFS'].each do |key|
             %td.numeric= number_with_delimiter row[key]
-
+    - @regions_sum.each do |row|
+      %tr.totals{:style => 'height: 24px; font-weight: bold'}
+        %td Totals
+        - ['DEFINITE','POSSIBLE','PROBABLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX'].each do |key|
+          %td.numeric= number_with_delimiter row[key]
+        %td

@@ -340,6 +340,21 @@ from
   (select "RANGEAREA" continental_rangearea from aed2007."Continent") c
 order by "REGION";
 
+create or replace view aed2007.continental_and_regional_totals_and_data_quality_sum as
+select
+  "CONTINENT",
+  "DEFINITE",
+  "POSSIBLE",
+  "PROBABLE",
+  "SPECUL",
+  "RANGEAREA",
+  100 "RANGEPERC",
+  round("SURVRANGPERC"*100) "SURVRANGPERC",
+  to_char("INFQLTYIDX",'999999D99') "INFQLTYIDX"
+from
+  aed2007."Continent" r
+order by "CONTINENT";
+
 create or replace view aed2007.country_and_regional_totals_and_data_quality as
 select
   c."REGION",
@@ -359,6 +374,22 @@ from
   aed2007."Regions" r on c."REGION"=r."REGION"
 order by c."REGION","CNTRYNAME";
 
+create or replace view aed2007.country_and_regional_totals_and_data_quality_sum as
+select
+  c."REGION",
+  c."DEFINITE",
+  c."POSSIBLE",
+  c."PROBABLE",
+  c."SPECUL",
+  c."RANGEAREA",
+  round((c."RANGEAREA"::float/continental_rangearea::float)*100) "RANGEPERC",
+  round(c."SURVRANGPERC"*100) "SURVRANGPERC",
+  to_char(c."INFQLTYIDX",'999999D99') "INFQLTYIDX",
+  round(log((c."INFQLTYIDX"::float+1)::float/(c."RANGEAREA"::float/continental_rangearea::float))) "PFS"
+from
+  (select "RANGEAREA" continental_rangearea from aed2007."Continent") a,
+  aed2007."Regions" c
+order by c."REGION";
 
 -- Elephant Estimates by Country
 

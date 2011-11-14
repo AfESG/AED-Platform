@@ -106,4 +106,9 @@
             %a{:href=>"#{@region.gsub(' ','_')}/#{row['CNTRYNAME'].gsub(' ','_')}"} #{row['CNTRYNAME']}
           - ['DEFINITE','POSSIBLE','PROBABLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX','PFS'].each do |key|
             %td.numeric= number_with_delimiter row[key]
+    - @countries_sum.each do |row|
+      %tr.totals{:style => 'height: 24px; font-weight: bold'}
+        %td Totals
+        - ['DEFINITE','POSSIBLE','PROBABLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX','PFS'].each do |key|
+          %td.numeric= number_with_delimiter row[key]
 

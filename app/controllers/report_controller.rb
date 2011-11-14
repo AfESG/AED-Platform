@@ -73,6 +73,15 @@ class ReportController < ApplicationController
       @regions = nil
     end
 
+    begin
+      @regions_sum = ActiveRecord::Base.connection.execute <<-SQL
+        SELECT *
+        FROM aed#{@year}.continental_and_regional_totals_and_data_quality_sum where "CONTINENT"='#{@continent}';
+      SQL
+    rescue
+      @regions_sum = nil
+    end
+
   end
 
   def region
@@ -139,6 +148,15 @@ class ReportController < ApplicationController
     rescue
       @countries = nil
     end
+
+    begin
+      @countries_sum = ActiveRecord::Base.connection.execute <<-SQL
+        SELECT *
+        FROM aed#{@year}.country_and_regional_totals_and_data_quality_sum where "REGION"='#{@region}';
+      SQL
+    rescue
+      @countries_sum = nil
+    end
   end
 
   def country
@@ -151,7 +169,7 @@ class ReportController < ApplicationController
     begin
       ccodes = ActiveRecord::Base.connection.execute <<-SQL
         SELECT "CCODE"
-        FROM aed#{@year}."Country" where "CNTRYNAME"='#{@country}'
+        FROM aed#{@year}."Country" where "CNTRYNAME"='#{@country.force_encoding('UTF-8')}'
       SQL
       @ccode = ccodes[0]['CCODE']
     rescue
