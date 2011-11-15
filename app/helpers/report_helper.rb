@@ -15,4 +15,12 @@ module ReportHelper
     end
   end
 
+  def number_or_zero(n)
+    if n.nil?
+      '0'
+    else
+      "#{number_with_delimiter n}"
+    end
+  end
+
 end

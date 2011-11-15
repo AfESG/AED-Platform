@@ -74,12 +74,12 @@
       %tr{:style => 'height: 24px;'}
         %td= number_with_delimiter row['surveytype']
         - ['known','possible','total'].each do |key|
-          %td.numeric= number_with_delimiter row[key]
+          %td.numeric= number_or_zero row[key]
     - @area_of_range_covered_sum_by_continent.each do |row|
       %tr.totals{:style => 'height: 24px; font-weight: bold'}
         %td Totals
         - ['known','possible','total'].each do |key|
-          %td.numeric= number_with_delimiter row[key]
+          %td.numeric= number_or_zero row[key]
 
 - if !@regions.nil? && @regions.num_tuples > 0
   %h2 Continental and Regional Totals and Data Quality
