@@ -51,8 +51,8 @@
     %tr
       %th{:width => '40%'} Cause of Change
       %th.numeric{:width => '15%'} Definite
-      %th.numeric{:width => '15%'} Possible
       %th.numeric{:width => '15%'} Probable
+      %th.numeric{:width => '15%'} Possible
       %th.numeric{:width => '15%'} Speculative
     - @causes_of_change_by_region.each do |row|
       %tr{:style => 'height: 24px;'}
@@ -91,8 +91,8 @@
     %tr
       %th Country
       %th.numeric Definite
-      %th.numeric Possible
       %th.numeric Probable
+      %th.numeric Possible
       %th.numeric Speculative
       %th.numeric Range Area (km²)
       %th.numeric % of Regional Range
@@ -104,11 +104,11 @@
         %tr{:style => 'height: 24px;'}
           %td
             %a{:href=>"#{@region.gsub(' ','_')}/#{row['CNTRYNAME'].gsub(' ','_')}"} #{row['CNTRYNAME']}
-          - ['DEFINITE','POSSIBLE','PROBABLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX','PFS'].each do |key|
+          - ['DEFINITE','PROBABLE','POSSIBLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX','PFS'].each do |key|
             %td.numeric= number_with_delimiter row[key]
     - @countries_sum.each do |row|
       %tr.totals{:style => 'height: 24px; font-weight: bold'}
         %td Totals
-        - ['DEFINITE','POSSIBLE','PROBABLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX','PFS'].each do |key|
+        - ['DEFINITE','PROBABLE','POSSIBLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX','PFS'].each do |key|
           %td.numeric= number_with_delimiter row[key]
 
