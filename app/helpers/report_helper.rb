@@ -1,6 +1,7 @@
 module ReportHelper
 
-  def signed_number(number)
+  def signed_number(n)
+    number = n.to_i
     if number.nil? or number == 0
       '0'
     elsif number.to_i>0
