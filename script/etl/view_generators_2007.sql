@@ -270,14 +270,14 @@ select
   t1.ccode,
   t1."REGION",
   t1.surveytype,
-  t1.known,
+  t3.known,
   t2.possible,
-  t3.total
+  t1.total
 from
 
 (select aed2007."Country"."CCODE" ccode, aed2007."Country"."REGION",
 CASE WHEN "SURVEYTYPE" is null THEN 'Unassessed Range' ELSE "SURVEYTYPE" END
-as surveytype, SUM("SurvRang"."Shape_Area") as known from aed2007."SurvRang" join aed2007."Country" on "CNTRYNAME_1"=aed2007."Country"."CNTRYNAME" and "Range"=1 and "RangeQuality"='Known' group by aed2007."Country"."CCODE",aed2007."Country"."REGION","SURVEYTYPE" order by aed2007."Country"."CCODE","SURVEYTYPE") t1
+as surveytype, SUM("SurvRang"."Shape_Area") as total from aed2007."SurvRang" join aed2007."Country" on "CNTRYNAME_1"=aed2007."Country"."CNTRYNAME" and "Range"=1 group by aed2007."Country"."CCODE",aed2007."Country"."REGION","SURVEYTYPE" order by aed2007."Country"."CCODE","SURVEYTYPE") t1
 
 left join
 
@@ -291,7 +291,7 @@ left join
 
 (select aed2007."Country"."CCODE" ccode,
 CASE WHEN "SURVEYTYPE" is null THEN 'Unassessed Range' ELSE "SURVEYTYPE" END
-as surveytype, SUM("SurvRang"."Shape_Area") as total from aed2007."SurvRang" join aed2007."Country" on "CNTRYNAME_1"=aed2007."Country"."CNTRYNAME" and "Range"=1 group by aed2007."Country"."CCODE","SURVEYTYPE" order by aed2007."Country"."CCODE","SURVEYTYPE") t3
+as surveytype, SUM("SurvRang"."Shape_Area") as known from aed2007."SurvRang" join aed2007."Country" on "CNTRYNAME_1"=aed2007."Country"."CNTRYNAME" and "Range"=1 and "RangeQuality"='Known' group by aed2007."Country"."CCODE","SURVEYTYPE" order by aed2007."Country"."CCODE","SURVEYTYPE") t3
 
 on t1.surveytype = t3.surveytype and t1.ccode = t3.ccode;
 
