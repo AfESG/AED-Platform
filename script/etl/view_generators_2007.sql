@@ -400,7 +400,11 @@ select distinct
   "INPCODE",
   "CCODE" ccode,
   "OBJECTID",
-  "ReasonForChange",
+  CASE WHEN "ReasonForChange"='NC' THEN
+    '-'
+  ELSE
+    "ReasonForChange"
+  END as "ReasonForChange",
   CASE WHEN "DESIGNATE" IS NULL THEN
     "SURVEYZONE"
   ELSE
