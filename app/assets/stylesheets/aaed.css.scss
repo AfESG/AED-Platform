@@ -249,6 +249,10 @@ fieldset {
 form {
   padding: none;
 }
+
+.required label {
+  font-weight: normal;
+}
 /**<!-- SURVEY INFORMATION -->**/
 
 div.survey_results {
