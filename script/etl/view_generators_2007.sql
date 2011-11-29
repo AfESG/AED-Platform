@@ -408,7 +408,7 @@ select distinct
   "CATEGORY",
   "CYEAR",
   "ESTIMATE",
-  CASE WHEN "METHOD"='IG' THEN
+  CASE WHEN "CL95" is NULL THEN
     to_char("UPRANGE",'9999999') || '*'
   ELSE
     to_char(ROUND("CL95"),'9999999')
