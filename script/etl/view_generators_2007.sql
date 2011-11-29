@@ -1,3 +1,16 @@
+-- Store preferred display order
+
+alter table aed2007."CausesOfChange" add column display_order int;
+update aed2007."CausesOfChange" set display_order=1 where "ChangeCODE"='RS';
+update aed2007."CausesOfChange" set display_order=2 where "ChangeCODE"='NP';
+update aed2007."CausesOfChange" set display_order=3 where "ChangeCODE"='DT';
+update aed2007."CausesOfChange" set display_order=4 where "ChangeCODE"='DA';
+update aed2007."CausesOfChange" set display_order=5 where "ChangeCODE"='NG';
+update aed2007."CausesOfChange" set display_order=6 where "ChangeCODE"='NA';
+update aed2007."CausesOfChange" set display_order=7 where "ChangeCODE"='PL';
+update aed2007."CausesOfChange" set display_order=8 where "ChangeCODE"='DD';
+
+
 -- Continental Change interpreters
 
 create or replace view aed2007.actual_diff_continent as
@@ -37,8 +50,8 @@ select
   spec_factor * sum("DIFSPEC") as specul
 from aed2007."ChangesInterpreter" i,
   aed2007.factor_continent f
-group by f."CONTINENT", "CauseofChange", def_factor, prob_factor, poss_factor, spec_factor
-order by f."CONTINENT", "CauseofChange";
+group by f."CONTINENT", display_order, "CauseofChange", def_factor, prob_factor, poss_factor, spec_factor
+order by f."CONTINENT", display_order;
 
 create or replace view aed2007.causes_of_change_by_continent as
 select
@@ -103,8 +116,8 @@ select
 from aed2007."ChangesInterpreter"
 join aed2007.factor_region on
   aed2007."ChangesInterpreter"."REGION" = aed2007.factor_region."REGION"
-group by aed2007."ChangesInterpreter"."REGION", "CauseofChange", def_factor, prob_factor, poss_factor, spec_factor
-order by aed2007."ChangesInterpreter"."REGION", "CauseofChange";
+group by aed2007."ChangesInterpreter"."REGION", display_order, "CauseofChange", def_factor, prob_factor, poss_factor, spec_factor
+order by aed2007."ChangesInterpreter"."REGION", display_order;
 
 create or replace view aed2007.causes_of_change_by_region as
 select
@@ -173,8 +186,8 @@ join aed2007.factor_country f on
   g."CCODE"=f.ccode
 join aed2007."CausesOfChange" on
   "ReasonForChange"="ChangeCODE"
-group by g."CCODE", "CauseofChange", def_factor, prob_factor, poss_factor, spec_factor
-order by "CCODE", "CauseofChange";
+group by g."CCODE", display_order, "CauseofChange", def_factor, prob_factor, poss_factor, spec_factor
+order by "CCODE", display_order, "CauseofChange";
 
 create or replace view aed2007.causes_of_change_by_country as
 select

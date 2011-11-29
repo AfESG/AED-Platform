@@ -333,6 +333,7 @@ select
   aed2007."Regions"."REGION",
   aed2007."Country"."CNTRYNAME",
   aed2007."CausesOfChange"."CauseofChange",
+  aed2007."CausesOfChange"."display_order",
   sum(aed2007.changesgrp.sumofdefinite) "DIFDEF",
   sum(aed2007.changesgrp.sumofprobable) "DIFPROB",
   sum(aed2007.changesgrp.sumofpossible) "DIFPOSS",
@@ -343,12 +344,15 @@ from
     join aed2007.changesgrp on aed2007."Country"."CCODE"=aed2007.changesgrp."CCODE")
     on aed2007."CausesOfChange"."ChangeCODE"=aed2007.changesgrp."ReasonForChange"
 where
-  aed2007."CausesOfChange"."ChangeCODE"!='nc'
+  aed2007."CausesOfChange"."ChangeCODE"!='NC'
 group by
   aed2007."Regions"."REGION",
   aed2007."Country"."CNTRYNAME",
-  aed2007."CausesOfChange"."CauseofChange"
+  aed2007."CausesOfChange"."CauseofChange",
+  aed2007."CausesOfChange".display_order
 order by
   aed2007."Regions"."REGION",
-  aed2007."Country"."CNTRYNAME";
+  aed2007."Country"."CNTRYNAME",
+  aed2007."CausesOfChange".display_order
+;
 
