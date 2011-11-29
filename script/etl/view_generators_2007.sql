@@ -152,6 +152,8 @@ select
 from aed2007.changesgrp i
 join aed2007.actual_diff_country a on
   i."CCODE"=a."CCODE"
+where
+  i."ReasonForChange"!='NC'
 group by a."CCODE",
   actual_dif_def,
   actual_dif_prob,
