@@ -9,7 +9,10 @@
 #{@species}
 
 %div{:style => 'margin-top: 20px'}
-
+.want_data
+  <strong>Want data?</strong><br />
+  Request to download<br/>
+  data <a href="/data_request_forms/new">here.</a> 
 -['2007'].each do |r|
   .report_cover
     = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do

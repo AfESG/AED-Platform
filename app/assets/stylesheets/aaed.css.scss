@@ -39,10 +39,20 @@ a{
   top: 70px;
   width: 73px;
 }
+.want_data {
+  font-size: 14px;
+  text-align: center;
+  line-height: 19px;
+  float: right;
+  padding: 10px;
+  border: 3px solid #ccc;
+  clear: both;
+}
 .report_cover {
   clear: left;
 }
 .report_cover img {
+  float: left;
   vertical-align: middle;
   margin-right: 30px;
   margin-bottom: 20px;
@@ -54,10 +64,8 @@ a{
 }
 .report_cover a {
   text-decoration: none;
-  font-size: 20px;
 }
 .report_cover .more {
-  float: right;
   width: 800px;
 }
 .report_cover .more div {
@@ -214,10 +222,6 @@ input, textarea {
   float: left;
   padding-bottom: 10px;
   clear: both;
-}
-.more {
-  clear: both;
-  float: right;
 }
 .undecorated {
   text-decoration: none;
