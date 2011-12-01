@@ -1,1 +1,37 @@
-This is the message that goes to the administrator to notify them of the submission.
+Dear AAED Administrator,
+%p
+A new data request form has been submitted:
+%p
+%dl
+  %dt= DataRequestForm.human_attribute_name :name
+  %dd= @data_request_form.name
+  %dt= DataRequestForm.human_attribute_name :title
+  %dd= @data_request_form.title
+  %dt= DataRequestForm.human_attribute_name :department
+  %dd= @data_request_form.department
+  %dt= DataRequestForm.human_attribute_name :organization
+  %dd= @data_request_form.organization
+  %dt= DataRequestForm.human_attribute_name :telephone
+  %dd= @data_request_form.telephone
+  %dt= DataRequestForm.human_attribute_name :fax
+  %dd= @data_request_form.fax
+  %dt= DataRequestForm.human_attribute_name :email
+  %dd= @data_request_form.email
+  %dt= DataRequestForm.human_attribute_name :website
+  %dd= @data_request_form.website
+  %dt= DataRequestForm.human_attribute_name :address
+  %dd= @data_request_form.address
+  %dt= DataRequestForm.human_attribute_name :town
+  %dd= @data_request_form.town
+  %dt= DataRequestForm.human_attribute_name :post_code
+  %dd= @data_request_form.post_code
+  %dt= DataRequestForm.human_attribute_name :state
+  %dd= @data_request_form.state
+  %dt= DataRequestForm.human_attribute_name :country
+  %dd= @data_request_form.country
+  %dt= DataRequestForm.human_attribute_name :extracts
+  %dd= @data_request_form.extracts
+  %dt= DataRequestForm.human_attribute_name :research
+  %dd= @data_request_form.research
+  %dt Date Submitted
+  %dd= @data_request_form.created_at
