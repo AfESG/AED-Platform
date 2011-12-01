@@ -53,5 +53,8 @@ module Aaed
 
     # Settings for static assets
     config.static_cache_control = "public, max-age=3600"
+    
+    # Mail settings 
+    config.action_mailer.default_url_options = { :host => "elephant-database.herokuapp.com" }
   end
 end
