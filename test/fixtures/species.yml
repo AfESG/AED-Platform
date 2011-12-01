@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  scientific_name: 
+  common_name: MyString
+
+two:
+  scientific_name: 
+  common_name: MyString
