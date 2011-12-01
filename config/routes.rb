@@ -69,6 +69,8 @@ Aaed::Application.routes.draw do
 
   match 'find/:year/:inpcode' => 'find#historical'
 
+  match 'species/:species_id/range_states' => 'species#range_states'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

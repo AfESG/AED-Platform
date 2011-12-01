@@ -1,8 +1,8 @@
 = semantic_form_for @submission do |f|
   = render "shared/error_messages", :target => @submission
   = f.inputs do
-    = f.input :species, :as => :select, :collection => ["African elephants", "Asian elephants"]
-    = f.input :country
+    = f.input :species, :as => :select, :collection => Species.find(:all), :member_label => :scientific_name
+    = f.input :country, :as => :select, :collection => []
     = f.input :phenotype, :as => :select, :collection => ["Savanna", "Forest", "Both", "Don't know"]
     = f.input :phenotype_basis, :as => :select, :collection => ["Genetic evidence gathered on-site", "Appearance of elephants", "Geographical location", "Habitat"]
     = f.input :data_type, :as => :radio, :collection => ["Population estimate", "Range polygon", "Point observations"]
@@ -11,3 +11,25 @@
     -if current_user.admin?
       = f.input :mike_site, :as => :radio
   = f.buttons
+
+:javascript
+  $('#submission_species').change(function(){
+    var species_id = this.value;
+    $('#submission_country').html('');
+    $.ajax({
+      dataType: "jsonp",
+      url: '/species/'+species_id+"/range_states.js",
+      success: function (range_states) {
+        if(range_states.length<1){
+          alert("No range states found for that species.")
+        } else {
+          for(var i=0; i<range_states.length; i++){
+            $('#submission_country').append('<option value="'+range_states[i].iso_code+'">'+range_states[i].name+'</option>')
+          }
+        }
+      },
+      failure: function () {
+        alert("Server error retrieving range states.");
+      }
+    });
+  })
