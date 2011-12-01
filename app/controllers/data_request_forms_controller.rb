@@ -39,7 +39,8 @@ class DataRequestFormsController < ApplicationController
 
     respond_to do |format|
       if @data_request_form.save
-        AdminNotifier.data_request_form_submitted(@data_request_form).deliver
+        AdminNotifier.data_request_form_submitted(@data_request_form, current_user).deliver
+        AdminNotifier.data_request_form_thanks(@data_request_form, current_user).deliver
         format.html { redirect_to :action =>'thanks' }
         format.xml  { render :xml => @data_request_form, :status => :created, :location => @data_request_form }
       else
