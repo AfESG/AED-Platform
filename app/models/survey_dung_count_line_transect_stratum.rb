@@ -14,8 +14,8 @@ class SurveyDungCountLineTransectStratum < ActiveRecord::Base
       if record.dung_decay_rate_reference == "" and record.dung_decay_rate_measurement_method == "Decay rate NOT measured on site"
         record.errors[:dung_decay_rate_reference] << "must be provided if decay rate was not measured on site"
       end
-      if record.dung_piles.nil? and !record.dung_decay_rate_measurement_method == "Decay rate NOT measured on site"
-        record.errors[:base] << "If decay rate was measured on site, you must provide blah blah"
+      if record.dung_piles.nil? and (record.dung_decay_rate_measurement_method == "Prospectively" || record.dung_decay_rate_measurement_method == "Retrospectively")
+        record.errors[:dung_piles] << "must be answered if decay rate was measured on site"
       end
     end
   end
