@@ -10,6 +10,15 @@ update aed2007."CausesOfChange" set display_order=6 where "ChangeCODE"='NA';
 update aed2007."CausesOfChange" set display_order=7 where "ChangeCODE"='PL';
 update aed2007."CausesOfChange" set display_order=8 where "ChangeCODE"='DD';
 
+drop table if exists aed2007.surveytypes CASCADE;
+create table aed2007.surveytypes (surveytype text, display_order integer);
+insert into aed2007.surveytypes values ('Aerial or Ground Total Counts',1);
+insert into aed2007.surveytypes values ('Direct Sample Counts and Reliable Dung Counts',2);
+insert into aed2007.surveytypes values ('Other Dung Counts',3);
+insert into aed2007.surveytypes values ('Informed Guesses',4);
+insert into aed2007.surveytypes values ('Other Guesses',5);
+insert into aed2007.surveytypes values ('Unassessed Range',6);
+
 
 -- Continental Change interpreters
 
@@ -107,17 +116,17 @@ group by i."REGION",
 
 create or replace view aed2007.fractional_causes_of_change_by_region as
 select
-   aed2007."ChangesInterpreter"."REGION",
+  i."REGION",
   "CauseofChange",
   def_factor * sum("DIFDEF") as definite,
   prob_factor * sum("DIFPROB") as probable,
   poss_factor * sum("DIFPOSS") as possible,
   spec_factor * sum("DIFSPEC") as specul
-from aed2007."ChangesInterpreter"
-join aed2007.factor_region on
-  aed2007."ChangesInterpreter"."REGION" = aed2007.factor_region."REGION"
-group by aed2007."ChangesInterpreter"."REGION", display_order, "CauseofChange", def_factor, prob_factor, poss_factor, spec_factor
-order by aed2007."ChangesInterpreter"."REGION", display_order;
+from aed2007."ChangesInterpreter" i
+join aed2007.factor_region f on
+  i."REGION" = f."REGION"
+group by i."REGION", display_order, "CauseofChange", def_factor, prob_factor, poss_factor, spec_factor
+order by i."REGION", display_order;
 
 create or replace view aed2007.causes_of_change_by_region as
 select
@@ -313,23 +322,48 @@ on t1.surveytype = t3.surveytype and t1.ccode = t3.ccode;
 create or replace view aed2007.area_of_range_covered_by_country as
 select
   ccode,
-  surveytype,
+  r.surveytype,
   round(known) known,
   round(possible) possible,
   round(total) total
-from aed2007.fractional_area_of_range_covered_by_country;
+from aed2007.fractional_area_of_range_covered_by_country r
+join aed2007.surveytypes s
+  on r.surveytype = s.surveytype
+order by s.display_order;
 
 create or replace view aed2007.area_of_range_covered_sum_by_country as
 select ccode, round(sum(known)) known, round(sum(possible)) possible, round(sum(total)) total from aed2007.fractional_area_of_range_covered_by_country group by ccode order by ccode;
 
 create or replace view aed2007.area_of_range_covered_by_region as
-select c."REGION", v.surveytype, round(sum(v.known)) known, round(sum(v.possible)) possible, round(sum(v.total)) total from aed2007."Country" c join aed2007.fractional_area_of_range_covered_by_country v on c."CCODE"=v.ccode group by c."REGION", v.surveytype order by c."REGION", v.surveytype;
+select
+  c."REGION",
+  v.surveytype,
+  round(sum(v.known)) known,
+  round(sum(v.possible)) possible,
+  round(sum(v.total)) total
+from aed2007."Country" c
+join aed2007.fractional_area_of_range_covered_by_country v
+  on c."CCODE"=v.ccode
+join aed2007.surveytypes s
+  on v.surveytype = s.surveytype
+group by c."REGION", v.surveytype, s.display_order
+order by c."REGION", s.display_order;
 
 create or replace view aed2007.area_of_range_covered_sum_by_region as
 select "REGION", round(sum(known)) known, round(sum(possible)) possible, round(sum(total)) total from aed2007.fractional_area_of_range_covered_by_country group by "REGION" order by "REGION";
 
 create or replace view aed2007.area_of_range_covered_by_continent as
-select "CONTINENT", v.surveytype, round(sum(v.known)) known, round(sum(v.possible)) possible, round(sum(v.total)) total from aed2007.fractional_area_of_range_covered_by_country v group by "CONTINENT", v.surveytype order by v.surveytype;
+select
+  "CONTINENT",
+  v.surveytype,
+  round(sum(v.known)) known,
+  round(sum(v.possible)) possible,
+  round(sum(v.total)) total
+from aed2007.fractional_area_of_range_covered_by_country v
+join aed2007.surveytypes s
+  on v.surveytype = s.surveytype
+group by "CONTINENT", v.surveytype, s.display_order
+order by s.display_order;
 
 create or replace view aed2007.area_of_range_covered_sum_by_continent as
 select "CONTINENT", round(sum(known)) known, round(sum(possible)) possible, round(sum(total)) total from aed2007.fractional_area_of_range_covered_by_country group by "CONTINENT" order by "CONTINENT";
