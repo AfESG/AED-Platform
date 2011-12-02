@@ -1,5 +1,5 @@
 DROP VIEW IF EXISTS aed2007.changesgrp CASCADE;
-CREATE VIEW aed2007.changesgrp AS
+CREATE OR REPLACE VIEW aed2007.changesgrp AS
 
 SELECT * FROM (
 
