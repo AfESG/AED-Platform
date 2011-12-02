@@ -2,6 +2,7 @@ class Submission < ActiveRecord::Base
   validates_presence_of :species
   validates_presence_of :country
   validates_presence_of :data_type
+  validates_presence_of :right_to_grant_permission
 
   belongs_to :user
 
