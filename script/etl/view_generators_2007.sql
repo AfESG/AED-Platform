@@ -10,6 +10,15 @@ update aed2007."CausesOfChange" set display_order=6 where "ChangeCODE"='NA';
 update aed2007."CausesOfChange" set display_order=7 where "ChangeCODE"='PL';
 update aed2007."CausesOfChange" set display_order=8 where "ChangeCODE"='DD';
 
+drop table if exists aed2007.surveytypes CASCADE;
+create table aed2007.surveytypes (name text, preferred_order integer);
+insert into aed2007.surveytypes values ('Aerial or Ground Total Counts',1);
+insert into aed2007.surveytypes values ('Direct Sample Counts and Reliable Dung Counts',2);
+insert into aed2007.surveytypes values ('Other Dung Counts',3);
+insert into aed2007.surveytypes values ('Informed Guesses',4);
+insert into aed2007.surveytypes values ('Other Guesses',5);
+insert into aed2007.surveytypes values ('Unassessed Range',6);
+
 
 -- Continental Change interpreters
 
@@ -99,22 +108,6 @@ select
 from aed2007."ChangesInterpreter" i
 join aed2007.actual_diff_region a on
   i."REGION"=a."REGION"
-
-create or replace view aed2007.fractional_causes_of_change_by_region as
-select
-  i."REGION",
-  "CauseofChange",
-  def_factor * sum("DIFDEF") as definite,
-  prob_factor * sum("DIFPROB") as probable,
-  poss_factor * sum("DIFPOSS") as possible,
-  spec_factor * sum("DIFSPEC") as specul
-from aed2007."ChangesInterpreter" i
-join aed2007.factor_region f on
-  i."REGION" = f."REGION"
-where
-  "CauseofChange"!='NC'
-group by i."REGION", display_order, "CauseofChange", def_factor, prob_factor, poss_factor, spec_factor
-order by i."REGION", display_order;
 group by i."REGION",
   actual_dif_def,
   actual_dif_prob,
@@ -132,7 +125,7 @@ select
 from aed2007."ChangesInterpreter" i
 join aed2007.factor_region f on
   i."REGION" = f."REGION"
-roup by i."REGION", display_order, "CauseofChange", def_factor, prob_factor, poss_factor, spec_factor
+group by i."REGION", display_order, "CauseofChange", def_factor, prob_factor, poss_factor, spec_factor
 order by i."REGION", display_order;
 
 create or replace view aed2007.causes_of_change_by_region as
