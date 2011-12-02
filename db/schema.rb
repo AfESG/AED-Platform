@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111202033137) do
+ActiveRecord::Schema.define(:version => 20111202200027) do
 
   create_table "countries", :force => true do |t|
     t.string   "iso_code"
