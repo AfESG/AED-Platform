@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111201195952) do
+ActiveRecord::Schema.define(:version => 20111202033137) do
 
   create_table "countries", :force => true do |t|
     t.string   "iso_code"
@@ -74,8 +74,8 @@ ActiveRecord::Schema.define(:version => 20111201195952) do
 
   create_table "submissions", :force => true do |t|
     t.integer  "user_id"
-    t.string   "species"
-    t.string   "country"
+    t.string   "species_id"
+    t.string   "country_id"
     t.string   "phenotype"
     t.string   "phenotype_basis"
     t.string   "data_type"

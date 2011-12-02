@@ -16,4 +16,14 @@ class Submission < ActiveRecord::Base
   has_many :survey_individual_registrations, :through => :population_submissions
   has_many :survey_others, :through => :population_submissions
 
+  belongs_to :species
+  belongs_to :country
+
+  def range_states
+    if species.nil?
+      {}
+    else
+      species.range_states
+    end
+  end
 end
