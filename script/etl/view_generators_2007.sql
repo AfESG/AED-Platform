@@ -99,6 +99,22 @@ select
 from aed2007."ChangesInterpreter" i
 join aed2007.actual_diff_region a on
   i."REGION"=a."REGION"
+
+create or replace view aed2007.fractional_causes_of_change_by_region as
+select
+  i."REGION",
+  "CauseofChange",
+  def_factor * sum("DIFDEF") as definite,
+  prob_factor * sum("DIFPROB") as probable,
+  poss_factor * sum("DIFPOSS") as possible,
+  spec_factor * sum("DIFSPEC") as specul
+from aed2007."ChangesInterpreter" i
+join aed2007.factor_region f on
+  i."REGION" = f."REGION"
+where
+  "CauseofChange"!='NC'
+group by i."REGION", display_order, "CauseofChange", def_factor, prob_factor, poss_factor, spec_factor
+order by i."REGION", display_order;
 group by i."REGION",
   actual_dif_def,
   actual_dif_prob,
@@ -107,17 +123,17 @@ group by i."REGION",
 
 create or replace view aed2007.fractional_causes_of_change_by_region as
 select
-   aed2007."ChangesInterpreter"."REGION",
+  i."REGION",
   "CauseofChange",
   def_factor * sum("DIFDEF") as definite,
   prob_factor * sum("DIFPROB") as probable,
   poss_factor * sum("DIFPOSS") as possible,
   spec_factor * sum("DIFSPEC") as specul
-from aed2007."ChangesInterpreter"
-join aed2007.factor_region on
-  aed2007."ChangesInterpreter"."REGION" = aed2007.factor_region."REGION"
-group by aed2007."ChangesInterpreter"."REGION", display_order, "CauseofChange", def_factor, prob_factor, poss_factor, spec_factor
-order by aed2007."ChangesInterpreter"."REGION", display_order;
+from aed2007."ChangesInterpreter" i
+join aed2007.factor_region f on
+  i."REGION" = f."REGION"
+roup by i."REGION", display_order, "CauseofChange", def_factor, prob_factor, poss_factor, spec_factor
+order by i."REGION", display_order;
 
 create or replace view aed2007.causes_of_change_by_region as
 select
