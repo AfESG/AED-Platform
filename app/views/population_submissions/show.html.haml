@@ -1,8 +1,9 @@
 %h1= t '.title'
-%p
-  = link_to t('back'), population_submissions_path
-  = link_to t('edit'), edit_population_submission_path(@population_submission)
-  = link_to t('.new'), new_population_submission_path
+= link_to 'Submission', submissions_path(@population_submission.submission)
+&gt;
+New Population Estimate
+
+= render "submission_info"
 
 %dl
   %dt= PopulationSubmission.human_attribute_name :submission_id
