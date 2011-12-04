@@ -17,6 +17,6 @@
       - if @submission.right_to_grant_permission == false and @submission.permission_email != ''
         Your submission on behalf of #{@submission.permission_email}
     - else
-      Submitted by #{@submission.user.name}
+      Submitted by #{@submission.user.email}
       - if @submission.right_to_grant_permission == false
         on behalf of #{@submission.permission_email}
