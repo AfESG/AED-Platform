@@ -1,3 +1,5 @@
 %h1= t '.title'
-%p= link_to t('back'), population_submissions_path
+= link_to 'Submission', submissions_path(@population_submission.submission)
+&gt;
+New Population Estimate
 = render 'form'

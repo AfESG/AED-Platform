@@ -25,6 +25,7 @@ class PopulationSubmissionsController < ApplicationController
   # GET /population_submissions/new.xml
   def new
     @population_submission = PopulationSubmission.new
+    @submission = Submission.find params[:submission_id]
 
     respond_to do |format|
       format.html # new.html.erb

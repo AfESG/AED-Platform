@@ -49,8 +49,13 @@ class SubmissionsController < ApplicationController
 
     respond_to do |format|
       if @submission.save
-        format.html { redirect_to(submission_path(@submission), :notice => 'Submission was successfully created.') }
-        format.xml  { render :xml => @submission, :status => :created, :location => @submission }
+        if @submission.data_type == 'Population estimate'
+          puts "Redirecting to new population estimate"
+          format.html { redirect_to new_submission_population_submission_path(@submission) }
+        else
+          puts "Ordinary poop."
+          format.html { redirect_to(submission_path(@submission), :notice => 'Submission for this data type is not fully implemented.') }
+        end
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @submission.errors, :status => :unprocessable_entity }

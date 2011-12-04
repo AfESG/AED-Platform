@@ -2,7 +2,6 @@ class Submission < ActiveRecord::Base
   validates_presence_of :species
   validates_presence_of :country
   validates_presence_of :data_type
-  validates_presence_of :right_to_grant_permission
 
   belongs_to :user
 
@@ -35,6 +34,9 @@ class Submission < ActiveRecord::Base
       end
       if record.phenotype_basis == "" and record.species.scientific_name == "Loxodonta africana"
         record.errors[:phenotype_basis] << "must be answered if you are reporting on Loxodonta africana"
+      end
+      if record.right_to_grant_permission.nil?
+        record.errors[:right_to_grant_permission] << "can't be blank"
       end
     end
   end

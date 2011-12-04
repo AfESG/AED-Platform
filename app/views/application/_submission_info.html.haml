@@ -1,0 +1,21 @@
+.submission_info
+  .submission_country= @submission.country.name
+  .submission_species
+    #{@submission.species.scientific_name}
+    (#{@submission.species.common_name})
+  - unless @submission.phenotype == ""
+    .submission_phenotype
+      Phenotype: #{@submission.phenotype}
+      - unless @submission.phenotype_basis == ""
+        based on #{@submission.phenotype_basis}
+  .submission_user
+  - if @submission.user == current_user
+    - if @submission.right_to_grant_permission == false
+      Your submission on behalf of #{@submission.permission_email}
+  - else
+    Submitted by #{@submission.user}
+    - if @submission.right_to_grant_permission == false
+      on behalf of #{@submission.permission_email}
+
+  - if @submission.mike_site
+    .submission_mike_site MIKE
