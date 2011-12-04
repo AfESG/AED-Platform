@@ -3,13 +3,13 @@
   = render "shared/error_messages", :target => @population_submission
   = f.inputs do
     = f.input :submission_id, :as => :hidden, :value => params[:submission_id]
-    = f.input :data_licensing, :as => :radio, :collection => {raw(t("creative_commons")) => "Creative Commons", raw(t("embargoed_until")) => "Embargoed Until", raw(t("controlled_redistribution")) => "Controlled redistribution"}
+    = f.input :data_licensing, :as => :radio, :collection => {raw(t("creative_commons")) => "CC", raw(t("embargoed_until")) => "CC/EM", raw(t("controlled_redistribution")) => "CR"}
     = f.input :embargo_date, :as => :date
     = f.input :site_name
     = f.input :designate
     = f.input :area
     = f.input :completion_year, :as => :select, :collection => Time.now.year.downto(2000)
-    = f.input :completion_month, :as => :select, :collection => ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    = f.input :completion_month, :as => :select, :collection => {"January" => 1, "February" => 2, "March" => 3, "April" => 4, "May" => 5, "June" => 6, "July" => 7, "August" => 8, "September" => 9, "October" => 10, "November" => 11, "December" => 12}
     = f.input :season, :as => :select, :collection => ["Wet", "Dry", "Both", "Unknown"]
-    = f.input :survey_type, :as => :select, :collection => ["Aerial total count (AT)", "Aerial sample count (AS)", "Ground total count (GT)", "Ground sample count (GS)", "Dung count (DC)", "Faecal DNA survey (GD in previous AEDs)", "Individual registration (IR)", "Other"]
+    = f.input :survey_type, :as => :select, :collection => {"Aerial total count (AT)" => 'AT', "Aerial sample count (AS)" => 'AS', "Ground total count (GT)" => 'GT', "Ground sample count (GS)" => 'GS', "Dung count (DC)" => 'DC', "Faecal DNA survey (GD in previous AEDs)" => 'GD', "Individual registration (IR)" => 'IR', "Other" => 'O'}
   = f.buttons
