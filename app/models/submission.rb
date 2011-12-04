@@ -27,9 +27,9 @@ class Submission < ActiveRecord::Base
       species.range_states
     end
   end
-  
+
   class SubmissionValidator < ActiveModel::Validator
-    def validate(record)  
+    def validate(record)
       if record.phenotype == "" and record.species.scientific_name == "Loxodonta africana"
         record.errors[:phenotype] << "must be answered if you are reporting on Loxodonta africana"
       end
@@ -38,6 +38,6 @@ class Submission < ActiveRecord::Base
       end
     end
   end
-  
+
   validates_with SubmissionValidator
 end
