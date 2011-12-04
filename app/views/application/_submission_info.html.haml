@@ -11,11 +11,12 @@
       Phenotype: #{@submission.phenotype}
       - unless @submission.phenotype_basis == ""
         based on #{@submission.phenotype_basis}
-  .submission_user
-  - if @submission.user == current_user
-    - if @submission.right_to_grant_permission == false and @submission.permission_email != ''
-      Your submission on behalf of #{@submission.permission_email}
-  - else
-    Submitted by #{@submission.user}
-    - if @submission.right_to_grant_permission == false
-      on behalf of #{@submission.permission_email}
+  - unless @submission.user.nil?
+    .submission_user
+    - if @submission.user == current_user
+      - if @submission.right_to_grant_permission == false and @submission.permission_email != ''
+        Your submission on behalf of #{@submission.permission_email}
+    - else
+      Submitted by #{@submission.user.name}
+      - if @submission.right_to_grant_permission == false
+        on behalf of #{@submission.permission_email}
