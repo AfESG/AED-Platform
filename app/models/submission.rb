@@ -32,7 +32,7 @@ class Submission < ActiveRecord::Base
       if record.phenotype == "" and record.species.scientific_name == "Loxodonta africana"
         record.errors[:phenotype] << "must be answered if you are reporting on Loxodonta africana"
       end
-      if record.phenotype_basis == "" and record.species.scientific_name == "Loxodonta africana"
+      if record.phenotype_basis == "" and record.phenotype != "Unknown" and record.species.scientific_name == "Loxodonta africana"
         record.errors[:phenotype_basis] << "must be answered if you are reporting on Loxodonta africana"
       end
       if record.right_to_grant_permission.nil?

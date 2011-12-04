@@ -6,7 +6,7 @@
   .submission_species
     #{@submission.species.scientific_name}
     (#{@submission.species.common_name})
-  - unless @submission.phenotype == ""
+  - unless @submission.phenotype == "" or @submission.phenotype == "Unknown"
     .submission_phenotype
       Phenotype: #{@submission.phenotype}
       - unless @submission.phenotype_basis == ""

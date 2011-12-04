@@ -3,10 +3,10 @@
   = f.inputs do
     = f.input :species, :as => :select, :collection => Species.find(:all), :member_label => :scientific_name
     = f.input :country, :as => :select, :collection => @submission.range_states
-    = f.input :phenotype, :as => :select, :collection => ["Savanna", "Forest", "Both", "Don't know"]
+    = f.input :phenotype, :as => :select, :collection => ["Savanna", "Forest", "Both", "Unknown"]
     = f.input :phenotype_basis, :as => :select, :collection => ["Genetic evidence gathered on-site", "Appearance of elephants", "Geographical location", "Habitat"]
     = f.input :data_type, :as => :radio, :collection => ["Population estimate", "Range polygon", "Point observations"]
-    = f.input :right_to_grant_permission, :as => :radio, :collection => {"Yes, I have the right to grant permission to IUCN to use the data as specified" => true, "No, I do not have the right to grant permission, please email the following person:" => false}
+    = f.input :right_to_grant_permission, :required => true, :as => :radio, :collection => {"Yes, I have the right to grant permission to IUCN to use the data as specified" => true, "No, I do not have the right to grant permission, please email the following person:" => false}
     = f.input :permission_email, :as => :email
     -if current_user.admin?
       = f.input :mike_site, :as => :radio
