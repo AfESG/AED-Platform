@@ -11,5 +11,18 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def find_parents object
+    if object.respond_to? :submission
+      @submission = object.submission
+      puts "Setting @submission on #{self} to #{@submission}"
+    end
+    if object.respond_to? :population_submission
+      @population_submission = object.population_submission
+      puts "Setting @population_submission on #{self} to #{@population_submission}"
+      @submission = @population_submission.submission
+      puts "Setting @submission on #{self} to #{@submission}"
+    end
+  end
+
   protect_from_forgery
 end

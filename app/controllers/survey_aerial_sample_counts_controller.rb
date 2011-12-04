@@ -14,8 +14,7 @@ class SurveyAerialSampleCountsController < ApplicationController
   # GET /survey_aerial_sample_counts/1.xml
   def show
     @survey_aerial_sample_count = SurveyAerialSampleCount.find(params[:id])
-    @population_submission = @survey_aerial_sample_count.population_submission
-    @submission = @population_submission.submission
+    find_parents @survey_aerial_sample_count
 
     respond_to do |format|
       format.html # show.html.erb
@@ -27,8 +26,8 @@ class SurveyAerialSampleCountsController < ApplicationController
   # GET /survey_aerial_sample_counts/new.xml
   def new
     @survey_aerial_sample_count = SurveyAerialSampleCount.new
-    @population_submission = PopulationSubmission.find params[:population_submission_id]
-    @submission = @population_submission.submission
+    @survey_aerial_sample_count.population_submission = PopulationSubmission.find(params[:population_submission_id])
+    find_parents @survey_aerial_sample_count
 
     respond_to do |format|
       format.html # new.html.erb
@@ -39,8 +38,7 @@ class SurveyAerialSampleCountsController < ApplicationController
   # GET /survey_aerial_sample_counts/1/edit
   def edit
     @survey_aerial_sample_count = SurveyAerialSampleCount.find(params[:id])
-    @population_submission = @survey_aerial_sample_count.population_submission
-    @submission = @population_submission.submission
+    find_parents @survey_aerial_sample_count
   end
 
   # POST /survey_aerial_sample_counts

@@ -14,7 +14,7 @@ class PopulationSubmissionsController < ApplicationController
   # GET /population_submissions/1.xml
   def show
     @population_submission = PopulationSubmission.find(params[:id])
-    @submission = @population_submission.submission
+    find_parents @population_submission
 
     respond_to do |format|
       format.html # show.html.erb
@@ -26,7 +26,11 @@ class PopulationSubmissionsController < ApplicationController
   # GET /population_submissions/new.xml
   def new
     @population_submission = PopulationSubmission.new
-    @submission = Submission.find params[:submission_id]
+    @population_submission.submission = Submission.find(params[:submission_id])
+
+    find_parents @population_submission
+
+    puts "Submission is #{@submission}"
 
     respond_to do |format|
       format.html # new.html.erb
@@ -37,13 +41,14 @@ class PopulationSubmissionsController < ApplicationController
   # GET /population_submissions/1/edit
   def edit
     @population_submission = PopulationSubmission.find(params[:id])
-    @submission = @population_submission.submission
+    find_parents @population_submission
   end
 
   # POST /population_submissions
   # POST /population_submissions.xml
   def create
     @population_submission = PopulationSubmission.new(params[:population_submission])
+    find_parents @population_submission
 
     respond_to do |format|
       if @population_submission.save
@@ -65,7 +70,6 @@ class PopulationSubmissionsController < ApplicationController
           format.html { render "Unsupported survey type. This is almost certainly a bug." }
         end
       else
-        @submission = @population_submission.submission
         format.html { render :action => "new" }
       end
     end
