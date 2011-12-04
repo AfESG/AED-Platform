@@ -37,6 +37,7 @@ class PopulationSubmissionsController < ApplicationController
   # GET /population_submissions/1/edit
   def edit
     @population_submission = PopulationSubmission.find(params[:id])
+    @submission = @population_submission.submission
   end
 
   # POST /population_submissions
@@ -46,22 +47,25 @@ class PopulationSubmissionsController < ApplicationController
 
     respond_to do |format|
       if @population_submission.save
-        if @submission.survey_type == 'AS'
+        if @population_submission.survey_type == 'AS'
           format.html { redirect_to new_population_submission_survey_aerial_sample_count_path(@population_submission) }
-        elsif @submission.survey_type == 'AT'
+        elsif @population_submission.survey_type == 'AT'
           format.html { redirect_to new_population_submission_survey_aerial_total_count_path(@population_submission) }
-        elsif @submission.survey_type == 'GS'
+        elsif @population_submission.survey_type == 'GS'
           format.html { redirect_to new_population_submission_survey_ground_sample_count_path(@population_submission) }
-        elsif @submission.survey_type == 'GT'
+        elsif @population_submission.survey_type == 'GT'
           format.html { redirect_to new_population_submission_survey_ground_total_count_path(@population_submission) }
-        elsif @submission.survey_type == 'DC'
+        elsif @population_submission.survey_type == 'DC'
           format.html { redirect_to new_population_submission_survey_dung_count_line_transect_path(@population_submission) }
-        elsif @submission.survey_type == 'GD'
+        elsif @population_submission.survey_type == 'GD'
           format.html { redirect_to new_population_submission_survey_faecal_dna_path(@population_submission) }
-        elsif @submission.survey_type == 'IR'
+        elsif @population_submission.survey_type == 'IR'
           format.html { redirect_to new_population_submission_survey_individual_registration_path(@population_submission) }
+        else
+          format.html { render "Unsupported survey type. This is almost certainly a bug." }
         end
       else
+        @submission = @population_submission.submission
         format.html { render :action => "new" }
       end
     end
