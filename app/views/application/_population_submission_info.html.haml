@@ -1,24 +1,20 @@
 .population_submission_info
-  %dl
-    %dt= PopulationSubmission.human_attribute_name :submission_id
-    %dd= @population_submission.submission_id
-    %dt= PopulationSubmission.human_attribute_name :data_licensing
-    %dd= @population_submission.data_licensing
-    %dt= PopulationSubmission.human_attribute_name :embargo_date
-    %dd= @population_submission.embargo_date
-    %dt= PopulationSubmission.human_attribute_name :site_name
-    %dd= @population_submission.site_name
-    %dt= PopulationSubmission.human_attribute_name :designate
-    %dd= @population_submission.designate
-    %dt= PopulationSubmission.human_attribute_name :area
-    %dd= @population_submission.area
-    %dt= PopulationSubmission.human_attribute_name :completion_year
-    %dd= @population_submission.completion_year
-    %dt= PopulationSubmission.human_attribute_name :completion_month
-    %dd= @population_submission.completion_month
-    %dt= PopulationSubmission.human_attribute_name :season
-    %dd= @population_submission.season
-    %dt= PopulationSubmission.human_attribute_name :survey_type
-    %dd= @population_submission.survey_type
-    %dt= PopulationSubmission.human_attribute_name :survey_type_other
-    %dd= @population_submission.survey_type_other
+  .population_submission_site_name
+    #{@population_submission.site_name}
+    #{@population_submission.designate}
+  .population_submission_licensing
+    -if @population_submission.data_licensing == "CC"
+      (CC image)
+    -unless @population_submission.embargo_date.nil? 
+      Embargoed until #{@population_submission.embargo_date}
+  .population_submission_area
+    Area surveyed: #{@population_submission.area} km²
+  .population_submission_survey_completed
+    Suvey completed:
+    -unless @population_submission.completion_month.nil?
+      #{@population_submission.completion_month}
+    #{@population_submission.completion_year}
+    -if @population_submission.season == "Wet" or @population_submission.season == "Dry"
+      in the #{@population_submission.season} season
+    -if @population_submission.season == "Both"
+      in both wet and dry seasons
