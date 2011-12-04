@@ -4,7 +4,7 @@
   = f.inputs do
     = f.input :submission_id, :as => :hidden, :value => params[:submission_id]
     = f.input :data_licensing, :as => :radio, :collection => {raw(t("creative_commons")) => "CC", raw(t("embargoed_until")) => "CC/EM", raw(t("controlled_redistribution")) => "CR"}
-    = f.input :embargo_date, :as => :date
+    = f.input :embargo_date, :required => true, :as => :date
     = f.input :site_name
     = f.input :designate
     = f.input :area
@@ -13,3 +13,16 @@
     = f.input :season, :as => :select, :collection => ["Wet", "Dry", "Both", "Unknown"]
     = f.input :survey_type, :as => :select, :collection => {"Aerial total count (AT)" => 'AT', "Aerial sample count (AS)" => 'AS', "Ground total count (GT)" => 'GT', "Ground sample count (GS)" => 'GS', "Dung count (DC)" => 'DC', "Faecal DNA survey (GD in previous AEDs)" => 'GD', "Individual registration (IR)" => 'IR', "Other" => 'O'}
   = f.buttons
+
+:javascript
+  function hide_and_show_things(){
+    $('#population_submission_data_licensing_ccem').each(function(){
+      if(this.checked == true){
+        $('#population_submission_embargo_date_input').show()
+      } else {
+        $('#population_submission_embargo_date_input').hide()
+      }
+    })
+  }
+  $('input[type=radio]').change(hide_and_show_things);
+  hide_and_show_things();

@@ -50,10 +50,8 @@ class SubmissionsController < ApplicationController
     respond_to do |format|
       if @submission.save
         if @submission.data_type == 'Population estimate'
-          puts "Redirecting to new population estimate"
           format.html { redirect_to new_submission_population_submission_path(@submission) }
         else
-          puts "Ordinary poop."
           format.html { redirect_to(submission_path(@submission), :notice => 'Submission for this data type is not fully implemented.') }
         end
       else

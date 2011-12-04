@@ -35,3 +35,15 @@
   }
 
   $('#submission_species_id').change(load_species);
+
+  function hide_and_show_things(){
+    $('#submission_right_to_grant_permission_false').each(function(){
+      if(this.checked == true){
+        $('#submission_permission_email_input').show()
+      } else {
+        $('#submission_permission_email_input').hide()
+      }
+    })
+  }
+  $('input[type=radio]').change(hide_and_show_things);
+  hide_and_show_things();

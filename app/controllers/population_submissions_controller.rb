@@ -46,11 +46,23 @@ class PopulationSubmissionsController < ApplicationController
 
     respond_to do |format|
       if @population_submission.save
-        format.html { redirect_to(@population_submission, :notice => 'Population submission was successfully created.') }
-        format.xml  { render :xml => @population_submission, :status => :created, :location => @population_submission }
+        if @submission.survey_type == 'AS'
+          format.html { redirect_to new_population_submission_survey_aerial_sample_count_path(@population_submission) }
+        elsif @submission.survey_type == 'AT'
+          format.html { redirect_to new_population_submission_survey_aerial_total_count_path(@population_submission) }
+        elsif @submission.survey_type == 'GS'
+          format.html { redirect_to new_population_submission_survey_ground_sample_count_path(@population_submission) }
+        elsif @submission.survey_type == 'GT'
+          format.html { redirect_to new_population_submission_survey_ground_total_count_path(@population_submission) }
+        elsif @submission.survey_type == 'DC'
+          format.html { redirect_to new_population_submission_survey_dung_count_line_transect_path(@population_submission) }
+        elsif @submission.survey_type == 'GD'
+          format.html { redirect_to new_population_submission_survey_faecal_dna_path(@population_submission) }
+        elsif @submission.survey_type == 'IR'
+          format.html { redirect_to new_population_submission_survey_individual_registration_path(@population_submission) }
+        end
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @population_submission.errors, :status => :unprocessable_entity }
       end
     end
   end
