@@ -24,7 +24,7 @@
           alert("No range states found for that species.")
         } else {
           for(var i=0; i<range_states.length; i++){
-            $('#submission_country_id').append('<option value="'+range_states[i].iso_code+'">'+range_states[i].name+'</option>')
+            $('#submission_country_id').append('<option value="'+range_states[i].id+'">'+range_states[i].name+'</option>')
           }
         }
       },
