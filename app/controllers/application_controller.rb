@@ -15,9 +15,16 @@ class ApplicationController < ActionController::Base
     if object.respond_to? :submission
       @submission = object.submission
       puts "Setting @submission on #{self} to #{@submission}"
-    end
-    if object.respond_to? :population_submission
+    elsif object.respond_to? :population_submission
       @population_submission = object.population_submission
+      puts "Setting @population_submission on #{self} to #{@population_submission}"
+      @submission = @population_submission.submission
+      puts "Setting @submission on #{self} to #{@submission}"
+    elsif object.class.name =~ /Stratum/
+      n = object.class.name.gsub('Stratum','').underscore
+      e =  "object.#{n}.population_submission"
+      puts "Going to eval #{e}"
+      @population_submission = eval e
       puts "Setting @population_submission on #{self} to #{@population_submission}"
       @submission = @population_submission.submission
       puts "Setting @submission on #{self} to #{@submission}"

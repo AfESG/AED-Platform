@@ -14,6 +14,7 @@ class SurveyAerialSampleCountStrataController < ApplicationController
   # GET /survey_aerial_sample_count_strata/1.xml
   def show
     @survey_aerial_sample_count_stratum = SurveyAerialSampleCountStratum.find(params[:id])
+    find_parents @survey_aerial_sample_count_stratum
 
     respond_to do |format|
       format.html # show.html.erb
@@ -25,6 +26,8 @@ class SurveyAerialSampleCountStrataController < ApplicationController
   # GET /survey_aerial_sample_count_strata/new.xml
   def new
     @survey_aerial_sample_count_stratum = SurveyAerialSampleCountStratum.new
+    @survey_aerial_sample_count_stratum.survey_aerial_sample_count = SurveyAerialSampleCount.find(params[:survey_aerial_sample_count_id])
+    find_parents @survey_aerial_sample_count_stratum
 
     respond_to do |format|
       format.html # new.html.erb
@@ -35,6 +38,7 @@ class SurveyAerialSampleCountStrataController < ApplicationController
   # GET /survey_aerial_sample_count_strata/1/edit
   def edit
     @survey_aerial_sample_count_stratum = SurveyAerialSampleCountStratum.find(params[:id])
+    find_parents @survey_aerial_sample_count_stratum
   end
 
   # POST /survey_aerial_sample_count_strata
@@ -57,6 +61,7 @@ class SurveyAerialSampleCountStrataController < ApplicationController
   # PUT /survey_aerial_sample_count_strata/1.xml
   def update
     @survey_aerial_sample_count_stratum = SurveyAerialSampleCountStratum.find(params[:id])
+    find_parents @survey_aerial_sample_count_stratum
 
     respond_to do |format|
       if @survey_aerial_sample_count_stratum.update_attributes(params[:survey_aerial_sample_count_stratum])

@@ -1,1 +1,15 @@
-Aerial sample count stratum restatement goes here
+.survey_aerial_sample_count_stratum_info
+  .edit_link
+    = link_to image_tag("editable.png"), edit_survey_aerial_sample_count_stratum_path(b)
+  .survey_aerial_sample_count_stratum_header
+    .survey_aerial_sample_count_stratum_estimate= b.population_estimate
+    =link_to survey_aerial_sample_count_stratum_path(b) do
+      - if b.stratum_name == ''
+        .survey_aerial_sample_count_stratum_name Stratum ##{b.id}
+      - else
+        .survey_aerial_sample_count_stratum_name= b.stratum_name
+    .survey_aerial_sample_count_stratum_parameters
+      - if b.stratum_area > 0
+        = b.stratum_area
+        km²
+

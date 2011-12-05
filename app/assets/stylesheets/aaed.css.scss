@@ -496,10 +496,14 @@ h5 {
   border-top: 1px dashed #ccc;
   padding: 5px;
 }
-.add_actions img{
+.stratum_add_actions{
+  padding: 5px;
+  padding-bottom: 0px;
+}
+.add_actions img, .stratum_add_actions img{
   vertical-align: middle;
   margin-top: 7px;
 }
-.add_actions a{
+.add_actions a, .stratum_add_actions a{
   text-decoration: none;
 }
