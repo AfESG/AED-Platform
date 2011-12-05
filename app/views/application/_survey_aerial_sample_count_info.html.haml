@@ -1,0 +1,16 @@
+.survey_aerial_sample_count_info
+  .edit_link
+    = link_to image_tag("editable.png"), edit_survey_aerial_sample_count_path(c)
+  .survey_aerial_sample_count_header
+    .survey_aerial_sample_count_transects
+      - if c.total_possible_transects>0
+        = c.total_possible_transects
+        transects
+    .survey_aerial_sample_count_strata
+      - if c.stratum_level_data_submitted == true
+        Recorded at stratum level
+      - else
+        - if c.surveyed_at_stratum_level == true
+          Multiple strata reported as aggregate
+        - else
+          No strata

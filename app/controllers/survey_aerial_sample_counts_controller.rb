@@ -48,11 +48,9 @@ class SurveyAerialSampleCountsController < ApplicationController
 
     respond_to do |format|
       if @survey_aerial_sample_count.save
-        format.html { redirect_to(@survey_aerial_sample_count, :notice => 'Survey aerial sample count was successfully created.') }
-        format.xml  { render :xml => @survey_aerial_sample_count, :status => :created, :location => @survey_aerial_sample_count }
+        format.html { redirect_to(new_survey_aerial_sample_count_survey_aerial_sample_count_stratum_path(@survey_aerial_sample_count)) }
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @survey_aerial_sample_count.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -61,6 +59,7 @@ class SurveyAerialSampleCountsController < ApplicationController
   # PUT /survey_aerial_sample_counts/1.xml
   def update
     @survey_aerial_sample_count = SurveyAerialSampleCount.find(params[:id])
+    find_parents @survey_aerial_sample_count
 
     respond_to do |format|
       if @survey_aerial_sample_count.update_attributes(params[:survey_aerial_sample_count])

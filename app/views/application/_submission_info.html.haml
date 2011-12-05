@@ -1,28 +1,39 @@
-.submission_info
-  .edit_link
-    = link_to image_tag("editable.png"), edit_submission_path(s)
-  .submission_header
-    - unless s.country.nil?
-      .submission_country= s.country.name
-    - if s.mike_site
-      .submission_mike_site MIKE site
-    .submission_species= s.species.scientific_name
-    .submission_common_name= s.species.common_name
-    - unless s.phenotype == "" or s.phenotype == "Unknown"
-      .submission_phenotype
-        Phenotype: #{s.phenotype}
-        - unless s.phenotype_basis == ""
-          (based on #{s.phenotype_basis.downcase})
-  .submission_parameters
-    - unless s.user.nil?
-      .submission_user
-      - if s.user == current_user
-        - if s.right_to_grant_permission == false and s.permission_email != ''
-          Your submission on behalf of #{s.permission_email}
-      - else
-        Submitted by #{s.user.email}
-        - if s.right_to_grant_permission == false
-          on behalf of #{s.permission_email}
+- if s.id.nil?
+  .submission_info
+    .submission_tip
+      Information about your submission will appear here as you complete each data entry screen.
+- else
+  .submission_info
+    .edit_link
+      = link_to image_tag("editable.png"), edit_submission_path(s)
+    .submission_header
+      - unless s.country.nil?
+        .submission_country= s.country.name
+      - if s.mike_site
+        .submission_mike_site MIKE site
+      - unless s.species.nil?
+        .submission_species= s.species.scientific_name
+        .submission_common_name= s.species.common_name
+        - unless s.phenotype == "" or s.phenotype == "Unknown"
+          .submission_phenotype
+            Phenotype: #{s.phenotype}
+            - unless s.phenotype_basis == ""
+              (based on #{s.phenotype_basis.downcase})
+    .submission_parameters
+      - unless s.user.nil?
+        .submission_user
+          - if s.user == current_user
+            Your submission,
+          - else
+            Submitted by #{s.user.email},
+          - if s.right_to_grant_permission == false and s.permission_email != ''
+            on behalf of #{s.permission_email},
+          last updated #{s.updated_at}
+  - for p in s.population_submissions do
+    =render :partial => 'population_submission_info', :locals => {:p => p}
+  - if s.population_submissions.size < 1
+    .add_actions
+      = link_to new_submission_population_submission_path(s) do
+        = image_tag('plus.png')
+        Add a population estimate
 
-- for p in s.population_submissions do
-  =render :partial => 'population_submission_info', :locals => {:p => p}

@@ -1,25 +1,36 @@
-.population_submission_info
-  .edit_link
-    = link_to image_tag("editable.png"), edit_population_submission_path(p)
-  .population_submission_header
-    .population_submission_site_name
-      #{p.site_name}
-      #{p.designate}
-    .population_submission_survey_completed
-      -unless p.completion_month.nil?
-        #{p.completion_month}
-        /
-      #{p.completion_year}
-  .population_submission_parameters
-    .population_submission_licensing
-      -if p.data_licensing == "CC"
-        <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png" /></a>
-      -unless p.embargo_date.nil?
-        Embargoed until #{p.embargo_date}
-    .population_submission_area
-      #{p.area} km²
-    .population_submission_season
-      -if p.season == "Wet" or p.season == "Dry"
-        #{p.season} season
-      -if p.season == "Both"
-        Both wet and dry seasons
+- if p.nil?
+  .population_submission_info
+    Population submission is nil when it shouldn't be. Report this message
+    as a bug, please.
+- else
+  .population_submission_info
+    .edit_link
+      = link_to image_tag("editable.png"), edit_population_submission_path(p)
+    .population_submission_header
+      .population_submission_site_name
+        #{p.site_name}
+        #{p.designate}
+      .population_submission_survey_completed
+        #{p.completion_year}
+    .population_submission_parameters
+      .population_submission_licensing
+        -if p.data_licensing == "CC"
+          <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png" /></a>
+        -unless p.embargo_date.nil?
+          Embargoed until #{p.embargo_date}
+      .population_submission_area
+        #{p.area} km²
+      .population_submission_season
+        -if p.season == "Wet" or p.season == "Dry"
+          #{p.season} season
+        -if p.season == "Both"
+          Both wet and dry seasons
+  - if p.survey_type='AS'
+    - for c in p.survey_aerial_sample_counts do
+      =render :partial => 'survey_aerial_sample_count_info', :locals => {:c => c}
+    - if p.survey_aerial_sample_counts.size < 1
+      .add_actions
+        = link_to new_population_submission_survey_aerial_sample_count_path(p) do
+          = image_tag('plus.png')
+          Add an aerial sample count
+

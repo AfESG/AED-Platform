@@ -1,13 +1,2 @@
-%h1= t '.title'
+=render :partial => 'submission_info', :locals => { :s => @submission }
 
-= render "population_submission_info"
-
-%dl
-  %dt= SurveyAerialSampleCount.human_attribute_name :population_submission_id
-  %dd= @survey_aerial_sample_count.population_submission_id
-  %dt= SurveyAerialSampleCount.human_attribute_name :total_possible_transects
-  %dd= @survey_aerial_sample_count.total_possible_transects
-  %dt= SurveyAerialSampleCount.human_attribute_name :surveyed_at_stratum_level
-  %dd= @survey_aerial_sample_count.surveyed_at_stratum_level
-  %dt= SurveyAerialSampleCount.human_attribute_name :stratum_level_data_submitted
-  %dd= @survey_aerial_sample_count.stratum_level_data_submitted

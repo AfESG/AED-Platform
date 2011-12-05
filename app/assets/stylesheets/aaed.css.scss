@@ -485,7 +485,21 @@ h5 {
   margin-left: 20px;
 }
 .edit_link {
+  width: 15px;
   float: right;
-  margin-right: -17px;
+  clear: right;
+  margin-right: -20px;
   margin-top: 3px;
+}
+.add_actions{
+  margin-top: 5px;
+  border-top: 1px dashed #ccc;
+  padding: 5px;
+}
+.add_actions img{
+  vertical-align: middle;
+  margin-top: 7px;
+}
+.add_actions a{
+  text-decoration: none;
 }
