@@ -1,13 +1,3 @@
 %h1= t '.title'
-%p
-  = link_to t('back'), survey_ground_total_counts_path
-  = link_to t('edit'), edit_survey_ground_total_count_path(@survey_ground_total_count)
-  = link_to t('.new'), new_survey_ground_total_count_path
+= render :partial => "submission_info", :locals => { :s => @submission }
 
-%dl
-  %dt= SurveyGroundTotalCount.human_attribute_name :population_submission_id
-  %dd= @survey_ground_total_count.population_submission_id
-  %dt= SurveyGroundTotalCount.human_attribute_name :surveyed_at_stratum_level
-  %dd= @survey_ground_total_count.surveyed_at_stratum_level
-  %dt= SurveyGroundTotalCount.human_attribute_name :stratum_level_data_submitted
-  %dd= @survey_ground_total_count.stratum_level_data_submitted

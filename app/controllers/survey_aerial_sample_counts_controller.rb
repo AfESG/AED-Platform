@@ -1,5 +1,5 @@
 class SurveyAerialSampleCountsController < ApplicationController
 
-  include CountController
+  include CountCrud
 
 end

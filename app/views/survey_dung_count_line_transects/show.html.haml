@@ -1,13 +1,3 @@
 %h1= t '.title'
-%p
-  = link_to t('back'), survey_dung_count_line_transects_path
-  = link_to t('edit'), edit_survey_dung_count_line_transect_path(@survey_dung_count_line_transect)
-  = link_to t('.new'), new_survey_dung_count_line_transect_path
+= render :partial => "submission_info", :locals => { :s => @submission }
 
-%dl
-  %dt= SurveyDungCountLineTransect.human_attribute_name :population_submission_id
-  %dd= @survey_dung_count_line_transect.population_submission_id
-  %dt= SurveyDungCountLineTransect.human_attribute_name :surveyed_at_stratum_level
-  %dd= @survey_dung_count_line_transect.surveyed_at_stratum_level
-  %dt= SurveyDungCountLineTransect.human_attribute_name :stratum_level_data_submitted
-  %dd= @survey_dung_count_line_transect.stratum_level_data_submitted

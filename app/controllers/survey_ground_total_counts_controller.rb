@@ -1,5 +1,5 @@
 class SurveyGroundTotalCountsController < ApplicationController
 
-  include CountController
+  include CountCrud
 
 end

@@ -1,5 +1,5 @@
 class SurveyDungCountLineTransectsController < ApplicationController
 
-  include CountController
+  include CountCrud
 
 end

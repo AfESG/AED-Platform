@@ -1,13 +1,3 @@
 %h1= t '.title'
-%p
-  = link_to t('back'), survey_faecal_dnas_path
-  = link_to t('edit'), edit_survey_faecal_dna_path(@survey_faecal_dna)
-  = link_to t('.new'), new_survey_faecal_dna_path
+= render :partial => "submission_info", :locals => { :s => @submission }
 
-%dl
-  %dt= SurveyFaecalDna.human_attribute_name :population_submission_id
-  %dd= @survey_faecal_dna.population_submission_id
-  %dt= SurveyFaecalDna.human_attribute_name :surveyed_at_stratum_level
-  %dd= @survey_faecal_dna.surveyed_at_stratum_level
-  %dt= SurveyFaecalDna.human_attribute_name :stratum_level_data_submitted
-  %dd= @survey_faecal_dna.stratum_level_data_submitted

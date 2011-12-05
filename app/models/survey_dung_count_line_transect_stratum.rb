@@ -1,4 +1,6 @@
 class SurveyDungCountLineTransectStratum < ActiveRecord::Base
+  include Stratum
+
   validates_presence_of :population_estimate
   validates_presence_of :dung_decay_rate_measurement_method
   validates_presence_of :dung_decay_rate_estimate_used
@@ -7,7 +9,7 @@ class SurveyDungCountLineTransectStratum < ActiveRecord::Base
   validates_presence_of :dung_density_estimate
 
   belongs_to :survey_dung_count_line_transect
-  
+
   class SurveyDungCountLineTransectStratumValidator < ActiveModel::Validator
     def validate(record)      
       if record.dung_decay_rate_reference == "" and record.dung_decay_rate_measurement_method == "Decay rate NOT measured on site"
@@ -18,6 +20,6 @@ class SurveyDungCountLineTransectStratum < ActiveRecord::Base
       end
     end
   end
-  
+
   validates_with SurveyDungCountLineTransectStratumValidator
 end

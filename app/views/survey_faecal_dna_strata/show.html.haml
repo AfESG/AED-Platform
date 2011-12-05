@@ -1,37 +1,3 @@
 %h1= t '.title'
-%p
-  = link_to t('back'), survey_faecal_dna_strata_path
-  = link_to t('edit'), edit_survey_faecal_dna_stratum_path(@survey_faecal_dna_stratum)
-  = link_to t('.new'), new_survey_faecal_dna_stratum_path
+= render :partial => "submission_info", :locals => { :s => @submission }
 
-%dl
-  %dt= SurveyFaecalDnaStratum.human_attribute_name :survey_faecal_dna_id
-  %dd= @survey_faecal_dna_stratum.survey_faecal_dna_id
-  %dt= SurveyFaecalDnaStratum.human_attribute_name :stratum_name
-  %dd= @survey_faecal_dna_stratum.stratum_name
-  %dt= SurveyFaecalDnaStratum.human_attribute_name :stratum_area
-  %dd= @survey_faecal_dna_stratum.stratum_area
-  %dt= SurveyFaecalDnaStratum.human_attribute_name :population_estimate
-  %dd= @survey_faecal_dna_stratum.population_estimate
-  %dt= SurveyFaecalDnaStratum.human_attribute_name :population_variance
-  %dd= @survey_faecal_dna_stratum.population_variance
-  %dt= SurveyFaecalDnaStratum.human_attribute_name :population_standard_error
-  %dd= @survey_faecal_dna_stratum.population_standard_error
-  %dt= SurveyFaecalDnaStratum.human_attribute_name :population_t
-  %dd= @survey_faecal_dna_stratum.population_t
-  %dt= SurveyFaecalDnaStratum.human_attribute_name :population_degrees_of_freedom
-  %dd= @survey_faecal_dna_stratum.population_degrees_of_freedom
-  %dt= SurveyFaecalDnaStratum.human_attribute_name :population_confidence_limits
-  %dd= @survey_faecal_dna_stratum.population_confidence_limits
-  %dt= SurveyFaecalDnaStratum.human_attribute_name :population_no_precision_estimate_available
-  %dd= @survey_faecal_dna_stratum.population_no_precision_estimate_available
-  %dt= SurveyFaecalDnaStratum.human_attribute_name :method_of_analysis
-  %dd= @survey_faecal_dna_stratum.method_of_analysis
-  %dt= SurveyFaecalDnaStratum.human_attribute_name :area_calculation_method
-  %dd= @survey_faecal_dna_stratum.area_calculation_method
-  %dt= SurveyFaecalDnaStratum.human_attribute_name :genotypes_identified
-  %dd= @survey_faecal_dna_stratum.genotypes_identified
-  %dt= SurveyFaecalDnaStratum.human_attribute_name :samples_analyzed
-  %dd= @survey_faecal_dna_stratum.samples_analyzed
-  %dt= SurveyFaecalDnaStratum.human_attribute_name :sampling_locations
-  %dd= @survey_faecal_dna_stratum.sampling_locations

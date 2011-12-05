@@ -5,7 +5,16 @@ module Stratum
   def stratum_base_name
     self.class.name.underscore
   end
+  def count_class_name
+    self.class.name.gsub('Stratum','')
+  end
+  def count_class
+    eval "#{count_class_name}"
+  end
+  def count_base_name
+    count_class_name.underscore
+  end
   def parent_count
-    eval self.class.name.gsub('Stratum','').underscore
+    eval count_base_name
   end
 end

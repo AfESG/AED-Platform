@@ -1,5 +1,5 @@
 class SurveyFaecalDnasController < ApplicationController
 
-  include CountController
+  include CountCrud
 
 end
