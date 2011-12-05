@@ -95,7 +95,8 @@ a{
   color: #777;
 }
 #legal{
-  margin-top: 20px;
+  clear: both;
+  padding-top: 20px;
   font-size: xx-small;
 }
 iframe{
@@ -506,4 +507,24 @@ h5 {
 }
 .add_actions a, .stratum_add_actions a{
   text-decoration: none;
+}
+.count_header{
+  margin-top: 5px;
+  border-top: 1px dashed #ccc;
+  padding: 5px;
+  padding-top: 8px;
+}
+.count_stratum_info{
+  border: 1px solid #ccc;
+  margin: 5px;
+  margin-right: 23px;
+}
+.count_stratum_header{
+  padding: 5px;
+  padding-top: 8px;
+}
+.count_stratum_estimate{
+  float: right;
+  font-size: 24px;
+  font-weight: bold;
 }

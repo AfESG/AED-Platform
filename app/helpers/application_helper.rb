@@ -33,4 +33,24 @@ module ApplicationHelper
     User.find(:all).count
   end
 
+  def guess_new_count_path(p)
+    eval "new_population_submission_#{p.count_base_name}_path(p)"
+  end
+
+  def guess_edit_count_path(c)
+    eval "edit_#{c.count_base_name}_path(c)"
+  end
+
+  def guess_new_stratum_path(c)
+    eval "new_#{c.count_base_name}_#{c.count_base_name}_stratum_path(c)"
+  end
+
+  def guess_edit_stratum_path(b)
+    eval "edit_#{b.stratum_base_name}_path(b)"
+  end
+
+  def guess_show_stratum_path(b)
+    eval "#{b.stratum_base_name}_path(b)"
+  end
+
 end

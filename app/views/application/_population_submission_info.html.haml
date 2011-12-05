@@ -25,12 +25,12 @@
           #{p.season} season
         -if p.season == "Both"
           Both wet and dry seasons
-  - if p.survey_type='AS'
-    - for c in p.survey_aerial_sample_counts do
-      =render :partial => 'survey_aerial_sample_count_info', :locals => {:c => c}
-    - if p.survey_aerial_sample_counts.size < 1
+  - if p.survey_type!=''
+    - for c in p.counts do
+      =render :partial => 'count_info', :locals => {:c => c}
+    - if p.counts.size < 1
       .add_actions
-        = link_to new_population_submission_survey_aerial_sample_count_path(p) do
+        = link_to guess_new_count_path(p) do
           = image_tag('plus.png')
-          Add an aerial sample count
+          Add #{p.count_friendly_name}
 
