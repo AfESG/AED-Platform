@@ -1,4 +1,3 @@
-%h4= t('.children')
 - if @population_submission.survey_type == "AT"
   - for c in @population_submission.survey_aerial_total_counts do
     %div= link_to "Aerial Sample Count ##{c.id}", c

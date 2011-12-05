@@ -1,3 +1,5 @@
+.restated_survey_info
+  = render :partial => "submission_info", :locals => { :s => @submission }
 = semantic_form_for @submission do |f|
   = render "shared/error_messages", :target => @submission
   = f.inputs do

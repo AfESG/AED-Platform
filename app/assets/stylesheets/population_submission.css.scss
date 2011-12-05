@@ -1,21 +1,27 @@
-.population_submission_info{
-  padding: 10px;
-  border: 1px solid #ccc;
-  margin-bottom: 20px;
-  margin-top: 20px;
+.population_submission_header{
+  margin-top: 5px;
+  border-top: 1px dashed #ccc;
+  padding: 5px;
+  padding-top: 8px;
+  padding-bottom: 0px;
+}
+.population_submission_parameters{
+  padding-top: 0px;
+  padding: 5px;
 }
 .population_submission_site_name {
-  float: right;
   font-size: 20px;
+  font-weight: bold;
 }
 .population_submission_licensing {
-  font-size: 20px;
-  margin-bottom: 5px;
+  margin-top: 15px;
+  float: right;
 }
 .population_submission_area {
-  float: right;
-  clear: right;
+  margin-top: 5px;
 }
 .population_submission_survey_completed {
-  margin-bottom: 5px;
+  font-size: 14px;
+  margin-top: 3px;
+  font-weight: bold;
 }

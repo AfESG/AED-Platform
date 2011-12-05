@@ -1,20 +1,25 @@
 .population_submission_info
-  .population_submission_site_name
-    #{@population_submission.site_name}
-    #{@population_submission.designate}
-  .population_submission_licensing
-    -if @population_submission.data_licensing == "CC"
-      (CC image)
-    -unless @population_submission.embargo_date.nil? 
-      Embargoed until #{@population_submission.embargo_date}
-  .population_submission_area
-    Area surveyed: #{@population_submission.area} km²
-  .population_submission_survey_completed
-    Suvey completed:
-    -unless @population_submission.completion_month.nil?
-      #{@population_submission.completion_month}
-    #{@population_submission.completion_year}
-    -if @population_submission.season == "Wet" or @population_submission.season == "Dry"
-      in the #{@population_submission.season} season
-    -if @population_submission.season == "Both"
-      in both wet and dry seasons
+  .edit_link
+    = link_to image_tag("editable.png"), edit_population_submission_path(p)
+  .population_submission_header
+    .population_submission_site_name
+      #{p.site_name}
+      #{p.designate}
+    .population_submission_survey_completed
+      -unless p.completion_month.nil?
+        #{p.completion_month}
+        /
+      #{p.completion_year}
+  .population_submission_parameters
+    .population_submission_licensing
+      -if p.data_licensing == "CC"
+        <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png" /></a>
+      -unless p.embargo_date.nil?
+        Embargoed until #{p.embargo_date}
+    .population_submission_area
+      #{p.area} km²
+    .population_submission_season
+      -if p.season == "Wet" or p.season == "Dry"
+        #{p.season} season
+      -if p.season == "Both"
+        Both wet and dry seasons

@@ -1,8 +1,6 @@
 %h1= t '.title'
-%p
-  = link_to t('back'), survey_aerial_sample_counts_path
-  = link_to t('edit'), edit_survey_aerial_sample_count_path(@survey_aerial_sample_count)
-  = link_to t('.new'), new_survey_aerial_sample_count_path
+
+= render "population_submission_info"
 
 %dl
   %dt= SurveyAerialSampleCount.human_attribute_name :population_submission_id

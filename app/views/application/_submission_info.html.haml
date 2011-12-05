@@ -1,22 +1,28 @@
 .submission_info
-  - unless @submission.country.nil?
-    .submission_country= @submission.country.name
-  - if @submission.mike_site
-    .submission_mike_site MIKE site
-  .submission_species
-    #{@submission.species.scientific_name}
-    (#{@submission.species.common_name})
-  - unless @submission.phenotype == "" or @submission.phenotype == "Unknown"
-    .submission_phenotype
-      Phenotype: #{@submission.phenotype}
-      - unless @submission.phenotype_basis == ""
-        based on #{@submission.phenotype_basis}
-  - unless @submission.user.nil?
-    .submission_user
-    - if @submission.user == current_user
-      - if @submission.right_to_grant_permission == false and @submission.permission_email != ''
-        Your submission on behalf of #{@submission.permission_email}
-    - else
-      Submitted by #{@submission.user.email}
-      - if @submission.right_to_grant_permission == false
-        on behalf of #{@submission.permission_email}
+  .edit_link
+    = link_to image_tag("editable.png"), edit_submission_path(s)
+  .submission_header
+    - unless s.country.nil?
+      .submission_country= s.country.name
+    - if s.mike_site
+      .submission_mike_site MIKE site
+    .submission_species= s.species.scientific_name
+    .submission_common_name= s.species.common_name
+    - unless s.phenotype == "" or s.phenotype == "Unknown"
+      .submission_phenotype
+        Phenotype: #{s.phenotype}
+        - unless s.phenotype_basis == ""
+          (based on #{s.phenotype_basis.downcase})
+  .submission_parameters
+    - unless s.user.nil?
+      .submission_user
+      - if s.user == current_user
+        - if s.right_to_grant_permission == false and s.permission_email != ''
+          Your submission on behalf of #{s.permission_email}
+      - else
+        Submitted by #{s.user.email}
+        - if s.right_to_grant_permission == false
+          on behalf of #{s.permission_email}
+
+- for p in s.population_submissions do
+  =render :partial => 'population_submission_info', :locals => {:p => p}
