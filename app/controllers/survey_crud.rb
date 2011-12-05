@@ -52,8 +52,10 @@ module SurveyCrud
 
   def new
     @level = level_class.new
-    connect_parent
-    find_parents @level
+    if respond_to? 'connect_parent'
+      connect_parent
+      find_parents @level
+    end
     enable_named_class_variable
 
     respond_to do |format|
