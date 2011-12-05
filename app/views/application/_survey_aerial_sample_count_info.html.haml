@@ -21,7 +21,7 @@
     = link_to new_survey_aerial_sample_count_survey_aerial_sample_count_stratum_path(c) do
       = image_tag('plus.png')
       Add a stratum
-- elsif p.survey_aerial_sample_count_strata.size < 1
+- elsif c.survey_aerial_sample_count_strata.size < 1
   .stratum_add_actions
     = link_to new_survey_aerial_sample_count_survey_aerial_sample_count_stratum_path(c) do
       = image_tag('plus.png')
