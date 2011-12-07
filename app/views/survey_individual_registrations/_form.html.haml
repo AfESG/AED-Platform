@@ -1,7 +1,9 @@
+.restated_survey_info
+  = render :partial => "submission_info", :locals => { :s => @submission }
 = semantic_form_for @survey_individual_registration do |f|
   = render "shared/error_messages", :target => @survey_individual_registration
   = f.inputs do
-    = f.input :population_submission_id, :as => :hidden, :value => params[:population_submission_id]
+    = f.input :population_submission_id, :as => :hidden, :value => @population_submission.id
     = f.input :population_estimate
     = f.input :population_upper_range
     = f.input :monitoring_years

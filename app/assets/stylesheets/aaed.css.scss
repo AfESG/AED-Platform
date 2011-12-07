@@ -95,7 +95,8 @@ a{
   color: #777;
 }
 #legal{
-  margin-top: 20px;
+  clear: both;
+  padding-top: 20px;
   font-size: xx-small;
 }
 iframe{
@@ -477,6 +478,55 @@ h5 {
 }
 .partners a {
   text-decoration: none;
+}
+.restated_survey_info {
+  float: right;
+  width: 350px;
+  border: 1px solid #ccc;
+  margin-left: 20px;
+}
+.edit_link {
+  width: 15px;
+  float: right;
+  clear: right;
+  margin-right: -20px;
+  margin-top: 3px;
+}
+.add_actions{
+  margin-top: 5px;
+  border-top: 1px dashed #ccc;
+  padding: 5px;
+}
+.stratum_add_actions{
+  padding: 5px;
+  padding-bottom: 0px;
+}
+.add_actions img, .stratum_add_actions img{
+  vertical-align: middle;
+  margin-top: 7px;
+}
+.add_actions a, .stratum_add_actions a{
+  text-decoration: none;
+}
+.count_header{
+  margin-top: 5px;
+  border-top: 1px dashed #ccc;
+  padding: 5px;
+  padding-top: 8px;
+}
+.count_stratum_info{
+  border: 1px solid #ccc;
+  margin: 5px;
+  margin-right: 23px;
+}
+.count_stratum_header{
+  padding: 5px;
+  padding-top: 8px;
+}
+.count_stratum_estimate{
+  float: right;
+  font-size: 24px;
+  font-weight: bold;
 }
 .errata {
   margin-left: 0px;

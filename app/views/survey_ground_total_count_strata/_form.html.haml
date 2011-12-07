@@ -1,7 +1,9 @@
+.restated_survey_info
+  = render :partial => "submission_info", :locals => { :s => @submission }
 = semantic_form_for @survey_ground_total_count_stratum do |f|
   = render "shared/error_messages", :target => @survey_ground_total_count_stratum
   = f.inputs do
-    = f.input :survey_ground_total_count_id, :as => :hidden, :value => params[:survey_ground_total_count_id]
+    = f.input :survey_ground_total_count_id, :as => :hidden, :value => @level.parent_count.id
     = f.input :stratum_name
     = f.input :stratum_area
     = f.input :population_estimate

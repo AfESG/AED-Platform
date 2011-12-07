@@ -1,0 +1,36 @@
+.submission_parameters{
+  padding: 5px;
+  padding-top: 0px;
+}
+.submission_tip {
+  padding: 10px;
+}
+.submission_header{
+  background: #ccc;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+.submission_species{
+  font-style: italic;
+  margin-bottom: 3px;
+}
+.submission_common_name{
+  margin-bottom: 3px;
+}
+.submission_phenotype{
+  font-size: 10px;
+  margin-bottom: 5px;
+}
+.submission_country{
+  float: right;
+}
+.submission_mike_site{
+  margin-top: -5px;
+  clear: right;
+  float: right;
+  background: #777;
+  padding: 2px;
+  font-weight: bold;
+  font-size: 12px;
+  color: #fff;
+}

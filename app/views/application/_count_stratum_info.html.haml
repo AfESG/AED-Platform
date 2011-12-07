@@ -1,0 +1,15 @@
+.count_stratum_info
+  .edit_link
+    = link_to image_tag("editable.png"), guess_edit_stratum_path(b)
+  .count_stratum_header
+    .count_stratum_estimate= b.population_estimate
+    =link_to guess_show_stratum_path(b) do
+      - if b.stratum_name == ''
+        .count_stratum_name Stratum ##{b.id}
+      - else
+        .count_stratum_name= b.stratum_name
+    .count_stratum_parameters
+      - if b.stratum_area > 0
+        = b.stratum_area
+        km²
+

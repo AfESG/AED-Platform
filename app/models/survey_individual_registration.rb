@@ -5,5 +5,4 @@ class SurveyIndividualRegistration < ActiveRecord::Base
   validates_presence_of :fenced_site
 
   belongs_to :population_submission
-
 end

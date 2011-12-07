@@ -11,5 +11,17 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def find_parents object
+    if object.respond_to? :submission
+      @submission = object.submission
+    elsif object.respond_to? :population_submission
+      @population_submission = object.population_submission
+      @submission = @population_submission.submission
+    elsif object.respond_to? :parent_count
+      @population_submission = object.parent_count.population_submission
+      @submission = @population_submission.submission
+    end
+  end
+
   protect_from_forgery
 end

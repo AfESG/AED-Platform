@@ -1,33 +1,3 @@
 %h1= t '.title'
-%p
-  = link_to t('back'), survey_ground_sample_count_strata_path
-  = link_to t('edit'), edit_survey_ground_sample_count_stratum_path(@survey_ground_sample_count_stratum)
-  = link_to t('.new'), new_survey_ground_sample_count_stratum_path
+= render :partial => "submission_info", :locals => { :s => @submission }
 
-%dl
-  %dt= SurveyGroundSampleCountStratum.human_attribute_name :survey_ground_sample_count_id
-  %dd= @survey_ground_sample_count_stratum.survey_ground_sample_count_id
-  %dt= SurveyGroundSampleCountStratum.human_attribute_name :stratum_name
-  %dd= @survey_ground_sample_count_stratum.stratum_name
-  %dt= SurveyGroundSampleCountStratum.human_attribute_name :stratum_area
-  %dd= @survey_ground_sample_count_stratum.stratum_area
-  %dt= SurveyGroundSampleCountStratum.human_attribute_name :population_estimate
-  %dd= @survey_ground_sample_count_stratum.population_estimate
-  %dt= SurveyGroundSampleCountStratum.human_attribute_name :population_variance
-  %dd= @survey_ground_sample_count_stratum.population_variance
-  %dt= SurveyGroundSampleCountStratum.human_attribute_name :population_standard_error
-  %dd= @survey_ground_sample_count_stratum.population_standard_error
-  %dt= SurveyGroundSampleCountStratum.human_attribute_name :population_t
-  %dd= @survey_ground_sample_count_stratum.population_t
-  %dt= SurveyGroundSampleCountStratum.human_attribute_name :population_degrees_of_freedom
-  %dd= @survey_ground_sample_count_stratum.population_degrees_of_freedom
-  %dt= SurveyGroundSampleCountStratum.human_attribute_name :population_confidence_limits
-  %dd= @survey_ground_sample_count_stratum.population_confidence_limits
-  %dt= SurveyGroundSampleCountStratum.human_attribute_name :population_no_precision_estimate_available
-  %dd= @survey_ground_sample_count_stratum.population_no_precision_estimate_available
-  %dt= SurveyGroundSampleCountStratum.human_attribute_name :transects_covered
-  %dd= @survey_ground_sample_count_stratum.transects_covered
-  %dt= SurveyGroundSampleCountStratum.human_attribute_name :transects_covered_total_length
-  %dd= @survey_ground_sample_count_stratum.transects_covered_total_length
-  %dt= SurveyGroundSampleCountStratum.human_attribute_name :person_hours
-  %dd= @survey_ground_sample_count_stratum.person_hours

@@ -25,4 +25,3 @@ production:
   password: <%=ENV['SPACIALDB_PASSWORD']%>
   pool: 5
   timeout: 5000
-

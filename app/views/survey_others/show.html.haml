@@ -1,15 +1,3 @@
 %h1= t '.title'
-%p
-  = link_to t('back'), survey_others_path
-  = link_to t('edit'), edit_survey_other_path(@survey_other)
-  = link_to t('.new'), new_survey_other_path
+= render :partial => "submission_info", :locals => { :s => @submission }
 
-%dl
-  %dt= SurveyOther.human_attribute_name :population_submission_id
-  %dd= @survey_other.population_submission_id
-  %dt= SurveyOther.human_attribute_name :other_method_description
-  %dd= @survey_other.other_method_description
-  %dt= SurveyOther.human_attribute_name :population_estimate_min
-  %dd= @survey_other.population_estimate_min
-  %dt= SurveyOther.human_attribute_name :population_estimate_max
-  %dd= @survey_other.population_estimate_max
