@@ -76,6 +76,9 @@ class PopulationSubmission < ActiveRecord::Base
       counts.each do |obj|
         if obj.respond_to? 'population_estimate'
           e = e + obj.population_estimate
+        elsif obj.respond_to? 'population_estimate_min'
+          # handles the Other case which just has a range
+          e = e + obj.population_estimate_min
         else
           strata = eval "obj.#{v}_strata"
           strata.each do |stratum|
