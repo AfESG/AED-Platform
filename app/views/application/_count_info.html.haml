@@ -4,7 +4,7 @@
   .count_header
     - if(c.respond_to? "total_possible_transects")
       .count_transects
-        - if c.total_possible_transects>0
+        - if !c.total_possible_transects.nil? and c.total_possible_transects>0
           = c.total_possible_transects
           transects
     .count_strata
