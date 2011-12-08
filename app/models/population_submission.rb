@@ -67,4 +67,43 @@ class PopulationSubmission < ActiveRecord::Base
     eval "#{count_base_name.pluralize}"
   end
 
+  # FIXME this straight-sum approach is incomplete
+  # also, PostgreSQL should be doing this
+  def estimate
+    e = 0
+    @@mappings.each do |k,v|
+      counts = eval v.pluralize
+      counts.each do |obj|
+        if obj.respond_to? 'population_estimate'
+          e = e + obj.population_estimate
+        else
+          strata = eval "obj.#{v}_strata"
+          strata.each do |stratum|
+            e = e + stratum.population_estimate
+          end
+        end
+      end
+    end
+    e
+  end
+
+  # TODO need to be able to fill in a manual source
+  def source
+    ''
+    unless submission.nil?
+      unless submission.user.nil?
+        unless submission.user.name.nil?
+          "#{submission.user.name.split(' ').pop}, #{completion_year}"
+        end
+      end
+    end
+  end
+
+  def data_licensing_link
+    if data_licensing =~ /CC/
+      '<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png" /></a>'
+    else
+      ''
+    end
+  end
 end

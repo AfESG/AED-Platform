@@ -2,6 +2,13 @@ class PopulationSubmissionsController < ApplicationController
 
   include SurveyCrud
 
+  def index
+    @population_submissions = PopulationSubmission.all :order => 'created_at desc'
+    respond_to do |format|
+      format.html
+    end
+  end
+
   # define the specific operation needed to connect the parent of
   # a newly created item in the new method
   def connect_parent

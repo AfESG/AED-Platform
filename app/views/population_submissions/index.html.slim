@@ -1,0 +1,30 @@
+h1 = t '.title'
+
+.info
+  |  These are the most recent surveys that have been submitted.
+  |  They have not yet been reviewed by the appropriate Data Review
+  |  Working Group.
+
+table
+  thead
+    tr
+      th Input Zone
+      th Type of Survey
+      th Year of Survey
+      th Estimate
+      th Source
+      th Data Licensing
+      th Date Submitted
+
+  tbody
+    - for p in @population_submissions
+      tr class=cycle(:odd, :even)
+        td
+          = link_to p do
+            = "#{p.site_name} #{p.designate}"
+        td = p.survey_type
+        td = p.completion_year
+        td = p.estimate
+        td = p.source
+        td == p.data_licensing_link
+        td = p.created_at
