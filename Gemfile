@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails'
+gem 'rails', '~>3.1.3'
 
 # Rails 3.1 - Asset Pipeline
 group :assets do
