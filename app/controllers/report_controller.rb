@@ -166,13 +166,15 @@ class ReportController < ApplicationController
     @region = params[:region].gsub('_',' ')
     @country = params[:country].gsub('_',' ')
 
+    conn = ActiveRecord::Base.connection.instance_variable_get("@connection")
+
     begin
       ccodes = ActiveRecord::Base.connection.execute <<-SQL
         SELECT "CCODE"
-        FROM aed#{@year}."Country" where "CNTRYNAME"='#{@country.force_encoding('UTF-8')}'
+        FROM aed#{@year}."Country" where "CNTRYNAME"='#{conn.escape(@country)}'
       SQL
       @ccode = ccodes[0]['CCODE']
-    rescue
+    rescue => e
       @ccode = @country
     end
 
