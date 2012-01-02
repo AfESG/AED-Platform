@@ -13,7 +13,7 @@
 %div{:style => 'margin-top:20px'}
 
 %a{:href=>"/report/#{@species.gsub(' ','_')}/#{@year}/Africa"} Continental totals for Africa
-- if @year==2007
+- if @year.to_i==2007
   %p
   .errata
     The 2007 African Elephant Status Report contained a number of errata.  These have been fixed in the display of data found on www.elephantdatabase.org, but for the purposes of clarity, they are briefly outlined below.
