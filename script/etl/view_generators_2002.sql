@@ -224,7 +224,7 @@ select
   round((c."RANGEAREA"::float/continental_rangearea::float)*100) "RANGEPERC",
   round(c."SURVRANGPERC"*100) "SURVRANGPERC",
   to_char(c."INFOQUALINDEX",'999999D99') "INFQLTYIDX",
-  round(log((c."INFOQUALINDEX"::float+1)::float/(c."RANGEAREA"::float/continental_rangearea::float))) "PFS"
+  round(ln((c."INFOQUALINDEX"::float+1)::float/(c."RANGEAREA"::float/continental_rangearea::float))) "PFS"
 from
   (select "RANGEAREA" continental_rangearea from aed2002."Continent") a,
   aed2002."Regions" c
