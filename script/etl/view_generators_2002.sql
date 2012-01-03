@@ -236,13 +236,9 @@ drop view if exists aed2002.elephant_estimates_by_country;
 create or replace view aed2002.elephant_estimates_by_country as
 select distinct
   "INPCODE",
-  "CCODE" ccode,
+  a."CCODE" ccode,
   "OBJECTID",
-  CASE WHEN "ReasonForChange"='NC' THEN
-    '-'
-  ELSE
-    "ReasonForChange"
-  END as "ReasonForChange",
+  '-' "ReasonForChange",
   CASE WHEN "DESIGNATE" IS NULL THEN
     "SURVEYZONE"
   ELSE
@@ -258,7 +254,7 @@ select distinct
     to_char(ROUND("CL95"),'9999999')
   END "CL95",
   "REFERENCE",
-  '-' as "PFS",
+  round(log(("QUALITY"::float+1)::float/("AREA_SQKM"::float/country_rangearea::float))) as "PFS",
   ROUND("AREA_SQKM") "AREA_SQKM",
   "LON" numeric_lon,
   "LAT" numeric_lat,
@@ -276,5 +272,8 @@ select distinct
   ELSE
     to_char(abs("LAT"),'990D9')||'N'
   END "LAT"
-from aed2002."Surveydata"
-order by "CCODE", survey_zone;
+from
+  aed2002."Surveydata" s
+  left join (select "CCODE", "RANGEAREA" country_rangearea from aed2002."Country") a
+    on s."CCODE" = a."CCODE"
+order by a."CCODE", survey_zone;
