@@ -276,4 +276,5 @@ from
   aed2002."Surveydata" s
   left join (select "CCODE", "RANGEAREA" country_rangearea from aed2002."Country") a
     on s."CCODE" = a."CCODE"
+  where s."SELECTION"=1
 order by a."CCODE", survey_zone;
