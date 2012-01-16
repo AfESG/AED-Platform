@@ -1,3 +1,15 @@
+:javascript
+  function confirm_submit(){
+    return confirm("Are you sure you want to submit this seizure record?")
+  }
+  $(document).ready(function(){
+    $('.formtastic').each(function(){
+      this.onsubmit = function(){
+        return confirm_submit();
+      }
+    })
+  })
+
 .restated_survey_info
   = render :partial => "submission_info", :locals => { :s => @submission }
 = semantic_form_for @survey_aerial_sample_count_stratum do |f|
