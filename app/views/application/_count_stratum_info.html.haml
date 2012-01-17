@@ -9,7 +9,8 @@
       - else
         .count_stratum_name= b.stratum_name
     .count_stratum_parameters
-      - if b.stratum_area > 0
-        = b.stratum_area
-        km²
+      -unless b.stratum_area.nil?
+        - if b.stratum_area > 0
+          = b.stratum_area
+          km²
 
