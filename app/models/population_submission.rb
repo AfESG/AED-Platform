@@ -105,8 +105,10 @@ class PopulationSubmission < ActiveRecord::Base
   def data_licensing_link
     if data_licensing =~ /CC/
       '<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png" /></a>'
+    elsif data_licensing =~ /CR/
+      'Report restricted by data provider'      
     else
-      ''
+      "Report embargoed by data provider until #{embargo_date}"   
     end
   end
 end
