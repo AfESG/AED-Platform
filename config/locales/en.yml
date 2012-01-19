@@ -90,7 +90,7 @@ en:
         population_upper_range: "Give the upper range of the population estimated at the site."
         monitoring_years: "In what year did individual monitoring of this population start?"
         monitoring_frequency: "On average, how frequently is every individual in the population re-sighted?"
-        fenced_site: "Is the site fenced? Is there a possiblity of elephants entering or leaving the site?"
+        fenced_site: "Is the site fenced?"
       survey_other:
         other_method_description: "Give a short description of the method used to arrive at the estimate"
         population_estimate_min: "Population estimate - minimum"
