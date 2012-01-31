@@ -23,7 +23,7 @@ table
         td
           = link_to p do
             = "#{p.site_name} #{p.designate}"
-        td = p.submission.nil? ? '???' : p.submission.country.name
+        td = (p.submission.nil? or p.submission.country.nil?) ? '???' : p.submission.country.name
         td = p.survey_type
         td = p.completion_year
         td = p.estimate
