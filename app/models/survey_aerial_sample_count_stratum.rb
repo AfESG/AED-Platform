@@ -7,21 +7,25 @@ class SurveyAerialSampleCountStratum < ActiveRecord::Base
 
   class SurveyAerialSampleCountStratumValidator < ActiveModel::Validator
     def validate(record)
-      some_precision = false
-      [:population_variance,
-       :population_standard_error,
-       :population_t,
-       :population_degrees_of_freedom,
-       :population_confidence_limits,
-       :population_no_precision_estimate_available].each do |field|
-        value = record.send field
-        unless value.nil?
-          some_precision = true
-          break
+      puts "I am validating"
+      unless record.population_no_precision_estimate_available
+        some_precision = false
+        [:population_variance,
+         :population_standard_error,
+         :population_t,
+         :population_degrees_of_freedom,
+         :population_confidence_limits].each do |field|
+          value = record.send field
+          puts "Value of #{field.to_s} = #{value}"
+          unless value.nil?
+            puts "So some_precision is true"
+            some_precision = true
+            break
+          end
         end
-      end
-      unless some_precision
-        record.errors[:population_no_precision_estimate_available] << "must be checked if no other precision information is available"
+        unless some_precision
+          record.errors[:population_no_precision_estimate_available] << "must be checked if no other precision information is available"
+        end
       end
     end
   end
