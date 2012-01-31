@@ -6,6 +6,7 @@
   .population_submission_info
     .edit_link
       = link_to image_tag("editable.png"), edit_population_submission_path(p)
+      = link_to image_tag("delete.png"), p, :confirm => t('are_you_sure'), :method => :delete
     .population_submission_header
       .population_submission_site_name
         #{p.site_name}

@@ -6,6 +6,7 @@
   .submission_info
     .edit_link
       = link_to image_tag("editable.png"), edit_submission_path(s)
+      = link_to image_tag("delete.png"), s, :confirm => t('are_you_sure'), :method => :delete
     .submission_header
       - unless s.country.nil?
         .submission_country= s.country.name

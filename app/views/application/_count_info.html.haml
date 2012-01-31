@@ -1,6 +1,7 @@
 .count_info
   .edit_link
     = link_to image_tag("editable.png"), guess_edit_count_path(c)
+    = link_to image_tag("delete.png"), c, :confirm => t('are_you_sure'), :method => :delete
   .count_header
     - if(c.respond_to? "total_possible_transects")
       .count_transects

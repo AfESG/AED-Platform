@@ -480,17 +480,21 @@ h5 {
   text-decoration: none;
 }
 .restated_survey_info {
-  float: right;
+  float: left;
   width: 350px;
   border: 1px solid #ccc;
-  margin-left: 20px;
+  margin-left: 35px;
+  margin-right: 20px;
 }
 .edit_link {
-  width: 15px;
-  float: right;
-  clear: right;
-  margin-right: -20px;
+  width: 40px;
+  float: left;
+  clear: left;
+  margin-left: -35px;
   margin-top: 3px;
+}
+.edit_link a {
+  float: left;
 }
 .add_actions{
   margin-top: 5px;
@@ -517,7 +521,6 @@ h5 {
 .count_stratum_info{
   border: 1px solid #ccc;
   margin: 5px;
-  margin-right: 23px;
 }
 .count_stratum_header{
   padding: 5px;
@@ -540,4 +543,13 @@ h5 {
 }
 .errata ul {
   margin-bottom: 5px;
+}
+.submission_info, .population_submission_info, .count_info, .count_stratum_info, .stratum_add_actions, .add_actions {
+}
+.count_stratum_info {
+  margin-left: 40px;
+}
+form {
+  float: left;
+  width: 500px;
 }
