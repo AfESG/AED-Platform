@@ -20,6 +20,25 @@ Reports
 
 &gt; #{@country}
 
+%p
+All Years for #{@country}:
+
+%a{:href=>"/report/#{@species.gsub(' ','_')}/2007/#{@continent}/#{@region}/#{@country}"} 2007
+
+&mdash;
+
+%a{:href=>"/report/#{@species.gsub(' ','_')}/2002/#{@continent}/#{@region}/#{@country}"} 2002
+
+&mdash;
+
+%a{:href=>"/report/#{@species.gsub(' ','_')}/1998/#{@continent}/#{@region}/#{@country}"} 1998
+
+&mdash;
+
+%a{:href=>"/report/#{@species.gsub(' ','_')}/1995/#{@continent}/#{@region}/#{@country}"} 1995
+
+
+
 - if @summary_totals_by_country.num_tuples > 0
   %h2{:style => 'margin-top:20px'} #{@year} Summary Totals for #{@country}
 
