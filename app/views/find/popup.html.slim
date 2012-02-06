@@ -1,0 +1,7 @@
+.popup_zone #{@survey_zone['survey_zone']} #{@survey_zone['designate']}
+.popup_count
+  =number_with_delimiter @survey_zone['ESTIMATE']
+.popup_elephants
+  | elephants in 
+  = @survey_zone['CYEAR']
+.link= link_to "Survey info and downloads", "/report/#{@species}/#{@year}/#{@continent}/#{@region}/#{@country}/#{@inpcode}"

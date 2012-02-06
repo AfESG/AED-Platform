@@ -70,6 +70,7 @@ Aaed::Application.routes.draw do
   match 'report' => 'report#index'
 
   match 'find/:year/:inpcode' => 'find#historical'
+  match 'popup/:year/:inpcode' => 'find#popup'
 
   match 'species/:species_id/range_states' => 'species#range_states'
 

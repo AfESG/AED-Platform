@@ -27,5 +27,13 @@
 .feature_name
   AESR 2007 Input Zones
 
-<iframe width="100%" height="500px" scrolling="no"  src="https://www.google.com/fusiontables/embedviz?viz=MAP&q=select+col59+from+1855116+&h=false&lat=-4.432774755925643&lng=11.540595250000031&z=4&t=1&l=col59"></iframe>
+#ftcanvas
+
+:javascript
+  var zoom = 4;
+  var center = new google.maps.LatLng(-4.43, 11.54);
+
+  jQuery(document).ready(function($){
+      ft_initialize('ftcanvas', zoom, center, function(){});
+  });
 
