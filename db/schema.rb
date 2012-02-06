@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111202200027) do
+ActiveRecord::Schema.define(:version => 20120206082544) do
 
   create_table "countries", :force => true do |t|
     t.string   "iso_code"
@@ -54,6 +54,14 @@ ActiveRecord::Schema.define(:version => 20111202200027) do
     t.string   "season"
     t.string   "survey_type"
     t.string   "survey_type_other"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "report_narratives", :force => true do |t|
+    t.string   "uri"
+    t.text     "narrative"
+    t.text     "footnote"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

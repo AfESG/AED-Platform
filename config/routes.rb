@@ -1,5 +1,7 @@
 Aaed::Application.routes.draw do
 
+  resources :report_narratives
+
   devise_for :users
 
   resources :submissions do
