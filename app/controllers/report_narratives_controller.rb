@@ -14,11 +14,7 @@ class ReportNarrativesController < ApplicationController
   # GET /report_narratives/1.json
   def show
     @report_narrative = ReportNarrative.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @report_narrative }
-    end
+    redirect_to "/report/#{@report_narrative.uri}"
   end
 
   # GET /report_narratives/new

@@ -2,4 +2,11 @@
 %p
   = link_to t('back'), report_narratives_path
   = link_to t('show'), @report_narrative
-= render 'form'
+= semantic_form_for @report_narrative do |f|
+  = f.inputs do
+    = f.input :uri
+    = f.input :narrative
+    = f.input :footnote
+
+  = f.buttons do
+    = f.commit_button

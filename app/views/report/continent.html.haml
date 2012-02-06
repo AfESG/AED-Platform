@@ -14,7 +14,7 @@
 #{@continent}
 
 %p
-All Years for #{@continent}: 
+All Years for #{@continent}:
 
 %a{:href=>"/report/#{@species.gsub(' ','_')}/2007/#{@continent}"} 2007
 
@@ -35,6 +35,8 @@ All Years for #{@continent}:
 
 - if @summary_totals_by_continent.num_tuples > 0
   %h2{:style => 'margin-top:20px'} #{@year} Summary Totals for #{@continent}
+
+  != narrative
 
   %table{:style => 'font-size:16px'}
     %tr
@@ -126,3 +128,5 @@ All Years for #{@continent}:
         - ['DEFINITE','PROBABLE','POSSIBLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX'].each do |key|
           %td.numeric= number_with_delimiter row[key]
         %td
+
+  != footnote

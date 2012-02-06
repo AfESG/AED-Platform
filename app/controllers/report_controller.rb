@@ -244,4 +244,38 @@ class ReportController < ApplicationController
       break
     end
   end
+
+  helper_method :narrative, :footnote
+
+  def report_narrative
+    if @report_narrative.nil?
+      @report_narrative = ReportNarrative.where(:uri => request.path[8..-1]).first
+    end
+    if @report_narrative.nil?
+      @report_narrative = ReportNarrative.new
+    end
+    return @report_narrative
+  end
+
+  def narrative
+    report_narrative.narrative
+  end
+
+  def footnote
+    note = report_narrative.footnote
+    if note.nil?
+      note = ''
+    end
+    if current_user.admin?
+      note << "<div>"
+      if report_narrative.id.nil?
+        note << "<a href='/report_narratives/new?uri=#{request.path[8..-1]}'>Create Narrative or Footnote</a>"
+      else
+        note << "<a href='/report_narratives/#{report_narrative.id}/edit'>Edit Narrative or Footnote</a>"
+      end
+      note << "</div>"
+    end
+    note
+  end
+
 end

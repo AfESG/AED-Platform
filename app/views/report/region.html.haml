@@ -40,6 +40,8 @@ All Years for #{@region}:
 - if @summary_totals_by_region.num_tuples > 0
   %h2{:style => 'margin-top:20px'} #{@year} Summary Totals for #{@region}
 
+  != narrative
+
   %table{:style => 'font-size:16px'}
     %tr
       %th{:width => '40%'} Data Category
@@ -130,3 +132,4 @@ All Years for #{@region}:
         - ['DEFINITE','PROBABLE','POSSIBLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX','PFS'].each do |key|
           %td.numeric= number_with_delimiter row[key]
 
+!= footnote

@@ -42,6 +42,8 @@ All Years for #{@country}:
 - if @summary_totals_by_country.num_tuples > 0
   %h2{:style => 'margin-top:20px'} #{@year} Summary Totals for #{@country}
 
+  != narrative
+
   %table{:style => 'font-size:16px'}
     %tr
       %th{:width => '40%'} Data Category
@@ -154,6 +156,9 @@ All Years for #{@country}:
         %td.numeric{:style=>"padding-right:10px"}= number_with_delimiter row['AREA_SQKM']
         %td{:style=>'text-align:center'}= row['LON']
         %td{:style=>'text-align:center'}= row['LAT']
+
+!= footnote
+
 %p
   * Range of informed guess
 %p
