@@ -266,7 +266,7 @@ class ReportController < ApplicationController
     if note.nil?
       note = ''
     end
-    if current_user.admin?
+    if !current_user.nil? and current_user.admin?
       note << "<div>"
       if report_narrative.id.nil?
         note << "<a href='/report_narratives/new?uri=#{request.path[8..-1]}'>Create Narrative or Footnote</a>"
