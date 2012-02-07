@@ -32,6 +32,14 @@ gem 'dalli'
 
 gem 'rack-cache'
 
+gem 'paperclip'
+
+gem 'fusion_tables', :git => 'git://github.com/rfc2616/fusion_tables.git'
+
+gem 'aws-s3'
+
+gem 'nofxx-georuby'
+
 # gem 'sqlite3'
 
 # Use unicorn as the web server
