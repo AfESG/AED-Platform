@@ -37,12 +37,10 @@ All Years for #{@country}:
 
 %a{:href=>"/report/#{@species.gsub(' ','_')}/1995/#{@continent}/#{@region}/#{@country}"} 1995
 
-
+!= narrative
 
 - if @summary_totals_by_country.num_tuples > 0
   %h2{:style => 'margin-top:20px'} #{@year} Summary Totals for #{@country}
-
-  != narrative
 
   %table{:style => 'font-size:16px'}
     %tr

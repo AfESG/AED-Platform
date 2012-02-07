@@ -1,0 +1,7 @@
+.report_narrative_links
+  - if report_narrative.id.nil?
+    = link_to "Create Narrative or Footnote", new_report_narrative_path, :uri => request.path[8..-1]
+  - else
+    = link_to "Edit Narrative or Footnote", edit_report_narrative_path(report_narrative)
+    | &#160;
+    = link_to "Delete Narrative and Footnote", report_narrative, :confirm => t('are_you_sure'), :method => :delete

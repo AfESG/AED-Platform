@@ -258,22 +258,24 @@ class ReportController < ApplicationController
   end
 
   def narrative
-    report_narrative.narrative
+    narrative = report_narrative.narrative
+    if narrative.nil?
+      narrative = ''
+    else
+      narrative = "<div class='report_narrative_narrative'>#{narrative}</div>"
+    end
   end
 
   def footnote
     note = report_narrative.footnote
     if note.nil?
       note = ''
+    else
+      note = "<div class='report_narrative_footnote'>#{note}</div>"
     end
     if !current_user.nil? and current_user.admin?
-      note << "<div>"
-      if report_narrative.id.nil?
-        note << "<a href='/report_narratives/new?uri=#{request.path[8..-1]}'>Create Narrative or Footnote</a>"
-      else
-        note << "<a href='/report_narratives/#{report_narrative.id}/edit'>Edit Narrative or Footnote</a>"
-      end
-      note << "</div>"
+      result = render_to_string :partial => "edit_narrative_links", :locals => {:report_narrative => report_narrative}
+      note << result
     end
     note
   end
