@@ -1,0 +1,15 @@
+h1 AESR 2007 Range
+
+#ftcanvas
+
+#key
+  div Green stuff is this
+  div Dark green stuff is that
+
+javascript:
+  var zoom = 4;
+  var center = new google.maps.LatLng(-4.43, 11.54);
+
+  jQuery(document).ready(function($){
+      ft_initialize('ftcanvas', 1631753, 'geometry', 'ROWID', '/popup/2007/', zoom, center, function(){});
+  });

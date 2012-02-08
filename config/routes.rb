@@ -74,6 +74,10 @@ Aaed::Application.routes.draw do
 
   match 'species/:species_id/range_states' => 'species#range_states'
 
+  match 'gallery/range' => 'welcome#range'
+  match 'gallery/zones' => 'welcome#zones'
+  match 'gallery' => 'welcome#gallery'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

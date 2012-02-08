@@ -20,7 +20,8 @@
             ( #{population_submission.completion_year} )
         %span ...
 
-=image_tag 'gallery.png', :class => 'gallery', :alt => 'Gallery'
+=link_to '/gallery' do
+  =image_tag 'gallery.png', :class => 'gallery', :alt => 'Gallery'
 
 .feature_legend
   featured map:
@@ -34,6 +35,6 @@
   var center = new google.maps.LatLng(-4.43, 11.54);
 
   jQuery(document).ready(function($){
-      ft_initialize('ftcanvas', zoom, center, function(){});
+      ft_initialize('ftcanvas', 1855116, 'location', 'INPCODE', '/popup/2007/', zoom, center, function(){});
   });
 

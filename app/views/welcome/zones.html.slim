@@ -1,0 +1,16 @@
+h1 AESR 2007 Survey Zones
+
+#ftcanvas
+
+#key
+  div Red stuff is this
+  div Dark green stuff is that
+
+javascript:
+  var zoom = 4;
+  var center = new google.maps.LatLng(-4.43, 11.54);
+
+  jQuery(document).ready(function($){
+      ft_initialize('ftcanvas', 1855116, 'location', 'INPCODE', '/popup/2007/', zoom, center, function(){});
+  });
+
