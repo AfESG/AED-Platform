@@ -40,6 +40,10 @@ gem 'aws-s3'
 
 gem 'nofxx-georuby'
 
+gem 'paper_trail'
+
+gem 'kaminari'
+
 # gem 'sqlite3'
 
 # Use unicorn as the web server
