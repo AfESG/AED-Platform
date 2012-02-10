@@ -63,7 +63,8 @@ All Years for #{@country}:
         %td.numeric= number_with_delimiter row['PROBABLE']
         %td.numeric= number_with_delimiter row['POSSIBLE']
         %td.numeric= number_with_delimiter row['SPECUL']
-
+- else
+  %h2 No estimates were available for #{@country} in #{@year}
 - if !@causes_of_change_by_country.nil? && @causes_of_change_by_country.num_tuples > 0
   %h2 Interpretation of Changes in Estimates from Previous Report
 
