@@ -36,7 +36,7 @@ class FindController < ApplicationController
     @objectid = params[:objectid]
     survey_zones = ActiveRecord::Base.connection.execute <<-SQL
       SELECT *
-      FROM aed#{@year}.elephant_estimates_by_country where "OBJECTID"='#{@objectid}'
+      FROM aed#{@year}.elephant_estimates_by_country where "OBJECTID"=#{@objectid}
     SQL
     survey_zones.each do |survey_zone|
       @survey_zone = survey_zone
