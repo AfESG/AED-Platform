@@ -1,15 +1,8 @@
--if current_user.admin?
+- if current_user.admin?
   %h1 Administrative resources
-  %h2 Database administration
   %div
-    %a{:href => '/submissions'} Recent Submissions
+    = link_to '/submissions' 'Recent Submissions'
   %div
-    %a{:href => '/data_request_forms'} Data Request Forms
-
-  %h2 GeoServer administration
-  %a{:href => 'http://geo.elephantdatabase.org/geoserver/web/'} GeoServer admin console
-
-  %h2 DSpace administration
-  %a{:href => 'http://dspace.elephantdatabase.org:4444/xmlui'} DSpace admin console
+    = link_to '/data_request_forms' 'Data Request Forms'
 - else
-  %h1 This account is not authorized to access this page.
+  This account is not authorized to access this page.
