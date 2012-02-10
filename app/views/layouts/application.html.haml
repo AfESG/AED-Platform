@@ -22,7 +22,8 @@
         #register= link_to t('register'), new_user_registration_path
         #login= link_to t('log_in'), new_user_session_path
       .nav
-        .navItem= raw(get_nav_item('Explore', '/report/Loxodonta_africana/2007/Africa'))
+        .navItem= raw(get_nav_item('Tables', '/report/Loxodonta_africana/2007/Africa'))
+        .navItem= raw(get_nav_item('Maps', '/gallery'))
         .navItem= raw(get_nav_item('Add Data', '/submissions/new'))
         .navItem= raw(get_nav_item('About', '/about'))
       %div
