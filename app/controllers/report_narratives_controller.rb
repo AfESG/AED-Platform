@@ -40,7 +40,7 @@ class ReportNarrativesController < ApplicationController
 
     respond_to do |format|
       if @report_narrative.save
-        format.html { redirect_to @report_narrative, notice: 'Report narrative was successfully created.' }
+        format.html { redirect_to "/report/#{@report_narrative.uri}" }
         format.json { render json: @report_narrative, status: :created, location: @report_narrative }
       else
         format.html { render action: "new" }
@@ -56,7 +56,7 @@ class ReportNarrativesController < ApplicationController
 
     respond_to do |format|
       if @report_narrative.update_attributes(params[:report_narrative])
-        format.html { redirect_to @report_narrative, notice: 'Report narrative was successfully updated.' }
+        format.html { redirect_to "/report/#{@report_narrative.uri}" }
         format.json { head :ok }
       else
         format.html { render action: "edit" }

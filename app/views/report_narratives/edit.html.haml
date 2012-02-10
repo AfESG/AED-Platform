@@ -1,7 +1,6 @@
-%h1= t '.title'
+%h1 Narratives and Footnotes
 %p
-  = link_to t('back'), report_narratives_path
-  = link_to t('show'), @report_narrative
+  = link_to 'All narratives and footnotes', report_narratives_path
 = semantic_form_for @report_narrative do |f|
   = f.inputs do
     = f.input :uri
