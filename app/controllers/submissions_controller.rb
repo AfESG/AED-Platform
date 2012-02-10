@@ -11,4 +11,8 @@ class SubmissionsController < ApplicationController
     eval "new_submission_population_submission_path(@level)"
   end
 
+  def index
+    @submissions = Submission.all
+  end
+
 end
