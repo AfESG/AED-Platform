@@ -4,10 +4,10 @@ class FindController < ApplicationController
     @species = 'Loxodonta_africana'
     @continent = 'Africa'
     @year = params[:year]
-    @inpcode = params[:inpcode]
+    @objectid = params[:objectid]
     survey_zones = ActiveRecord::Base.connection.execute <<-SQL
       SELECT *
-      FROM aed#{@year}.elephant_estimates_by_country where "INPCODE"='#{@inpcode}'
+      FROM aed#{@year}.elephant_estimates_by_country where "OBJECTID"='#{@objectid}'
     SQL
     survey_zones.each do |survey_zone|
       countries = ActiveRecord::Base.connection.execute <<-SQL
@@ -33,10 +33,10 @@ class FindController < ApplicationController
     @species = 'Loxodonta_africana'
     @continent = 'Africa'
     @year = params[:year]
-    @inpcode = params[:inpcode]
+    @objectid = params[:objectid]
     survey_zones = ActiveRecord::Base.connection.execute <<-SQL
       SELECT *
-      FROM aed#{@year}.elephant_estimates_by_country where "INPCODE"='#{@inpcode}'
+      FROM aed#{@year}.elephant_estimates_by_country where "OBJECTID"='#{@objectid}'
     SQL
     survey_zones.each do |survey_zone|
       @survey_zone = survey_zone

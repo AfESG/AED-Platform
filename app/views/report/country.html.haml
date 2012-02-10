@@ -142,7 +142,7 @@ All Years for #{@country}:
     - @elephant_estimates_by_country.each do |row|
       %tr{:style=>'height:18px'}
         %td
-          %a{:href=>"#{@country.gsub(' ','_')}/#{row['INPCODE']}"}= row['survey_zone']
+          %a{:href=>"#{@country.gsub(' ','_')}/#{row['OBJECTID']}"}= row['survey_zone']
         - if @year.to_i==2007
           %td= row['ReasonForChange']
         %td= row['method_and_quality']

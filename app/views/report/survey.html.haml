@@ -28,7 +28,7 @@ Reports
 
 %div{:style=>'margin-top: 20px'}
 
-%iframe{:style=>'float:right', :width=>'400px', :height=>'400px', :src=>"https://www.google.com/fusiontables/embedviz?viz=MAP&q=select+col59+from+1855116+where+col2+%3D+'#{@survey_zone['INPCODE']}'&h=false&lat=#{@survey_zone['numeric_lat']}&lng=#{@survey_zone['numeric_lon']}&z=8&t=1&l=col59"}
+%iframe{:style=>'float:right', :width=>'400px', :height=>'400px', :src=>"https://www.google.com/fusiontables/embedviz?viz=MAP&q=select+col59+from+1855116+where+col2+%3D+'#{@survey_zone['OBJECTID']}'&h=false&lat=#{@survey_zone['numeric_lat']}&lng=#{@survey_zone['numeric_lon']}&z=8&t=1&l=col59"}
 %div{:style=>'font-size: 40px; font-weight: bold'}
   =number_with_delimiter @survey_zone['ESTIMATE']
 %div{:style=>'font-size: 20px;'}

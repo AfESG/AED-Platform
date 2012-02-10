@@ -237,7 +237,7 @@ class ReportController < ApplicationController
     @survey = params[:survey]
     survey_zones = ActiveRecord::Base.connection.execute <<-SQL
       SELECT *
-      FROM aed#{@year}.elephant_estimates_by_country where "INPCODE"='#{@survey}'
+      FROM aed#{@year}.elephant_estimates_by_country where "OBJECTID"='#{@survey}'
     SQL
     survey_zones.each do |survey_zone|
       @survey_zone = survey_zone
