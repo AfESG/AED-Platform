@@ -4,6 +4,12 @@ window.ft_initialize = (canvas_id, table_id, geometry_name, key_name, url_prefix
     zoom: zoom
     mapTypeId: google.maps.MapTypeId.TERRAIN
   )
+  protarea = new google.maps.FusionTablesLayer(
+    query:
+      select: 'geometry'
+      from: 2898400
+    map: map
+  )
   layer = new google.maps.FusionTablesLayer(
     query:
       select: geometry_name
