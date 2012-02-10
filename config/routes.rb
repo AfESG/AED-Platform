@@ -4,6 +4,8 @@ Aaed::Application.routes.draw do
 
   devise_for :users
 
+  resources :users
+
   resources :submissions do
     resources :population_submissions
   end

@@ -1,0 +1,17 @@
+= semantic_form_for @user do |f|
+  = f.inputs do
+    = f.input :email
+    = f.input :job_title
+    = f.input :department
+    = f.input :organization
+    = f.input :phone
+    = f.input :fax
+    = f.input :address_1
+    = f.input :address_2
+    = f.input :address_3
+    = f.input :city
+    = f.input :country
+    - if current_user.admin?
+      = f.input :admin
+  = f.buttons do
+    = f.commit_button :update
