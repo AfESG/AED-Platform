@@ -6,7 +6,7 @@ module ApplicationHelper
     if (path == "/" && request_uri == path )
       return "<div class=\"selected\">#{text}</div>";
     elsif (path != "/" && request_uri.starts_with?( path))
-      return "<div class=\"selected\">#{text}</div>";
+      return "<div class=\"selected\">#{link_to text, path}</div>";
     end
     return link_to text, path
   end

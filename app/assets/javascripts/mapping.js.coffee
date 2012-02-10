@@ -2,7 +2,7 @@ window.ft_initialize = (canvas_id, table_id, geometry_name, key_name, url_prefix
   map = new google.maps.Map(document.getElementById(canvas_id),
     center: center
     zoom: zoom
-    mapTypeId: google.maps.MapTypeId.ROADMAP
+    mapTypeId: google.maps.MapTypeId.TERRAIN
   )
   layer = new google.maps.FusionTablesLayer(
     query:
