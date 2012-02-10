@@ -576,10 +576,13 @@ form {
 .gallery_item .link {
   margin-bottom: 5px;
 }
+#canvas_holder {
+  position: relative;
+}
 #key {
   position: absolute;
-  top: 640px;
-  left: 50px;
+  bottom: 40px;
+  left: 40px;
   z-index: 99;
   background: #fff;
   padding: 20px;
