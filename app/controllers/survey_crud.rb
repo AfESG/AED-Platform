@@ -34,20 +34,12 @@ module SurveyCrud
 
   def index
     @levels = level_class.all
-
-    respond_to do |format|
-      format.html
-    end
   end
 
   def show
     @level = level_class.find(params[:id])
     find_parents @level
     enable_named_class_variable
-
-    respond_to do |format|
-      format.html
-    end
   end
 
   def new
@@ -57,10 +49,6 @@ module SurveyCrud
       find_parents @level
     end
     enable_named_class_variable
-
-    respond_to do |format|
-      format.html
-    end
   end
 
   def edit
@@ -77,12 +65,12 @@ module SurveyCrud
     respond_to do |format|
       if @level.save
         if respond_to? 'new_child_path'
-          format.html { redirect_to new_child_path }
+          redirect_to new_child_path
         else
-          format.html { render :action => "show" }
+          render :action => "show"
         end
       else
-        format.html { render :action => "new" }
+        render :action => "new"
       end
     end
   end
@@ -94,9 +82,9 @@ module SurveyCrud
 
     respond_to do |format|
       if @level.update_attributes(params[level_base_name])
-        format.html { redirect_to(@level) }
+        redirect_to(@level)
       else
-        format.html { render :action => "edit" }
+        render :action => "edit"
       end
     end
   end
@@ -105,9 +93,7 @@ module SurveyCrud
     @level = level_class.find(params[:id])
     @level.destroy
 
-    respond_to do |format|
-      format.html { redirect_to(eval("#{level_base_name.pluralize}_url")) }
-    end
+    redirect_to(eval("#{level_base_name.pluralize}_url"))
   end
 
 end
