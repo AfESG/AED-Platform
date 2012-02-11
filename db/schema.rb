@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120206082544) do
+ActiveRecord::Schema.define(:version => 20120211051510) do
 
   create_table "countries", :force => true do |t|
     t.string   "iso_code"
@@ -42,6 +42,19 @@ ActiveRecord::Schema.define(:version => 20120206082544) do
     t.datetime "updated_at"
   end
 
+# Could not dump table "ft_surveydata" because of following StandardError
+#   Unknown type 'geometry' for column 'the_geom'
+
+  create_table "geometry_columns", :id => false, :force => true do |t|
+    t.string  "f_table_catalog",   :limit => 256, :null => false
+    t.string  "f_table_schema",    :limit => 256, :null => false
+    t.string  "f_table_name",      :limit => 256, :null => false
+    t.string  "f_geometry_column", :limit => 256, :null => false
+    t.integer "coord_dimension",                  :null => false
+    t.integer "srid",                             :null => false
+    t.string  "type",              :limit => 30,  :null => false
+  end
+
   create_table "population_submissions", :force => true do |t|
     t.integer  "submission_id"
     t.string   "data_licensing"
@@ -56,7 +69,15 @@ ActiveRecord::Schema.define(:version => 20120206082544) do
     t.string   "survey_type_other"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "abstract"
+    t.text     "link"
+    t.text     "citation"
+    t.boolean  "submitted"
+    t.boolean  "released"
   end
+
+# Could not dump table "range" because of following StandardError
+#   Unknown type 'geometry' for column 'the_geom'
 
   create_table "report_narratives", :force => true do |t|
     t.string   "uri"
@@ -64,6 +85,14 @@ ActiveRecord::Schema.define(:version => 20120206082544) do
     t.text     "footnote"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "spatial_ref_sys", :id => false, :force => true do |t|
+    t.integer "srid",                      :null => false
+    t.string  "auth_name", :limit => 256
+    t.integer "auth_srid"
+    t.string  "srtext",    :limit => 2048
+    t.string  "proj4text", :limit => 2048
   end
 
   create_table "species", :force => true do |t|
@@ -321,6 +350,9 @@ ActiveRecord::Schema.define(:version => 20120206082544) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+# Could not dump table "surveydata" because of following StandardError
+#   Unknown type 'geometry' for column 'the_geom'
 
   create_table "users", :force => true do |t|
     t.string   "email",                                 :default => "", :null => false
