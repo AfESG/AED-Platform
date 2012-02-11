@@ -21,4 +21,8 @@ class PopulationSubmissionsController < ApplicationController
     eval "new_#{level_base_name}_#{@level.count_base_name}_path(@level)"
   end
 
+  def submit
+    edit
+  end
+
 end
