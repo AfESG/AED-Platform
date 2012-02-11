@@ -36,7 +36,7 @@ gem 'paperclip'
 
 gem 'fusion_tables', :git => 'git://github.com/rfc2616/fusion_tables.git'
 
-gem 'aws-s3'
+gem 'aws-sdk'
 
 gem 'nofxx-georuby'
 

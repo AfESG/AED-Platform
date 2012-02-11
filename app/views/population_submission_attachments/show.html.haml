@@ -1,7 +1,20 @@
-%h1= t '.title'
-%p
-  = link_to t('back'), population_submission_attachments_path
-  = link_to t('edit'), edit_population_submission_attachment_path(@population_submission_attachment)
-  = link_to t('.new'), new_population_submission_attachment_path
+%h1 Attachment
+.restated_survey_info
+  = render :partial => "submission_info", :locals => { :s => @submission }
+%h4= @population_submission_attachment.file_file_name
+%div
+  = @population_submission_attachment.file_file_size
+  bytes
+%div
+  = @population_submission_attachment.file_content_type
+%div
+  Uploaded
+  = time_ago_in_words @population_submission_attachment.created_at
+  ago
 
-%dl
+.download
+  =link_to "Download", @population_submission_attachment.file.url
+
+.actions
+  =link_to "Remove", @population_submission_attachment, :confirm => "You are about to remove the file \"#{@population_submission_attachment.file_file_name}\". Do you wish to proceed?", :method => :delete
+

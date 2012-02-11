@@ -25,7 +25,7 @@
           #{p.season} season
         -if p.season == "Both"
           Both wet and dry seasons
-  - if p.survey_type!=''
+  - unless p.survey_type.blank?
     - for c in p.counts do
       =render :partial => 'count_info', :locals => {:c => c}
     - if p.counts.size < 1
@@ -33,4 +33,10 @@
         = link_to guess_new_count_path(p) do
           = image_tag('plus.png')
           Add #{p.count_friendly_name}
+    - for a in p.population_submission_attachments do
+      =render :partial => 'population_submission_attachment', :locals => {:a => a}
+    .add_actions
+      = link_to new_population_submission_population_submission_attachment_path(p) do
+        = image_tag('file.png')
+        Attach a file
 

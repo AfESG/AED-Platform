@@ -69,6 +69,10 @@ class PopulationSubmission < ActiveRecord::Base
     eval "#{count_base_name.pluralize}"
   end
 
+  def to_s
+    "#{site_name} #{designate}"
+  end
+
   # FIXME this straight-sum approach is incomplete
   # also, PostgreSQL should be doing this
   def estimate

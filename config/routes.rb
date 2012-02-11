@@ -1,7 +1,5 @@
 Aaed::Application.routes.draw do
 
-  resources :population_submission_attachments
-
   resources :report_narratives
 
   devise_for :users
@@ -21,6 +19,7 @@ Aaed::Application.routes.draw do
     resources :survey_ground_total_counts
     resources :survey_individual_registrations
     resources :survey_others
+    resources :population_submission_attachments
   end
 
   resources :survey_aerial_sample_counts do
@@ -55,6 +54,8 @@ Aaed::Application.routes.draw do
 
   resources :survey_individual_registrations
   resources :survey_others
+
+  resources :population_submission_attachments
 
   match 'data_request_forms/thanks' => 'data_request_forms#thanks'
 
