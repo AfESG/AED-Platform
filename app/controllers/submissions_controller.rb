@@ -3,7 +3,6 @@ class SubmissionsController < ApplicationController
   include SurveyCrud
 
   before_filter :authenticate_user!, :except => [:index, :show]
-  before_filter :authenticate_superuser!, :only => [:index, :show]
 
   # define the path to short-circuit to on creation of a new item
   # in the create method

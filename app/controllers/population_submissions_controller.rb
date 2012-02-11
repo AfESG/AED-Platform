@@ -9,6 +9,13 @@ class PopulationSubmissionsController < ApplicationController
     end
   end
 
+  def my
+    @population_submissions = PopulationSubmission.joins(:submission).where("submissions.user_id = #{current_user.id}").order('created_at desc')
+    respond_to do |format|
+      format.html
+    end
+  end
+
   # define the specific operation needed to connect the parent of
   # a newly created item in the new method
   def connect_parent

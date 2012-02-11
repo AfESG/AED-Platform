@@ -78,6 +78,7 @@ Aaed::Application.routes.draw do
   match 'popup/:year/:objectid' => 'find#popup'
 
   match 'population_submissions/:id/submit' => 'population_submissions#submit'
+  match 'my_population_submissions' => 'population_submissions#my'
 
   match 'species/:species_id/range_states' => 'species#range_states'
 

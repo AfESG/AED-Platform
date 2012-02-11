@@ -10,6 +10,8 @@
     = f.input :data_type, :as => :radio, :collection => ["Population estimate", "Range polygon", "Point observations"]
     = f.input :right_to_grant_permission, :required => true, :as => :radio, :collection => {"Yes, I have the right to grant permission to IUCN to use the data as specified" => true, "No, I do not have the right to grant permission, please email the following person:" => false}
     = f.input :permission_email, :as => :email
+    - if @submission.user_id.blank?
+      = f.input :user_id, :as => :hidden, :value => current_user.id
     -if current_user.admin?
       = f.input :mike_site, :as => :radio
   = f.buttons
