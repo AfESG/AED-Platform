@@ -15,7 +15,7 @@ module ApplicationHelper
     displayed = 0
     max = 3
     result = []
-    PopulationSubmission.find(:all, :order => 'id DESC').each do |population_submission|
+    PopulationSubmission.where(:released => true).order('id DESC').each do |population_submission|
       result << population_submission
       displayed = displayed + 1
       break if displayed > max
@@ -25,7 +25,7 @@ module ApplicationHelper
 
   # this shows all PS in the new model ... they're all new
   def new_surveys
-    PopulationSubmission.find(:all).count
+    PopulationSubmission.where(:released => true).count
   end
 
   # this shows all users ... everybody's new
