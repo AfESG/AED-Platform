@@ -1,5 +1,7 @@
 Aaed::Application.routes.draw do
 
+  resources :population_submission_attachments
+
   resources :report_narratives
 
   devise_for :users

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120211051510) do
+ActiveRecord::Schema.define(:version => 20120211055235) do
 
   create_table "countries", :force => true do |t|
     t.string   "iso_code"
@@ -53,6 +53,16 @@ ActiveRecord::Schema.define(:version => 20120211051510) do
     t.integer "coord_dimension",                  :null => false
     t.integer "srid",                             :null => false
     t.string  "type",              :limit => 30,  :null => false
+  end
+
+  create_table "population_submission_attachments", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
+    t.integer  "population_submission_id"
   end
 
   create_table "population_submissions", :force => true do |t|

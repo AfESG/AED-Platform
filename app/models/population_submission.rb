@@ -31,6 +31,8 @@ class PopulationSubmission < ActiveRecord::Base
 
   has_many :survey_others
 
+  has_many :population_submission_attachments
+
   @@mappings =
     {
       'AS' => 'survey_aerial_sample_count',
