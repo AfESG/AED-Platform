@@ -23,22 +23,6 @@
 .feature_legend
   featured map:
 .feature_name
-  AESR 2007 Input Zones
+  African Elephant Range (AESR 2007)
 
-#canvas_holder
-  #ftcanvas
-  #key
-    %div
-      %strong Data Reliability:
-    %div Dark Red - A thru
-    %div Light Red - E
-    %div{:style=>'margin-top:10px'} Yellow - Protected Areas
-
-:javascript
-  var zoom = 4;
-  var center = new google.maps.LatLng(-4.43, 11.54);
-
-  jQuery(document).ready(function($){
-      ft_initialize('ftcanvas', 2896260, 'location', 'objectid', '/popup/2007/', zoom, center, function(){});
-  });
-
+= render 'range'
