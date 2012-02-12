@@ -12,6 +12,28 @@
 
 module SurveyCrud
 
+  def edit_allowed
+    if current_user.nil?
+      return false
+    end
+    if current_user.admin?
+      return true
+    end
+    if @submission.nil?
+      return false
+    end
+    if @submission.user == current_user
+      if @population_submission.nil?
+        return true
+      else
+        unless @population_submission.submitted?
+          return true
+        end
+      end
+    end
+    return false
+  end
+
   def level_class_name
     self.class.name.gsub('Controller','').singularize
   end
@@ -55,12 +77,31 @@ module SurveyCrud
     @level = level_class.find(params[:id])
     find_parents @level
     enable_named_class_variable
+
+    puts "----------------------------------------------"
+    puts "edit_allowed = #{edit_allowed}"
+
+    unless edit_allowed
+      flash[:error] = "You attempted an operation that was not permitted."
+      redirect_to @level
+      return
+    end
   end
 
   def create
     @level = level_class.new(params[level_base_name])
     find_parents @level
     enable_named_class_variable
+
+    unless edit_allowed
+      flash[:error] = "You attempted an operation that was not permitted."
+      if @submission.nil?
+        redirect_to root_url
+      else
+        redirect_to @submission
+      end
+      return
+    end
 
     if @level.save
       if respond_to? 'new_child_path'
@@ -78,6 +119,16 @@ module SurveyCrud
     find_parents @level
     enable_named_class_variable
 
+    unless edit_allowed
+      flash[:error] = "You attempted an operation that was not permitted."
+      if @submission.nil?
+        redirect_to root_url
+      else
+        redirect_to @submission
+      end
+      return
+    end
+
     if @level.update_attributes(params[level_base_name])
       redirect_to @level
     else
@@ -88,8 +139,18 @@ module SurveyCrud
   def destroy
     @level = level_class.find(params[:id])
     find_parents @level
-    @level.destroy
 
+    unless edit_allowed
+      flash[:error] = "You attempted an operation that was not permitted."
+      if @submission.nil?
+        redirect_to root_url
+      else
+        redirect_to @submission
+      end
+      return
+   end
+
+    @level.destroy
     if @population_submission.nil?
       redirect_to @submission
     else
