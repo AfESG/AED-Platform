@@ -1,3 +1,36 @@
 %h1= t '.title'
-= render :partial => "submission_info", :locals => { :s => @submission }
-
+.restated_survey_info
+  = render :partial => "submission_info", :locals => { :s => @submission }
+.show_stratum
+  = t 'label.stratum_area'":"
+  = @level.stratum_area
+.show_stratum
+  = t 'label.population_estimate'":"
+  = @level.population_estimate
+.show_stratum
+  = t 'label.population_variance'":"
+  = @level.population_variance
+.show_stratum
+  = t 'label.population_standard_error'":"
+  = @level.population_standard_error
+.show_stratum
+  = t 'label.population_t'":"
+  = @level.population_t
+.show_stratum
+  = t 'label.population_degrees_of_freedom'":"
+  = @level.population_degrees_of_freedom
+.show_stratum
+  = t 'label.population_confidence_limits'":"
+  = @level.population_confidence_limits
+.show_stratum
+  = t 'label.population_no_precision_estimate_available'":"
+  = @level.population_no_precision_estimate_available
+.show_stratum
+  = t 'label.transects_covered'":"
+  = @level.transects_covered
+.show_stratum
+  = t 'label.transects_covered_total_length'":"
+  = @level.transects_covered_total_length
+.show_stratum
+  = t 'label.person_hours'":"
+  = @level.person_hours
