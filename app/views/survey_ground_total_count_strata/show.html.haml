@@ -1,3 +1,29 @@
 %h1= t '.title'
-= render :partial => "submission_info", :locals => { :s => @submission }
-
+.restated_survey_info
+  = render :partial => "submission_info", :locals => { :s => @submission }
+.restated_survey_info
+  = render :partial => "submission_info", :locals => { :s => @submission }
+.show_stratum
+  = t 'label.stratum_area'":"
+  = @level.stratum_area
+.show_stratum
+  = t 'label.population_estimate'":"
+  = @level.population_estimate
+.show_stratum
+  = t 'label.transects_covered'":"
+  = @level.transects_covered
+.show_stratum
+  = t 'label.transects_covered_total_length'":"
+  = @level.transects_covered_total_length
+.show_stratum
+  = t 'label.person_hours'":"
+  = @level.person_hours
+.show_stratum
+  = t 'label.strip_width'":"
+  = @level.strip_width
+.show_stratum
+  = t 'label.observations'":"
+  = @level.observations
+.show_stratum
+  = t 'label.actually_seen'":"
+  = @level.actually_seen
