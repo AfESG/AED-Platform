@@ -1,6 +1,11 @@
 %h1= t '.title'
 .restated_survey_info
   = render :partial => "submission_info", :locals => { :s => @submission }
+%h4
+  - if @level.stratum_name == ''
+    .count_stratum_name Stratum ##{b.id}
+  - else
+    .count_stratum_name= @level.stratum_name
 .show_stratum
   = t 'label.stratum_area'":"
   = @level.stratum_area
