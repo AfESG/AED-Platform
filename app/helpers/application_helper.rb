@@ -53,4 +53,27 @@ module ApplicationHelper
     eval "#{b.stratum_base_name}_path(b)"
   end
 
+  # FIXME/Annoying/NotDRY: this helper is duplicated in SurveyCrud
+  def edit_allowed
+    if current_user.nil?
+      return false
+    end
+    if current_user.admin?
+      return true
+    end
+    if @submission.nil?
+      return false
+    end
+    if @submission.user == current_user
+      if @population_submission.nil?
+        return true
+      else
+        unless @population_submission.submitted?
+          return true
+        end
+      end
+    end
+    return false
+  end
+
 end
