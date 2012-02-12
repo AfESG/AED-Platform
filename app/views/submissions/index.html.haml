@@ -3,29 +3,33 @@
 %table
   %thead
     %tr
-      %th= Submission.human_attribute_name :user_id
-      %th= Submission.human_attribute_name :species
+      %th User
+      %th Site Name
       %th= Submission.human_attribute_name :country
       %th= Submission.human_attribute_name :phenotype
-      %th= Submission.human_attribute_name :phenotype_basis
-      %th= Submission.human_attribute_name :data_type
-      %th= Submission.human_attribute_name :right_to_grant_permission
-      %th= Submission.human_attribute_name :permission_email
-      %th= Submission.human_attribute_name :mike_site
+      %th Pop
+      %th Rng
+      %th Perm
+      %th Submitted
+      %th Released
+      %th Created
+      %th Updated
       %th{:colspan => 3}= t 'actions'
 
   %tbody
     - for submission in @submissions
       %tr{ :class => cycle(:odd, :even) }
-        %td= submission.user_id
-        %td= submission.species
+        %td= submission.user.name
+        %td= submission.population_submissions[0].nil?? '' : submission.population_submissions[0].site_name
         %td= submission.country
         %td= submission.phenotype
-        %td= submission.phenotype_basis
-        %td= submission.data_type
-        %td= submission.right_to_grant_permission
-        %td= submission.permission_email
-        %td= submission.mike_site
+        %td= submission.data_type == 'Population estimate' ? 'X' : ''
+        %td= submission.data_type == 'Range polygon' ? 'X' : ''
+        %td= submission.right_to_grant_permission ? 'Y' : 'N'
+        %td= submission.population_submissions[0].nil?? '' : (submission.population_submissions[0].submitted ? 'Y' : 'N')
+        %td= submission.population_submissions[0].nil?? '' : (submission.population_submissions[0].released ? 'Y' : 'N')
+        %td= submission.created_at
+        %td= submission.updated_at
         %td.action= link_to t('show'), submission
         %td.action= link_to t('edit'), edit_submission_path(submission)
         %td.action= link_to t('destroy'), submission, :confirm => t('are_you_sure'), :method => :delete
