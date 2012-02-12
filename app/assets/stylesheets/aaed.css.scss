@@ -137,10 +137,17 @@ body{
 p {
   padding-bottom: 10px;
 }
-input, textarea {
+input {
   border: 1px solid #004400;
   margin: 0 10px 10px 0;
+  padding: 7px;
 }
+textarea {
+  border: 1px solid #004400;
+  margin: 0 10px 10px 0;
+  padding: 5px;
+}
+
 .area{
   float: left;
   width: 440px;
