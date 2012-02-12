@@ -291,6 +291,8 @@ en:
       title: "Population Estimate"
     edit:
       title: "Edit Population Estimate"
+    my:
+      title: "My Submissions"
   back: "Back"
   email_not_found:
     Email address not found.  Please check your spelling, and ensure that you have entered the
