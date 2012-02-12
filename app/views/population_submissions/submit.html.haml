@@ -2,12 +2,12 @@
 
 .restated_survey_info
   = render :partial => "submission_info", :locals => { :s => @submission }
-
-When you are done with your submission, complete the fields here to begin
-the data review process. If you are publishing this data under a Creative
-Commons license, the information you have entered will be released to the
-public as soon as an administrator initially reviews the submission -
-usually 1-2 business days.
+.submit_instructions
+  When you are done with your submission, complete the fields here to begin
+  the data review process. If you are publishing this data under a Creative
+  Commons license, the information you have entered will be released to the
+  public as soon as an administrator initially reviews the submission -
+  usually 1-2 business days.
 
 = semantic_form_for @population_submission do |f|
   = render "shared/error_messages", :target => @population_submission
@@ -19,12 +19,14 @@ usually 1-2 business days.
       %div
         This population survey is already submitted.
     - else
-      By ticking this box, I acknowledge that I have the rights to submit
-      this information to the African Elephant Specialist Group and request
-      review of this submission.
+      .submit_confirmation
+        By ticking this box, I acknowledge that I have the rights to submit
+        this information to the African Elephant Specialist Group and request
+        review of this submission.
       = f.input :submitted
     - if current_user.admin?
-      Admin Use Only: ticking this box will make this submission visible
-      on the site, pursuant to its data use restrictions.
+      .submit_confirmation
+        Admin Use Only: ticking this box will make this submission visible
+        on the site, pursuant to its data use restrictions.
       =f.input :released
   = f.buttons
