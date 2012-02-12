@@ -1,3 +1,42 @@
 %h1= t '.title'
-= render :partial => "submission_info", :locals => { :s => @submission }
+.restated_survey_info
+  = render :partial => "submission_info", :locals => { :s => @submission }
+%h4
+  - if @level.stratum_name == ''
+    .count_stratum_name Stratum ##{b.id}
+  - else
+    .count_stratum_name= @level.stratum_name
+.show_stratum
+  = t 'label.stratum_area'":"
+  = @level.stratum_area
+.show_stratum
+  = t '.label.population_estimate'":"
+  = @level.population_estimate
+.show_stratum
+  = t 'label.average_speed'":"
+  = @level.average_speed
+.show_stratum
+  = t 'label.average_transect_spacing'":"
+  = @level.average_transect_spacing
+.show_stratum
+  = t 'label.average_searching_rate'":"
+  = @level.average_searching_rate
+.show_stratum
+  = t 'label.transects_covered'":"
+  = @level.transects_covered
+.show_stratum
+  = t 'label.transects_covered_total_length'":"
+  = @level.transects_covered_total_length
+.show_stratum
+  = t 'label.observations'":"
+  = @level.observations
+.show_stratum
+  = t 'label.carcasses_fresh'":"
+  = @level.carcasses_fresh
+.show_stratum
+  = t 'label.carcasses_old'":"
+  = @level.carcasses_old
+.show_stratum
+  = t 'label.carcasses_very_old'":"
+  = @level.carcasses_very_old
 
