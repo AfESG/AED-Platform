@@ -39,6 +39,7 @@ en:
       survey_aerial_sample_count_stratum:
         seen_in_transects: "Number of elephants seen inside the transects"
         seen_outside_transects: "Number of elephants seen outside the transects"
+        sampling_intensity: "Sampling intensity"
       survey_aerial_total_count_stratum:        
         average_speed: "Average aircraft speed (km/h)"
         average_transect_spacing: "Average transect spacing (km)"
