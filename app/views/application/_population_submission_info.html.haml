@@ -38,7 +38,7 @@
     .add_actions
       = link_to new_population_submission_population_submission_attachment_path(p) do
         = image_tag('file.png')
-        Attach a file
+        Attach a file (survey report, relevant geometries, etc.)
     .submit_actions
       - if p.submitted?
         = link_to "Abstract and citation", "/population_submissions/#{p.id}/submit"
