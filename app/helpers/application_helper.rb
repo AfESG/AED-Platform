@@ -76,4 +76,15 @@ module ApplicationHelper
     return false
   end
 
+  def best_label_for(tag)
+    r = t "formtastic.labels.#{tag}", :default => ''
+    if r.blank? and !@level.nil?
+      r = t "formtastic.labels.#{@level.class.name.underscore}.#{tag}", :default => ''
+    end
+    if r.blank?
+      return "#{tag}<b>?</b>:"
+    end
+    return "#{r}:"
+  end
+
 end
