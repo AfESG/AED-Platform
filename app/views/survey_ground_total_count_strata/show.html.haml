@@ -7,26 +7,26 @@
   - else
     .count_stratum_name= @level.stratum_name
 .show_stratum
-  = t 'label.stratum_area'":"
+  != best_label_for 'stratum_area'
   = @level.stratum_area
 .show_stratum
-  = t 'label.population_estimate'":"
+  != best_label_for 'population_estimate'
   = @level.population_estimate
 .show_stratum
-  = t 'label.transects_covered'":"
+  != best_label_for 'transects_covered'
   = @level.transects_covered
 .show_stratum
-  = t 'label.transects_covered_total_length'":"
+  != best_label_for 'transects_covered_total_length'
   = @level.transects_covered_total_length
 .show_stratum
-  = t 'label.person_hours'":"
+  != best_label_for 'person_hours'
   = @level.person_hours
 .show_stratum
-  = t 'label.strip_width'":"
+  != best_label_for 'strip_width'
   = @level.strip_width
 .show_stratum
-  = t 'label.observations'":"
+  != best_label_for 'observations'
   = @level.observations
 .show_stratum
-  = t 'label.actually_seen'":"
+  != best_label_for 'actually_seen'
   = @level.actually_seen
