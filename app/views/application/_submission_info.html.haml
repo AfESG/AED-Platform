@@ -25,9 +25,14 @@
       - unless s.user.nil?
         .submission_user
           - if s.user == current_user
-            Your submission,
+            - unless edit_allowed
+              .warn
+                This report has been submitted to AfESG and can no longer be edited. If you need access to one of your completed submissions,
+                = link_to 'contact the Data Manager', '/contact'
+                = '.'
+            Your contribution,
           - else
-            Submitted by #{s.user.email},
+            Data contributed by #{s.user.email},
           - if s.right_to_grant_permission == false and s.permission_email != ''
             on behalf of #{s.permission_email},
           last updated #{s.updated_at}
