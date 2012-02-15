@@ -1,7 +1,7 @@
 .count_stratum_info
   .edit_link
     = link_to image_tag("editable.png"), guess_edit_stratum_path(b)
-    = link_to image_tag("delete.png"), b, :confirm => t('are_you_sure'), :method => :delete
+    = link_to image_tag("delete.png"), b, :confirm => t('are_you_sure_delete_stratum'), :method => :delete
   .count_stratum_header
     .count_stratum_estimate= b.population_estimate
     =link_to guess_show_stratum_path(b) do
