@@ -79,7 +79,7 @@ en:
         dung_density_no_precision_estimate_available: "Check if no estimate of precision available"
         dung_encounter_rate: "Dung encounter rate"
       survey_faecal_dna_stratum:        
-        method_of_analysis:          
+        method_of_analysis: "Method of analysis"         
         area_calculation_method: "How was the area calculated?"
         genotypes_identified: "No. of individual genotypes identified"
         samples_analyzed: "No. of DNA samples analyzed"
