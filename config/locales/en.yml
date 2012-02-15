@@ -9,7 +9,7 @@ en:
       stratum_level_data_submitted: "Can you submit data at the stratum/block level?"
       stratum_name: "Stratum/block name"
       stratum_area: "Stratum/block area (km²)"
-      population_estimate:
+      population_estimate: "Population estimate"
       population_variance: "Variance"
       population_standard_error: "Standard error"
       population_t: "Value of t used to calculate 95% confidence interval"
