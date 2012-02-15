@@ -4,9 +4,10 @@
     as a bug, please.
 - else
   .population_submission_info
-    .edit_link
-      = link_to image_tag("editable.png"), edit_population_submission_path(p)
-      = link_to image_tag("delete.png"), p, :confirm => t('are_you_sure'), :method => :delete
+    - if edit_allowed
+      .edit_link
+        = link_to image_tag("editable.png"), edit_population_submission_path(p)
+        = link_to image_tag("delete.png"), p, :confirm => t('are_you_sure'), :method => :delete
     .population_submission_header
       .population_submission_site_name
         #{p.site_name}
@@ -29,16 +30,18 @@
     - for c in p.counts do
       =render :partial => 'count_info', :locals => {:c => c}
     - if p.counts.size < 1
-      .add_actions
-        = link_to guess_new_count_path(p) do
-          = image_tag('plus.png')
-          Add #{p.count_friendly_name}
+      - if edit_allowed
+        .add_actions
+          = link_to guess_new_count_path(p) do
+            = image_tag('plus.png')
+            Add #{p.count_friendly_name}
     - for a in p.population_submission_attachments do
       =render :partial => 'population_submission_attachment', :locals => {:a => a}
-    .add_actions
-      = link_to new_population_submission_population_submission_attachment_path(p) do
-        = image_tag('file.png')
-        Attach a file (survey report, relevant geometries, etc.)
+    - if edit_allowed
+      .add_actions
+        = link_to new_population_submission_population_submission_attachment_path(p) do
+          = image_tag('file.png')
+          Attach a file (survey report, relevant geometries, etc.)
     .submit_actions
       - if p.submitted?
         = link_to "Abstract and citation", "/population_submissions/#{p.id}/submit"

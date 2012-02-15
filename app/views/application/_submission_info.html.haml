@@ -39,7 +39,8 @@
   - for p in s.population_submissions do
     =render :partial => 'population_submission_info', :locals => {:p => p}
   - if s.population_submissions.size < 1
-    .add_actions
-      = link_to new_submission_population_submission_path(s) do
-        = image_tag('plus.png')
-        Add a population estimate
+    - if edit_allowed
+      .add_actions
+        = link_to new_submission_population_submission_path(s) do
+          = image_tag('plus.png')
+          Add a population estimate
