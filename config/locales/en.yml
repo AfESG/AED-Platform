@@ -337,6 +337,7 @@ en:
   show: "Show"
   up: "Up"
   are_you_sure: "Are You Sure?"
+  are_you_sure_delete_stratum: "You are about to delete this stratum. Do you wish to proceed?"
   destroy: "Delete"
   actions: "Actions"
   email: "email"
