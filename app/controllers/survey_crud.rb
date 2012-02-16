@@ -104,12 +104,16 @@ module SurveyCrud
     end
 
     if @level.save
-      if respond_to? 'new_child_path'
-        redirect_to new_child_path
+      if params['commit'] == 'This is my final stratum'
+        redirect_to "/population_submissions/#{@population_submission.id}/submit"
       else
-        redirect_to @level
+        if respond_to? 'new_child_path'
+          redirect_to new_child_path
+        else
+          redirect_to @level
+        end
       end
-    else
+   else
       render :action => "new"
     end
   end

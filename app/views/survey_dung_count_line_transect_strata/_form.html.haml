@@ -51,4 +51,6 @@
     = f.input :dung_density_confidence_limits
     = f.input :dung_density_no_precision_estimate_available
     = f.input :dung_encounter_rate
-  = f.buttons
+  = f.buttons do
+    = f.commit_button :label => 'Save and enter another stratum'
+    = f.commit_button :label => 'This is my final stratum'

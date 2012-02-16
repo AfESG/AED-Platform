@@ -18,4 +18,6 @@
     = f.input :genotypes_identified
     = f.input :samples_analyzed
     = f.input :sampling_locations
-  = f.buttons
+  = f.buttons do
+    = f.commit_button :label => 'Save and enter another stratum'
+    = f.commit_button :label => 'This is my final stratum'

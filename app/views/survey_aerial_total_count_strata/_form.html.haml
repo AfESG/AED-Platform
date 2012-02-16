@@ -16,4 +16,6 @@
     = f.input :carcasses_fresh
     = f.input :carcasses_old
     = f.input :carcasses_very_old
-  = f.buttons
+  = f.buttons do
+    = f.commit_button :label => 'Save and enter another stratum'
+    = f.commit_button :label => 'This is my final stratum'

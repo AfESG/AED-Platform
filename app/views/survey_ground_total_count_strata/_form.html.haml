@@ -13,4 +13,6 @@
     = f.input :strip_width
     = f.input :observations
     = f.input :actually_seen
-  = f.buttons
+  = f.buttons do
+    = f.commit_button :label => 'Save and enter another stratum'
+    = f.commit_button :label => 'This is my final stratum'
