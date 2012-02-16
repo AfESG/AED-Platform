@@ -1,3 +1,15 @@
 %h1= t '.title'
-= render :partial => "submission_info", :locals => { :s => @submission }
-
+.restated_survey_info
+  = render :partial => "submission_info", :locals => { :s => @submission }
+.show_stratum
+  != best_label_for 'monitoring_years'
+  = @level.monitoring_years
+.show_stratum
+  != best_label_for 'monitoring_frequency'
+  = @level.monitoring_frequency
+.show_stratum
+  != best_label_for 'fenced_site'
+  = @level.fenced_site
+.show_stratum
+  != best_label_for 'porous_fenced_site'
+  = @level.porous_fenced_site

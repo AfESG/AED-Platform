@@ -1,3 +1,13 @@
 %h1= t '.title'
-= render :partial => "submission_info", :locals => { :s => @submission }
+.restated_survey_info
+  = render :partial => "submission_info", :locals => { :s => @submission }
+.show_stratum
+  != best_label_for 'other_method_description'
+  = @level.other_method_description
+.show_stratum
+  != best_label_for 'population_estimate_min'
+  = @level.population_estimate_min
+.show_stratum
+  != best_label_for 'population_estimate_max'
+  = @level.population_estimate_max
 
