@@ -68,6 +68,8 @@ GEM
       warden (~> 1.1)
     erubis (2.7.0)
     eventmachine (0.12.10)
+    exceptional (2.0.32)
+      rack
     execjs (1.3.0)
       multi_json (~> 1.0)
     formtastic (2.0.2)
@@ -97,7 +99,6 @@ GEM
     mime-types (1.17.2)
     multi_json (1.0.4)
     multi_xml (0.4.1)
-    newrelic_rpm (3.3.1)
     nofxx-georuby (1.9.2)
     nokogiri (1.5.0)
     orm_adapter (0.0.6)
@@ -182,6 +183,7 @@ DEPENDENCIES
   coffee-rails
   dalli
   devise
+  exceptional
   flutie!
   formtastic
   fusion_tables!
@@ -190,7 +192,6 @@ DEPENDENCIES
   jquery-rails
   kaminari
   maruku
-  newrelic_rpm
   nofxx-georuby
   paper_trail
   paperclip
