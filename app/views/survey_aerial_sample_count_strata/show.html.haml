@@ -3,7 +3,7 @@
   = render :partial => "submission_info", :locals => { :s => @submission }
 %h4
   - if @level.stratum_name == ''
-    .count_stratum_name Stratum ##{b.id}
+    .count_stratum_name Stratum ##{@level.id}
   - else
     .count_stratum_name= @level.stratum_name
 .show_stratum
