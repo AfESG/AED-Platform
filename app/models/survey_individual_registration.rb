@@ -5,6 +5,7 @@ class SurveyIndividualRegistration < ActiveRecord::Base
   validates_presence_of :monitoring_years
   validates_presence_of :monitoring_frequency
   validates_presence_of :fenced_site
+  validates_presence_of :porous_fenced_site
 
   def stratum_level_data_submitted
     false
