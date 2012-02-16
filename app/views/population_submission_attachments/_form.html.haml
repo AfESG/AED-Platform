@@ -1,6 +1,18 @@
 .restated_survey_info
   = render :partial => "submission_info", :locals => { :s => @submission }
 = semantic_form_for @population_submission_attachment, :html => { :enctype=>'multipart/form-data'} do |f|
+  .submit_confirmation
+    Please submit your full survey report to allow evaluation of the survey data submitted. Please 
+    also submit any polygons available from the survey, including the survey zone, the elephant 
+    results, and any available data on protected area boundaries. This will enable us to process 
+    and utilize your data more effectively. Thank you!
+    %p
+    As a reminder, you have licensed these data as 
+    %p
+    !=@population_submission.data_licensing_link
+    %br
+    -unless @population_submission.embargo_date.nil?
+      Embargoed until #{@population_submission.embargo_date}
   .file_uploader
     = f.inputs do
       = f.input :population_submission_id, :as => :hidden, :value => @population_submission.id
