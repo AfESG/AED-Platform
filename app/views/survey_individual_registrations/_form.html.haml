@@ -6,7 +6,7 @@
     = f.input :population_submission_id, :as => :hidden, :value => @population_submission.id
     = f.input :population_estimate
     = f.input :population_upper_range
-    = f.input :monitoring_years
+    = f.input :monitoring_years, :as => :select, :collection => Time.now.year.downto(1950)
     = f.input :monitoring_frequency, :as => :select, :collection => ["Weekly", "Monthly", "Quarterly", "Annually", "Every several years"]
     = f.input :fenced_site, :as => :select, :collection => ["Yes", "No", "Partly", "Unknown"]
     = f.input :porous_fenced_site, :as => :select, :collection => ["Yes", "No", "Unknown"]
