@@ -19,7 +19,7 @@ table
 
   tbody
     - for p in @population_submissions
-      - if p.released? or current_user.admin?
+      - if p.released? or (!current_user.nil? and current_user.admin?)
         - if p.submitted?
           tr class=cycle(:odd, :even)
             td
