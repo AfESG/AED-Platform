@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120211055235) do
+ActiveRecord::Schema.define(:version => 20120216001347) do
 
   create_table "countries", :force => true do |t|
     t.string   "iso_code"
@@ -347,9 +347,10 @@ ActiveRecord::Schema.define(:version => 20120211055235) do
     t.integer  "population_upper_range"
     t.integer  "monitoring_years"
     t.string   "monitoring_frequency"
-    t.boolean  "fenced_site"
+    t.string   "fenced_site"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "porous_fenced_site"
   end
 
   create_table "survey_others", :force => true do |t|
