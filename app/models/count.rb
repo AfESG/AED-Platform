@@ -9,6 +9,13 @@ module Count
     eval "#{count_base_name}_stratum.new"
   end
   def strata
-    eval "#{count_base_name}_strata"
+    begin
+      return eval "#{count_base_name}_strata"
+    rescue
+      return {}
+    end
+  end
+  def has_strata?
+    true
   end
 end
