@@ -15,4 +15,8 @@ module CountCrud
     eval "new_#{level_base_name}_#{level_base_name}_stratum_path(@level)"
   end
 
+  def index
+    raise ActiveRecord::RecordNotFound
+  end
+
 end
