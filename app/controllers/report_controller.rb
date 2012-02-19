@@ -19,7 +19,7 @@ class ReportController < ApplicationController
         FROM aed#{@year}.summary_totals_by_continent where "CONTINENT"='#{@continent}'
       SQL
     rescue
-      @summary_totals_by_continent = nil
+      raise ActiveRecord::RecordNotFound
     end
 
     begin
@@ -95,7 +95,7 @@ class ReportController < ApplicationController
         FROM aed#{@year}.summary_totals_by_region where "REGION"='#{@region}'
       SQL
     rescue
-      @summary_totals_by_region = nil
+      raise ActiveRecord::RecordNotFound
     end
 
     begin
@@ -196,15 +196,23 @@ class ReportController < ApplicationController
       @causes_of_change_sums_by_country = nil
     end
 
-    @summary_totals_by_country = ActiveRecord::Base.connection.execute <<-SQL
-      SELECT *
-      FROM aed#{@year}.summary_totals_by_country where ccode='#{@ccode}'
-    SQL
+    begin
+      @summary_totals_by_country = ActiveRecord::Base.connection.execute <<-SQL
+        SELECT *
+        FROM aed#{@year}.summary_totals_by_country where ccode='#{@ccode}'
+      SQL
+    rescue
+      raise ActiveRecord::RecordNotFound
+    end
 
-    @summary_sums_by_country = ActiveRecord::Base.connection.execute <<-SQL
-      SELECT *
-      FROM aed#{@year}.summary_sums_by_country where ccode='#{@ccode}'
-    SQL
+    begin
+      @summary_sums_by_country = ActiveRecord::Base.connection.execute <<-SQL
+        SELECT *
+        FROM aed#{@year}.summary_sums_by_country where ccode='#{@ccode}'
+      SQL
+    rescue
+      @summary_sums_by_country = nil
+    end
 
     begin
       @area_of_range_covered_by_country = ActiveRecord::Base.connection.execute <<-SQL
@@ -221,10 +229,14 @@ class ReportController < ApplicationController
       @area_of_range_covered_sum_by_country = nil
     end
 
-    @elephant_estimates_by_country = ActiveRecord::Base.connection.execute <<-SQL
-      SELECT *
-      FROM aed#{@year}.elephant_estimates_by_country where ccode='#{@ccode}'
-    SQL
+    begin
+      @elephant_estimates_by_country = ActiveRecord::Base.connection.execute <<-SQL
+        SELECT *
+        FROM aed#{@year}.elephant_estimates_by_country where ccode='#{@ccode}'
+      SQL
+    rescue
+      @elephant_estimates_by_country = nil
+    end
 
   end
 
