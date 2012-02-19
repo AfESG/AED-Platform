@@ -243,6 +243,9 @@ class ReportController < ApplicationController
       @survey_zone = survey_zone
       break
     end
+    if @survey_zone.nil?
+      raise ActiveRecord::RecordNotFound
+    end
   end
 
   helper_method :narrative, :footnote
