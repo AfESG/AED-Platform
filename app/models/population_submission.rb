@@ -7,6 +7,21 @@ class PopulationSubmission < ActiveRecord::Base
   validates_presence_of :season
   validates_presence_of :survey_type
 
+  class PopulationSubmissionValidator < ActiveModel::Validator
+    def validate(record)
+      if record.released?
+        unless record.submitted?
+          record.errors[:submitted] << "must be submitted in order to be released"
+        end
+        if record.short_citation.blank?
+          record.errors[:short_citation] << "must be supplied in order to be released"
+        end
+      end
+    end
+  end
+
+  validates_with PopulationSubmissionValidator
+
   belongs_to :submission
 
   has_many :survey_aerial_sample_counts
@@ -96,16 +111,8 @@ class PopulationSubmission < ActiveRecord::Base
     e
   end
 
-  # TODO need to be able to fill in a manual source
   def source
-    ''
-    unless submission.nil?
-      unless submission.user.nil?
-        unless submission.user.name.nil?
-          "#{submission.user.name.split(' ').pop}, #{completion_year}"
-        end
-      end
-    end
+    short_citation
   end
 
   def data_licensing_link

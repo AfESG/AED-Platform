@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120216001347) do
+ActiveRecord::Schema.define(:version => 20120221062558) do
 
   create_table "countries", :force => true do |t|
     t.string   "iso_code"
@@ -84,6 +84,7 @@ ActiveRecord::Schema.define(:version => 20120216001347) do
     t.text     "citation"
     t.boolean  "submitted"
     t.boolean  "released"
+    t.string   "short_citation"
   end
 
 # Could not dump table "range" because of following StandardError

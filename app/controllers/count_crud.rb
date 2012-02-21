@@ -19,4 +19,8 @@ module CountCrud
     raise ActiveRecord::RecordNotFound
   end
 
+  def show
+    raise ActiveRecord::RecordNotFound
+  end
+
 end

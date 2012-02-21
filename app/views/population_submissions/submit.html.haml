@@ -29,6 +29,7 @@
         review of this submission.
       = f.input :submitted
     - if current_user.admin?
+      = f.input :short_citation
       .submit_confirmation
         Admin Use Only: ticking this box will make this submission visible
         on the site, pursuant to its data use restrictions.
