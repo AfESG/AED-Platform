@@ -69,6 +69,10 @@ group :test do
   gem 'turn', :require => false
 end
 
+group :development do
+  gem "rails-erd"
+end
+
 group :development, :test do
   gem 'ruby_parser'
   gem 'hpricot'
