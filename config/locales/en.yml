@@ -20,6 +20,7 @@ en:
       actually_seen: "Number of elephants seen"
       transects_covered: "Number of transects covered"
       transects_covered_total_length: "Total length of transects covered (in km)"
+      individual_transect_length: "Individual transect length (in km)"
       strip_width: "Effective strip width"
       carcasses_fresh: "Number of Fresh or Recent Carcasses (Categ. 1 and 2)"
       carcasses_old: "Number of Old Carcasses (Categ. 3)"
