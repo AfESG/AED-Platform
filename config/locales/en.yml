@@ -29,6 +29,8 @@ en:
       submission:
         mike_site: "ADMIN ONLY: MIKE site?"
       population_submission:
+        latitude: "Latitude of approximate center of site"
+        longitude: "Longitude of approximate center of site"
         data_type: "Type of data"
         area: "Surface area of the site (km²)"
         completion_year: "Year of survey completion"

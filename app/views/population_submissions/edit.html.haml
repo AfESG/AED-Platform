@@ -1,2 +1,9 @@
 %h1= t '.title'
 = render 'form'
+
+:javascript
+  jQuery(document).ready(function($){
+    ft_initialize_below_protarea('map_canvas', 2899026, 'geometry', 'ROWID', '/popup/2007/', 3, new google.maps.LatLng(0,0), function(){
+      addExistingZone(#{@population_submission.id},#{@population_submission.latitude},#{@population_submission.longitude});
+    });
+  });

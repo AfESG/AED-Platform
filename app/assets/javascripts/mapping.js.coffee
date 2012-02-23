@@ -25,6 +25,7 @@ window.ft_initialize_below_protarea = (canvas_id, table_id, geometry_name, key_n
     infoWindow.open map
     jQuery.get url_prefix + e.row[key_name].value, (data) ->
       infoWindow.setContent data
+  window.map = map
   and_then()
 
 window.ft_initialize = (canvas_id, table_id, geometry_name, key_name, url_prefix, zoom, center, and_then) ->
@@ -55,6 +56,33 @@ window.ft_initialize = (canvas_id, table_id, geometry_name, key_name, url_prefix
     jQuery.get url_prefix + e.row[key_name].value, (data) ->
       infoWindow.setContent data
   and_then()
+
+window.addExistingZone = (population_submission_id, lat, lng) ->
+  lat = 0 if lat == ''
+  lng = 0 if lng == ''
+  myLocation = new google.maps.LatLng(lat, lng)
+  user_draggable = false
+  if document.getElementById("population_submission_latitude")
+    user_draggable = true
+  marker = new google.maps.Marker(
+    icon: new google.maps.MarkerImage('http://www.google.com/intl/en_us/mapfiles/ms/micons/orange.png')
+    position: new google.maps.LatLng(lat, lng)
+    title: "Input Zone #" + population_submission_id
+    population_submission_id: population_submission_id
+    map: map
+    draggable: user_draggable
+  )
+  window.map.setCenter myLocation
+  if user_draggable
+    google.maps.event.addListener marker, "dragend", ->
+      document.getElementById("population_submission_latitude").value = marker.getPosition().lat()
+      document.getElementById("population_submission_longitude").value = marker.getPosition().lng()
+  jQuery('#population_submission_latitude').change ->
+    marker.setPosition(new google.maps.LatLng(this.value,marker.getPosition().lng()))
+    map.setCenter marker.getPosition()
+  jQuery('#population_submission_longitude').change ->
+    marker.setPosition(new google.maps.LatLng(marker.getPosition().lat(),this.value))
+    map.setCenter marker.getPosition()
 
 window.map = undefined
 
