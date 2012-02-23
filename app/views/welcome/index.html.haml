@@ -10,15 +10,16 @@
         = new_surveys
       .ticker_legend
         new surveys
-  .ticker_text
-    - last_three_surveys.each do |population_submission|
-      - unless population_submission.site_name == ''
+  #ticker_text
+  - last_three_surveys.each do |population_submission|
+    - unless population_submission.site_name == ''
+      - @has_surveys = true
+      .ticker_tick
         = link_to url_for(population_submission) do
           = population_submission.site_name
           = population_submission.designate
           - unless population_submission.completion_year == ''
             ( #{population_submission.completion_year} )
-        %span ...
 
 .feature_legend
   featured map:
@@ -26,3 +27,31 @@
   African Elephant Range (AESR 2007)
 
 = render 'range'
+
+- if @has_surveys
+  :javascript
+    var last_h=''
+    function show_tick(h){
+      if(h!=last_h){
+        last_h = h;
+        var txt = $('#ticker_text').first();
+        txt.fadeOut('slow',function(){
+          txt.html(h);
+          txt.fadeIn('slow',function(){});
+        });
+      }
+    }
+    function tick(l){
+      var at_end = true;
+      $('.ticker_tick').each(function(i){
+        if(i>l && at_end){
+          show_tick(this.innerHTML);
+          at_end = false;
+          setTimeout("tick("+i+")",7000);
+        }
+      });
+      if(at_end){
+        setTimeout("tick(-1)",1000);
+      }
+    }
+    tick(-1);

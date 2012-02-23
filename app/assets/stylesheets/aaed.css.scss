@@ -459,13 +459,13 @@ h5 {
   text-decoration: none;
   color: #2b1100;
 }
-.ticker_text a {
+#ticker_text a {
   color: #fff;
 }
 .ticker_legend{
   font-family: "Droid Sans";
 }
-.ticker_text {
+#ticker_text {
   float: right;
   width: 700px;
   height: 18px;
@@ -476,6 +476,9 @@ h5 {
   font-size: 16px;
   margin-top: 30px;
   margin-right: 15px;
+}
+.ticker_tick {
+  display: none;
 }
 .partners {
   width: 100%;
