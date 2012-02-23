@@ -32,4 +32,16 @@
         = link_to guess_new_stratum_path(c) do
           = image_tag('plus.png')
           Report aggregates as a single stratum
-
+- else
+  .count_stratum_info
+    .count_stratum_header
+      - if c.respond_to? "population_estimate"
+        .count_stratum_estimate= c.population_estimate
+      - if c.respond_to? "population_estimate_min"
+        .count_stratum_estimate= "#{c.population_estimate_min}-#{c.population_estimate_max}"
+      =link_to c do
+        .count_stratum_name
+          Survey Type: 
+          = @population_submission.survey_type
+      .count_stratum_parameters
+        != '&#160;'
