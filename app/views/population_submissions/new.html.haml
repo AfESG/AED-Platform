@@ -1,9 +1,12 @@
 %h1= t '.title'
 = render 'form'
 
+- @f_lat = @population_submission.latitude.blank? ? 0 : @population_submission.latitude
+- @f_long = @population_submission.longitude.blank? ? 0 : @population_submission.longitude
+
 :javascript
   jQuery(document).ready(function($){
     ft_initialize_below_protarea('map_canvas', 2899026, 'geometry', 'ROWID', '/popup/2007/', 3, new google.maps.LatLng(0,0), function(){
-      addExistingZone(0,#{@population_submission.latitude},#{@population_submission.longitude});
+      addExistingZone(0,#{@f_lat},#{@f_long});
     });
   });
