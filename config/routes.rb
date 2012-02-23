@@ -82,6 +82,7 @@ Aaed::Application.routes.draw do
 
   match 'species/:species_id/range_states' => 'species#range_states'
 
+  match 'maps/asian_range' => 'welcome#asian_range'
   match 'maps/range' => 'welcome#range'
   match 'maps/zones' => 'welcome#zones'
   match 'maps' => 'welcome#maps'

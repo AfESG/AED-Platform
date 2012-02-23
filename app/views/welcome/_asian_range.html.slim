@@ -1,0 +1,14 @@
+#canvas_holder
+  #ftcanvas
+  #key
+    div Dark Purple - Confirmed Range
+    div Medium Purple - Possible Range
+    div Light Purple - Recoverable Range
+
+javascript:
+  var zoom = 5;
+  var center = new google.maps.LatLng(16.79, 91.36);
+
+  jQuery(document).ready(function($){
+      ft_initialize('ftcanvas', 3020060, 'geometry', 'ROWID', '/popup/2007/', zoom, center, function(){});
+  });
