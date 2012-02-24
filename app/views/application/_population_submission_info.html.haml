@@ -43,8 +43,9 @@
           = image_tag('file.png')
           Attach a file (survey report, relevant geometries, etc.)
     .submit_actions
-      - if p.submitted?
-        = link_to "Abstract and citation", "/population_submissions/#{p.id}/submit"
-      - else
-        = link_to "Submit this population data to AfESG", "/population_submissions/#{p.id}/submit"
+      - if edit_allowed
+        - if p.submitted?
+          = link_to "Abstract and citation", "/population_submissions/#{p.id}/submit"
+        - else
+          = link_to "Submit this population data to AfESG", "/population_submissions/#{p.id}/submit"
 
