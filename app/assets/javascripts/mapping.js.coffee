@@ -55,7 +55,18 @@ window.ft_initialize = (canvas_id, table_id, geometry_name, key_name, url_prefix
     infoWindow.open map
     jQuery.get url_prefix + e.row[key_name].value, (data) ->
       infoWindow.setContent data
+  window.map = map
   and_then()
+
+window.markMap = (marker, url, lat, lng) ->
+  marker = new google.maps.Marker(
+    icon: new google.maps.MarkerImage(marker)
+    position: new google.maps.LatLng(lat, lng)
+    url: url
+    map: map
+  )
+  google.maps.event.addListener marker, 'click', (e) ->
+    window.location.href = url
 
 window.addExistingZone = (population_submission_id, lat, lng) ->
   lat = 0 if lat == ''

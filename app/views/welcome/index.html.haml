@@ -10,16 +10,28 @@
         = new_surveys
       .ticker_legend
         new surveys
+  :javascript
+    ticker_lats = new Array
+    ticker_longs = new Array
+    ticker_ids = new Array
   #ticker_text
+  - @img_i = -1
   - last_three_surveys.each do |population_submission|
     - unless population_submission.site_name == ''
       - @has_surveys = true
+      - @img_i = @img_i+1
       .ticker_tick
+        = image_tag "orange_marker#{@img_i}.png"
         = link_to url_for(population_submission) do
           = population_submission.site_name
           = population_submission.designate
           - unless population_submission.completion_year == ''
             ( #{population_submission.completion_year} )
+      :javascript
+        ticker_lats[#{@img_i}]=#{population_submission.latitude};
+        ticker_longs[#{@img_i}]=#{population_submission.longitude};
+        ticker_ids[#{@img_i}]=#{population_submission.id};
+        ticker_max=#{@img_i};
 
 .feature_legend
   featured map:
@@ -30,6 +42,13 @@
 
 - if @has_surveys
   :javascript
+
+    jQuery(document).ready(function($){
+      for(i=0;i<=ticker_max;i++){
+        markMap("/assets/orange_marker"+i+".png","/population_submissions/"+ticker_ids[i],ticker_lats[i],ticker_longs[i]);
+      }
+    });
+
     var last_h=''
     function show_tick(h){
       if(h!=last_h){
