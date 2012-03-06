@@ -18,7 +18,7 @@ module ApplicationHelper
     PopulationSubmission.where(:released => true).order('id DESC').each do |population_submission|
       result << population_submission
       displayed = displayed + 1
-      break if displayed > max
+      break if displayed >= max
     end
     result
   end
