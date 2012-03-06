@@ -1,4 +1,7 @@
 class ApplicationController < ActionController::Base
+
+  before_filter :authenticate
+
   def authenticate_superuser!
     unless authenticate_user!
       return false
@@ -24,4 +27,17 @@ class ApplicationController < ActionController::Base
   end
 
   protect_from_forgery
+
+  protected
+
+  def authenticate
+    if !ENV['authenticate_all_requests'].nil?
+      authenticate_or_request_with_http_basic do |username, password|
+        username == "pachyderm" && password == ENV['authenticate_all_requests']
+      end
+    else
+      true
+    end
+  end
+
 end
