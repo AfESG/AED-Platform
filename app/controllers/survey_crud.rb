@@ -156,7 +156,7 @@ module SurveyCrud
 
     @level.destroy
     if @population_submission.nil?
-      if @submission.nil?
+      unless @submission.nil?
         redirect_to @submission
       else
         redirect_to '/submissions'
