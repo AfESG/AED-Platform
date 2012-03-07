@@ -4,6 +4,7 @@ class ReportController < ApplicationController
     @references = ActiveRecord::Base.connection.execute <<-SQL
       SELECT *
       FROM aed2007."References"
+      order by "Authors"
     SQL
   end
 
