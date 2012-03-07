@@ -1,0 +1,8 @@
+%h1 References
+- @i = 0
+- @references.each do |foo|
+  - @i = @i + 1
+  %p
+    #{@i}:
+    = foo.inspect
+

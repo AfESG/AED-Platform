@@ -1,5 +1,12 @@
 class ReportController < ApplicationController
 
+  def references
+    @references = ActiveRecord::Base.connection.execute <<-SQL
+      SELECT *
+      FROM aed2007."References"
+    SQL
+  end
+
   def species
     @species = params[:species].gsub('_',' ')
   end
