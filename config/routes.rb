@@ -66,6 +66,7 @@ Aaed::Application.routes.draw do
 
   match 'superuser' => 'superuser#index'
 
+  match 'report/references' => 'report#references'
   match 'report/:species/:year/:continent/:region/:country/:survey' => 'report#survey'
   match 'report/:species/:year/:continent/:region/:country' => 'report#country'
   match 'report/:species/:year/:continent/:region' => 'report#region'
