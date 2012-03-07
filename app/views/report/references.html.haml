@@ -1,8 +1,10 @@
 %h1 References
 - @i = 0
-- @references.each do |foo|
+- @references.each do |reference|
   - @i = @i + 1
+  %p{:style=>'font-size: 10px; color: #ccc'}
+    Raw database source for reference ##{@i}:
+    = reference.inspect
   %p
-    #{@i}:
-    = foo.inspect
+    != format_reference reference
 

@@ -150,7 +150,7 @@ All Years for #{@country}:
         %td= row['CYEAR']
         %td.numeric= number_with_delimiter row['ESTIMATE']
         %td.numeric= number_with_delimiter row['CL95']
-        %td{:style=>"padding-left:10px"}= row['REFERENCE']
+        %td{:style=>"padding-left:10px"}= link_to(row['REFERENCE'],'/report/references')
         %td{:style=>'text-align:center'}= row['PFS']
         %td.numeric{:style=>"padding-right:10px"}= number_with_delimiter row['AREA_SQKM']
         %td{:style=>'text-align:center'}= row['LON']
