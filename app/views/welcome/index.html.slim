@@ -3,14 +3,14 @@
     .ticker_no
       = contributors
     .ticker_legend
-      contributors
+      | contributors
   = link_to population_submissions_path do
     .ticker_item
       .ticker_no
         = new_surveys
       .ticker_legend
-        new surveys
-  :javascript
+        | new surveys
+  javascript:
     ticker_lats = new Array
     ticker_longs = new Array
     ticker_ids = new Array
@@ -24,25 +24,26 @@
         = image_tag "orange_marker#{@img_i}.png"
         = link_to url_for(population_submission) do
           = population_submission.site_name
+          = " "
           = population_submission.designate
+          = " "
           - unless population_submission.completion_year == ''
-            ( #{population_submission.completion_year} )
-      :javascript
+            | ( #{population_submission.completion_year} )
+      javascript:
         ticker_lats[#{@img_i}]=#{population_submission.latitude};
         ticker_longs[#{@img_i}]=#{population_submission.longitude};
         ticker_ids[#{@img_i}]=#{population_submission.id};
         ticker_max=#{@img_i};
 
 .feature_legend
-  featured map:
+  | featured map:
 .feature_name
-  African Elephant Range (AESR 2007)
+  | African Elephant Range (AESR 2007)
 
 = render 'range'
 
 - if @has_surveys
-  :javascript
-
+  javascript:
     jQuery(document).ready(function($){
       for(i=0;i<=ticker_max;i++){
         markMap("/assets/orange_marker"+i+".png","/population_submissions/"+ticker_ids[i],ticker_lats[i],ticker_longs[i]);
