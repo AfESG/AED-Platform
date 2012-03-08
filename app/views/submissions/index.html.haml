@@ -19,7 +19,7 @@
   %tbody
     - for submission in @submissions
       %tr{ :class => cycle(:odd, :even) }
-        %td= submission.user.name
+        %td= submission.user.nil?? '???' : submission.user.name
         %td= submission.population_submissions[0].nil?? '' : submission.population_submissions[0].site_name
         %td= submission.country
         %td= submission.phenotype
