@@ -10,10 +10,10 @@
         = new_surveys
       .ticker_legend
         | new surveys
-  javascript:
-    ticker_lats = new Array
-    ticker_longs = new Array
-    ticker_ids = new Array
+  coffee:
+    window.ticker_lats = new Array
+    window.ticker_longs = new Array
+    window.ticker_ids = new Array
   #ticker_text
   - @img_i = -1
   - last_three_surveys.each do |population_submission|
@@ -30,10 +30,10 @@
           - unless population_submission.completion_year == ''
             | ( #{population_submission.completion_year} )
       javascript:
-        ticker_lats[#{@img_i}]=#{population_submission.latitude};
-        ticker_longs[#{@img_i}]=#{population_submission.longitude};
-        ticker_ids[#{@img_i}]=#{population_submission.id};
-        ticker_max=#{@img_i};
+        ticker_lats[#{@img_i}]=#{population_submission.latitude}
+        ticker_longs[#{@img_i}]=#{population_submission.longitude}
+        ticker_ids[#{@img_i}]=#{population_submission.id}
+        ticker_max=#{@img_i}
 
 .feature_legend
   | featured map:
@@ -43,35 +43,27 @@
 = render 'range'
 
 - if @has_surveys
-  javascript:
-    jQuery(document).ready(function($){
-      for(i=0;i<=ticker_max;i++){
-        markMap("/assets/orange_marker"+i+".png","/population_submissions/"+ticker_ids[i],ticker_lats[i],ticker_longs[i]);
-      }
-    });
+  coffee:
+    show_tick = (h) ->
+      unless h is last_h
+        last_h = h
+        txt = $("#ticker_text").first()
+        txt.fadeOut "slow", ->
+          txt.html h
+          txt.fadeIn "slow", ->
+    window.tick = (l) ->
+      at_end = true
+      $(".ticker_tick").each (i) ->
+        if i > l and at_end
+          show_tick @innerHTML
+          at_end = false
+          setTimeout "tick(" + i + ")", 7000
 
-    var last_h=''
-    function show_tick(h){
-      if(h!=last_h){
-        last_h = h;
-        var txt = $('#ticker_text').first();
-        txt.fadeOut('slow',function(){
-          txt.html(h);
-          txt.fadeIn('slow',function(){});
-        });
-      }
-    }
-    function tick(l){
-      var at_end = true;
-      $('.ticker_tick').each(function(i){
-        if(i>l && at_end){
-          show_tick(this.innerHTML);
-          at_end = false;
-          setTimeout("tick("+i+")",7000);
-        }
-      });
-      if(at_end){
-        setTimeout("tick(-1)",1000);
-      }
-    }
-    tick(-1);
+      setTimeout "tick(-1)", 1000  if at_end
+    jQuery(document).ready ($) ->
+      i = 0
+      while i <= ticker_max
+        markMap "/assets/orange_marker" + i + ".png", "/population_submissions/" + ticker_ids[i], ticker_lats[i], ticker_longs[i]
+        i++
+    last_h = ""
+    tick -1
