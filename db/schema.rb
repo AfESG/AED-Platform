@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120223190436) do
+ActiveRecord::Schema.define(:version => 20120308014115) do
 
   create_table "countries", :force => true do |t|
     t.string   "iso_code"
@@ -53,6 +53,16 @@ ActiveRecord::Schema.define(:version => 20120223190436) do
     t.integer "coord_dimension",                  :null => false
     t.integer "srid",                             :null => false
     t.string  "type",              :limit => 30,  :null => false
+  end
+
+  create_table "mike_sites", :force => true do |t|
+    t.integer  "country_id"
+    t.integer  "subregion"
+    t.integer  "site_code"
+    t.integer  "site_name"
+    t.integer  "area"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "population_submission_attachments", :force => true do |t|
