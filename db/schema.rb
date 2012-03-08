@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120308014115) do
+ActiveRecord::Schema.define(:version => 20120308020028) do
 
   create_table "countries", :force => true do |t|
     t.string   "iso_code"
@@ -262,6 +262,8 @@ ActiveRecord::Schema.define(:version => 20120308014115) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.float    "individual_transect_length"
+    t.integer  "dung_density_asymmetric_upper_confidence_limit"
+    t.integer  "dung_density_asymmetric_lower_confidence_limit"
   end
 
   create_table "survey_dung_count_line_transects", :force => true do |t|
