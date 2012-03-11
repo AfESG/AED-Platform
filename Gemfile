@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '~>3.1.3'
+gem 'rails'
 
 # Rails 3.1 - Asset Pipeline
 group :assets do
@@ -43,6 +43,8 @@ gem 'nofxx-georuby'
 gem 'paper_trail'
 
 gem 'kaminari'
+
+gem 'country_select'
 
 # gem 'sqlite3'
 
