@@ -1,6 +1,9 @@
 class SurveyIndividualRegistration < ActiveRecord::Base
   include Count
 
+  # All normal attributes of Count models are mass-assignable
+  attr_protected :created_at, :updated_at
+
   validates_presence_of :population_estimate
   validates_presence_of :monitoring_years
   validates_presence_of :monitoring_frequency

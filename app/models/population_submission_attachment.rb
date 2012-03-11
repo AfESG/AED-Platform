@@ -1,5 +1,10 @@
 class PopulationSubmissionAttachment < ActiveRecord::Base
 
+  attr_accessible(
+    :population_submission_id,
+    :file
+  )
+
   belongs_to :population_submission
   has_attached_file :file,
     :storage => :s3,
