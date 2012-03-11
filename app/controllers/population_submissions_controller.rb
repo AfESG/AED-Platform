@@ -10,7 +10,7 @@ class PopulationSubmissionsController < ApplicationController
   end
 
   def my
-    @population_submissions = PopulationSubmission.joins(:submission).where("submissions.user_id = #{current_user.id}").order('created_at desc')
+    @population_submissions = PopulationSubmission.joins(:submission).where("submissions.user_id = ?",current_user.id).order('created_at desc')
     respond_to do |format|
       format.html
     end

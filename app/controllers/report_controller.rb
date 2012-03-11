@@ -1,7 +1,12 @@
 class ReportController < ApplicationController
 
+  def execute(*array)
+    sql = ActiveRecord::Base.send(:sanitize_sql_array, array)
+    return ActiveRecord::Base.connection.execute(sql)
+  end
+
   def references
-    @references = ActiveRecord::Base.connection.execute <<-SQL
+    @references = execute <<-SQL
       SELECT *
       FROM aed2007."References"
       order by "Authors"
@@ -19,53 +24,54 @@ class ReportController < ApplicationController
 
   def continent
     @species = params[:species].gsub('_',' ')
-    @year = params[:year]
+    @year = params[:year].to_i
+    db = "aed#{@year}"
     @continent = params[:continent]
     begin
-      @summary_totals_by_continent = ActiveRecord::Base.connection.execute <<-SQL
+      @summary_totals_by_continent = execute <<-SQL, @continent
         SELECT *
-        FROM aed#{@year}.summary_totals_by_continent where "CONTINENT"='#{@continent}'
+        FROM #{db}.summary_totals_by_continent where "CONTINENT"=?
       SQL
     rescue
       raise ActiveRecord::RecordNotFound
     end
 
     begin
-      @summary_sums_by_continent = ActiveRecord::Base.connection.execute <<-SQL
+      @summary_sums_by_continent = execute <<-SQL, @continent
         SELECT *
-        FROM aed#{@year}.summary_sums_by_continent where "CONTINENT"='#{@continent}'
+        FROM #{db}.summary_sums_by_continent where "CONTINENT"=?
       SQL
     rescue
       @summary_sums_by_continent = nil
     end
 
     begin
-      @causes_of_change_by_continent = ActiveRecord::Base.connection.execute <<-SQL
+      @causes_of_change_by_continent = execute <<-SQL, @continent
         SELECT *
-        FROM aed#{@year}.causes_of_change_by_continent where "CONTINENT"='#{@continent}'
+        FROM #{db}.causes_of_change_by_continent where "CONTINENT"=?
       SQL
     rescue
       @causes_of_change_by_continent = nil
     end
 
     begin
-      @causes_of_change_sums_by_continent = ActiveRecord::Base.connection.execute <<-SQL
+      @causes_of_change_sums_by_continent = execute <<-SQL, @continent
         SELECT *
-        FROM aed#{@year}.causes_of_change_sums_by_continent where "CONTINENT"='#{@continent}'
+        FROM #{db}.causes_of_change_sums_by_continent where "CONTINENT"=?
       SQL
     rescue
       @causes_of_change_sums_by_continent = nil
     end
 
     begin
-      @area_of_range_covered_by_continent = ActiveRecord::Base.connection.execute <<-SQL
+      @area_of_range_covered_by_continent = execute <<-SQL, @continent
         SELECT *
-        FROM aed#{@year}.area_of_range_covered_by_continent where "CONTINENT"='#{@continent}'
+        FROM #{db}.area_of_range_covered_by_continent where "CONTINENT"=?
       SQL
 
-      @area_of_range_covered_sum_by_continent = ActiveRecord::Base.connection.execute <<-SQL
+      @area_of_range_covered_sum_by_continent = execute <<-SQL, @continent
         SELECT *
-        FROM aed#{@year}.area_of_range_covered_sum_by_continent where "CONTINENT"='#{@continent}'
+        FROM #{db}.area_of_range_covered_sum_by_continent where "CONTINENT"=?
       SQL
     rescue
       @area_of_range_covered_by_continent = nil
@@ -73,18 +79,18 @@ class ReportController < ApplicationController
     end
 
     begin
-      @regions = ActiveRecord::Base.connection.execute <<-SQL
+      @regions = execute <<-SQL, @continent
         SELECT *
-        FROM aed#{@year}.continental_and_regional_totals_and_data_quality where "CONTINENT"='#{@continent}';
+        FROM #{db}.continental_and_regional_totals_and_data_quality where "CONTINENT"=?;
       SQL
     rescue
       @regions = nil
     end
 
     begin
-      @regions_sum = ActiveRecord::Base.connection.execute <<-SQL
+      @regions_sum = execute <<-SQL, @continent
         SELECT *
-        FROM aed#{@year}.continental_and_regional_totals_and_data_quality_sum where "CONTINENT"='#{@continent}';
+        FROM #{db}.continental_and_regional_totals_and_data_quality_sum where "CONTINENT"=?;
       SQL
     rescue
       @regions_sum = nil
@@ -94,54 +100,56 @@ class ReportController < ApplicationController
 
   def region
     @species = params[:species].gsub('_',' ')
-    @year = params[:year]
+    @year = params[:year].to_i
     @continent = params[:continent]
     @region = params[:region].gsub('_',' ')
+    db = "aed#{@year}"
+
     begin
-      @summary_totals_by_region = ActiveRecord::Base.connection.execute <<-SQL
+      @summary_totals_by_region = execute <<-SQL, @region
         SELECT *
-        FROM aed#{@year}.summary_totals_by_region where "REGION"='#{@region}'
+        FROM #{db}.summary_totals_by_region where "REGION"=?
       SQL
     rescue
       raise ActiveRecord::RecordNotFound
     end
 
     begin
-      @summary_sums_by_region = ActiveRecord::Base.connection.execute <<-SQL
+      @summary_sums_by_region = execute <<-SQL, @region
         SELECT *
-        FROM aed#{@year}.summary_sums_by_region where "REGION"='#{@region}'
+        FROM #{db}.summary_sums_by_region where "REGION"=?
       SQL
     rescue
       @summary_sums_by_region = nil
     end
 
     begin
-      @causes_of_change_by_region = ActiveRecord::Base.connection.execute <<-SQL
+      @causes_of_change_by_region = execute <<-SQL, @region
         SELECT *
-        FROM aed#{@year}.causes_of_change_by_region where "REGION"='#{@region}'
+        FROM #{db}.causes_of_change_by_region where "REGION"=?
       SQL
     rescue
       @causes_of_change_by_region = nil
     end
 
     begin
-      @causes_of_change_sums_by_region = ActiveRecord::Base.connection.execute <<-SQL
+      @causes_of_change_sums_by_region = execute <<-SQL, @region
         SELECT *
-        FROM aed#{@year}.causes_of_change_sums_by_region where "REGION"='#{@region}'
+        FROM #{db}.causes_of_change_sums_by_region where "REGION"=?
       SQL
     rescue
       @causes_of_change_sums_by_region = nil
     end
 
     begin
-      @area_of_range_covered_by_region = ActiveRecord::Base.connection.execute <<-SQL
+      @area_of_range_covered_by_region = execute <<-SQL, @region
         SELECT *
-        FROM aed#{@year}.area_of_range_covered_by_region where "REGION"='#{@region}'
+        FROM #{db}.area_of_range_covered_by_region where "REGION"=?
       SQL
 
-      @area_of_range_covered_sum_by_region = ActiveRecord::Base.connection.execute <<-SQL
+      @area_of_range_covered_sum_by_region = execute <<-SQL, @region
         SELECT *
-        FROM aed#{@year}.area_of_range_covered_sum_by_region where "REGION"='#{@region}'
+        FROM #{db}.area_of_range_covered_sum_by_region where "REGION"=?
       SQL
     rescue
       @area_of_range_covered_by_region = nil
@@ -149,18 +157,18 @@ class ReportController < ApplicationController
     end
 
     begin
-      @countries = ActiveRecord::Base.connection.execute <<-SQL
+      @countries = execute <<-SQL, @region
         SELECT *
-        FROM aed#{@year}.country_and_regional_totals_and_data_quality where "REGION"='#{@region}';
+        FROM #{db}.country_and_regional_totals_and_data_quality where "REGION"=?;
       SQL
     rescue
       @countries = nil
     end
 
     begin
-      @countries_sum = ActiveRecord::Base.connection.execute <<-SQL
+      @countries_sum = execute <<-SQL, @region
         SELECT *
-        FROM aed#{@year}.country_and_regional_totals_and_data_quality_sum where "REGION"='#{@region}';
+        FROM #{db}.country_and_regional_totals_and_data_quality_sum where "REGION"=?;
       SQL
     rescue
       @countries_sum = nil
@@ -169,17 +177,18 @@ class ReportController < ApplicationController
 
   def country
     @species = params[:species].gsub('_',' ')
-    @year = params[:year]
+    @year = params[:year].to_i
     @continent = params[:continent]
     @region = params[:region].gsub('_',' ')
     @country = params[:country].gsub('_',' ')
+    db = "aed#{@year}"
 
     conn = ActiveRecord::Base.connection.instance_variable_get("@connection")
 
     begin
-      ccodes = ActiveRecord::Base.connection.execute <<-SQL
+      ccodes = execute <<-SQL, @country
         SELECT "CCODE"
-        FROM aed#{@year}."Country" where "CNTRYNAME"='#{conn.escape(@country)}'
+        FROM #{db}."Country" where "CNTRYNAME"=?
       SQL
       @ccode = ccodes[0]['CCODE']
     rescue => e
@@ -187,50 +196,50 @@ class ReportController < ApplicationController
     end
 
     begin
-      @causes_of_change_by_country = ActiveRecord::Base.connection.execute <<-SQL
+      @causes_of_change_by_country = execute <<-SQL, @ccode
         SELECT *
-        FROM aed#{@year}.causes_of_change_by_country where ccode='#{@ccode}'
+        FROM #{db}.causes_of_change_by_country where ccode=?
       SQL
     rescue
       @causes_of_change_by_country = nil
     end
 
     begin
-      @causes_of_change_sums_by_country = ActiveRecord::Base.connection.execute <<-SQL
+      @causes_of_change_sums_by_country = execute <<-SQL, @ccode
         SELECT *
-        FROM aed#{@year}.causes_of_change_sums_by_country where ccode='#{@ccode}'
+        FROM #{db}.causes_of_change_sums_by_country where ccode=?
       SQL
     rescue
       @causes_of_change_sums_by_country = nil
     end
 
     begin
-      @summary_totals_by_country = ActiveRecord::Base.connection.execute <<-SQL
+      @summary_totals_by_country = execute <<-SQL, @ccode
         SELECT *
-        FROM aed#{@year}.summary_totals_by_country where ccode='#{@ccode}'
+        FROM #{db}.summary_totals_by_country where ccode=?
       SQL
     rescue
       raise ActiveRecord::RecordNotFound
     end
 
     begin
-      @summary_sums_by_country = ActiveRecord::Base.connection.execute <<-SQL
+      @summary_sums_by_country = execute <<-SQL, @ccode
         SELECT *
-        FROM aed#{@year}.summary_sums_by_country where ccode='#{@ccode}'
+        FROM #{db}.summary_sums_by_country where ccode=?
       SQL
     rescue
       @summary_sums_by_country = nil
     end
 
     begin
-      @area_of_range_covered_by_country = ActiveRecord::Base.connection.execute <<-SQL
+      @area_of_range_covered_by_country = execute <<-SQL, @ccode
         SELECT *
-        FROM aed#{@year}.area_of_range_covered_by_country where ccode='#{@ccode}'
+        FROM #{db}.area_of_range_covered_by_country where ccode=?
       SQL
 
-      @area_of_range_covered_sum_by_country = ActiveRecord::Base.connection.execute <<-SQL
+      @area_of_range_covered_sum_by_country = execute <<-SQL, @ccode
         SELECT *
-        FROM aed#{@year}.area_of_range_covered_sum_by_country where ccode='#{@ccode}'
+        FROM #{db}.area_of_range_covered_sum_by_country where ccode=?
       SQL
     rescue
       @area_of_range_covered_by_country = nil
@@ -238,9 +247,9 @@ class ReportController < ApplicationController
     end
 
     begin
-      @elephant_estimates_by_country = ActiveRecord::Base.connection.execute <<-SQL
+      @elephant_estimates_by_country = execute <<-SQL, @ccode
         SELECT *
-        FROM aed#{@year}.elephant_estimates_by_country where ccode='#{@ccode}'
+        FROM #{db}.elephant_estimates_by_country where ccode=?
       SQL
     rescue
       @elephant_estimates_by_country = nil
@@ -250,15 +259,16 @@ class ReportController < ApplicationController
 
   def survey
     @species = params[:species].gsub('_',' ')
-    @year = params[:year]
+    @year = params[:year].to_i
     @continent = params[:continent]
     @region = params[:region].gsub('_',' ')
     @country = params[:country].gsub('_',' ')
     @survey = params[:survey]
+    db = "aed#{@year}"
     if @survey.to_i > 0
-      survey_zones = ActiveRecord::Base.connection.execute <<-SQL
+      survey_zones = execute <<-SQL, @survey
         SELECT *
-        FROM aed#{@year}.elephant_estimates_by_country where "OBJECTID"='#{@survey}'
+        FROM #{db}.elephant_estimates_by_country where "OBJECTID"=?
       SQL
       survey_zones.each do |survey_zone|
         @survey_zone = survey_zone
