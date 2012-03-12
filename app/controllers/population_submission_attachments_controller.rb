@@ -10,6 +10,7 @@ class PopulationSubmissionAttachmentsController < ApplicationController
   def download
     head(:not_found) and return if (attachment = PopulationSubmissionAttachment.find_by_id(params[:id])).nil?
     path = attachment.file.path
-    redirect_to(AWS::S3::S3Object.url_for(path, attachment.file.bucket_name, :expires_in => 10.seconds))
+    uri = attachment.file.s3_object.url_for(:read, :secure => false, :expires_in => 10.seconds)
+    redirect_to uri.to_s
   end
 end
