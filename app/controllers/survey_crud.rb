@@ -90,6 +90,13 @@ module SurveyCrud
 
   def create
     @level = level_class.new(params[level_base_name])
+
+    # We have special knowledge of this association since it cannot
+    # be done by mass assignment
+    if level_base_name == 'submission'
+      @level.user_id = current_user.id
+    end
+
     find_parents @level
     enable_named_class_variable
 
