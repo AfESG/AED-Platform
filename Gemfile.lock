@@ -5,12 +5,6 @@ GIT
     fusion_tables (0.3.1)
       gdata_19 (>= 1.1.2)
 
-GIT
-  remote: https://github.com/thoughtbot/flutie.git
-  revision: 478d2257fc45019bf28985bbfaeba176a147ff7b
-  specs:
-    flutie (1.3.3)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -72,6 +66,7 @@ GEM
       rack
     execjs (1.3.0)
       multi_json (~> 1.0)
+    flutie (1.3.3)
     formtastic (2.1.1)
       actionpack (~> 3.0)
     gdata_19 (1.1.3)
@@ -188,7 +183,7 @@ DEPENDENCIES
   dalli
   devise
   exceptional
-  flutie!
+  flutie
   formtastic
   fusion_tables!
   haml

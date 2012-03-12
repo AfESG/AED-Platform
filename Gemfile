@@ -24,7 +24,7 @@ gem 'slim'
 
 gem 'formtastic'
 
-gem 'flutie', :git => 'https://github.com/thoughtbot/flutie.git'
+gem 'flutie'
 
 gem 'maruku'
 
