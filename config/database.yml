@@ -18,10 +18,6 @@ test:
 production:
   encoding: unicode
   adapter: postgresql
-  host: beta.spacialdb.com
-  database: spacialdb0_rfc2616
-  port: 9999
-  username: <%=ENV['SPACIALDB_USER']%>
-  password: <%=ENV['SPACIALDB_PASSWORD']%>
+  database: aaed_production
   pool: 5
   timeout: 5000

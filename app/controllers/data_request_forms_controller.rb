@@ -56,14 +56,10 @@ class DataRequestFormsController < ApplicationController
   def update
     @data_request_form = DataRequestForm.find(params[:id])
 
-    respond_to do |format|
-      if @data_request_form.update_attributes(params[:data_request_form])
-        format.html { redirect_to(@data_request_form, :notice => 'Data request form was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @data_request_form.errors, :status => :unprocessable_entity }
-      end
+    if @data_request_form.update_attributes(params[:data_request_form])
+      redirect_to @data_request_form, :notice => 'Data request form was successfully updated.', :only_path => true
+    else
+      render :action => "edit"
     end
   end
 

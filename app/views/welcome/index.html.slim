@@ -1,0 +1,69 @@
+.ticker_bar
+  .ticker_item
+    .ticker_no
+      = contributors
+    .ticker_legend
+      | contributors
+  = link_to population_submissions_path do
+    .ticker_item
+      .ticker_no
+        = new_surveys
+      .ticker_legend
+        | new surveys
+  coffee:
+    window.ticker_lats = new Array
+    window.ticker_longs = new Array
+    window.ticker_ids = new Array
+  #ticker_text
+  - @img_i = -1
+  - last_three_surveys.each do |population_submission|
+    - unless population_submission.site_name == ''
+      - @has_surveys = true
+      - @img_i = @img_i+1
+      .ticker_tick
+        = image_tag "orange_marker#{@img_i}.png"
+        = link_to url_for(population_submission) do
+          = population_submission.site_name
+          = " "
+          = population_submission.designate
+          = " "
+          - unless population_submission.completion_year == ''
+            | ( #{population_submission.completion_year} )
+      javascript:
+        ticker_lats[#{@img_i}]=#{population_submission.latitude}
+        ticker_longs[#{@img_i}]=#{population_submission.longitude}
+        ticker_ids[#{@img_i}]=#{population_submission.id}
+        ticker_max=#{@img_i}
+
+.feature_legend
+  | featured map:
+.feature_name
+  | African Elephant Range (AESR 2007)
+
+= render 'range'
+
+- if @has_surveys
+  coffee:
+    show_tick = (h) ->
+      unless h is last_h
+        last_h = h
+        txt = $("#ticker_text").first()
+        txt.fadeOut "slow", ->
+          txt.html h
+          txt.fadeIn "slow", ->
+    window.tick = (l) ->
+      at_end = true
+      $(".ticker_tick").each (i) ->
+        if i > l and at_end
+          show_tick @innerHTML
+          at_end = false
+          setTimeout "tick(" + i + ")", 7000
+
+      setTimeout "tick(-1)", 1000  if at_end
+    jQuery(document).ready ($) ->
+      i = 0
+      while i <= ticker_max
+        markMap "/assets/orange_marker" + i + ".png", "/population_submissions/" + ticker_ids[i], ticker_lats[i], ticker_longs[i]
+        i++
+    last_h = ""
+    tick -1

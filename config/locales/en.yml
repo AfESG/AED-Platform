@@ -43,11 +43,11 @@ en:
         seen_in_transects: "Number of elephants seen inside the transects"
         seen_outside_transects: "Number of elephants seen outside the transects"
         sampling_intensity: "Sampling intensity"
-      survey_aerial_total_count_stratum:        
+      survey_aerial_total_count_stratum:
         average_speed: "Average aircraft speed (km/h)"
         average_transect_spacing: "Average transect spacing (km)"
-        average_searching_rate: "Average searching rate (km²/hr)"        
-      survey_dung_count_line_transect_stratum:        
+        average_searching_rate: "Average searching rate (km²/hr)"
+      survey_dung_count_line_transect_stratum:
         asymmetric_lower_confidence_limit: "Lower asymmetric Confidence Interval"
         asymmetric_upper_confidence_limit: "Upper asymmetric Confidence Interval"
         observations_distance_method: "How were distances to observations estimated?"
@@ -80,10 +80,12 @@ en:
         dung_density_t: "Value of t"
         dung_density_degrees_of_freedom: "Degrees of freedom"
         dung_density_confidence_limits: "Confidence limits"
+        dung_density_asymmetric_upper_confidence_limit: "Upper asymmetric Confidence Interval"
+        dung_density_asymmetric_lower_confidence_limit: "Lower asymmetric Confidence Interval"
         dung_density_no_precision_estimate_available: "Check if no estimate of precision available"
         dung_encounter_rate: "Dung encounter rate"
-      survey_faecal_dna_stratum:        
-        method_of_analysis: "Method of analysis"         
+      survey_faecal_dna_stratum:
+        method_of_analysis: "Method of analysis"
         area_calculation_method: "How was the area calculated?"
         genotypes_identified: "No. of individual genotypes identified"
         samples_analyzed: "No. of DNA samples analyzed"

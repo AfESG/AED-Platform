@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120223190436) do
+ActiveRecord::Schema.define(:version => 20120312011811) do
 
   create_table "countries", :force => true do |t|
     t.string   "iso_code"
@@ -53,6 +53,16 @@ ActiveRecord::Schema.define(:version => 20120223190436) do
     t.integer "coord_dimension",                  :null => false
     t.integer "srid",                             :null => false
     t.string  "type",              :limit => 30,  :null => false
+  end
+
+  create_table "mike_sites", :force => true do |t|
+    t.integer  "country_id"
+    t.integer  "subregion"
+    t.integer  "site_code"
+    t.integer  "site_name"
+    t.integer  "area"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "population_submission_attachments", :force => true do |t|
@@ -252,6 +262,8 @@ ActiveRecord::Schema.define(:version => 20120223190436) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.float    "individual_transect_length"
+    t.integer  "dung_density_asymmetric_upper_confidence_limit"
+    t.integer  "dung_density_asymmetric_lower_confidence_limit"
   end
 
   create_table "survey_dung_count_line_transects", :force => true do |t|
@@ -402,5 +414,17 @@ ActiveRecord::Schema.define(:version => 20120223190436) do
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+
+  create_table "versions", :force => true do |t|
+    t.string   "item_type",      :null => false
+    t.integer  "item_id",        :null => false
+    t.string   "event",          :null => false
+    t.string   "whodunnit"
+    t.text     "object"
+    t.datetime "created_at"
+    t.text     "object_changes"
+  end
+
+  add_index "versions", ["item_type", "item_id"], :name => "index_versions_on_item_type_and_item_id"
 
 end

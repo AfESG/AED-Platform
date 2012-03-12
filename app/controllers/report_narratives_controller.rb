@@ -14,7 +14,7 @@ class ReportNarrativesController < ApplicationController
   # GET /report_narratives/1.json
   def show
     @report_narrative = ReportNarrative.find(params[:id])
-    redirect_to "/report/#{@report_narrative.uri}"
+    redirect_to "/report/#{@report_narrative.uri}", :only_path => true
   end
 
   # GET /report_narratives/new
@@ -38,14 +38,10 @@ class ReportNarrativesController < ApplicationController
   def create
     @report_narrative = ReportNarrative.new(params[:report_narrative])
 
-    respond_to do |format|
-      if @report_narrative.save
-        format.html { redirect_to "/report/#{@report_narrative.uri}" }
-        format.json { render json: @report_narrative, status: :created, location: @report_narrative }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @report_narrative.errors, status: :unprocessable_entity }
-      end
+    if @report_narrative.save
+      redirect_to "/report/#{@report_narrative.uri}", :only_path => true
+    else
+      render action: "new"
     end
   end
 
@@ -54,14 +50,10 @@ class ReportNarrativesController < ApplicationController
   def update
     @report_narrative = ReportNarrative.find(params[:id])
 
-    respond_to do |format|
-      if @report_narrative.update_attributes(params[:report_narrative])
-        format.html { redirect_to "/report/#{@report_narrative.uri}" }
-        format.json { head :ok }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @report_narrative.errors, status: :unprocessable_entity }
-      end
+    if @report_narrative.update_attributes(params[:report_narrative])
+      redirect_to "/report/#{@report_narrative.uri}", :only_path => true
+    else
+      render action: "edit"
     end
   end
 

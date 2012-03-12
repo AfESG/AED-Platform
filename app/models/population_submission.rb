@@ -1,4 +1,9 @@
 class PopulationSubmission < ActiveRecord::Base
+  has_paper_trail
+
+  # All normal attributes of this model are mass-assignable
+  attr_protected :created_at, :updated_at
+
   validates_presence_of :data_licensing
   validates_presence_of :site_name
   validates_presence_of :designate

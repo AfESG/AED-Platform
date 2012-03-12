@@ -1,5 +1,10 @@
 class SurveyDungCountLineTransectStratum < ActiveRecord::Base
+  has_paper_trail
+
   include Stratum
+
+  # All normal attributes of Stratum models are mass-assignable
+  attr_protected :created_at, :updated_at
 
   validates_presence_of :population_estimate
   validates_presence_of :dung_decay_rate_measurement_method
