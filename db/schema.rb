@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120312011811) do
+ActiveRecord::Schema.define(:version => 20120312110156) do
 
   create_table "countries", :force => true do |t|
     t.string   "iso_code"
@@ -73,6 +73,8 @@ ActiveRecord::Schema.define(:version => 20120312011811) do
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
     t.integer  "population_submission_id"
+    t.text     "attachment_type"
+    t.boolean  "restrict"
   end
 
   create_table "population_submissions", :force => true do |t|
