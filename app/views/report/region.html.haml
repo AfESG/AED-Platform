@@ -120,7 +120,7 @@ All Years for #{@region}:
       - unless row['RANGEAREA'].nil?
         %tr{:style => 'height: 24px;'}
           %td
-            %a{:href=>"#{@region.gsub(' ','_')}/#{row['CNTRYNAME'].gsub(' ','_')}"} #{row['CNTRYNAME']}
+            %a{:href=>"#{@region.gsub(' ','_')}/#{u row['CNTRYNAME'].gsub(' ','_')}"} #{row['CNTRYNAME']}
           - ['DEFINITE','PROBABLE','POSSIBLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX','PFS'].each do |key|
             %td.numeric= number_with_delimiter row[key]
     - @countries_sum.each do |row|
