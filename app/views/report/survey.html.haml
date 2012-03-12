@@ -35,7 +35,7 @@ Reports
   elephants in #{@survey_zone['CYEAR']}
 %div{:style=>'margin-top: 20px;'}
   Source:
-  =link_to(@survey_zone['REFERENCE'],'/report/references')
+  =@survey_zone['REFERENCE']
 %div
   Area surveyed:
   =number_with_delimiter @survey_zone['AREA_SQKM']
