@@ -1,4 +1,5 @@
 class Country < ActiveRecord::Base
+  has_paper_trail
 
   # this model is not web-serviceable
   attr_accessible

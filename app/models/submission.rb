@@ -1,4 +1,5 @@
 class Submission < ActiveRecord::Base
+  has_paper_trail
 
   # All normal attributes of this model are mass-assignable
   # except user_id which will be set in the controller

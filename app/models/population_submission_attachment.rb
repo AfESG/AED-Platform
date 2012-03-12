@@ -1,4 +1,5 @@
 class PopulationSubmissionAttachment < ActiveRecord::Base
+  has_paper_trail
 
   attr_accessible(
     :population_submission_id,

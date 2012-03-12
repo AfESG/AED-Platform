@@ -1,4 +1,6 @@
 class SurveyFaecalDnaStratum < ActiveRecord::Base
+  has_paper_trail
+
   include Stratum
 
   # All normal attributes of Stratum models are mass-assignable

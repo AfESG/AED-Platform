@@ -1,4 +1,6 @@
 class SpeciesRangeStateCountry < ActiveRecord::Base
+  has_paper_trail
+
   # this model is not mass-assignable
   attr_accessible
 
