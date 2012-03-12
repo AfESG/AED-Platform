@@ -57,6 +57,8 @@ Aaed::Application.routes.draw do
 
   resources :population_submission_attachments
 
+  match 'population_submission_attachments/download/:id' => 'population_submission_attachments#download'
+
   match 'data_request_forms/thanks' => 'data_request_forms#thanks'
 
   resources :data_request_forms
