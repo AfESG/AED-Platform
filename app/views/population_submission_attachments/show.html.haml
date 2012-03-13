@@ -3,15 +3,23 @@
   = render :partial => "submission_info", :locals => { :s => @submission }
 %h4= @population_submission_attachment.file_file_name
 .attachment_details
-  Details: 
+  Details:
   = @population_submission_attachment.file_file_size
   bytes,
   = @population_submission_attachment.file_content_type
-  
+
 %div
   Uploaded:
   = time_ago_in_words @population_submission_attachment.created_at
   ago
+
+%div
+  Type:
+  = @population_submission_attachment.type
+
+%div
+  Restricted:
+  = @population_submission_attachment.restrict?
 
 .download
   =link_to "Download", "/population_submission_attachments/download/#{@population_submission_attachment.id}"
