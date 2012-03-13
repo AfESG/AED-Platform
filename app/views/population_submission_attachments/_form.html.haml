@@ -16,7 +16,7 @@
   .file_uploader
     = f.inputs do
       = f.input :population_submission_id, :as => :hidden, :value => @population_submission.id
-      = f.input :attachment_type, :as => :select, :collection => ['Survey report','Shapefile','Other']
+      = f.input :attachment_type, :as => :select, :collection => ['Survey report','Survey Shapefile','Range Shapefile','Other']
       .submit_confirmation
         You can supply restricted attachments that will not be shared on this site under the general
         licensing terms of your submission. If this is such an attachment, tick this box. Only the
