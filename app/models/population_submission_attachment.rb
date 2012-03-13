@@ -3,7 +3,9 @@ class PopulationSubmissionAttachment < ActiveRecord::Base
 
   attr_accessible(
     :population_submission_id,
-    :file
+    :file,
+    :attachment_type,
+    :restricted
   )
 
   belongs_to :population_submission
