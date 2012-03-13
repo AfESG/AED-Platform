@@ -5,7 +5,7 @@ class PopulationSubmissionAttachment < ActiveRecord::Base
     :population_submission_id,
     :file,
     :attachment_type,
-    :restricted
+    :restrict
   )
 
   belongs_to :population_submission
