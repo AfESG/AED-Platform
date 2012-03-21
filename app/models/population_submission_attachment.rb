@@ -25,7 +25,7 @@ class PopulationSubmissionAttachment < ActiveRecord::Base
     unless user.nil?
       return true if user.admin?
     end
-    if a.restrict?
+    if restrict?
       return false
     end
     return true
