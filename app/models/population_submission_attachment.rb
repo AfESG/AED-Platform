@@ -20,4 +20,14 @@ class PopulationSubmissionAttachment < ActiveRecord::Base
     },
     :s3_headers => { :content_disposition => 'attachment' },
     :path => "/:id/:filename"
+
+  def can_access_file(user)
+    unless user.nil?
+      return true if user.admin?
+    end
+    if a.restrict?
+      return false
+    end
+    return true
+  end
 end

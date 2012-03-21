@@ -35,9 +35,9 @@
           = link_to guess_new_count_path(p) do
             = image_tag('plus.png')
             Add #{p.count_friendly_name}
-    - if p.data_licensing =~ /CC/
+    - if p.can_see_attachments(current_user)
       - for a in p.population_submission_attachments do
-        - unless a.restrict?
+        - if a.can_access_file(current_user)
           = render :partial => 'population_submission_attachment', :locals => {:a => a}
     - if edit_allowed
       .add_actions

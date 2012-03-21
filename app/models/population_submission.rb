@@ -129,4 +129,15 @@ class PopulationSubmission < ActiveRecord::Base
       "Report embargoed by data provider until #{embargo_date}"   
     end
   end
+
+  def can_see_attachments(user)
+    unless user.nil?
+      return true if user.admin?
+    end
+    if data_licensing =~ /CC/
+      return true
+    end
+    return false
+  end
+
 end
