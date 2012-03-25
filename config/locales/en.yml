@@ -25,6 +25,7 @@ en:
       carcasses_fresh: "Number of Fresh or Recent Carcasses (Categ. 1 and 2)"
       carcasses_old: "Number of Old Carcasses (Categ. 3)"
       carcasses_very_old: "Number of Very Old Carcasses (Categ. 4)"
+      carcasses_age_unknown: "Number of Other Carcasses (Age/Category Unknown)"
       person_hours: "Person hours: Where each independent survey team is counted as one 'person'"
       submission:
         mike_site: "ADMIN ONLY: MIKE site?"

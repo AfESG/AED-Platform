@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120312110156) do
+ActiveRecord::Schema.define(:version => 20120325021120) do
 
   create_table "countries", :force => true do |t|
     t.string   "iso_code"
@@ -169,6 +169,7 @@ ActiveRecord::Schema.define(:version => 20120312110156) do
     t.integer  "carcasses_very_old"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "carcasses_age_unknown"
   end
 
   create_table "survey_aerial_sample_counts", :force => true do |t|
@@ -202,6 +203,7 @@ ActiveRecord::Schema.define(:version => 20120312110156) do
     t.integer  "carcasses_very_old"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "carcasses_age_unknown"
   end
 
   create_table "survey_aerial_total_counts", :force => true do |t|
