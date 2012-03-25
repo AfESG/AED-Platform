@@ -18,7 +18,9 @@ class SurveyAerialSampleCountStratum < ActiveRecord::Base
          :population_standard_error,
          :population_t,
          :population_degrees_of_freedom,
-         :population_confidence_limits].each do |field|
+         :population_confidence_interval,
+         :population_upper_confidence_limit,
+         :population_lower_confidence_limit].each do |field|
           value = record.send field
           unless value.nil?
             some_precision = true

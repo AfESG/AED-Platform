@@ -25,8 +25,14 @@
   != best_label_for 'population_degrees_of_freedom'
   = @level.population_degrees_of_freedom
 .show_stratum
-  != best_label_for 'population_confidence_limits'
-  = @level.population_confidence_limits
+  != best_label_for 'population_confidence_interval'
+  = @level.population_confidence_interval
+.show_stratum
+  != best_label_for 'population_lower_confidence_limit'
+  = @level.population_lower_confidence_limit
+.show_stratum
+  != best_label_for 'population_upper_confidence_limit'
+  = @level.population_upper_confidence_limit
 .show_stratum
   != best_label_for 'population_no_precision_estimate_available'
   = @level.population_no_precision_estimate_available
