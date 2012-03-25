@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120325021120) do
+ActiveRecord::Schema.define(:version => 20120325030413) do
 
   create_table "countries", :force => true do |t|
     t.string   "iso_code"
@@ -157,7 +157,7 @@ ActiveRecord::Schema.define(:version => 20120325021120) do
     t.float    "population_standard_error"
     t.float    "population_t"
     t.integer  "population_degrees_of_freedom"
-    t.float    "population_confidence_limits"
+    t.float    "population_confidence_interval"
     t.boolean  "population_no_precision_estimate_available"
     t.float    "sampling_intensity"
     t.integer  "transects_covered"
@@ -170,6 +170,8 @@ ActiveRecord::Schema.define(:version => 20120325021120) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "carcasses_age_unknown"
+    t.integer  "population_lower_confidence_limit"
+    t.integer  "population_upper_confidence_limit"
   end
 
   create_table "survey_aerial_sample_counts", :force => true do |t|
@@ -190,7 +192,7 @@ ActiveRecord::Schema.define(:version => 20120325021120) do
     t.float    "population_standard_error"
     t.float    "population_t"
     t.integer  "population_degrees_of_freedom"
-    t.float    "population_confidence_limits"
+    t.float    "population_confidence_interval"
     t.boolean  "population_no_precision_estimate_available"
     t.integer  "average_speed"
     t.integer  "average_transect_spacing"
@@ -204,6 +206,8 @@ ActiveRecord::Schema.define(:version => 20120325021120) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "carcasses_age_unknown"
+    t.integer  "population_lower_confidence_limit"
+    t.integer  "population_upper_confidence_limit"
   end
 
   create_table "survey_aerial_total_counts", :force => true do |t|
@@ -223,10 +227,10 @@ ActiveRecord::Schema.define(:version => 20120325021120) do
     t.float    "population_standard_error"
     t.float    "population_t"
     t.integer  "population_degrees_of_freedom"
-    t.float    "population_confidence_limits"
+    t.float    "population_confidence_interval"
     t.boolean  "population_no_precision_estimate_available"
-    t.integer  "asymmetric_upper_confidence_limit"
-    t.integer  "asymmetric_lower_confidence_limit"
+    t.integer  "population_asymmetric_upper_confidence_interval"
+    t.integer  "population_asymmetric_lower_confidence_interval"
     t.integer  "transects_covered"
     t.integer  "transects_covered_total_length"
     t.float    "strip_width"
@@ -243,7 +247,7 @@ ActiveRecord::Schema.define(:version => 20120325021120) do
     t.float    "dung_decay_rate_standard_error"
     t.float    "dung_decay_rate_t"
     t.integer  "dung_decay_rate_degrees_of_freedom"
-    t.float    "dung_decay_rate_confidence_limits"
+    t.float    "dung_decay_rate_confidence_interval"
     t.boolean  "dung_decay_rate_no_precision_estimate_available"
     t.boolean  "defecation_rate_measured_on_site"
     t.integer  "defecation_rate_estimate_used"
@@ -253,21 +257,29 @@ ActiveRecord::Schema.define(:version => 20120325021120) do
     t.float    "defecation_rate_standard_error"
     t.float    "defecation_rate_t"
     t.integer  "defecation_rate_degrees_of_freedom"
-    t.float    "defecation_rate_confidence_limits"
+    t.float    "defecation_rate_confidence_interval"
     t.boolean  "defecation_rate_no_precision_estimate_available"
     t.integer  "dung_density_estimate"
     t.float    "dung_density_variance"
     t.float    "dung_density_standard_error"
     t.float    "dung_density_t"
     t.integer  "dung_density_degrees_of_freedom"
-    t.float    "dung_density_confidence_limits"
+    t.float    "dung_density_confidence_interval"
     t.boolean  "dung_density_no_precision_estimate_available"
     t.integer  "dung_encounter_rate"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.float    "individual_transect_length"
-    t.integer  "dung_density_asymmetric_upper_confidence_limit"
-    t.integer  "dung_density_asymmetric_lower_confidence_limit"
+    t.integer  "dung_density_asymmetric_upper_confidence_interval"
+    t.integer  "dung_density_asymmetric_lower_confidence_interval"
+    t.integer  "population_lower_confidence_limit"
+    t.integer  "population_upper_confidence_limit"
+    t.float    "dung_decay_rate_lower_confidence_limit"
+    t.float    "dung_decay_rate_upper_confidence_limit"
+    t.float    "defecation_rate_lower_confidence_limit"
+    t.float    "defecation_rate_upper_confidence_limit"
+    t.float    "dung_density_lower_confidence_limit"
+    t.float    "dung_density_upper_confidence_limit"
   end
 
   create_table "survey_dung_count_line_transects", :force => true do |t|
@@ -287,7 +299,7 @@ ActiveRecord::Schema.define(:version => 20120325021120) do
     t.float    "population_standard_error"
     t.float    "population_t"
     t.integer  "population_degrees_of_freedom"
-    t.float    "population_confidence_limits"
+    t.float    "population_confidence_interval"
     t.boolean  "population_no_precision_estimate_available"
     t.string   "method_of_analysis"
     t.string   "area_calculation_method"
@@ -296,6 +308,8 @@ ActiveRecord::Schema.define(:version => 20120325021120) do
     t.integer  "sampling_locations"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "population_lower_confidence_limit"
+    t.integer  "population_upper_confidence_limit"
   end
 
   create_table "survey_faecal_dnas", :force => true do |t|
@@ -315,7 +329,7 @@ ActiveRecord::Schema.define(:version => 20120325021120) do
     t.float    "population_standard_error"
     t.float    "population_t"
     t.integer  "population_degrees_of_freedom"
-    t.float    "population_confidence_limits"
+    t.float    "population_confidence_interval"
     t.boolean  "population_no_precision_estimate_available"
     t.integer  "transects_covered"
     t.integer  "transects_covered_total_length"
@@ -323,6 +337,8 @@ ActiveRecord::Schema.define(:version => 20120325021120) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.float    "individual_transect_length"
+    t.integer  "population_lower_confidence_limit"
+    t.integer  "population_upper_confidence_limit"
   end
 
   create_table "survey_ground_sample_counts", :force => true do |t|
@@ -342,7 +358,7 @@ ActiveRecord::Schema.define(:version => 20120325021120) do
     t.float    "population_standard_error"
     t.float    "population_t"
     t.integer  "population_degrees_of_freedom"
-    t.float    "population_confidence_limits"
+    t.float    "population_confidence_interval"
     t.boolean  "population_no_precision_estimate_available"
     t.integer  "transects_covered"
     t.integer  "transects_covered_total_length"
@@ -352,6 +368,8 @@ ActiveRecord::Schema.define(:version => 20120325021120) do
     t.integer  "actually_seen"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "population_lower_confidence_limit"
+    t.integer  "population_upper_confidence_limit"
   end
 
   create_table "survey_ground_total_counts", :force => true do |t|
