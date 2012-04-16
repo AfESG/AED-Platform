@@ -3,7 +3,7 @@ class PopulationSubmissionsController < ApplicationController
   include SurveyCrud
 
   def index
-    @population_submissions = PopulationSubmission.joins(:submission).order(translated_sort_column + ' ' + sort_direction);
+    @population_submissions = PopulationSubmission.joins(:submission).joins('join countries on submissions.country_id=countries.id').order(translated_sort_column + ' ' + sort_direction);
     unless sort_column=='created_at'
       # always add a secondary sort, to enforce a guaranteed order
       @population_submissions = @population_submissions.order('created_at desc');
@@ -44,7 +44,7 @@ class PopulationSubmissionsController < ApplicationController
 
   def translated_sort_column
     if sort_column=="country"
-      "country_id"
+      "countries.name"
     else
       sort_column
     end

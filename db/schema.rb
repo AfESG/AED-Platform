@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120325030413) do
+ActiveRecord::Schema.define(:version => 20120416174639) do
 
   create_table "countries", :force => true do |t|
     t.string   "iso_code"
@@ -64,6 +64,9 @@ ActiveRecord::Schema.define(:version => 20120325030413) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+# Could not dump table "nightjar_routes" because of following StandardError
+#   Unknown type 'geometry' for column 'the_geom'
 
   create_table "population_submission_attachments", :force => true do |t|
     t.datetime "created_at"
@@ -136,8 +139,6 @@ ActiveRecord::Schema.define(:version => 20120325030413) do
 
   create_table "submissions", :force => true do |t|
     t.integer  "user_id"
-    t.string   "species_id"
-    t.string   "country_id"
     t.string   "phenotype"
     t.string   "phenotype_basis"
     t.string   "data_type"
@@ -146,6 +147,8 @@ ActiveRecord::Schema.define(:version => 20120325030413) do
     t.boolean  "mike_site"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "species_id"
+    t.integer  "country_id"
   end
 
   create_table "survey_aerial_sample_count_strata", :force => true do |t|

@@ -10,6 +10,8 @@ class Submission < ActiveRecord::Base
   validates_presence_of :data_type
 
   belongs_to :user
+  belongs_to :country
+  belongs_to :species
 
   has_many :population_submissions
 

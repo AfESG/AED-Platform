@@ -9,4 +9,6 @@ class Country < ActiveRecord::Base
   def to_s
     name
   end
+  has_many :submissions
+
 end
