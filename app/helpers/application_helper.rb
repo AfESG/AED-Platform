@@ -1,6 +1,16 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
 
+  def sortable(column, title = nil)
+    title ||= column.titleize
+    css_class = [sort_direction]
+    new_direction = (column == sort_column && sort_direction == 'asc' ? 'desc' : 'asc')
+    if column == sort_column
+      css_class << 'current'
+    end
+    link_to title, {:sort => column, :direction => new_direction, :page => nil}, {:class => css_class.join(' ')}
+  end
+
   def get_nav_item(text, path)
     request_uri = controller.request.fullpath
     if (path == "/" && request_uri == path )

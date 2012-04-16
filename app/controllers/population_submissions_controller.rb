@@ -3,7 +3,11 @@ class PopulationSubmissionsController < ApplicationController
   include SurveyCrud
 
   def index
-    @population_submissions = PopulationSubmission.all :order => 'created_at desc'
+    @population_submissions = PopulationSubmission.joins(:submission).order(translated_sort_column + ' ' + sort_direction);
+    unless sort_column=='created_at'
+      # always add a secondary sort, to enforce a guaranteed order
+      @population_submissions = @population_submissions.order('created_at desc');
+    end
     respond_to do |format|
       format.html
     end
@@ -30,6 +34,24 @@ class PopulationSubmissionsController < ApplicationController
 
   def submit
     edit
+  end
+
+  helper_method :sort_column, :sort_direction
+
+  def sort_column
+    params[:sort] || "id"
+  end
+
+  def translated_sort_column
+    if sort_column=="country"
+      "country_id"
+    else
+      sort_column
+    end
+  end
+
+  def sort_direction
+    params[:direction] || "desc"
   end
 
 end
