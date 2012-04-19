@@ -89,6 +89,7 @@ Aaed::Application.routes.draw do
   match 'maps/range' => 'welcome#range'
   match 'maps/zones' => 'welcome#zones'
   match 'maps' => 'welcome#maps'
+  match 'mike_report' => 'welcome#mike_report'
   match 'reliability' => 'welcome#reliability'
 
   # The priority is based upon order of creation:

@@ -26,11 +26,13 @@ SQL
   to.gsub! /\s/, ''
   to.gsub! '(part)', ''
 
+  reason_change = xl.cell(row,9).to_s
+
   if site == '' or from == '?' or (to == '' and from == '')
   else
     puts "#{site}: #{from} => #{to}"
     ActiveRecord::Base.connection.execute <<-SQL
-      insert into replacement_map values ('#{site}','#{from}','#{to}')
+      insert into replacement_map values ('#{site}','#{from}','#{to}','#{reason_change}')
     SQL
   end
 end
