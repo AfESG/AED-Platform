@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120416174639) do
+ActiveRecord::Schema.define(:version => 20120419005827) do
 
   create_table "countries", :force => true do |t|
     t.string   "iso_code"
@@ -57,12 +57,12 @@ ActiveRecord::Schema.define(:version => 20120416174639) do
 
   create_table "mike_sites", :force => true do |t|
     t.integer  "country_id"
-    t.integer  "subregion"
-    t.integer  "site_code"
-    t.integer  "site_name"
+    t.string   "subregion"
+    t.string   "site_code"
+    t.text     "site_name"
     t.integer  "area"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
 # Could not dump table "nightjar_routes" because of following StandardError
@@ -144,11 +144,12 @@ ActiveRecord::Schema.define(:version => 20120416174639) do
     t.string   "data_type"
     t.boolean  "right_to_grant_permission"
     t.string   "permission_email"
-    t.boolean  "mike_site"
+    t.boolean  "is_mike_site"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "species_id"
     t.integer  "country_id"
+    t.integer  "mike_site_id"
   end
 
   create_table "survey_aerial_sample_count_strata", :force => true do |t|

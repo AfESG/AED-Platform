@@ -12,6 +12,7 @@ class Submission < ActiveRecord::Base
   belongs_to :user
   belongs_to :country
   belongs_to :species
+  belongs_to :mike_site
 
   has_many :population_submissions
 
