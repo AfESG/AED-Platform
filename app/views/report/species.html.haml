@@ -24,7 +24,9 @@
       .links
         Explore the <a href="http://african-elephant.org/aed/aesr2007.html" target="_blank">full text of the 2007 report</a> (PDF) and its 
         =link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
-          errata.
+          errata
+        or
+        =link_to 'bibliography', '/report/references'
 
 -['2002'].each do |r|
   .report_cover
@@ -37,7 +39,9 @@
       .links 
         Explore the <a href="http://african-elephant.org/aed/aesr2002.html" target="_blank">full text of the 2002 report</a> (PDF) and its
         =link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
-          errata.
+          errata
+        or
+        =link_to 'bibliography', '/report/references'
 
 -['1998'].each do |r|
   .report_cover
@@ -50,7 +54,9 @@
       .links
       Explore the <a href="http://african-elephant.org/aed/aed98.html" target="_blank">full text of the 1998 report</a> (PDF) and its
       =link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
-        errata.
+        errata
+      or
+      =link_to 'bibliography', '/report/references'
 
 -['1995'].each do |r|
   .report_cover
@@ -63,7 +69,10 @@
       .links
         Explore the <a href="http://african-elephant.org/aed/aed95.html" target="_blank">full text of the 1995 report</a> (PDF) and its
         =link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
-          errata.
+          errata
+        or
+        =link_to 'bibliography', '/report/references'
+
 %p
 %p
 %p

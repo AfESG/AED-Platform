@@ -1,10 +1,7 @@
-%h1 References
+%h1 Bibliography: African Elephant Status Reports
 - @i = 0
 - @references.each do |reference|
   - @i = @i + 1
-  %p{:style=>'font-size: 10px; color: #ccc'}
-    Raw database source for reference ##{@i}:
-    = reference.inspect
   %p
     != format_reference reference
 
