@@ -1,0 +1,14 @@
+h1 Changes Since 2007 Impacting MIKE Sites
+
+table
+  tr
+    th MIKE ID
+    th AESR 2007 Data
+    th Reason for Change
+    th Latest Data
+  - @changes.each do |row|
+    tr
+      td= row['mike_site']
+      td== enumerate_oids(row['aed2007_oids'])
+      td= row['reason_change']
+      td== enumerate_strata(row['current_strata'])

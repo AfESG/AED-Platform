@@ -73,6 +73,7 @@ end
 
 group :development do
   gem "rails-erd"
+  gem "roo"
 end
 
 group :development, :test do
