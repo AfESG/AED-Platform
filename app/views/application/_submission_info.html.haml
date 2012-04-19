@@ -11,7 +11,7 @@
     .submission_header
       - unless s.country.nil?
         .submission_country= s.country.name
-      - if s.mike_site
+      - if s.is_mike_site?
         .submission_mike_site MIKE site
       - unless s.species.nil?
         .submission_species= s.species.scientific_name
