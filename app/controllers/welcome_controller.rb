@@ -37,7 +37,7 @@ class WelcomeController < ApplicationController
       end
       return divs.join ''
     rescue
-      return '?'
+      return 'No new data available'
     end
   end
 
