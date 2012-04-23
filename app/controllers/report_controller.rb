@@ -22,7 +22,10 @@ class ReportController < ApplicationController
     @year = params[:year]
   end
 
+  before_filter :authenticate_user!, :only => :mike_continent
+
   def mike_continent
+    return unless current_user.admin?
     @species = 'Loxodonta africana'
     @year = 2012
     @continent = 'Africa'
