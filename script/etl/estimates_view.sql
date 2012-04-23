@@ -1,4 +1,4 @@
-drop view estimates;
+drop view cascade estimates;
 
 create or replace view estimates as
 
@@ -18,7 +18,7 @@ select
       THEN ROUND(population_estimate-population_confidence_interval)
     ELSE 0
   END cl95,
-  actually_seen,
+  CASE WHEN actually_seen IS NULL 0 ELSE actually_seen END actually_seen,
   CASE
     WHEN completion_year<2002 THEN 'E'
     ELSE 'A'
@@ -46,7 +46,7 @@ select
       THEN ROUND(population_estimate-population_confidence_interval)
     ELSE 0
   END cl95,
-  actually_seen,
+  CASE WHEN actually_seen IS NULL 0 ELSE actually_seen END actually_seen,
   CASE
     WHEN completion_year<2002 THEN 'E'
     WHEN dung_decay_rate_measurement_site is not null and dung_decay_rate_measurement_site!='' THEN 'B'
@@ -75,7 +75,7 @@ select
       THEN ROUND(population_estimate-population_confidence_interval)
     ELSE 0
   END cl95,
-  null,
+  0,
   CASE
     WHEN completion_year<2002 THEN 'E'
     ELSE 'A'
@@ -103,7 +103,7 @@ select
       THEN ROUND(population_estimate-population_confidence_interval)
     ELSE 0
   END cl95,
-  null,
+  0,
   CASE
     WHEN completion_year<2002 THEN 'E'
     WHEN (CASE
@@ -138,7 +138,7 @@ select
       THEN ROUND(population_estimate-population_confidence_interval)
     ELSE 0
   END cl95,
-  null,
+  0,
   CASE
     WHEN completion_year<2002 THEN 'E'
     WHEN (CASE
@@ -172,7 +172,7 @@ select
       THEN ROUND(population_estimate-population_confidence_interval)
     ELSE 0
   END cl95,
-  null,
+  0,
   CASE
     WHEN completion_year<2002 THEN 'E'
     ELSE 'C'
@@ -190,9 +190,9 @@ select
   site_name,
   completion_year,
   population_estimate,
-  null,
-  null,
-  null,
+  0,
+  0,
+  0,
   population_estimate,
   CASE
     WHEN completion_year<2002 THEN 'E'
@@ -209,12 +209,126 @@ select 'O'||survey_others.id input_zone_id,
   site_name,
   site_name,
   completion_year,
-  population_estimate_min,
-  null,
-  null,
-  null,
-  null,
+  population_estimate_min+population_estimate_max/2,
+  0,
+  0,
+  0,
+  0,
   'E' category
 from survey_others
   join population_submissions on population_submissions.id=population_submission_id
 ;
+
+drop view estimate_dpps;
+
+create or replace view estimate_dpps as
+
+select
+  input_zone_id,
+  category,
+  population_estimate,
+  population_estimate as definite,
+  0 as probable,
+  0 as possible,
+  0 as speculative
+from
+  estimates
+where
+  category='A'
+
+union
+
+select
+  input_zone_id,
+  category,
+  population_estimate,
+  CASE
+    WHEN cl95>actually_seen THEN cl95
+    ELSE actually_seen
+  END as definite,
+  CASE WHEN cl95>0 or actually_seen>0 THEN
+    population_estimate-(CASE
+      WHEN cl95>actually_seen THEN cl95
+      ELSE actually_seen
+    END)
+    ELSE population_estimate
+  END as probable,
+  CASE WHEN cl95>0 or actually_seen>0 THEN
+    population_estimate-(CASE
+      WHEN cl95>actually_seen THEN cl95
+      ELSE actually_seen
+    END)
+    ELSE 0
+  END as possible,
+  0 as speculative
+from
+  estimates
+where
+  category='B'
+
+union
+
+select
+  input_zone_id,
+  category,
+  population_estimate,
+  CASE
+    WHEN actually_seen>0 THEN actually_seen
+    ELSE 0
+  END
+  as definite,
+  population_estimate as probable,
+  CASE WHEN cl95>0 or actually_seen>0 THEN
+    population_estimate-(CASE
+      WHEN cl95>actually_seen THEN cl95
+      ELSE actually_seen
+    END)
+    ELSE 0
+  END as possible,
+  0 as speculative
+from
+  estimates
+where
+  category='C'
+
+union
+
+select
+  input_zone_id,
+  category,
+  population_estimate,
+  CASE
+    WHEN actually_seen>0 THEN actually_seen
+    ELSE 0
+  END
+  as definite,
+  0 as probable,
+  population_estimate as possible,
+  CASE WHEN cl95>0 THEN (population_estimate-cl95)*2
+  ELSE 0
+  END as speculative
+from
+  estimates
+where
+  category='D'
+
+union
+
+select
+  input_zone_id,
+  category,
+  population_estimate,
+  CASE
+    WHEN actually_seen>0 THEN actually_seen
+    ELSE 0
+  END
+  as definite,
+  0 as probable,
+  0 as possible,
+  population_estimate-actually_seen as speculative
+from
+  estimates
+where
+  category='E'
+;
+
