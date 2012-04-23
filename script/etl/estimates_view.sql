@@ -1,7 +1,5 @@
-drop view cascade estimates;
-
+drop view estimates cascade;
 create or replace view estimates as
-
 select
   'GT'||survey_ground_total_count_strata.id input_zone_id,
   population_submission_id,
@@ -18,7 +16,7 @@ select
       THEN ROUND(population_estimate-population_confidence_interval)
     ELSE 0
   END cl95,
-  CASE WHEN actually_seen IS NULL 0 ELSE actually_seen END actually_seen,
+  CASE WHEN actually_seen IS NULL THEN 0 ELSE actually_seen END actually_seen,
   CASE
     WHEN completion_year<2002 THEN 'E'
     ELSE 'A'
@@ -27,9 +25,7 @@ select
     survey_ground_total_count_strata
     join survey_ground_total_counts on survey_ground_total_counts.id=survey_ground_total_count_id
     join population_submissions on population_submissions.id=population_submission_id
-
 union
-
 select
   'DC'||survey_dung_count_line_transect_strata.id input_zone_id,
   population_submission_id,
@@ -46,7 +42,7 @@ select
       THEN ROUND(population_estimate-population_confidence_interval)
     ELSE 0
   END cl95,
-  CASE WHEN actually_seen IS NULL 0 ELSE actually_seen END actually_seen,
+  CASE WHEN actually_seen IS NULL THEN 0 ELSE actually_seen END actually_seen,
   CASE
     WHEN completion_year<2002 THEN 'E'
     WHEN dung_decay_rate_measurement_site is not null and dung_decay_rate_measurement_site!='' THEN 'B'
@@ -56,9 +52,7 @@ from
   survey_dung_count_line_transect_strata
   join survey_dung_count_line_transects on survey_dung_count_line_transects.id=survey_dung_count_line_transect_id
   join population_submissions on population_submissions.id=population_submission_id
-
 union
-
 select
   'AT'||survey_aerial_total_count_strata.id input_zone_id,
   population_submission_id,
@@ -84,9 +78,7 @@ from
   survey_aerial_total_count_strata
   join survey_aerial_total_counts on survey_aerial_total_counts.id=survey_aerial_total_count_id
   join population_submissions on population_submissions.id=population_submission_id
-
 union
-
 select
   'GS'||survey_ground_sample_count_strata.id input_zone_id,
   population_submission_id,
@@ -119,9 +111,7 @@ from
   survey_ground_sample_count_strata
   join survey_ground_sample_counts on survey_ground_sample_counts.id=survey_ground_sample_count_id
   join population_submissions on population_submissions.id=population_submission_id
-
 union
-
 select
   'AS'||survey_aerial_sample_count_strata.id input_zone_id,
   population_submission_id,
@@ -153,9 +143,7 @@ select
 from survey_aerial_sample_count_strata
   join survey_aerial_sample_counts on survey_aerial_sample_counts.id=survey_aerial_sample_count_id
   join population_submissions on population_submissions.id=population_submission_id
-
 union
-
 select
   'GD'||survey_faecal_dna_strata.id input_zone_id,
   population_submission_id,
@@ -180,9 +168,7 @@ select
 from survey_faecal_dna_strata
   join survey_faecal_dnas on survey_faecal_dnas.id=survey_faecal_dna_id
   join population_submissions on population_submissions.id=population_submission_id
-
 union
-
 select
   'IR'||survey_individual_registrations.id input_zone_id,
   population_submission_id,
@@ -198,12 +184,9 @@ select
     WHEN completion_year<2002 THEN 'E'
     ELSE 'A'
   END category
-
 from survey_individual_registrations
   join population_submissions on population_submissions.id=population_submission_id
-
 union
-
 select 'O'||survey_others.id input_zone_id,
   population_submission_id,
   site_name,
@@ -220,9 +203,7 @@ from survey_others
 ;
 
 drop view estimate_dpps;
-
 create or replace view estimate_dpps as
-
 select
   input_zone_id,
   category,
@@ -235,9 +216,7 @@ from
   estimates
 where
   category='A'
-
 union
-
 select
   input_zone_id,
   category,
@@ -265,9 +244,7 @@ from
   estimates
 where
   category='B'
-
 union
-
 select
   input_zone_id,
   category,
@@ -290,9 +267,7 @@ from
   estimates
 where
   category='C'
-
 union
-
 select
   input_zone_id,
   category,
@@ -311,9 +286,7 @@ from
   estimates
 where
   category='D'
-
 union
-
 select
   input_zone_id,
   category,
@@ -331,4 +304,3 @@ from
 where
   category='E'
 ;
-

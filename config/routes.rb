@@ -73,6 +73,7 @@ Aaed::Application.routes.draw do
   match 'report/:species/:year/:continent/:region/:country' => 'report#country'
   match 'report/:species/:year/:continent/:region' => 'report#region'
   match 'report/:species/:year/:continent' => 'report#continent'
+  match 'mike_report/:species/:year/:continent' => 'report#mike_continent'
   match 'report/:species/:year' => 'report#year'
   match 'report/:species' => 'report#species'
   match 'report' => 'report#index'

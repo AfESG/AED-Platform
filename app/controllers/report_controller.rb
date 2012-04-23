@@ -22,6 +22,17 @@ class ReportController < ApplicationController
     @year = params[:year]
   end
 
+  def mike_continent
+    @species = 'Loxodonta africana'
+    @year = 2012
+    @continent = 'Africa'
+    @summary_totals_by_continent = execute <<-SQL
+select 'Africa' "CONTINENT", e.category "CATEGORY", surveytype "SURVEYTYPE", sum(definite) "DEFINITE", sum(probable) "PROBABLE", sum(possible) "POSSIBLE", sum(speculative) "SPECUL" from estimate_dpps e join (
+select input_zone_id from estimates join population_submissions on population_submission_id = population_submissions.id join submissions on submission_id = submissions.id where is_mike_site=true
+) f on f.input_zone_id = e.input_zone_id join surveytypes t on t.category = e.category group by e.category, surveytype order by e.category;
+    SQL
+  end
+
   def continent
     @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
