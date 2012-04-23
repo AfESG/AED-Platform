@@ -37,11 +37,14 @@ class WelcomeController < ApplicationController
       end
       return divs.join ''
     rescue
-      return '?'
+      return 'No new data available'
     end
   end
 
+  before_filter :authenticate_user!, :only => :mike_report
+
   def mike_report
+    return unless current_user.admin?
     @changes = execute <<-SQL
       SELECT *
       FROM replacement_map
