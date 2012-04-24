@@ -51,7 +51,7 @@ class ReportController < ApplicationController
 
   def preview_continent
     return unless current_user.admin?
-    @species = 'Loxodonta africana'
+    @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
     @filter = params[:filter]
@@ -210,6 +210,97 @@ class ReportController < ApplicationController
       SQL
     rescue
       @regions_sum = nil
+    end
+
+  end
+
+  def preview_region
+    return unless current_user.admin?
+    @species = params[:species].gsub('_',' ')
+    @year = params[:year].to_i
+    @continent = params[:continent]
+    @region = params[:region].gsub('_',' ')
+    @filter = params[:filter]
+    sql_filter = process_filter
+    @summary_totals_by_region = execute <<-SQL
+      select
+        region "REGION",
+        e.category "CATEGORY",
+        surveytype "SURVEYTYPE",
+        sum(definite) "DEFINITE",
+        sum(probable) "PROBABLE",
+        sum(possible) "POSSIBLE",
+        sum(speculative) "SPECUL"
+      from estimate_locator e
+        join (
+          #{sql_filter}
+        ) f on f.input_zone_id = e.input_zone_id
+        join estimate_dpps d on e.input_zone_id = d.input_zone_id
+        join surveytypes t on t.category = e.category
+      where region='#{@region}'
+      group by region, e.category, surveytype
+      order by region, e.category;
+    SQL
+    @summary_sums_by_region = execute <<-SQL
+      select
+        region "REGION",
+        sum(definite) "DEFINITE",
+        sum(probable) "PROBABLE",
+        sum(possible) "POSSIBLE",
+        sum(speculative) "SPECUL"
+      from estimate_locator e
+        join (
+          #{sql_filter}
+        ) f on f.input_zone_id = e.input_zone_id
+        join estimate_dpps d on e.input_zone_id = d.input_zone_id
+      where region='#{@region}'
+      group by region
+      order by region;
+    SQL
+    begin
+      @countries = nil
+      @countries = execute <<-SQL, @region
+        select
+          region "REGION",
+          country "CNTRYNAME",
+          SUM(d.definite) "DEFINITE",
+          SUM(d.possible) "POSSIBLE",
+          SUM(d.probable) "PROBABLE",
+          SUM(d.speculative) "SPECUL",
+          0 "RANGEAREA",
+          0 "RANGEPERC",
+          0 "SURVRANGPERC",
+          0 "INFQLTYIDX",
+          0 "PFS"
+        from estimate_locator e
+          join (
+            #{sql_filter}
+          ) f on f.input_zone_id = e.input_zone_id
+          join estimate_dpps d on e.input_zone_id = d.input_zone_id
+        where region='#{@region}'
+        group by region, country
+        order by region, country
+      SQL
+      @countries_sum = execute <<-SQL, @continent
+        select
+          SUM(d.definite) "DEFINITE",
+          SUM(d.possible) "POSSIBLE",
+          SUM(d.probable) "PROBABLE",
+          SUM(d.speculative) "SPECUL",
+          0 "RANGEAREA",
+          0 "RANGEPERC",
+          0 "SURVRANGPERC",
+          0 "INFQLTYIDX",
+          0 "PFS"
+        from estimate_locator e
+          join (
+            #{sql_filter}
+          ) f on f.input_zone_id = e.input_zone_id
+          join estimate_dpps d on e.input_zone_id = d.input_zone_id
+        where region='#{@region}'
+        group by region
+        order by region
+      SQL
     end
 
   end
