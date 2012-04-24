@@ -49,6 +49,43 @@ All Years for #{@continent}:
         %td.numeric= number_with_delimiter row['PROBABLE']
         %td.numeric= number_with_delimiter row['POSSIBLE']
         %td.numeric= number_with_delimiter row['SPECUL']
+    -@summary_sums_by_continent.each do |row|
+      %tr.totals{:style => 'height: 24px; font-weight: bold'}
+        %td Totals #{@year}
+        %td.numeric= number_with_delimiter row['DEFINITE']
+        %td.numeric= number_with_delimiter row['PROBABLE']
+        %td.numeric= number_with_delimiter row['POSSIBLE']
+        %td.numeric= number_with_delimiter row['SPECUL']
+
+- if !@regions.nil? && @regions.num_tuples > 0
+  %h2 Continental and Regional Totals and Data Quality
+  %table{:style => 'font-size:16px'}
+    %tr
+      %th Region
+      %th.numeric Definite
+      %th.numeric Probable
+      %th.numeric Possible
+      %th.numeric Speculative
+      %th.numeric Range Area (km²)
+      %th.numeric % of Continental Range
+      %th.numeric % of Range Assessed
+      %th.numeric
+        IQI<sup>1</sup>
+      %th.numeric
+        PFS<sup>2</sup>
+    - @regions.each do |row|
+      - unless row['RANGEAREA'].nil?
+        %tr{:style => 'height: 24px;'}
+          %td
+            %a{:href=>"/report/#{@species.gsub(' ','_')}/#{@year}/#{@continent}/#{row['REGION'].gsub(' ','_')}"} #{row['REGION']}
+          - ['DEFINITE','PROBABLE','POSSIBLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX','PFS'].each do |key|
+            %td.numeric= number_with_delimiter row[key]
+    - @regions_sum.each do |row|
+      %tr.totals{:style => 'height: 24px; font-weight: bold'}
+        %td Totals
+        - ['DEFINITE','PROBABLE','POSSIBLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX'].each do |key|
+          %td.numeric= number_with_delimiter row[key]
+        %td
 
 %p
   %sup 1

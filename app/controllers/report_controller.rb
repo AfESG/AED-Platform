@@ -57,10 +57,41 @@ class ReportController < ApplicationController
     @filter = params[:filter]
     sql_filter = process_filter
     @summary_totals_by_continent = execute <<-SQL
-select 'Africa' "CONTINENT", e.category "CATEGORY", surveytype "SURVEYTYPE", sum(definite) "DEFINITE", sum(probable) "PROBABLE", sum(possible) "POSSIBLE", sum(speculative) "SPECUL" from estimate_dpps e join (
-#{sql_filter}
-) f on f.input_zone_id = e.input_zone_id join surveytypes t on t.category = e.category group by e.category, surveytype order by e.category;
+      select
+        'Africa' "CONTINENT",
+        e.category "CATEGORY",
+        surveytype "SURVEYTYPE",
+        sum(definite) "DEFINITE",
+        sum(probable) "PROBABLE",
+        sum(possible) "POSSIBLE",
+        sum(speculative) "SPECUL"
+        from estimate_dpps e join (
+          #{sql_filter}
+        ) f on f.input_zone_id = e.input_zone_id
+        join surveytypes t on t.category = e.category
+        group by e.category, surveytype
+        order by e.category;
     SQL
+    @summary_sums_by_continent = execute <<-SQL
+      select
+        'Africa' "CONTINENT",
+        sum(definite) "DEFINITE",
+        sum(probable) "PROBABLE",
+        sum(possible) "POSSIBLE",
+        sum(speculative) "SPECUL"
+        from estimate_dpps e join (
+          #{sql_filter}
+        ) f on f.input_zone_id = e.input_zone_id;
+    SQL
+    begin
+      @regions = nil
+#      @regions = execute <<-SQL, @continent
+#        SELECT *
+#        FROM #{db}.continental_and_regional_totals_and_data_quality where "CONTINENT"=?;
+#      SQL
+    rescue
+      @regions = nil
+    end
   end
 
   def continent
