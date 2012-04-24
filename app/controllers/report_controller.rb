@@ -85,13 +85,57 @@ class ReportController < ApplicationController
     SQL
     begin
       @regions = nil
-#      @regions = execute <<-SQL, @continent
-#        SELECT *
-#        FROM #{db}.continental_and_regional_totals_and_data_quality where "CONTINENT"=?;
-#      SQL
+      @regions = execute <<-SQL, @continent
+        select
+          e.continent "CONTINENT",
+          e.region "REGION",
+          SUM(d.definite) "DEFINITE",
+          SUM(d.possible) "POSSIBLE",
+          SUM(d.probable) "PROBABLE",
+          SUM(d.speculative) "SPECUL",
+          0 "RANGEAREA",
+          0 "RANGEPERC",
+          0 "SURVRANGPERC",
+          0 "INFQLTYIDX",
+          0 "PFS"
+        from
+          estimate_locator e
+          join (
+            #{sql_filter}
+          ) f on f.input_zone_id = e.input_zone_id
+          join estimate_dpps d on e.input_zone_id = d.input_zone_id
+        group by
+          e.continent, e.region
+        order by
+          e.continent, e.region;
+      SQL
+      @regions_sum = execute <<-SQL, @continent
+        select
+          e.continent "CONTINENT",
+          SUM(d.definite) "DEFINITE",
+          SUM(d.possible) "POSSIBLE",
+          SUM(d.probable) "PROBABLE",
+          SUM(d.speculative) "SPECUL",
+          0 "RANGEAREA",
+          0 "RANGEPERC",
+          0 "SURVRANGPERC",
+          0 "INFQLTYIDX",
+          0 "PFS"
+        from
+          estimate_locator e
+          join (
+            #{sql_filter}
+          ) f on f.input_zone_id = e.input_zone_id
+          join estimate_dpps d on e.input_zone_id = d.input_zone_id
+        group by
+          e.continent
+        order by
+          e.continent;
+      SQL
     rescue
       @regions = nil
     end
+
   end
 
   def continent
