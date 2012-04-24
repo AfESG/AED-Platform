@@ -22,16 +22,43 @@ class ReportController < ApplicationController
     @year = params[:year]
   end
 
-  before_filter :authenticate_user!, :only => :mike_continent
+  def process_filter
+    if @filter == 'mike'
+      sql_filter = <<-SQL
+        select input_zone_id from estimates
+        join population_submissions
+          on population_submission_id = population_submissions.id
+        join submissions on submission_id = submissions.id
+        where is_mike_site=true
+      SQL
+      @preview_title = 'MIKE Sites'
+      @preview_nav = 'MIKE Site Analysis'
+    elsif @filter == 'current'
+      sql_filter = <<-SQL
+        select input_zone_id from estimates
+      SQL
+      @preview_nav = @preview_title = "All Current Data"
+    else
+      sql_filter = <<-SQL
+        select input_zone_id from estimates
+      SQL
+      @preview_nav = @preview_title = "Unknown preview #{@filter}"
+    end
+    sql_filter
+  end
 
-  def mike_continent
+  before_filter :authenticate_user!, :only => [:preview_continent, :preview_region, :preview_country]
+
+  def preview_continent
     return unless current_user.admin?
     @species = 'Loxodonta africana'
-    @year = 2012
-    @continent = 'Africa'
+    @year = params[:year].to_i
+    @continent = params[:continent]
+    @filter = params[:filter]
+    sql_filter = process_filter
     @summary_totals_by_continent = execute <<-SQL
 select 'Africa' "CONTINENT", e.category "CATEGORY", surveytype "SURVEYTYPE", sum(definite) "DEFINITE", sum(probable) "PROBABLE", sum(possible) "POSSIBLE", sum(speculative) "SPECUL" from estimate_dpps e join (
-select input_zone_id from estimates join population_submissions on population_submission_id = population_submissions.id join submissions on submission_id = submissions.id where is_mike_site=true
+#{sql_filter}
 ) f on f.input_zone_id = e.input_zone_id join surveytypes t on t.category = e.category group by e.category, surveytype order by e.category;
     SQL
   end
