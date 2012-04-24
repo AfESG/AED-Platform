@@ -301,6 +301,8 @@ class ReportController < ApplicationController
         group by region
         order by region
       SQL
+    rescue
+      @countries = nil
     end
 
   end
@@ -380,6 +382,89 @@ class ReportController < ApplicationController
     rescue
       @countries_sum = nil
     end
+  end
+
+  def preview_country
+    return unless current_user.admin?
+    @species = params[:species].gsub('_',' ')
+    @year = params[:year].to_i
+    @continent = params[:continent]
+    @region = params[:region].gsub('_',' ')
+    @country = params[:country].gsub('_',' ')
+    @filter = params[:filter]
+
+    sql_filter = process_filter
+    @summary_totals_by_country = execute <<-SQL
+      select
+        e.category "CATEGORY",
+        surveytype "SURVEYTYPE",
+        sum(definite) "DEFINITE",
+        sum(probable) "PROBABLE",
+        sum(possible) "POSSIBLE",
+        sum(speculative) "SPECUL"
+      from estimate_locator e
+        join (
+          #{sql_filter}
+        ) f on f.input_zone_id = e.input_zone_id
+        join estimate_dpps d on e.input_zone_id = d.input_zone_id
+        join surveytypes t on t.category = e.category
+      where country='#{@country}'
+      group by e.category, surveytype
+      order by e.category;
+    SQL
+    @summary_sums_by_country = execute <<-SQL
+      select
+        sum(definite) "DEFINITE",
+        sum(probable) "PROBABLE",
+        sum(possible) "POSSIBLE",
+        sum(speculative) "SPECUL"
+      from estimate_locator e
+        join (
+          #{sql_filter}
+        ) f on f.input_zone_id = e.input_zone_id
+        join estimate_dpps d on e.input_zone_id = d.input_zone_id
+        join surveytypes t on t.category = e.category
+      where country='#{@country}'
+    SQL
+    @elephant_estimates_by_country = execute <<-SQL
+      select
+        e.population_submission_id,
+        e.site_name || ' / ' || e.stratum_name survey_zone,
+        '-' "ReasonForChange",
+        e.input_zone_id method_and_quality,
+        e.category "CATEGORY",
+        e.completion_year "YEAR",
+        e.population_estimate "ESTIMATE",
+        cl95 "CL95",
+        short_citation "REFERENCE",
+        '-' "PFS",
+        '-' "AREA_SQKM",
+        CASE WHEN longitude<0 THEN
+          to_char(abs(longitude),'999D9')||'W'
+        WHEN longitude=0 THEN
+          '0.0'
+        ELSE
+          to_char(abs(longitude),'999D9')||'E'
+        END "LON",
+        CASE WHEN latitude<0 THEN
+          to_char(abs(latitude),'990D9')||'S'
+        WHEN latitude=0 THEN
+          '0.0'
+        ELSE
+          to_char(abs(latitude),'990D9')||'N'
+        END "LAT"
+      from estimate_locator e
+        join (
+          #{sql_filter}
+        ) f on f.input_zone_id = e.input_zone_id
+        join estimate_dpps d on e.input_zone_id = d.input_zone_id
+        join surveytypes t on t.category = e.category
+        join population_submissions on e.population_submission_id = population_submissions.id
+      where country='#{@country}'
+      order by e.site_name, e.stratum_name
+    SQL
+
+
   end
 
   def country
