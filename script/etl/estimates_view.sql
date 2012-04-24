@@ -8,7 +8,8 @@ select
   completion_year,
   population_estimate,
   population_variance,
-  population_confidence_interval,
+  population_standard_error,
+  population_confidence_interval, 
   CASE
     WHEN population_lower_confidence_limit IS NOT NULL
       THEN population_lower_confidence_limit
@@ -34,6 +35,7 @@ select
   completion_year,
   population_estimate,
   population_variance,
+  population_standard_error,
   population_confidence_interval,
   CASE
     WHEN population_lower_confidence_limit IS NOT NULL
@@ -61,6 +63,7 @@ select
   completion_year,
   population_estimate,
   population_variance,
+  population_standard_error,
   population_confidence_interval,
   CASE
     WHEN population_lower_confidence_limit IS NOT NULL
@@ -87,6 +90,7 @@ select
   completion_year,
   population_estimate,
   population_variance,
+  population_standard_error,
   population_confidence_interval,
   CASE
     WHEN population_lower_confidence_limit IS NOT NULL
@@ -120,6 +124,7 @@ select
   completion_year,
   population_estimate,
   population_variance,
+  population_standard_error,
   population_confidence_interval,
   CASE
     WHEN population_lower_confidence_limit IS NOT NULL
@@ -152,6 +157,7 @@ select
   completion_year,
   population_estimate,
   population_variance,
+  population_standard_error,
   population_confidence_interval,
   CASE
     WHEN population_lower_confidence_limit IS NOT NULL
@@ -179,6 +185,7 @@ select
   0,
   0,
   0,
+  0,
   population_estimate,
   CASE
     WHEN completion_year<2002 THEN 'E'
@@ -193,6 +200,7 @@ select 'O'||survey_others.id input_zone_id,
   site_name,
   completion_year,
   population_estimate_min+population_estimate_max/2,
+  0,
   0,
   0,
   0,
