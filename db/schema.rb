@@ -11,13 +11,20 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120419005827) do
+ActiveRecord::Schema.define(:version => 20120424115021) do
+
+  create_table "continents", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "countries", :force => true do |t|
     t.string   "iso_code"
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "region_id"
   end
 
   create_table "data_request_forms", :force => true do |t|
@@ -42,9 +49,6 @@ ActiveRecord::Schema.define(:version => 20120419005827) do
     t.datetime "updated_at"
   end
 
-# Could not dump table "ft_surveydata" because of following StandardError
-#   Unknown type 'geometry' for column 'the_geom'
-
   create_table "geometry_columns", :id => false, :force => true do |t|
     t.string  "f_table_catalog",   :limit => 256, :null => false
     t.string  "f_table_schema",    :limit => 256, :null => false
@@ -64,9 +68,6 @@ ActiveRecord::Schema.define(:version => 20120419005827) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
-
-# Could not dump table "nightjar_routes" because of following StandardError
-#   Unknown type 'geometry' for column 'the_geom'
 
   create_table "population_submission_attachments", :force => true do |t|
     t.datetime "created_at"
@@ -104,8 +105,19 @@ ActiveRecord::Schema.define(:version => 20120419005827) do
     t.float    "longitude"
   end
 
-# Could not dump table "range" because of following StandardError
-#   Unknown type 'geometry' for column 'the_geom'
+  create_table "regions", :force => true do |t|
+    t.integer  "continent_id"
+    t.string   "name"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  create_table "replacement_map", :id => false, :force => true do |t|
+    t.text "mike_site"
+    t.text "aed2007_oids"
+    t.text "current_strata"
+    t.text "reason_change"
+  end
 
   create_table "report_narratives", :force => true do |t|
     t.string   "uri"
@@ -405,8 +417,11 @@ ActiveRecord::Schema.define(:version => 20120419005827) do
     t.datetime "updated_at"
   end
 
-# Could not dump table "surveydata" because of following StandardError
-#   Unknown type 'geometry' for column 'the_geom'
+  create_table "surveytypes", :id => false, :force => true do |t|
+    t.string  "category",      :limit => 8
+    t.string  "surveytype"
+    t.integer "display_order"
+  end
 
   create_table "users", :force => true do |t|
     t.string   "email",                                 :default => "", :null => false

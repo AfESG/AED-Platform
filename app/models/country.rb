@@ -11,4 +11,5 @@ class Country < ActiveRecord::Base
   end
   has_many :submissions
 
+  belongs_to :region
 end
