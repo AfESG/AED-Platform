@@ -81,6 +81,7 @@ Aaed::Application.routes.draw do
   match 'report' => 'report#index'
 
   match 'find/:year/:objectid' => 'find#historical'
+  match 'range_popup/:source_id' => 'find#range_popup'
   match 'popup/:year/:objectid' => 'find#popup'
 
   match 'population_submissions/:id/submit' => 'population_submissions#submit'

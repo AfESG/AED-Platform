@@ -29,6 +29,11 @@ class FindController < ApplicationController
     render :layout => 'internal'
   end
 
+  def range_popup
+    @source_id = params[:source_id]
+    render :layout => false
+  end
+
   def popup
     @species = 'Loxodonta_africana'
     @continent = 'Africa'
