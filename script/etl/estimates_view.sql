@@ -123,7 +123,18 @@ select
   stratum_name,
   completion_year,
   population_estimate,
-  population_variance,
+  CASE
+    WHEN population_variance IS NOT NULL
+    THEN population_variance
+    WHEN population_standard_error IS NOT NULL
+    THEN population_standard_error ^ 2
+    WHEN population_confidence_interval IS NOT NULL
+         AND population_t IS NOT NULL
+    THEN (population_confidence_interval/population_t) ^ 2
+    WHEN population_confidence_interval IS NOT NULL
+    THEN (population_confidence_interval/1.96) ^ 2
+    ELSE null
+  END population_variance,
   population_standard_error,
   population_confidence_interval,
   CASE
