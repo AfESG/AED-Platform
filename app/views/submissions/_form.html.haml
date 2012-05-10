@@ -10,9 +10,6 @@
     = f.input :data_type, :as => :hidden, :value => 'Population estimate'
     = f.input :right_to_grant_permission, :required => true, :as => :radio, :collection => {"Yes, I have the right to grant permission to IUCN to use the data as specified" => true, "No, I do not have the right to grant permission, please email the following person:" => false}
     = f.input :permission_email, :as => :email
-    -if current_user.admin?
-      = f.input :is_mike_site, :as => :radio
-      = f.input :mike_site
   = f.buttons
 
 :javascript

@@ -23,4 +23,5 @@ class SurveyOther < ActiveRecord::Base
   end
 
   belongs_to :population_submission
+  belongs_to :mike_site
 end

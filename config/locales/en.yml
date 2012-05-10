@@ -31,9 +31,8 @@ en:
       carcasses_very_old: "Number of Very Old Carcasses (Categ. 4)"
       carcasses_age_unknown: "Number of Other Carcasses (Age/Category Unknown)"
       person_hours: "Person hours: Where each independent survey team is counted as one 'person'"
-      submission:
-        is_mike_site: "ADMIN ONLY: MIKE site?"
-        mike_site: "If yes, which?"
+      is_mike_site: "ADMIN ONLY: MIKE site?"
+      mike_site: "If yes, which?"
       population_submission:
         latitude: "Latitude of approximate center of site"
         longitude: "Longitude of approximate center of site"

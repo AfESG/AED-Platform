@@ -19,6 +19,9 @@
     = f.input :transects_covered_total_length
     = f.input :individual_transect_length
     = f.input :person_hours
+    -if current_user.admin?
+      = f.input :is_mike_site, :as => :radio
+      = f.input :mike_site
   = f.buttons do
     = f.commit_button :label => 'Save and enter another stratum'
     = f.commit_button :label => 'This is my final stratum'

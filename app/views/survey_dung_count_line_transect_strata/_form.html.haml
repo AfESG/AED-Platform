@@ -62,6 +62,9 @@
     = f.input :dung_density_asymmetric_lower_confidence_interval
     = f.input :dung_density_no_precision_estimate_available
     = f.input :dung_encounter_rate
+    -if current_user.admin?
+      = f.input :is_mike_site, :as => :radio
+      = f.input :mike_site
   = f.buttons do
     = f.commit_button :label => 'Save and enter another stratum'
     = f.commit_button :label => 'This is my final stratum'

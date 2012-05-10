@@ -14,6 +14,7 @@ class SurveyDungCountLineTransectStratum < ActiveRecord::Base
   validates_presence_of :dung_density_estimate
 
   belongs_to :survey_dung_count_line_transect
+  belongs_to :mike_site
 
   class SurveyDungCountLineTransectStratumValidator < ActiveModel::Validator
     def validate(record)      

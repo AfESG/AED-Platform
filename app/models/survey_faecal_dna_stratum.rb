@@ -10,4 +10,5 @@ class SurveyFaecalDnaStratum < ActiveRecord::Base
   validates_presence_of :method_of_analysis
 
   belongs_to :survey_faecal_dna
+  belongs_to :mike_site
 end

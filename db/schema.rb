@@ -11,7 +11,10 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120424115021) do
+ActiveRecord::Schema.define(:version => 20120510060541) do
+
+# Could not dump table "circles" because of following StandardError
+#   Unknown type 'geometry' for column 'st_buffer'
 
   create_table "continents", :force => true do |t|
     t.string   "name"
@@ -188,6 +191,8 @@ ActiveRecord::Schema.define(:version => 20120424115021) do
     t.integer  "carcasses_age_unknown"
     t.integer  "population_lower_confidence_limit"
     t.integer  "population_upper_confidence_limit"
+    t.integer  "mike_site_id"
+    t.boolean  "is_mike_site"
   end
 
   create_table "survey_aerial_sample_counts", :force => true do |t|
@@ -224,6 +229,8 @@ ActiveRecord::Schema.define(:version => 20120424115021) do
     t.integer  "carcasses_age_unknown"
     t.integer  "population_lower_confidence_limit"
     t.integer  "population_upper_confidence_limit"
+    t.integer  "mike_site_id"
+    t.boolean  "is_mike_site"
   end
 
   create_table "survey_aerial_total_counts", :force => true do |t|
@@ -296,6 +303,8 @@ ActiveRecord::Schema.define(:version => 20120424115021) do
     t.float    "defecation_rate_upper_confidence_limit"
     t.float    "dung_density_lower_confidence_limit"
     t.float    "dung_density_upper_confidence_limit"
+    t.integer  "mike_site_id"
+    t.boolean  "is_mike_site"
   end
 
   create_table "survey_dung_count_line_transects", :force => true do |t|
@@ -326,6 +335,8 @@ ActiveRecord::Schema.define(:version => 20120424115021) do
     t.datetime "updated_at"
     t.integer  "population_lower_confidence_limit"
     t.integer  "population_upper_confidence_limit"
+    t.integer  "mike_site_id"
+    t.boolean  "is_mike_site"
   end
 
   create_table "survey_faecal_dnas", :force => true do |t|
@@ -355,6 +366,8 @@ ActiveRecord::Schema.define(:version => 20120424115021) do
     t.float    "individual_transect_length"
     t.integer  "population_lower_confidence_limit"
     t.integer  "population_upper_confidence_limit"
+    t.integer  "mike_site_id"
+    t.boolean  "is_mike_site"
   end
 
   create_table "survey_ground_sample_counts", :force => true do |t|
@@ -386,6 +399,8 @@ ActiveRecord::Schema.define(:version => 20120424115021) do
     t.datetime "updated_at"
     t.integer  "population_lower_confidence_limit"
     t.integer  "population_upper_confidence_limit"
+    t.integer  "mike_site_id"
+    t.boolean  "is_mike_site"
   end
 
   create_table "survey_ground_total_counts", :force => true do |t|
@@ -406,6 +421,8 @@ ActiveRecord::Schema.define(:version => 20120424115021) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "porous_fenced_site"
+    t.integer  "mike_site_id"
+    t.boolean  "is_mike_site"
   end
 
   create_table "survey_others", :force => true do |t|
@@ -415,6 +432,8 @@ ActiveRecord::Schema.define(:version => 20120424115021) do
     t.integer  "population_estimate_max"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "mike_site_id"
+    t.boolean  "is_mike_site"
   end
 
   create_table "surveytypes", :id => false, :force => true do |t|
