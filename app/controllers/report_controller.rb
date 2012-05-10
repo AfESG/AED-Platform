@@ -435,7 +435,7 @@ class ReportController < ApplicationController
         e.category "CATEGORY",
         e.completion_year "YEAR",
         e.population_estimate "ESTIMATE",
-        cl95 "CL95",
+        e.population_confidence_interval "CL95",
         short_citation "REFERENCE",
         '-' "PFS",
         '-' "AREA_SQKM",
