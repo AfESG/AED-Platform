@@ -26,10 +26,7 @@ class ReportController < ApplicationController
     if @filter == 'mike'
       sql_filter = <<-SQL
         select input_zone_id from estimates
-        join population_submissions
-          on population_submission_id = population_submissions.id
-        join submissions on submission_id = submissions.id
-        where is_mike_site=true
+        join currently_used_strata on input_zone_id = current_stratum
       SQL
       @preview_title = 'MIKE Sites'
       @preview_nav = 'MIKE Site Analysis'
