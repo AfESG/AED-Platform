@@ -433,9 +433,13 @@ class ReportController < ApplicationController
     if @year==2012
       @elephant_estimates_by_country = execute <<-SQL
         select
+          CASE WHEN reason_change='NC' THEN
+            '-'
+          ELSE
+            reason_change
+          END as "ReasonForChange",
           e.population_submission_id,
           e.site_name || ' / ' || e.stratum_name survey_zone,
-          '-' "ReasonForChange",
           e.input_zone_id method_and_quality,
           e.category "CATEGORY",
           e.completion_year "YEAR",
@@ -465,6 +469,7 @@ class ReportController < ApplicationController
           join estimate_dpps d on e.input_zone_id = d.input_zone_id
           join surveytypes t on t.category = e.category
           join population_submissions on e.population_submission_id = population_submissions.id
+          left join replacement_map on current_strata like '%%' || e.input_zone_id || '%%'
         where country='#{@country}'
         order by e.site_name, e.stratum_name
       SQL
