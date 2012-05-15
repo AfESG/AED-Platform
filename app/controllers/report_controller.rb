@@ -430,44 +430,98 @@ class ReportController < ApplicationController
         join surveytypes t on t.category = e.category
       where country='#{@country}'
     SQL
-    @elephant_estimates_by_country = execute <<-SQL
-      select
-        e.population_submission_id,
-        e.site_name || ' / ' || e.stratum_name survey_zone,
-        '-' "ReasonForChange",
-        e.input_zone_id method_and_quality,
-        e.category "CATEGORY",
-        e.completion_year "YEAR",
-        e.population_estimate "ESTIMATE",
-        e.population_confidence_interval "CL95",
-        short_citation "REFERENCE",
-        '-' "PFS",
-        '-' "AREA_SQKM",
-        CASE WHEN longitude<0 THEN
-          to_char(abs(longitude),'999D9')||'W'
-        WHEN longitude=0 THEN
-          '0.0'
-        ELSE
-          to_char(abs(longitude),'999D9')||'E'
-        END "LON",
-        CASE WHEN latitude<0 THEN
-          to_char(abs(latitude),'990D9')||'S'
-        WHEN latitude=0 THEN
-          '0.0'
-        ELSE
-          to_char(abs(latitude),'990D9')||'N'
-        END "LAT"
-      from estimate_locator e
-        join (
-          #{sql_filter}
-        ) f on f.input_zone_id = e.input_zone_id
-        join estimate_dpps d on e.input_zone_id = d.input_zone_id
-        join surveytypes t on t.category = e.category
-        join population_submissions on e.population_submission_id = population_submissions.id
-      where country='#{@country}'
-      order by e.site_name, e.stratum_name
-    SQL
-
+    if @year==2012
+      @elephant_estimates_by_country = execute <<-SQL
+        select
+          e.population_submission_id,
+          e.site_name || ' / ' || e.stratum_name survey_zone,
+          '-' "ReasonForChange",
+          e.input_zone_id method_and_quality,
+          e.category "CATEGORY",
+          e.completion_year "YEAR",
+          e.population_estimate "ESTIMATE",
+          e.population_confidence_interval "CL95",
+          short_citation "REFERENCE",
+          '-' "PFS",
+          '-' "AREA_SQKM",
+          CASE WHEN longitude<0 THEN
+            to_char(abs(longitude),'999D9')||'W'
+          WHEN longitude=0 THEN
+            '0.0'
+          ELSE
+            to_char(abs(longitude),'999D9')||'E'
+          END "LON",
+          CASE WHEN latitude<0 THEN
+            to_char(abs(latitude),'990D9')||'S'
+          WHEN latitude=0 THEN
+            '0.0'
+          ELSE
+            to_char(abs(latitude),'990D9')||'N'
+          END "LAT"
+        from estimate_locator e
+          join (
+            #{sql_filter}
+          ) f on f.input_zone_id = e.input_zone_id
+          join estimate_dpps d on e.input_zone_id = d.input_zone_id
+          join surveytypes t on t.category = e.category
+          join population_submissions on e.population_submission_id = population_submissions.id
+        where country='#{@country}'
+        order by e.site_name, e.stratum_name
+      SQL
+    elsif @year==2007
+      @elephant_estimates_by_country = execute <<-SQL
+        select
+          CASE WHEN "ReasonForChange"='NC' THEN
+            '-'
+          ELSE
+            "ReasonForChange"
+          END as "ReasonForChange",
+          CASE WHEN "DESIGNATE" IS NULL THEN
+            "SURVEYZONE"
+          ELSE
+            "SURVEYZONE" || ' ' || "DESIGNATE"
+          END as survey_zone,
+          "METHOD" || "QUALITY" method_and_quality,
+          "CATEGORY",
+          "CYEAR",
+          "ESTIMATE",
+          CASE WHEN "CL95" is NULL THEN
+            to_char("UPRANGE",'9999999') || '*'
+          ELSE
+            to_char(ROUND("CL95"),'9999999')
+          END "CL95",
+          "REFERENCE",
+          "PFS",
+          ROUND("AREA_SQKM") "AREA_SQKM",
+          "LON" numeric_lon,
+          "LAT" numeric_lat,
+          CASE WHEN "LON"<0 THEN
+            to_char(abs("LON"),'999D9')||'W'
+          WHEN "LON"=0 THEN
+            '0.0'
+          ELSE
+            to_char(abs("LON"),'999D9')||'E'
+          END "LON",
+          CASE WHEN "LAT"<0 THEN
+            to_char(abs("LON"),'990D9')||'S'
+          WHEN "LAT"=0 THEN
+            '0.0'
+          ELSE
+            to_char(abs("LAT"),'990D9')||'N'
+          END "LAT"
+        from estimate_locator e
+          join (
+            #{sql_filter}
+          ) f on f.input_zone_id = e.input_zone_id
+          join estimate_dpps d on e.input_zone_id = d.input_zone_id
+          join surveytypes t on t.category = e.category
+          join aed2007."Surveydata" on "OBJECTID" = cast(f.input_zone_id as int)
+          left join aed2007."ChangesTracker" on
+            "OBJECTID"="CurrentOID"
+        where country='#{@country}'
+        order by e.site_name, e.stratum_name
+      SQL
+    end
 
   end
 

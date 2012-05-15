@@ -228,8 +228,8 @@ select cast("OBJECTID" as text),
   "ESTIMATE",
   "VARIANCE",
   "STDERROR",
-  "CL95",
-  "ESTIMATE"-"CL95",
+  "CL95"::int,
+  "ESTIMATE"-"CL95"::int,
   "ACTUALSEEN",
   "CATEGORY"
 from aed2007."Surveydata"
