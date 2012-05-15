@@ -219,6 +219,20 @@ select 'O'||survey_others.id input_zone_id,
   'E' category
 from survey_others
   join population_submissions on population_submissions.id=population_submission_id
+union
+select cast("OBJECTID" as text),
+  null,
+  "SURVEYZONE",
+  "SURVEYZONE",
+  "CYEAR",
+  "ESTIMATE",
+  "VARIANCE",
+  "STDERROR",
+  "CL95",
+  "ESTIMATE"-"CL95",
+  "ACTUALSEEN",
+  "CATEGORY"
+from aed2007."Surveydata"
 ;
 
 drop view estimate_dpps;
