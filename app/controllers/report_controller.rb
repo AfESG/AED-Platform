@@ -24,10 +24,17 @@ class ReportController < ApplicationController
 
   def process_filter
     if @filter == 'mike'
-      sql_filter = <<-SQL
-        select input_zone_id from estimates
-        join currently_used_strata on input_zone_id = current_stratum
-      SQL
+      if @year == 2012
+        sql_filter = <<-SQL
+          select input_zone_id from estimates
+          join currently_used_strata on input_zone_id = current_stratum
+        SQL
+      elsif @year == 2007
+        sql_filter = <<-SQL
+          select input_zone_id from estimates
+          join previously_used_strata on input_zone_id = current_stratum
+        SQL
+      end
       @preview_title = 'MIKE Sites'
       @preview_nav = 'MIKE Site Analysis'
     elsif @filter == 'current'
