@@ -136,7 +136,7 @@ All Years for #{@country}:
         %td
           %a{:href=>"/population_submissions/#{row['population_submission_id']}"}!= row['survey_zone']
         %td= row['ReasonForChange']
-        %td= row['method_and_quality']
+        %td= row['method_and_quality'].gsub(/[\d]/,'')
         %td{:style=>"text-align:center"}= row['CATEGORY']
         %td= row['CYEAR']
         %td.numeric= number_with_delimiter row['ESTIMATE']

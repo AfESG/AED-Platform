@@ -442,7 +442,7 @@ class ReportController < ApplicationController
           e.site_name || ' / ' || e.stratum_name survey_zone,
           e.input_zone_id method_and_quality,
           e.category "CATEGORY",
-          e.completion_year "YEAR",
+          e.completion_year "CYEAR",
           e.population_estimate "ESTIMATE",
           e.population_confidence_interval "CL95",
           short_citation "REFERENCE",
