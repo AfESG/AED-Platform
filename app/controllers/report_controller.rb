@@ -447,7 +447,7 @@ class ReportController < ApplicationController
           e.population_confidence_interval "CL95",
           short_citation "REFERENCE",
           '-' "PFS",
-          '-' "AREA_SQKM",
+          e.stratum_area "AREA_SQKM",
           CASE WHEN longitude<0 THEN
             to_char(abs(longitude),'999D9')||'W'
           WHEN longitude=0 THEN
