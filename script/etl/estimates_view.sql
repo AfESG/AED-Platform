@@ -111,8 +111,8 @@ select
           THEN population_lower_confidence_limit
         WHEN population_confidence_interval<population_estimate
           THEN ROUND(population_estimate-population_confidence_interval)
-        ELSE 0
-      END)>0 THEN 'B'
+        ELSE NULL
+      END) IS NOT NULL THEN 'B'
     ELSE 'D'
   END category
 from
@@ -141,7 +141,18 @@ select
     ELSE null
   END population_variance,
   population_standard_error,
-  population_confidence_interval,
+  CASE
+    WHEN population_confidence_interval IS NOT NULL
+    THEN population_confidence_interval
+    WHEN population_standard_error IS NOT NULL
+    THEN ROUND(population_standard_error * 1.96)
+    WHEN population_standard_error IS NOT NULL
+         AND population_t IS NOT NULL
+    THEN ROUND(population_standard_error * population_t)
+    WHEN population_variance IS NOT NULL
+    THEN ROUND(SQRT(population_variance) * 1.96)
+    ELSE null
+  END population_confidence_interval,
   CASE
     WHEN population_lower_confidence_limit IS NOT NULL
       THEN population_lower_confidence_limit
@@ -155,10 +166,32 @@ select
     WHEN (CASE
         WHEN population_lower_confidence_limit IS NOT NULL
           THEN population_lower_confidence_limit
-        WHEN population_confidence_interval<population_estimate
-          THEN ROUND(population_estimate-population_confidence_interval)
-        ELSE 0
-      END)>0 THEN 'B'
+        WHEN CASE
+          WHEN population_confidence_interval IS NOT NULL
+          THEN population_confidence_interval
+          WHEN population_standard_error IS NOT NULL
+          THEN ROUND(population_standard_error * 1.96)
+          WHEN population_standard_error IS NOT NULL
+               AND population_t IS NOT NULL
+          THEN ROUND(population_standard_error * population_t)
+          WHEN population_variance IS NOT NULL
+          THEN ROUND(SQRT(population_variance) * 1.96)
+          ELSE null
+        END < population_estimate
+          THEN ROUND(population_estimate-CASE
+            WHEN population_confidence_interval IS NOT NULL
+            THEN population_confidence_interval
+            WHEN population_standard_error IS NOT NULL
+            THEN ROUND(population_standard_error * 1.96)
+            WHEN population_standard_error IS NOT NULL
+                 AND population_t IS NOT NULL
+            THEN ROUND(population_standard_error * population_t)
+            WHEN population_variance IS NOT NULL
+            THEN ROUND(SQRT(population_variance) * 1.96)
+            ELSE null
+          END)
+        ELSE null
+      END) IS NOT NULL THEN 'B'
     ELSE 'D'
   END category
 from survey_aerial_sample_count_strata
