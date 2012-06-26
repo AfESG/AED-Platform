@@ -82,6 +82,6 @@ group :development, :test do
 end
 
 group :production do
-  gem 'exceptional'
+  gem 'appygram'
   gem 'thin'
 end
