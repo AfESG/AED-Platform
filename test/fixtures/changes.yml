@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  analysis_name: MyString
+  replacement_name: MyString
+  replaced_strata: MyString
+  new_strata: MyString
+  reason_change: MyString
+
+two:
+  analysis_name: MyString
+  replacement_name: MyString
+  replaced_strata: MyString
+  new_strata: MyString
+  reason_change: MyString

@@ -1,5 +1,7 @@
 Aaed::Application.routes.draw do
 
+  resources :changes
+
   resources :report_narratives
 
   devise_for :users

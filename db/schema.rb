@@ -11,10 +11,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120510060541) do
+ActiveRecord::Schema.define(:version => 20120627084543) do
 
-# Could not dump table "circles" because of following StandardError
-#   Unknown type 'geometry' for column 'st_buffer'
+  create_table "changes", :force => true do |t|
+    t.string   "analysis_name"
+    t.integer  "analysis_year"
+    t.string   "replacement_name"
+    t.string   "replaced_strata"
+    t.string   "new_strata"
+    t.string   "reason_change"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
 
   create_table "continents", :force => true do |t|
     t.string   "name"
@@ -116,10 +124,11 @@ ActiveRecord::Schema.define(:version => 20120510060541) do
   end
 
   create_table "replacement_map", :id => false, :force => true do |t|
-    t.text "mike_site"
-    t.text "aed2007_oids"
-    t.text "current_strata"
-    t.text "reason_change"
+    t.text    "mike_site"
+    t.text    "aed2007_oids"
+    t.text    "current_strata"
+    t.text    "reason_change"
+    t.integer "id",             :null => false
   end
 
   create_table "report_narratives", :force => true do |t|
@@ -434,6 +443,8 @@ ActiveRecord::Schema.define(:version => 20120510060541) do
     t.datetime "updated_at"
     t.integer  "mike_site_id"
     t.boolean  "is_mike_site"
+    t.integer  "actually_seen"
+    t.boolean  "informed"
   end
 
   create_table "surveytypes", :id => false, :force => true do |t|
