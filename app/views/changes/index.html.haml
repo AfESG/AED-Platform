@@ -5,6 +5,7 @@
   %thead
     %tr
       %th= Change.human_attribute_name :analysis_name
+      %th= Change.human_attribute_name :analysis_year
       %th= Change.human_attribute_name :replacement_name
       %th= Change.human_attribute_name :replaced_strata
       %th= Change.human_attribute_name :new_strata
@@ -15,6 +16,7 @@
     - for change in @changes
       %tr{ :class => cycle(:odd, :even) }
         %td= change.analysis_name
+        %td= change.analysis_year
         %td= change.replacement_name
         %td= change.replaced_strata
         %td= change.new_strata
