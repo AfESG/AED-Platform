@@ -473,7 +473,6 @@ class ReportController < ApplicationController
       where country='#{@country}'
       order by e.site_name, e.stratum_name
     SQL
-    end
 
   end
 
