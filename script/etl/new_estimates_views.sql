@@ -1,0 +1,493 @@
+---
+--- estimate_factors
+---
+--- The purpose of this view is to standardize the factors in the various
+--- survey strata or count tables so that common operations involved in
+--- pooling can be performed on them.
+---
+drop view estimate_factors cascade;
+create or replace view estimate_factors as
+select
+  'GT'::text estimate_type,
+  'GT'||survey_ground_total_count_strata.id input_zone_id,
+  population_submission_id,
+  site_name,
+  stratum_name,
+  stratum_area,
+  completion_year,
+  short_citation,
+  population_estimate,
+  population_variance,
+  population_standard_error,
+  population_confidence_interval,
+  population_t,
+  population_lower_confidence_limit,
+  population_upper_confidence_limit,
+  1 quality_level,
+  actually_seen
+  from
+    survey_ground_total_count_strata
+    join survey_ground_total_counts on survey_ground_total_counts.id=survey_ground_total_count_id
+    join population_submissions on population_submissions.id=population_submission_id
+union
+select
+  'DC',
+  'DC'||survey_dung_count_line_transect_strata.id input_zone_id,
+  population_submission_id,
+  site_name,
+  stratum_name,
+  stratum_area,
+  completion_year,
+  short_citation,
+  population_estimate,
+  population_variance,
+  population_standard_error,
+  population_confidence_interval,
+  population_t,
+  population_lower_confidence_limit,
+  population_upper_confidence_limit,
+  CASE
+    WHEN dung_decay_rate_measurement_site is not null and dung_decay_rate_measurement_site!='' THEN 1
+    ELSE 0
+  END quality_level,
+  actually_seen
+from
+  survey_dung_count_line_transect_strata
+  join survey_dung_count_line_transects on survey_dung_count_line_transects.id=survey_dung_count_line_transect_id
+  join population_submissions on population_submissions.id=population_submission_id
+union
+select
+  'AT',
+  'AT'||survey_aerial_total_count_strata.id input_zone_id,
+  population_submission_id,
+  site_name,
+  stratum_name,
+  stratum_area,
+  completion_year,
+  short_citation,
+  population_estimate,
+  population_variance,
+  population_standard_error,
+  population_confidence_interval,
+  population_t,
+  population_lower_confidence_limit,
+  population_upper_confidence_limit,
+  1 quality_level,
+  NULL actually_seen
+from
+  survey_aerial_total_count_strata
+  join survey_aerial_total_counts on survey_aerial_total_counts.id=survey_aerial_total_count_id
+  join population_submissions on population_submissions.id=population_submission_id
+union
+select
+  'GS',
+  'GS'||survey_ground_sample_count_strata.id input_zone_id,
+  population_submission_id,
+  site_name,
+  stratum_name,
+  stratum_area,
+  completion_year,
+  short_citation,
+  population_estimate,
+  population_variance,
+  population_standard_error,
+  population_confidence_interval,
+  population_t,
+  population_lower_confidence_limit,
+  population_upper_confidence_limit,
+  1 quality_level,
+  NULL actually_seen
+from
+  survey_ground_sample_count_strata
+  join survey_ground_sample_counts on survey_ground_sample_counts.id=survey_ground_sample_count_id
+  join population_submissions on population_submissions.id=population_submission_id
+union
+select
+  'AS',
+  'AS'||survey_aerial_sample_count_strata.id input_zone_id,
+  population_submission_id,
+  site_name,
+  stratum_name,
+  stratum_area,
+  completion_year,
+  short_citation,
+  population_estimate,
+  population_variance,
+  population_standard_error,
+  population_confidence_interval,
+  population_t,
+  population_lower_confidence_limit,
+  population_upper_confidence_limit,
+  1 quality_level,
+  NULL actually_seen
+from survey_aerial_sample_count_strata
+  join survey_aerial_sample_counts on survey_aerial_sample_counts.id=survey_aerial_sample_count_id
+  join population_submissions on population_submissions.id=population_submission_id
+union
+select
+  'GD',
+  'GD'||survey_faecal_dna_strata.id input_zone_id,
+  population_submission_id,
+  site_name,
+  stratum_name,
+  stratum_area,
+  completion_year,
+  short_citation,
+  population_estimate,
+  population_variance,
+  population_standard_error,
+  population_confidence_interval,
+  population_t,
+  population_lower_confidence_limit,
+  population_upper_confidence_limit,
+  1 quality_level,
+  NULL actually_seen
+from survey_faecal_dna_strata
+  join survey_faecal_dnas on survey_faecal_dnas.id=survey_faecal_dna_id
+  join population_submissions on population_submissions.id=population_submission_id
+union
+select
+  'IR',
+  'IR'||survey_individual_registrations.id input_zone_id,
+  population_submission_id,
+  site_name,
+  site_name,
+  area,
+  completion_year,
+  short_citation,
+  population_estimate,
+  NULL population_variance,
+  NULL population_standard_error,
+  NULL population_confidence_interval,
+  NULL population_t,
+  NULL population_lower_confidence_limit,
+  population_upper_range population_upper_confidence_limit,
+  CASE
+    WHEN population_upper_range is null THEN 1
+    ELSE 0
+  END quality_level,
+  population_estimate actually_seen
+from survey_individual_registrations
+  join population_submissions on population_submissions.id=population_submission_id
+union
+select
+  'O',
+  'O'||survey_others.id input_zone_id,
+  population_submission_id,
+  site_name,
+  site_name,
+  area,
+  completion_year,
+  short_citation,
+  (population_estimate_min+population_estimate_max)/2,
+  NULL population_variance,
+  NULL population_standard_error,
+  NULL population_confidence_interval,
+  NULL population_t,
+  population_estimate_min lower_confidence_limit,
+  population_estimate_max population_upper_confidence_limit,
+  CASE
+    WHEN informed=true THEN 1
+    ELSE 0
+  END quality_level,
+  NULL actually_seen
+from survey_others
+  join population_submissions on population_submissions.id=population_submission_id
+;
+
+---
+--- estimate_factors_confidence
+---
+--- This view calculates population_variance or population_confidence_interval
+--- if they are missing
+---
+drop view estimate_factors_confidence;
+create view estimate_factors_confidence as
+select
+  estimate_type,
+  input_zone_id,
+  population_submission_id,
+  site_name,
+  stratum_name,
+  stratum_area,
+  completion_year,
+  short_citation,
+  quality_level,
+  population_estimate,
+  CASE
+    WHEN population_variance IS NOT NULL
+    THEN population_variance
+    WHEN population_standard_error IS NOT NULL
+    THEN population_standard_error ^ 2
+    WHEN population_confidence_interval IS NOT NULL
+         AND population_t IS NOT NULL
+    THEN (population_confidence_interval/population_t) ^ 2
+    WHEN population_confidence_interval IS NOT NULL
+    THEN (population_confidence_interval/1.96) ^ 2
+    ELSE null
+  END population_variance,
+  population_standard_error,
+  CASE
+    WHEN population_confidence_interval IS NOT NULL
+    THEN population_confidence_interval
+    WHEN population_standard_error IS NOT NULL
+    THEN ROUND(population_standard_error * 1.96)
+    WHEN population_standard_error IS NOT NULL
+         AND population_t IS NOT NULL
+    THEN ROUND(population_standard_error * population_t)
+    WHEN population_variance IS NOT NULL
+    THEN ROUND(SQRT(population_variance) * 1.96)
+    ELSE null
+  END population_confidence_interval,
+  population_lower_confidence_limit,
+  population_upper_confidence_limit,
+  CASE WHEN actually_seen IS NULL THEN 0 ELSE actually_seen END actually_seen
+  from
+    estimate_factors;
+
+---
+--- estimate_factors_analyses
+---
+--- Extracts the factors by analysis in context of the target year
+---
+drop view estimate_factors_analyses;
+create view estimate_factors_analyses as
+select
+  estimate_type,
+  input_zone_id,
+  population_submission_id,
+  site_name,
+  stratum_name,
+  stratum_area,
+  completion_year,
+  a.analysis_name,
+  a.analysis_year,
+  a.analysis_year - completion_year age,
+  short_citation,
+  population_estimate,
+  population_variance,
+  population_standard_error,
+  population_confidence_interval,
+  population_lower_confidence_limit,
+  population_upper_confidence_limit,
+  quality_level,
+  actually_seen
+  from
+    estimate_factors_confidence
+  join new_strata n on n.new_stratum = input_zone_id
+  join analyses a on a.analysis_name = n.analysis_name
+union
+select
+  estimate_type,
+  input_zone_id,
+  population_submission_id,
+  site_name,
+  stratum_name,
+  stratum_area,
+  completion_year,
+  a.analysis_name,
+  a.comparison_year,
+  a.comparison_year - completion_year age,
+  short_citation,
+  population_estimate,
+  population_variance,
+  population_standard_error,
+  population_confidence_interval,
+  population_lower_confidence_limit,
+  population_upper_confidence_limit,
+  quality_level,
+  actually_seen
+  from
+    estimate_factors_confidence
+  join replaced_strata n on n.replaced_stratum = input_zone_id
+  join analyses a on a.analysis_name = n.analysis_name
+;
+
+---
+--- estimate_factors_analyses_categorized
+---
+--- Applies the categorization rules (type, age, confidence)
+---
+drop view estimate_factors_analyses_categorized;
+create view estimate_factors_analyses_categorized as
+select
+  estimate_type,
+  input_zone_id,
+  population_submission_id,
+  site_name,
+  stratum_name,
+  stratum_area,
+  completion_year,
+  analysis_name,
+  analysis_year,
+  age,
+  short_citation,
+  population_estimate,
+  population_variance,
+  population_standard_error,
+  population_confidence_interval,
+  population_lower_confidence_limit,
+  population_upper_confidence_limit,
+  quality_level,
+  actually_seen,
+  CASE
+
+    --- old surveys always 'E' ---
+
+    WHEN age>10 THEN 'E'
+
+    --- dung counts ---
+
+    WHEN estimate_type='DC' THEN
+      CASE WHEN quality_level=1 THEN 'B' ELSE 'C' END
+
+    WHEN estimate_type='GD' THEN 'A'
+
+    --- totals ---
+
+    WHEN (estimate_type='AT' or estimate_type='GT') THEN 'A'
+
+    --- samples--
+
+    WHEN (estimate_type='AS' or estimate_type='GS') THEN
+      CASE WHEN population_variance IS NOT NULL THEN 'B' ELSE 'D' END
+
+    --- individual registrations ---
+
+    WHEN estimate_type='IR' THEN
+      CASE WHEN quality_level IS 1 THEN 'A' ELSE 'D' END
+
+    --- others ---
+
+    WHEN estimate_type='O' THEN
+      CASE WHEN quality_level IS 1 THEN 'D' ELSE 'E' END
+
+    --- a meaningless value 'F' for anything that fell through --
+
+    ELSE 'F'
+
+  END category
+  from
+    estimate_factors_analyses
+;
+
+
+
+drop view estimate_dpps;
+create or replace view estimate_dpps as
+select
+  input_zone_id,
+  category,
+  population_estimate,
+  population_estimate as definite,
+  0 as probable,
+  0 as possible,
+  0 as speculative
+from
+  estimates
+where
+  category='A'
+union
+select
+  input_zone_id,
+  category,
+  population_estimate,
+  CASE
+    WHEN cl95>actually_seen THEN cl95
+    ELSE actually_seen
+  END as definite,
+  CASE WHEN cl95>0 or actually_seen>0 THEN
+    population_estimate-(CASE
+      WHEN cl95>actually_seen THEN cl95
+      ELSE actually_seen
+    END)
+    ELSE population_estimate
+  END as probable,
+  CASE WHEN cl95>0 or actually_seen>0 THEN
+    population_estimate-(CASE
+      WHEN cl95>actually_seen THEN cl95
+      ELSE actually_seen
+    END)
+    ELSE 0
+  END as possible,
+  0 as speculative
+from
+  estimates
+where
+  category='B'
+union
+select
+  input_zone_id,
+  category,
+  population_estimate,
+  CASE
+    WHEN actually_seen>0 THEN actually_seen
+    ELSE 0
+  END
+  as definite,
+  population_estimate as probable,
+  CASE WHEN cl95>0 or actually_seen>0 THEN
+    population_estimate-(CASE
+      WHEN cl95>actually_seen THEN cl95
+      ELSE actually_seen
+    END)
+    ELSE 0
+  END as possible,
+  0 as speculative
+from
+  estimates
+where
+  category='C'
+union
+select
+  input_zone_id,
+  category,
+  population_estimate,
+  CASE
+    WHEN actually_seen>0 THEN actually_seen
+    ELSE 0
+  END
+  as definite,
+  0 as probable,
+  population_estimate as possible,
+  CASE WHEN cl95>0 THEN (population_estimate-cl95)*2
+  ELSE 0
+  END as speculative
+from
+  estimates
+where
+  category='D'
+union
+select
+  input_zone_id,
+  category,
+  population_estimate,
+  CASE
+    WHEN actually_seen>0 THEN actually_seen
+    ELSE 0
+  END
+  as definite,
+  0 as probable,
+  0 as possible,
+  population_estimate-actually_seen as speculative
+from
+  estimates
+where
+  category='E'
+;
+
+
+drop view estimate_locator;
+create or replace view estimate_locator as
+select
+  estimates.*,
+  countries.name country,
+  regions.name region,
+  continents.name continent
+from estimates
+join population_submissions on population_submission_id=population_submissions.id
+join submissions on submission_id=submissions.id
+join countries on country_id=countries.id
+join regions on region_id=regions.id
+join continents on continent_id=continents.id
+;
