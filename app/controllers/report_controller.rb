@@ -28,13 +28,13 @@ class ReportController < ApplicationController
       # the analysis definition in the database.
       if @year == 2012
         sql_filter = <<-SQL
-          select input_zone_id from estimates
-          join new_strata on input_zone_id = new_stratum and analysis_name='mike_2012'
+          select input_zone_id, reason_change from estimates
+          join new_strata on input_zone_id = new_stratum and analysis_name='2012_mike'
         SQL
       elsif @year == 2007
         sql_filter = <<-SQL
-          select input_zone_id from estimates
-          join replaced_strata on input_zone_id = replaced_stratum and analysis_name='mike_2012'
+          select input_zone_id, reason_change from estimates
+          join replaced_strata on input_zone_id = replaced_stratum and analysis_name='2012_mike'
         SQL
       end
       @preview_title = 'MIKE Sites'
