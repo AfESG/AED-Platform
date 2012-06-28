@@ -7,6 +7,7 @@ select
   stratum_name,
   stratum_area,
   completion_year,
+  citation short_citation,
   population_estimate,
   population_variance,
   population_standard_error,
@@ -35,6 +36,7 @@ select
   stratum_name,
   stratum_area,
   completion_year,
+  citation short_citation,
   population_estimate,
   population_variance,
   population_standard_error,
@@ -64,6 +66,7 @@ select
   stratum_name,
   stratum_area,
   completion_year,
+  citation short_citation,
   population_estimate,
   population_variance,
   population_standard_error,
@@ -92,6 +95,7 @@ select
   stratum_name,
   stratum_area,
   completion_year,
+  citation short_citation,
   population_estimate,
   population_variance,
   population_standard_error,
@@ -127,6 +131,7 @@ select
   stratum_name,
   stratum_area,
   completion_year,
+  citation short_citation,
   population_estimate,
   CASE
     WHEN population_variance IS NOT NULL
@@ -205,6 +210,7 @@ select
   stratum_name,
   stratum_area,
   completion_year,
+  citation short_citation,
   population_estimate,
   population_variance,
   population_standard_error,
@@ -232,6 +238,7 @@ select
   site_name,
   area,
   completion_year,
+  citation short_citation,
   population_estimate,
   0,
   0,
@@ -251,6 +258,7 @@ select 'O'||survey_others.id input_zone_id,
   site_name,
   area,
   completion_year,
+  citation short_citation,
   population_estimate_min+population_estimate_max/2,
   0,
   0,
@@ -260,21 +268,6 @@ select 'O'||survey_others.id input_zone_id,
   'E' category
 from survey_others
   join population_submissions on population_submissions.id=population_submission_id
-union
-select cast("OBJECTID" as text),
-  null,
-  "SURVEYZONE",
-  "SURVEYZONE",
-  "AREA_SQKM",
-  "CYEAR",
-  "ESTIMATE",
-  "VARIANCE",
-  "STDERROR",
-  "CL95"::int,
-  "ESTIMATE"-"CL95"::int,
-  "ACTUALSEEN",
-  "CATEGORY"
-from aed2007."Surveydata"
 ;
 
 drop view estimate_dpps;
@@ -394,17 +387,4 @@ join submissions on submission_id=submissions.id
 join countries on country_id=countries.id
 join regions on region_id=regions.id
 join continents on continent_id=continents.id
-
-union
-select
-  estimates.*,
-  countries.name country,
-  regions.name region,
-  continents.name continent
-from estimates
-join aed2007."Surveydata" d on cast(input_zone_id as int) = "OBJECTID"
-join countries on countries.name="CNTRYNAME"
-join regions on region_id=regions.id
-join continents on continent_id=continents.id
-where estimates.population_submission_id is null
 ;

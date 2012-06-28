@@ -446,7 +446,7 @@ class ReportController < ApplicationController
         e.completion_year "CYEAR",
         e.population_estimate "ESTIMATE",
         e.population_confidence_interval "CL95",
-        short_citation "REFERENCE",
+        e.short_citation "REFERENCE",
         '-' "PFS",
         e.stratum_area "AREA_SQKM",
         CASE WHEN longitude<0 THEN
