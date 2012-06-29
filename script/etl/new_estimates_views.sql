@@ -201,7 +201,7 @@ from survey_others
 --- This view calculates population_variance or population_confidence_interval
 --- if they are missing
 ---
-drop view estimate_factors_confidence;
+drop view if exists estimate_factors_confidence;
 create view estimate_factors_confidence as
 select
   estimate_type,
@@ -231,12 +231,12 @@ select
     WHEN population_confidence_interval IS NOT NULL
     THEN population_confidence_interval
     WHEN population_standard_error IS NOT NULL
-    THEN ROUND(population_standard_error * 1.96)
+    THEN population_standard_error * 1.96
     WHEN population_standard_error IS NOT NULL
          AND population_t IS NOT NULL
-    THEN ROUND(population_standard_error * population_t)
+    THEN population_standard_error * population_t
     WHEN population_variance IS NOT NULL
-    THEN ROUND(SQRT(population_variance) * 1.96)
+    THEN SQRT(population_variance) * 1.96
     ELSE null
   END population_confidence_interval,
   population_lower_confidence_limit,
@@ -250,7 +250,7 @@ select
 ---
 --- Extracts the factors by analysis in context of the target year
 ---
-drop view estimate_factors_analyses;
+drop view if exists estimate_factors_analyses;
 create view estimate_factors_analyses as
 select
   estimate_type,
@@ -263,6 +263,7 @@ select
   a.analysis_name,
   a.analysis_year,
   a.analysis_year - completion_year age,
+  reason_change,
   short_citation,
   population_estimate,
   population_variance,
@@ -288,6 +289,7 @@ select
   a.analysis_name,
   a.comparison_year,
   a.comparison_year - completion_year age,
+  reason_change,
   short_citation,
   population_estimate,
   population_variance,
@@ -306,9 +308,10 @@ select
 ---
 --- estimate_factors_analyses_categorized
 ---
---- Applies the categorization rules (type, age, confidence)
+--- Applies the categorization rules (type, age, confidence).
+--- Adds the synthetic LCL95 value used in pooling.
 ---
-drop view estimate_factors_analyses_categorized;
+drop view if exists estimate_factors_analyses_categorized;
 create view estimate_factors_analyses_categorized as
 select
   estimate_type,
@@ -321,6 +324,7 @@ select
   analysis_name,
   analysis_year,
   age,
+  reason_change,
   short_citation,
   population_estimate,
   population_variance,
@@ -330,6 +334,13 @@ select
   population_upper_confidence_limit,
   quality_level,
   actually_seen,
+  CASE
+    WHEN population_lower_confidence_limit IS NOT NULL
+      THEN population_lower_confidence_limit
+    WHEN population_confidence_interval<population_estimate
+      THEN population_estimate-population_confidence_interval
+    ELSE 0
+  END lcl95,
   CASE
 
     --- old surveys always 'E' ---
@@ -355,12 +366,12 @@ select
     --- individual registrations ---
 
     WHEN estimate_type='IR' THEN
-      CASE WHEN quality_level IS 1 THEN 'A' ELSE 'D' END
+      CASE WHEN quality_level = 1 THEN 'A' ELSE 'D' END
 
     --- others ---
 
     WHEN estimate_type='O' THEN
-      CASE WHEN quality_level IS 1 THEN 'D' ELSE 'E' END
+      CASE WHEN quality_level = 1 THEN 'D' ELSE 'E' END
 
     --- a meaningless value 'F' for anything that fell through --
 
@@ -371,11 +382,31 @@ select
     estimate_factors_analyses
 ;
 
+drop view if exists estimate_locator;
+create or replace view estimate_locator as
+select
+  e.*,
+  countries.name country,
+  regions.name region,
+  continents.name continent
+from estimate_factors_analyses_categorized e
+join population_submissions on population_submission_id=population_submissions.id
+join submissions on submission_id=submissions.id
+join countries on country_id=countries.id
+join regions on region_id=regions.id
+join continents on continent_id=continents.id
+;
 
-
-drop view estimate_dpps;
+---
+--- estimate_dpps
+---
+--- Row-level DPPS is useful for consistency check only
+---
+drop view if exists estimate_dpps;
 create or replace view estimate_dpps as
 select
+  analysis_name,
+  analysis_year,
   input_zone_id,
   category,
   population_estimate,
@@ -384,39 +415,43 @@ select
   0 as possible,
   0 as speculative
 from
-  estimates
+  estimate_factors_analyses_categorized
 where
   category='A'
 union
 select
+  analysis_name,
+  analysis_year,
   input_zone_id,
   category,
   population_estimate,
   CASE
-    WHEN cl95>actually_seen THEN cl95
+    WHEN lcl95>actually_seen THEN lcl95
     ELSE actually_seen
   END as definite,
-  CASE WHEN cl95>0 or actually_seen>0 THEN
+  CASE WHEN lcl95>0 or actually_seen>0 THEN
     population_estimate-(CASE
-      WHEN cl95>actually_seen THEN cl95
+      WHEN lcl95>actually_seen THEN lcl95
       ELSE actually_seen
     END)
     ELSE population_estimate
   END as probable,
-  CASE WHEN cl95>0 or actually_seen>0 THEN
+  CASE WHEN lcl95>0 or actually_seen>0 THEN
     population_estimate-(CASE
-      WHEN cl95>actually_seen THEN cl95
+      WHEN lcl95>actually_seen THEN lcl95
       ELSE actually_seen
     END)
     ELSE 0
   END as possible,
   0 as speculative
 from
-  estimates
+  estimate_factors_analyses_categorized
 where
   category='B'
 union
 select
+  analysis_name,
+  analysis_year,
   input_zone_id,
   category,
   population_estimate,
@@ -426,20 +461,22 @@ select
   END
   as definite,
   population_estimate as probable,
-  CASE WHEN cl95>0 or actually_seen>0 THEN
+  CASE WHEN lcl95>0 or actually_seen>0 THEN
     population_estimate-(CASE
-      WHEN cl95>actually_seen THEN cl95
+      WHEN lcl95>actually_seen THEN lcl95
       ELSE actually_seen
     END)
     ELSE 0
   END as possible,
   0 as speculative
 from
-  estimates
+  estimate_factors_analyses_categorized
 where
   category='C'
 union
 select
+  analysis_name,
+  analysis_year,
   input_zone_id,
   category,
   population_estimate,
@@ -450,15 +487,17 @@ select
   as definite,
   0 as probable,
   population_estimate as possible,
-  CASE WHEN cl95>0 THEN (population_estimate-cl95)*2
+  CASE WHEN lcl95>0 THEN (population_estimate-lcl95)*2
   ELSE 0
   END as speculative
 from
-  estimates
+  estimate_factors_analyses_categorized
 where
   category='D'
 union
 select
+  analysis_name,
+  analysis_year,
   input_zone_id,
   category,
   population_estimate,
@@ -471,23 +510,7 @@ select
   0 as possible,
   population_estimate-actually_seen as speculative
 from
-  estimates
+  estimate_factors_analyses_categorized
 where
   category='E'
-;
-
-
-drop view estimate_locator;
-create or replace view estimate_locator as
-select
-  estimates.*,
-  countries.name country,
-  regions.name region,
-  continents.name continent
-from estimates
-join population_submissions on population_submission_id=population_submissions.id
-join submissions on submission_id=submissions.id
-join countries on country_id=countries.id
-join regions on region_id=regions.id
-join continents on continent_id=continents.id
 ;

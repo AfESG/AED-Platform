@@ -22,37 +22,6 @@ class ReportController < ApplicationController
     @year = params[:year]
   end
 
-  def process_filter
-    if @filter == 'mike'
-      # FIXME this could be simplified by saving both the "from" and "to" year in
-      # the analysis definition in the database.
-      if @year == 2012
-        sql_filter = <<-SQL
-          select input_zone_id, reason_change from estimates
-          join new_strata on input_zone_id = new_stratum and analysis_name='2012_mike'
-        SQL
-      elsif @year == 2007
-        sql_filter = <<-SQL
-          select input_zone_id, reason_change from estimates
-          join replaced_strata on input_zone_id = replaced_stratum and analysis_name='2012_mike'
-        SQL
-      end
-      @preview_title = 'MIKE Sites'
-      @preview_nav = 'MIKE Site Analysis'
-    elsif @filter == 'current'
-      sql_filter = <<-SQL
-        select input_zone_id from estimates
-      SQL
-      @preview_nav = @preview_title = "All Current Data"
-    else
-      sql_filter = <<-SQL
-        select input_zone_id from estimates
-      SQL
-      @preview_nav = @preview_title = "Unknown preview #{@filter}"
-    end
-    sql_filter
-  end
-
   before_filter :authenticate_user!, :only => [:preview_continent, :preview_region, :preview_country]
 
   def preview_continent
@@ -61,7 +30,8 @@ class ReportController < ApplicationController
     @year = params[:year].to_i
     @continent = params[:continent]
     @filter = params[:filter]
-    sql_filter = process_filter
+    @preview_title = @filter.humanize.upcase
+
     @summary_totals_by_continent = execute <<-SQL
       select
         'Africa' "CONTINENT",
@@ -71,10 +41,9 @@ class ReportController < ApplicationController
         sum(probable) "PROBABLE",
         sum(possible) "POSSIBLE",
         sum(speculative) "SPECUL"
-        from estimate_dpps e join (
-          #{sql_filter}
-        ) f on f.input_zone_id = e.input_zone_id
+        from estimate_dpps e
         join surveytypes t on t.category = e.category
+        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
         group by e.category, surveytype
         order by e.category;
     SQL
@@ -85,9 +54,8 @@ class ReportController < ApplicationController
         sum(probable) "PROBABLE",
         sum(possible) "POSSIBLE",
         sum(speculative) "SPECUL"
-        from estimate_dpps e join (
-          #{sql_filter}
-        ) f on f.input_zone_id = e.input_zone_id;
+        from estimate_dpps
+        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
     SQL
     begin
       @regions = nil
@@ -106,10 +74,10 @@ class ReportController < ApplicationController
           0 "PFS"
         from
           estimate_locator e
-          join (
-            #{sql_filter}
-          ) f on f.input_zone_id = e.input_zone_id
           join estimate_dpps d on e.input_zone_id = d.input_zone_id
+            and e.analysis_name = d.analysis_name
+            and e.analysis_year = d.analysis_year
+          where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
         group by
           e.continent, e.region
         order by
@@ -129,10 +97,10 @@ class ReportController < ApplicationController
           0 "PFS"
         from
           estimate_locator e
-          join (
-            #{sql_filter}
-          ) f on f.input_zone_id = e.input_zone_id
           join estimate_dpps d on e.input_zone_id = d.input_zone_id
+            and e.analysis_name = d.analysis_name
+            and e.analysis_year = d.analysis_year
+          where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
         group by
           e.continent
         order by
@@ -227,7 +195,8 @@ class ReportController < ApplicationController
     @continent = params[:continent]
     @region = params[:region].gsub('_',' ')
     @filter = params[:filter]
-    sql_filter = process_filter
+    @preview_title = @filter.humanize.upcase
+
     @summary_totals_by_region = execute <<-SQL
       select
         region "REGION",
@@ -238,11 +207,11 @@ class ReportController < ApplicationController
         sum(possible) "POSSIBLE",
         sum(speculative) "SPECUL"
       from estimate_locator e
-        join (
-          #{sql_filter}
-        ) f on f.input_zone_id = e.input_zone_id
         join estimate_dpps d on e.input_zone_id = d.input_zone_id
+          and e.analysis_name = d.analysis_name
+          and e.analysis_year = d.analysis_year
         join surveytypes t on t.category = e.category
+        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
       where region='#{@region}'
       group by region, e.category, surveytype
       order by region, e.category;
@@ -254,11 +223,12 @@ class ReportController < ApplicationController
         sum(probable) "PROBABLE",
         sum(possible) "POSSIBLE",
         sum(speculative) "SPECUL"
-      from estimate_locator e
-        join (
-          #{sql_filter}
-        ) f on f.input_zone_id = e.input_zone_id
-        join estimate_dpps d on e.input_zone_id = d.input_zone_id
+      from
+        estimate_locator e
+          join estimate_dpps d on e.input_zone_id = d.input_zone_id
+            and e.analysis_name = d.analysis_name
+            and e.analysis_year = d.analysis_year
+          where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
       where region='#{@region}'
       group by region
       order by region;
@@ -279,10 +249,10 @@ class ReportController < ApplicationController
           0 "INFQLTYIDX",
           0 "PFS"
         from estimate_locator e
-          join (
-            #{sql_filter}
-          ) f on f.input_zone_id = e.input_zone_id
           join estimate_dpps d on e.input_zone_id = d.input_zone_id
+            and e.analysis_name = d.analysis_name
+            and e.analysis_year = d.analysis_year
+          where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
         where region='#{@region}'
         group by region, country
         order by region, country
@@ -299,10 +269,10 @@ class ReportController < ApplicationController
           0 "INFQLTYIDX",
           0 "PFS"
         from estimate_locator e
-          join (
-            #{sql_filter}
-          ) f on f.input_zone_id = e.input_zone_id
           join estimate_dpps d on e.input_zone_id = d.input_zone_id
+            and e.analysis_name = d.analysis_name
+            and e.analysis_year = d.analysis_year
+          where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
         where region='#{@region}'
         group by region
         order by region
@@ -398,39 +368,39 @@ class ReportController < ApplicationController
     @region = params[:region].gsub('_',' ')
     @country = params[:country].gsub('_',' ')
     @filter = params[:filter]
+    @preview_title = @filter.humanize.upcase
 
-    sql_filter = process_filter
     @summary_totals_by_country = execute <<-SQL
       select
         e.category "CATEGORY",
         surveytype "SURVEYTYPE",
-        sum(definite) "DEFINITE",
-        sum(probable) "PROBABLE",
-        sum(possible) "POSSIBLE",
-        sum(speculative) "SPECUL"
+        round(sum(definite)) "DEFINITE",
+        round(sum(probable)) "PROBABLE",
+        round(sum(possible)) "POSSIBLE",
+        round(sum(speculative)) "SPECUL"
       from estimate_locator e
-        join (
-          #{sql_filter}
-        ) f on f.input_zone_id = e.input_zone_id
         join estimate_dpps d on e.input_zone_id = d.input_zone_id
+          and e.analysis_name = d.analysis_name
+          and e.analysis_year = d.analysis_year
         join surveytypes t on t.category = e.category
-      where country='#{@country}'
+        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
+        and country='#{@country}'
       group by e.category, surveytype
       order by e.category;
     SQL
     @summary_sums_by_country = execute <<-SQL
       select
-        sum(definite) "DEFINITE",
-        sum(probable) "PROBABLE",
-        sum(possible) "POSSIBLE",
-        sum(speculative) "SPECUL"
+        round(sum(definite)) "DEFINITE",
+        round(sum(probable)) "PROBABLE",
+        round(sum(possible)) "POSSIBLE",
+        round(sum(speculative)) "SPECUL"
       from estimate_locator e
-        join (
-          #{sql_filter}
-        ) f on f.input_zone_id = e.input_zone_id
         join estimate_dpps d on e.input_zone_id = d.input_zone_id
+          and e.analysis_name = d.analysis_name
+          and e.analysis_year = d.analysis_year
         join surveytypes t on t.category = e.category
-      where country='#{@country}'
+        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
+        and country='#{@country}'
     SQL
     @elephant_estimates_by_country = execute <<-SQL
       select
@@ -445,7 +415,7 @@ class ReportController < ApplicationController
         e.category "CATEGORY",
         e.completion_year "CYEAR",
         e.population_estimate "ESTIMATE",
-        e.population_confidence_interval "CL95",
+        ROUND(e.population_confidence_interval) "CL95",
         e.short_citation "REFERENCE",
         '-' "PFS",
         e.stratum_area "AREA_SQKM",
@@ -464,13 +434,13 @@ class ReportController < ApplicationController
           to_char(abs(latitude),'990D9')||'N'
         END "LAT"
       from estimate_locator e
-        join (
-          #{sql_filter}
-        ) f on f.input_zone_id = e.input_zone_id
         join estimate_dpps d on e.input_zone_id = d.input_zone_id
+          and e.analysis_name = d.analysis_name
+          and e.analysis_year = d.analysis_year
         join surveytypes t on t.category = e.category
         join population_submissions on e.population_submission_id = population_submissions.id
-      where country='#{@country}'
+        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
+        and country='#{@country}'
       order by e.site_name, e.stratum_name
     SQL
 
