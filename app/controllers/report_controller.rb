@@ -414,7 +414,11 @@ class ReportController < ApplicationController
         e.category "CATEGORY",
         e.completion_year "CYEAR",
         e.population_estimate "ESTIMATE",
-        ROUND(e.population_confidence_interval) "CL95",
+        CASE WHEN e.population_confidence_interval is NULL THEN
+          to_char(e.population_upper_confidence_limit,'9999999') || '*'
+        ELSE
+          to_char(ROUND(e.population_confidence_interval),'9999999')
+        END "CL95",
         e.short_citation "REFERENCE",
         '-' "PFS",
         e.stratum_area "AREA_SQKM",
