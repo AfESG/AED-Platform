@@ -179,7 +179,12 @@ select
   area,
   completion_year,
   short_citation,
-  (population_estimate_min+population_estimate_max)/2,
+  CASE
+    WHEN informed=false THEN
+      (population_estimate_min+population_estimate_max)/2
+    ELSE
+      population_estimate_min
+  END,
   NULL population_variance,
   NULL population_standard_error,
   NULL population_confidence_interval,

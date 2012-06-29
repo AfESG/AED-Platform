@@ -447,6 +447,17 @@ class ReportController < ApplicationController
       order by e.site_name, e.stratum_name
     SQL
 
+    @causes_of_change_by_country = execute <<-SQL, @country
+      SELECT *
+      FROM causes_of_change_by_country where country=?
+        and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
+    SQL
+
+    @causes_of_change_sums_by_country = execute <<-SQL, @country
+      SELECT *
+      FROM causes_of_change_sums_by_country where country=?
+        and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
+    SQL
   end
 
   def country
