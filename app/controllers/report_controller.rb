@@ -113,6 +113,18 @@ class ReportController < ApplicationController
       @regions = nil
     end
 
+    @causes_of_change_by_continent = execute <<-SQL, @continent
+      SELECT *
+      FROM causes_of_change_by_continent where continent=?
+        and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
+    SQL
+
+    @causes_of_change_sums_by_continent = execute <<-SQL, @continent
+      SELECT *
+      FROM causes_of_change_sums_by_continent where continent=?
+        and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
+    SQL
+
   end
 
   def continent
@@ -279,7 +291,16 @@ class ReportController < ApplicationController
       group by region
       order by region
     SQL
-
+    @causes_of_change_by_region = execute <<-SQL, @region
+      SELECT *
+      FROM causes_of_change_by_region where region=?
+        and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
+    SQL
+    @causes_of_change_sums_by_region = execute <<-SQL, @region
+      SELECT *
+      FROM causes_of_change_sums_by_region where region=?
+        and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
+    SQL
   end
 
   def region
