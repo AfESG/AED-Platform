@@ -73,7 +73,7 @@ select
   population_lower_confidence_limit,
   population_upper_confidence_limit,
   1 quality_level,
-  NULL actually_seen
+  observations actually_seen
 from
   survey_aerial_total_count_strata
   join survey_aerial_total_counts on survey_aerial_total_counts.id=survey_aerial_total_count_id
@@ -119,7 +119,7 @@ select
   population_lower_confidence_limit,
   population_upper_confidence_limit,
   1 quality_level,
-  NULL actually_seen
+  seen_in_transects actually_seen
 from survey_aerial_sample_count_strata
   join survey_aerial_sample_counts on survey_aerial_sample_counts.id=survey_aerial_sample_count_id
   join population_submissions on population_submissions.id=population_submission_id
@@ -195,7 +195,7 @@ select
     WHEN informed=true THEN 1
     ELSE 0
   END quality_level,
-  NULL actually_seen
+  actually_seen
 from survey_others
   join population_submissions on population_submissions.id=population_submission_id
 ;
@@ -441,13 +441,7 @@ select
     END)
     ELSE population_estimate
   END as probable,
-  CASE WHEN lcl95>0 or actually_seen>0 THEN
-    population_estimate-(CASE
-      WHEN lcl95>actually_seen THEN lcl95
-      ELSE actually_seen
-    END)
-    ELSE 0
-  END as possible,
+  population_confidence_interval as possible,
   0 as speculative
 from
   estimate_factors_analyses_categorized
@@ -491,8 +485,15 @@ select
   END
   as definite,
   0 as probable,
-  population_estimate as possible,
-  CASE WHEN lcl95>0 THEN (population_estimate-lcl95)*2
+  CASE
+    WHEN actually_seen>0 THEN
+      population_estimate-actually_seen
+    ELSE
+      population_estimate
+  END as possible,
+  CASE WHEN lcl95>0 and lcl95!=population_estimate THEN (population_estimate-lcl95)*2
+  WHEN population_upper_confidence_limit>0 THEN
+    population_upper_confidence_limit-population_estimate
   ELSE 0
   END as speculative
 from
