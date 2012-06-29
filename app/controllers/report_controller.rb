@@ -369,7 +369,7 @@ class ReportController < ApplicationController
     @filter = params[:filter]
     @preview_title = @filter.humanize.upcase
 
-    @summary_totals_by_country = execute <<-SQL
+    @summary_totals_by_country = execute <<-SQL, @country
       select
         e.category "CATEGORY",
         surveytype "SURVEYTYPE",
@@ -383,11 +383,11 @@ class ReportController < ApplicationController
           and e.analysis_year = d.analysis_year
         join surveytypes t on t.category = e.category
         where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
-        and country='#{@country}'
+        and country=?
       group by e.category, surveytype
       order by e.category;
     SQL
-    @summary_sums_by_country = execute <<-SQL
+    @summary_sums_by_country = execute <<-SQL, @country
       select
         round(sum(definite)) "DEFINITE",
         round(sum(probable)) "PROBABLE",
@@ -399,9 +399,9 @@ class ReportController < ApplicationController
           and e.analysis_year = d.analysis_year
         join surveytypes t on t.category = e.category
         where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
-        and country='#{@country}'
+        and country=?
     SQL
-    @elephant_estimates_by_country = execute <<-SQL
+    @elephant_estimates_by_country = execute <<-SQL, @country
       select
         CASE WHEN reason_change='NC' THEN
           '-'
@@ -443,7 +443,7 @@ class ReportController < ApplicationController
         join surveytypes t on t.category = e.category
         join population_submissions on e.population_submission_id = population_submissions.id
         where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
-        and country='#{@country}'
+        and country=?
       order by e.site_name, e.stratum_name
     SQL
 
