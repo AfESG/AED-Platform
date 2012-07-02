@@ -624,7 +624,7 @@ class ReportController < ApplicationController
   def bibliography
     @filter = params[:filter]
     @bibliography = execute <<-SQL, @filter
-      select input_zone_id, short_citation, citation from estimates join new_strata on analysis_name=? and input_zone_id=new_stratum;
+      select input_zone_id, short_citation, citation from estimate_factors join new_strata on analysis_name=? and input_zone_id=new_stratum;
     SQL
   end
 
