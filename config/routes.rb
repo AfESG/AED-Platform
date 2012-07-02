@@ -78,6 +78,7 @@ Aaed::Application.routes.draw do
   match 'preview_report/:filter/:species/:year/:continent' => 'report#preview_continent'
   match 'preview_report/:filter/:species/:year/:continent/:region' => 'report#preview_region'
   match 'preview_report/:filter/:species/:year/:continent/:region/:country' => 'report#preview_country'
+  match 'preview_report/:filter/bibliography' => 'report#bibliography'
   match 'report/:species/:year' => 'report#year'
   match 'report/:species' => 'report#species'
   match 'report' => 'report#index'
