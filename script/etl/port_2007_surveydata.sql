@@ -92,20 +92,3 @@ insert into survey_others (id,population_submission_id,population_estimate_min,p
 delete from changes;
 insert into changes (id,analysis_name,analysis_year,replacement_name,replaced_strata,new_strata,reason_change,created_at,updated_at) select r.id, '2012_mike', 2011, r.mike_site, CASE WHEN d."METHOD"='IG' or d."METHOD"='OG' THEN 'O' ELSE d."METHOD" END || (d."OBJECTID"+1000), r.current_strata, r.reason_change, NOW(), NOW() from replacement_map r join aed2007."Surveydata" d on cast(r.aed2007_oids as int)=d."OBJECTID";
 update changes set new_strata = replaced_strata where new_strata='';
-
-drop view currently_used_strata;
-drop view new_strata;
-create view new_strata as
- SELECT q.analysis_name,q.reason_change,q.new_stratum
-   FROM ( SELECT DISTINCT analysis_name, reason_change, unnest(regexp_split_to_array(changes.new_strata, ','::text)) AS new_stratum
-           FROM changes) q
-  WHERE q.new_stratum IS NOT NULL AND q.new_stratum <> ''::text
-  ORDER BY q.analysis_name, q.reason_change, q.new_stratum;
-
-drop view replaced_strata;
-create view replaced_strata as
- SELECT q.analysis_name,'-'::text reason_change,q.replaced_stratum
-   FROM ( SELECT DISTINCT analysis_name, unnest(regexp_split_to_array(changes.replaced_strata, ','::text)) AS replaced_stratum
-           FROM changes) q
-  WHERE q.replaced_stratum IS NOT NULL AND q.replaced_stratum <> ''::text
-  ORDER BY q.analysis_name, q.replaced_stratum;

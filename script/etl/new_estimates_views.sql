@@ -260,6 +260,27 @@ select
     estimate_factors;
 
 ---
+--- new_strata and replaced_strata
+---
+--- expand the CSV columns stored in the changes table
+---
+drop view new_strata cascade;
+create view new_strata as
+ SELECT q.analysis_name,q.replacement_name,q.reason_change,q.new_stratum
+   FROM ( SELECT DISTINCT analysis_name, replacement_name, reason_change, unnest(regexp_split_to_array(changes.new_strata, ','::text)) AS new_stratum
+           FROM changes) q
+  WHERE q.new_stratum IS NOT NULL AND q.new_stratum <> ''::text
+  ORDER BY q.analysis_name, q.replacement_name, q.reason_change, q.new_stratum;
+
+drop view replaced_strata cascade;
+create view replaced_strata as
+ SELECT q.analysis_name,q.replacement_name,'-'::text reason_change,q.replaced_stratum
+   FROM ( SELECT DISTINCT analysis_name, replacement_name, unnest(regexp_split_to_array(changes.replaced_strata, ','::text)) AS replaced_stratum
+           FROM changes) q
+  WHERE q.replaced_stratum IS NOT NULL AND q.replaced_stratum <> ''::text
+  ORDER BY q.analysis_name, q.replacement_name, q.replaced_stratum;
+
+---
 --- estimate_factors_analyses
 ---
 --- Extracts the factors by analysis in context of the target year
@@ -277,6 +298,7 @@ select
   a.analysis_name,
   a.analysis_year,
   a.analysis_year - completion_year age,
+  n.replacement_name,
   reason_change,
   citation,
   short_citation,
@@ -304,6 +326,7 @@ select
   a.analysis_name,
   a.comparison_year,
   a.comparison_year - completion_year age,
+  r.replacement_name,
   reason_change,
   citation,
   short_citation,
@@ -317,8 +340,8 @@ select
   actually_seen
   from
     estimate_factors_confidence
-  join replaced_strata n on n.replaced_stratum = input_zone_id
-  join analyses a on a.analysis_name = n.analysis_name
+  join replaced_strata r on r.replaced_stratum = input_zone_id
+  join analyses a on a.analysis_name = r.analysis_name
 ;
 
 ---
@@ -340,6 +363,7 @@ select
   analysis_name,
   analysis_year,
   age,
+  replacement_name,
   reason_change,
   citation,
   short_citation,

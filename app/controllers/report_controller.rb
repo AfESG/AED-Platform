@@ -481,6 +481,106 @@ class ReportController < ApplicationController
     SQL
   end
 
+  def preview_site
+    return unless current_user.admin?
+    @species = params[:species].gsub('_',' ')
+    @year = params[:year].to_i
+    @continent = params[:continent]
+    @site = params[:site].gsub('_',' ')
+    @filter = params[:filter]
+    @preview_title = @filter.humanize.upcase
+
+    @summary_totals_by_site = execute <<-SQL, @site
+      select
+        e.category "CATEGORY",
+        surveytype "SURVEYTYPE",
+        round(sum(definite)) "DEFINITE",
+        round(sum(probable)) "PROBABLE",
+        round(sum(possible)) "POSSIBLE",
+        round(sum(speculative)) "SPECUL"
+      from estimate_locator e
+        join estimate_dpps d on e.input_zone_id = d.input_zone_id
+          and e.analysis_name = d.analysis_name
+          and e.analysis_year = d.analysis_year
+        join surveytypes t on t.category = e.category
+        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
+        and replacement_name=?
+      group by e.category, surveytype
+      order by e.category;
+    SQL
+    @summary_sums_by_site = execute <<-SQL, @site
+      select
+        round(sum(definite)) "DEFINITE",
+        round(sum(probable)) "PROBABLE",
+        round(sum(possible)) "POSSIBLE",
+        round(sum(speculative)) "SPECUL"
+      from estimate_locator e
+        join estimate_dpps d on e.input_zone_id = d.input_zone_id
+          and e.analysis_name = d.analysis_name
+          and e.analysis_year = d.analysis_year
+        join surveytypes t on t.category = e.category
+        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
+        and replacement_name=?
+    SQL
+    @elephant_estimates_by_site = execute <<-SQL, @site
+      select
+        CASE WHEN reason_change='NC' THEN
+          '-'
+        ELSE
+          reason_change
+        END as "ReasonForChange",
+        e.population_submission_id,
+        e.site_name || ' / ' || e.stratum_name survey_zone,
+        e.input_zone_id method_and_quality,
+        e.category "CATEGORY",
+        e.completion_year "CYEAR",
+        e.population_estimate "ESTIMATE",
+        CASE WHEN e.population_confidence_interval is NULL THEN
+          to_char(e.population_upper_confidence_limit,'9999999') || '*'
+        ELSE
+          to_char(ROUND(e.population_confidence_interval),'9999999')
+        END "CL95",
+        e.short_citation "REFERENCE",
+        '-' "PFS",
+        e.stratum_area "AREA_SQKM",
+        CASE WHEN longitude<0 THEN
+          to_char(abs(longitude),'999D9')||'W'
+        WHEN longitude=0 THEN
+          '0.0'
+        ELSE
+          to_char(abs(longitude),'999D9')||'E'
+        END "LON",
+        CASE WHEN latitude<0 THEN
+          to_char(abs(latitude),'990D9')||'S'
+        WHEN latitude=0 THEN
+          '0.0'
+        ELSE
+          to_char(abs(latitude),'990D9')||'N'
+        END "LAT"
+      from estimate_locator e
+        join estimate_dpps d on e.input_zone_id = d.input_zone_id
+          and e.analysis_name = d.analysis_name
+          and e.analysis_year = d.analysis_year
+        join surveytypes t on t.category = e.category
+        join population_submissions on e.population_submission_id = population_submissions.id
+        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
+        and replacement_name=?
+      order by e.site_name, e.stratum_name
+    SQL
+
+    @causes_of_change_by_site = execute <<-SQL, @site
+      SELECT *
+      FROM causes_of_change_by_site where site=?
+        and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
+    SQL
+
+    @causes_of_change_sums_by_site = execute <<-SQL, @site
+      SELECT *
+      FROM causes_of_change_sums_by_site where site=?
+        and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
+    SQL
+  end
+
   def country
     @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
