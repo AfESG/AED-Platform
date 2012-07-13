@@ -1,2 +1,3 @@
-Appygram::config '9fe8238e887839ac9ea8eaefe2d68f16435bb0b1'
+require 'appygram-rails'
 
+Appygram.configure '9fe8238e887839ac9ea8eaefe2d68f16435bb0b1'
