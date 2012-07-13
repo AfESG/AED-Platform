@@ -100,6 +100,8 @@ Aaed::Application.routes.draw do
   match 'mike_report' => 'welcome#mike_report'
   match 'reliability' => 'welcome#reliability'
 
+  match 'crash' => 'welcome#crash'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
