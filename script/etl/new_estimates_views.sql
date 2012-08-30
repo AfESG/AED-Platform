@@ -391,7 +391,11 @@ select
     --- dung counts ---
 
     WHEN estimate_type='DC' THEN
-      CASE WHEN quality_level=1 THEN 'B' ELSE 'C' END
+      CASE
+        WHEN quality_level=1 THEN 'B'
+        WHEN (population_variance IS NULL and population_standard_error IS NULL) THEN 'D'
+        ELSE 'C'
+      END
 
     WHEN estimate_type='GD' THEN 'A'
 
