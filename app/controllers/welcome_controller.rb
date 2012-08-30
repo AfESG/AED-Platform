@@ -52,4 +52,9 @@ class WelcomeController < ApplicationController
     SQL
   end
 
+  # This simulates an uncaught exception for testing
+  def crash
+    raise Exception
+  end
+
 end
