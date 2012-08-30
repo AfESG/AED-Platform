@@ -84,8 +84,8 @@ insert into survey_individual_registrations (id,population_submission_id,populat
 ---
 select setval('survey_others_id_seq',3000);
 delete from survey_others where id>1000 and id<3000;
-insert into survey_others (id,population_submission_id,population_estimate_min,population_estimate_max,informed) select "OBJECTID"+1000, "OBJECTID"+1000, "ESTIMATE", CASE WHEN "UPRANGE" IS NOT NULL AND "UPRANGE">0 THEN "UPRANGE" ELSE "ESTIMATE" END,false from aed2007."Surveydata" where "METHOD"='OG';
-insert into survey_others (id,population_submission_id,population_estimate_min,population_estimate_max,actually_seen,informed) select "OBJECTID"+1000, "OBJECTID"+1000, "ESTIMATE", CASE WHEN "UPRANGE" IS NOT NULL AND "UPRANGE">0 THEN "UPRANGE" ELSE "ESTIMATE" END,"ACTUALSEEN",true from aed2007."Surveydata" where "METHOD"='IG';
+insert into survey_others (id,population_submission_id,population_estimate_min,population_estimate_max,informed) select "OBJECTID"+1000, "OBJECTID"+1000, "ESTIMATE", CASE WHEN "UPRANGE" IS NOT NULL AND "UPRANGE">0 THEN "UPRANGE"+"ESTIMATE" ELSE "ESTIMATE" END,false from aed2007."Surveydata" where "METHOD"='OG';
+insert into survey_others (id,population_submission_id,population_estimate_min,population_estimate_max,actually_seen,informed) select "OBJECTID"+1000, "OBJECTID"+1000, "ESTIMATE", CASE WHEN "UPRANGE" IS NOT NULL AND "UPRANGE">0 THEN "UPRANGE"+"ESTIMATE" ELSE "ESTIMATE" END,"ACTUALSEEN",true from aed2007."Surveydata" where "METHOD"='IG';
 
 --- Populate new, official Changes table (you've run migrations, yes?) and make views using it ---
 ---
