@@ -25,4 +25,6 @@ class SurveyIndividualRegistration < ActiveRecord::Base
 
   belongs_to :population_submission
   belongs_to :mike_site
+  belongs_to :survey_geometry
+
 end

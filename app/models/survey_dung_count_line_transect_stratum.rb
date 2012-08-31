@@ -15,6 +15,7 @@ class SurveyDungCountLineTransectStratum < ActiveRecord::Base
 
   belongs_to :survey_dung_count_line_transect
   belongs_to :mike_site
+  belongs_to :survey_geometry
 
   class SurveyDungCountLineTransectStratumValidator < ActiveModel::Validator
     def validate(record)      

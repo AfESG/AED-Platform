@@ -11,4 +11,6 @@ class SurveyFaecalDnaStratum < ActiveRecord::Base
 
   belongs_to :survey_faecal_dna
   belongs_to :mike_site
+  belongs_to :survey_geometry
+
 end
