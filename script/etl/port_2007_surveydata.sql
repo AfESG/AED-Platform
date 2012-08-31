@@ -92,3 +92,21 @@ insert into survey_others (id,population_submission_id,population_estimate_min,p
 delete from changes;
 insert into changes (id,analysis_name,analysis_year,replacement_name,replaced_strata,new_strata,reason_change,created_at,updated_at) select r.id, '2012_mike', 2011, r.mike_site, CASE WHEN d."METHOD"='IG' or d."METHOD"='OG' THEN 'O' ELSE d."METHOD" END || (d."OBJECTID"+1000), r.current_strata, r.reason_change, NOW(), NOW() from replacement_map r join aed2007."Surveydata" d on cast(r.aed2007_oids as int)=d."OBJECTID";
 update changes set new_strata = replaced_strata where new_strata='';
+
+update survey_aerial_sample_count_strata s set survey_geometry_id=g.id
+  from survey_geometries g where g.id=s.id-1000 and s.id>=1000 and s.id<=3000;
+update survey_aerial_total_count_strata s set survey_geometry_id=g.id
+  from survey_geometries g where g.id=s.id-1000 and s.id>=1000 and s.id<=3000;
+update survey_dung_count_line_transect_strata s set survey_geometry_id=g.id
+  from survey_geometries g where g.id=s.id-1000 and s.id>=1000 and s.id<=3000;
+update survey_faecal_dna_strata s set survey_geometry_id=g.id
+  from survey_geometries g where g.id=s.id-1000 and s.id>=1000 and s.id<=3000;
+update survey_ground_sample_count_strata s set survey_geometry_id=g.id
+  from survey_geometries g where g.id=s.id-1000 and s.id>=1000 and s.id<=3000;
+update survey_ground_total_count_strata s set survey_geometry_id=g.id
+  from survey_geometries g where g.id=s.id-1000 and s.id>=1000 and s.id<=3000;
+update survey_individual_registrations s set survey_geometry_id=g.id
+  from survey_geometries g where g.id=s.id-1000 and s.id>=1000 and s.id<=3000;
+update survey_others s set survey_geometry_id=g.id
+  from survey_geometries g where g.id=s.id-1000 and s.id>=1000 and s.id<=3000;
+
