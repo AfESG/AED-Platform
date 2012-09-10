@@ -18,8 +18,8 @@
         %td= change.analysis_name
         %td= change.analysis_year
         %td= change.replacement_name
-        %td= change.replaced_strata
-        %td= change.new_strata
+        %td= change.replaced_strata.split(/,/).join(', ')
+        %td= change.new_strata.split(/,/).join(', ')
         %td= change.reason_change
         %td.action= link_to t('show'), change
         %td.action= link_to t('edit'), edit_change_path(change)

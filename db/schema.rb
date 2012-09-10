@@ -11,7 +11,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120627084543) do
+ActiveRecord::Schema.define(:version => 20120831090228) do
+
+  create_table "analyses", :id => false, :force => true do |t|
+    t.text    "analysis_name"
+    t.integer "comparison_year"
+    t.integer "analysis_year"
+  end
 
   create_table "changes", :force => true do |t|
     t.string   "analysis_name"
@@ -23,6 +29,10 @@ ActiveRecord::Schema.define(:version => 20120627084543) do
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
   end
+
+  add_index "changes", ["analysis_name"], :name => "changes_analysis_name"
+  add_index "changes", ["analysis_year"], :name => "changes_analysis_year"
+  add_index "changes", ["reason_change"], :name => "changes_reason_change"
 
   create_table "continents", :force => true do |t|
     t.string   "name"
@@ -58,6 +68,11 @@ ActiveRecord::Schema.define(:version => 20120627084543) do
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "estimates_with_±", :id => false, :force => true do |t|
+    t.integer "estimate"
+    t.integer "±"
   end
 
   create_table "geometry_columns", :id => false, :force => true do |t|
@@ -202,6 +217,7 @@ ActiveRecord::Schema.define(:version => 20120627084543) do
     t.integer  "population_upper_confidence_limit"
     t.integer  "mike_site_id"
     t.boolean  "is_mike_site"
+    t.integer  "survey_geometry_id"
   end
 
   create_table "survey_aerial_sample_counts", :force => true do |t|
@@ -240,6 +256,7 @@ ActiveRecord::Schema.define(:version => 20120627084543) do
     t.integer  "population_upper_confidence_limit"
     t.integer  "mike_site_id"
     t.boolean  "is_mike_site"
+    t.integer  "survey_geometry_id"
   end
 
   create_table "survey_aerial_total_counts", :force => true do |t|
@@ -314,6 +331,7 @@ ActiveRecord::Schema.define(:version => 20120627084543) do
     t.float    "dung_density_upper_confidence_limit"
     t.integer  "mike_site_id"
     t.boolean  "is_mike_site"
+    t.integer  "survey_geometry_id"
   end
 
   create_table "survey_dung_count_line_transects", :force => true do |t|
@@ -346,6 +364,7 @@ ActiveRecord::Schema.define(:version => 20120627084543) do
     t.integer  "population_upper_confidence_limit"
     t.integer  "mike_site_id"
     t.boolean  "is_mike_site"
+    t.integer  "survey_geometry_id"
   end
 
   create_table "survey_faecal_dnas", :force => true do |t|
@@ -377,6 +396,7 @@ ActiveRecord::Schema.define(:version => 20120627084543) do
     t.integer  "population_upper_confidence_limit"
     t.integer  "mike_site_id"
     t.boolean  "is_mike_site"
+    t.integer  "survey_geometry_id"
   end
 
   create_table "survey_ground_sample_counts", :force => true do |t|
@@ -410,6 +430,7 @@ ActiveRecord::Schema.define(:version => 20120627084543) do
     t.integer  "population_upper_confidence_limit"
     t.integer  "mike_site_id"
     t.boolean  "is_mike_site"
+    t.integer  "survey_geometry_id"
   end
 
   create_table "survey_ground_total_counts", :force => true do |t|
@@ -432,6 +453,7 @@ ActiveRecord::Schema.define(:version => 20120627084543) do
     t.string   "porous_fenced_site"
     t.integer  "mike_site_id"
     t.boolean  "is_mike_site"
+    t.integer  "survey_geometry_id"
   end
 
   create_table "survey_others", :force => true do |t|
@@ -445,6 +467,7 @@ ActiveRecord::Schema.define(:version => 20120627084543) do
     t.boolean  "is_mike_site"
     t.integer  "actually_seen"
     t.boolean  "informed"
+    t.integer  "survey_geometry_id"
   end
 
   create_table "surveytypes", :id => false, :force => true do |t|

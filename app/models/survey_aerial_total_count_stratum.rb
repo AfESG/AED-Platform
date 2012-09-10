@@ -10,5 +10,6 @@ class SurveyAerialTotalCountStratum < ActiveRecord::Base
 
   belongs_to :survey_aerial_total_count
   belongs_to :mike_site
+  belongs_to :survey_geometry
 
 end

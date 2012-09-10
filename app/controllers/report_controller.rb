@@ -434,9 +434,17 @@ class ReportController < ApplicationController
         e.input_zone_id method_and_quality,
         e.category "CATEGORY",
         e.completion_year "CYEAR",
-        e.population_estimate "ESTIMATE",
+        CASE WHEN e.population_lower_confidence_limit IS NULL then
+          e.population_estimate
+        ELSE
+          e.population_lower_confidence_limit
+        END "ESTIMATE",
         CASE WHEN e.population_confidence_interval is NULL THEN
-          to_char(e.population_upper_confidence_limit,'9999999') || '*'
+          CASE WHEN e.population_upper_confidence_limit = e.population_lower_confidence_limit
+            THEN ''
+          ELSE
+            to_char(e.population_upper_confidence_limit-e.population_lower_confidence_limit,'9999999') || '*'
+          END
         ELSE
           to_char(ROUND(e.population_confidence_interval),'9999999')
         END "CL95",

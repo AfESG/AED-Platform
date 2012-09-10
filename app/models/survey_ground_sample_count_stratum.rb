@@ -10,6 +10,7 @@ class SurveyGroundSampleCountStratum < ActiveRecord::Base
 
   belongs_to :survey_ground_sample_count
   belongs_to :mike_site
+  belongs_to :survey_geometry
 
   class SurveyGroundSampleCountStratumValidator < ActiveModel::Validator
     def validate(record)
