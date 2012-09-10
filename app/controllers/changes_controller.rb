@@ -1,4 +1,7 @@
 class ChangesController < ApplicationController
+
+  before_filter :authenticate_superuser!
+
   # GET /changes
   # GET /changes.json
   def index
