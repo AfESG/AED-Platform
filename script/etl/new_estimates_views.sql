@@ -25,7 +25,8 @@ select
   population_lower_confidence_limit,
   population_upper_confidence_limit,
   1 quality_level,
-  actually_seen
+  actually_seen,
+  survey_geometry_id
   from
     survey_ground_total_count_strata
     join survey_ground_total_counts on survey_ground_total_counts.id=survey_ground_total_count_id
@@ -52,7 +53,8 @@ select
     WHEN dung_decay_rate_measurement_site is not null and dung_decay_rate_measurement_site!='' THEN 1
     ELSE 0
   END quality_level,
-  actually_seen
+  actually_seen,
+  survey_geometry_id
 from
   survey_dung_count_line_transect_strata
   join survey_dung_count_line_transects on survey_dung_count_line_transects.id=survey_dung_count_line_transect_id
@@ -76,7 +78,8 @@ select
   population_lower_confidence_limit,
   population_upper_confidence_limit,
   1 quality_level,
-  observations actually_seen
+  observations actually_seen,
+  survey_geometry_id
 from
   survey_aerial_total_count_strata
   join survey_aerial_total_counts on survey_aerial_total_counts.id=survey_aerial_total_count_id
@@ -100,7 +103,8 @@ select
   population_lower_confidence_limit,
   population_upper_confidence_limit,
   1 quality_level,
-  NULL actually_seen
+  NULL actually_seen,
+  survey_geometry_id
 from
   survey_ground_sample_count_strata
   join survey_ground_sample_counts on survey_ground_sample_counts.id=survey_ground_sample_count_id
@@ -124,7 +128,8 @@ select
   population_lower_confidence_limit,
   population_upper_confidence_limit,
   1 quality_level,
-  seen_in_transects actually_seen
+  seen_in_transects actually_seen,
+  survey_geometry_id
 from survey_aerial_sample_count_strata
   join survey_aerial_sample_counts on survey_aerial_sample_counts.id=survey_aerial_sample_count_id
   join population_submissions on population_submissions.id=population_submission_id
@@ -147,7 +152,8 @@ select
   population_lower_confidence_limit,
   population_upper_confidence_limit,
   1 quality_level,
-  NULL actually_seen
+  NULL actually_seen,
+  survey_geometry_id
 from survey_faecal_dna_strata
   join survey_faecal_dnas on survey_faecal_dnas.id=survey_faecal_dna_id
   join population_submissions on population_submissions.id=population_submission_id
@@ -173,7 +179,8 @@ select
     WHEN population_upper_range is null THEN 1
     ELSE 0
   END quality_level,
-  population_estimate actually_seen
+  population_estimate actually_seen,
+  survey_geometry_id
 from survey_individual_registrations
   join population_submissions on population_submissions.id=population_submission_id
 union
@@ -203,7 +210,8 @@ select
     WHEN informed=true THEN 1
     ELSE 0
   END quality_level,
-  actually_seen
+  actually_seen,
+  survey_geometry_id
 from survey_others
   join population_submissions on population_submissions.id=population_submission_id
 ;
@@ -560,3 +568,14 @@ from
 where
   category='E'
 ;
+
+create view estimate_locator_with_geometry as
+select
+  g.id as id,
+  l.*,
+  g.geometry
+from survey_geometries g
+  join estimate_factors f
+    on f.survey_geometry_id = g.id
+  join estimate_locator l
+    on l.input_zone_id = f.input_zone_id;
