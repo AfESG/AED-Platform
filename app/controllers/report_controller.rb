@@ -439,7 +439,7 @@ class ReportController < ApplicationController
         ELSE
           e.population_lower_confidence_limit
         END "ESTIMATE",
-        CASE WHEN e.population_confidence_interval is NULL THEN
+        CASE WHEN e.population_upper_confidence_limit IS NOT NULL THEN
           CASE WHEN e.population_upper_confidence_limit = e.population_lower_confidence_limit
             THEN ''
           ELSE
