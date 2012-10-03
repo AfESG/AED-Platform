@@ -405,7 +405,8 @@ select
         ELSE 'C'
       END
 
-    WHEN estimate_type='GD' THEN 'A'
+    WHEN estimate_type='GD' AND analysis_year>2007 THEN 'A'
+    WHEN estimate_type='GD' AND analysis_year<=2007 THEN 'C'
 
     --- totals ---
 
