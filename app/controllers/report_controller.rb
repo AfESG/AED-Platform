@@ -436,7 +436,7 @@ class ReportController < ApplicationController
         e.category "CATEGORY",
         surveytype "SURVEYTYPE",
         round(sum(definite)) "DEFINITE",
-        round(sum(probable)) "PROBABLE",
+        round(sum(probable)-sum(definite)) "PROBABLE",
         round(sqrt(sum(population_variance))*1.96) "POSSIBLE",
         round(sum(speculative)) "SPECUL"
       from estimate_locator e
