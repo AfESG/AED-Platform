@@ -413,7 +413,7 @@ class ReportController < ApplicationController
       select
         e.category "CATEGORY",
         surveytype "SURVEYTYPE",
-        CASE WHEN SUM(actually_seen) > SQRT(SUM(population_variance))*1.96
+        CASE WHEN SUM(actually_seen) > (SUM(e.population_estimate)-SQRT(SUM(population_variance))*1.96)
         THEN SUM(actually_seen)
         ELSE ROUND(SUM(e.population_estimate) - SQRT(SUM(population_variance))*1.96)
         END "DEFINITE",
