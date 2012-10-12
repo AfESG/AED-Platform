@@ -6,6 +6,7 @@
     %tr
       %th= Change.human_attribute_name :analysis_name
       %th= Change.human_attribute_name :analysis_year
+      %th= Change.human_attribute_name :country
       %th= Change.human_attribute_name :replacement_name
       %th= Change.human_attribute_name :replaced_strata
       %th= Change.human_attribute_name :new_strata
@@ -17,6 +18,7 @@
       %tr{ :class => cycle(:odd, :even) }
         %td= change.analysis_name
         %td= change.analysis_year
+        %td= change.country
         %td= change.replacement_name
         %td= change.replaced_strata.split(/,/).join(', ')
         %td= change.new_strata.split(/,/).join(', ')
