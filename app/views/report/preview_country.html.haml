@@ -137,7 +137,7 @@ All Years for #{@country}:
       %th{:style=>'text-align:center'} Lat.
     - @elephant_estimate_groups.each do |group|
       - @rn = @cc = @ty = @yr = @re = ''
-      - @ar = 0
+      - @ar = @n = @pv = @es = 0
       - group.each do |row|
         - @rn = row['replacement_name']
         - @cc = row['ReasonForChange']
@@ -146,14 +146,17 @@ All Years for #{@country}:
         - @yr = row['CYEAR']
         - @re = row['REFERENCE']
         - @ar = @ar + row['AREA_SQKM'].to_i
+        - @pv = @pv + row['population_variance'].to_f
+        - @es = @es + row['ESTIMATE'].to_i
+        - @n = @n + 1
       %tr
         %td= @rn
         %td= @cc
         %td= @ty
         %td{:style=>"text-align:center"}= @ca
         %td= @yr
-        %td= @es
-        %td= @cl
+        %td{:style=>"text-align:right"}= number_with_delimiter @es
+        %td{:style=>"text-align:right"}= number_with_delimiter ((Math.sqrt(@pv))*1.96).round
         %td{:style=>"padding-left:10px"}= @re
         %td{:style=>"text-align:center"} -
         %td{:style=>"text-align:right"}= number_with_delimiter @ar

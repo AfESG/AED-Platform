@@ -435,6 +435,7 @@ class ReportController < ApplicationController
     @elephant_estimates_by_country = execute <<-SQL, @country
       select
         e.replacement_name,
+        e.population_variance,
         CASE WHEN reason_change='NC' THEN
           '-'
         ELSE
