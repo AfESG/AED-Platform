@@ -488,6 +488,21 @@ class ReportController < ApplicationController
       order by e.replacement_name, e.site_name, e.stratum_name
     SQL
 
+    @elephant_estimate_groups = []
+
+    group = []
+    current_replacement_name = @elephant_estimates_by_country[0]['replacement_name']
+    @elephant_estimates_by_country.each do |row|
+      if row['replacement_name'] == current_replacement_name
+        group << row
+      else
+        @elephant_estimate_groups << group
+        group = []
+        group << row
+        current_replacement_name = row['replacement_name']
+      end
+    end
+
     @causes_of_change_by_country = execute <<-SQL, @country
       SELECT *
       FROM causes_of_change_by_country where country=?
