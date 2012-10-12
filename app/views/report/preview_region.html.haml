@@ -38,20 +38,24 @@ All Years for #{@region}:
       %th.numeric{:width => '15%'} Probable
       %th.numeric{:width => '15%'} Possible
       %th.numeric{:width => '15%'} Speculative
+    -@sdef = @sprob = @sposs = @sspec = 0
     -@summary_totals_by_region.each do |row|
       %tr{:style => 'height: 24px'}
         %td= row['SURVEYTYPE']
         %td.numeric= number_with_delimiter row['DEFINITE']
+        - @sdef = @sdef + row['DEFINITE'].to_i
         %td.numeric= number_with_delimiter row['PROBABLE']
+        - @sprob = @sprob + row['PROBABLE'].to_i
         %td.numeric= number_with_delimiter row['POSSIBLE']
+        - @sposs = @sposs + row['POSSIBLE'].to_i
         %td.numeric= number_with_delimiter row['SPECUL']
-    -@summary_sums_by_region.each do |row|
-      %tr.totals{:style => 'height: 24px; font-weight: bold'}
-        %td Totals #{@year}
-        %td.numeric= number_with_delimiter row['DEFINITE']
-        %td.numeric= number_with_delimiter row['PROBABLE']
-        %td.numeric= number_with_delimiter row['POSSIBLE']
-        %td.numeric= number_with_delimiter row['SPECUL']
+        - @sspec = @sspec + row['SPECUL'].to_i
+    %tr.totals{:style => 'height: 24px; font-weight: bold'}
+      %td Totals #{@year}
+      %td.numeric= number_with_delimiter @sdef
+      %td.numeric= number_with_delimiter @sprob
+      %td.numeric= number_with_delimiter @sposs
+      %td.numeric= number_with_delimiter @sspec
 
 - if !@causes_of_change_by_region.nil? && @causes_of_change_by_region.num_tuples > 0
   %h2 Interpretation of Changes in Estimates from Previous Report

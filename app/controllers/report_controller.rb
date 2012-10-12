@@ -24,6 +24,108 @@ class ReportController < ApplicationController
 
   before_filter :authenticate_user!, :only => [:preview_continent, :preview_region, :preview_country]
 
+  def totalizer(scope, filter, year)
+    <<-SQL
+      select
+        e.category "CATEGORY",
+        surveytype "SURVEYTYPE",
+        round(sum(definite)) "DEFINITE",
+        round(sum(probable)) "PROBABLE",
+        round(sum(possible)) "POSSIBLE",
+        round(sum(speculative)) "SPECUL"
+      from estimate_locator e
+        join estimate_dpps d on e.input_zone_id = d.input_zone_id
+          and e.analysis_name = d.analysis_name
+          and e.analysis_year = d.analysis_year
+        join surveytypes t on t.category = e.category
+        where e.analysis_name = '#{filter}' and e.analysis_year = '#{year}'
+        and #{scope}
+        and e.category='A'
+      group by e.category, surveytype
+
+      UNION
+
+      select
+        e.category "CATEGORY",
+        surveytype "SURVEYTYPE",
+        CASE WHEN SUM(actually_seen) > (SUM(e.population_estimate)-SQRT(SUM(population_variance))*1.96)
+        THEN SUM(actually_seen)
+        ELSE ROUND(SUM(e.population_estimate) - SQRT(SUM(population_variance))*1.96)
+        END "DEFINITE",
+        round(sqrt(sum(population_variance))*1.96) "PROBABLE",
+        round(sqrt(sum(population_variance))*1.96) "POSSIBLE",
+        round(sum(speculative)) "SPECUL"
+      from estimate_locator e
+        join estimate_dpps d on e.input_zone_id = d.input_zone_id
+          and e.analysis_name = d.analysis_name
+          and e.analysis_year = d.analysis_year
+        join surveytypes t on t.category = e.category
+        where e.analysis_name = '#{filter}' and e.analysis_year = '#{year}'
+        and #{scope}
+        and e.category='B'
+      group by e.category, surveytype
+
+      UNION
+
+      select
+        e.category "CATEGORY",
+        surveytype "SURVEYTYPE",
+        round(sum(definite)) "DEFINITE",
+        round(sum(probable)-sum(definite)) "PROBABLE",
+        round(sqrt(sum(population_variance))*1.96) "POSSIBLE",
+        round(sum(speculative)) "SPECUL"
+      from estimate_locator e
+        join estimate_dpps d on e.input_zone_id = d.input_zone_id
+          and e.analysis_name = d.analysis_name
+          and e.analysis_year = d.analysis_year
+        join surveytypes t on t.category = e.category
+        where e.analysis_name = '#{filter}' and e.analysis_year = '#{year}'
+        and #{scope}
+        and e.category='C'
+      group by e.category, surveytype
+
+      UNION
+
+      select
+        e.category "CATEGORY",
+        surveytype "SURVEYTYPE",
+        round(sum(definite)) "DEFINITE",
+        round(sum(probable)) "PROBABLE",
+        round(sum(possible)) "POSSIBLE",
+        round(sum(speculative)) "SPECUL"
+      from estimate_locator e
+        join estimate_dpps d on e.input_zone_id = d.input_zone_id
+          and e.analysis_name = d.analysis_name
+          and e.analysis_year = d.analysis_year
+        join surveytypes t on t.category = e.category
+        where e.analysis_name = '#{filter}' and e.analysis_year = '#{year}'
+        and #{scope}
+        and e.category='D'
+      group by e.category, surveytype
+
+      UNION
+
+      select
+        e.category "CATEGORY",
+        surveytype "SURVEYTYPE",
+        round(sum(definite)) "DEFINITE",
+        round(sum(probable)) "PROBABLE",
+        round(sum(possible)) "POSSIBLE",
+        round(sum(speculative)) "SPECUL"
+      from estimate_locator e
+        join estimate_dpps d on e.input_zone_id = d.input_zone_id
+          and e.analysis_name = d.analysis_name
+          and e.analysis_year = d.analysis_year
+        join surveytypes t on t.category = e.category
+        where e.analysis_name = '#{filter}' and e.analysis_year = '#{year}'
+        and #{scope}
+        and e.category='E'
+      group by e.category, surveytype
+
+      order by "CATEGORY"
+    SQL
+  end
+
   def preview_continent
     return unless current_user.admin?
     @species = params[:species].gsub('_',' ')
@@ -32,34 +134,7 @@ class ReportController < ApplicationController
     @filter = params[:filter]
     @preview_title = @filter.humanize.upcase
 
-    @summary_totals_by_continent = execute <<-SQL
-      select
-        'Africa' "CONTINENT",
-        e.category "CATEGORY",
-        surveytype "SURVEYTYPE",
-        round(sum(definite)) "DEFINITE",
-        round(sum(probable)) "PROBABLE",
-        round(sum(possible)) "POSSIBLE",
-        round(sum(speculative)) "SPECUL"
-        from estimate_dpps e
-        join surveytypes t on t.category = e.category
-        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
-        group by e.category, surveytype
-        order by e.category;
-    SQL
-    @summary_sums_by_continent = execute <<-SQL
-      select
-        'Africa' "CONTINENT",
-        round(sum(definite)) "DEFINITE",
-        round(sum(probable)) "PROBABLE",
-        round(sum(possible)) "POSSIBLE",
-        round(sum(speculative)) "SPECUL"
-        from estimate_locator e
-          join estimate_dpps d on e.input_zone_id = d.input_zone_id
-            and e.analysis_name = d.analysis_name
-            and e.analysis_year = d.analysis_year
-          where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
-    SQL
+    @summary_totals_by_continent = execute totalizer("1=1",@filter,@year)
     begin
       @regions = nil
       @regions = execute <<-SQL, @continent
@@ -212,42 +287,7 @@ class ReportController < ApplicationController
     @filter = params[:filter]
     @preview_title = @filter.humanize.upcase
 
-    @summary_totals_by_region = execute <<-SQL
-      select
-        region "REGION",
-        e.category "CATEGORY",
-        surveytype "SURVEYTYPE",
-        round(sum(definite)) "DEFINITE",
-        round(sum(probable)) "PROBABLE",
-        round(sum(possible)) "POSSIBLE",
-        round(sum(speculative)) "SPECUL"
-      from estimate_locator e
-        join estimate_dpps d on e.input_zone_id = d.input_zone_id
-          and e.analysis_name = d.analysis_name
-          and e.analysis_year = d.analysis_year
-        join surveytypes t on t.category = e.category
-        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
-        and region='#{@region}'
-      group by region, e.category, surveytype
-      order by region, e.category;
-    SQL
-    @summary_sums_by_region = execute <<-SQL
-      select
-        region "REGION",
-        round(sum(definite)) "DEFINITE",
-        round(sum(probable)) "PROBABLE",
-        round(sum(possible)) "POSSIBLE",
-        round(sum(speculative)) "SPECUL"
-      from
-        estimate_locator e
-        join estimate_dpps d on e.input_zone_id = d.input_zone_id
-          and e.analysis_name = d.analysis_name
-          and e.analysis_year = d.analysis_year
-        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
-        and region='#{@region}'
-      group by region
-      order by region;
-    SQL
+    @summary_totals_by_region = execute totalizer("region='#{@region}'",@filter,@year)
     @countries = nil
     @countries = execute <<-SQL, @region
       select
@@ -390,105 +430,8 @@ class ReportController < ApplicationController
     @filter = params[:filter]
     @preview_title = @filter.humanize.upcase
 
-    @summary_totals_by_country = execute <<-SQL, @country, @country, @country, @country, @country
-      select
-        e.category "CATEGORY",
-        surveytype "SURVEYTYPE",
-        round(sum(definite)) "DEFINITE",
-        round(sum(probable)) "PROBABLE",
-        round(sum(possible)) "POSSIBLE",
-        round(sum(speculative)) "SPECUL"
-      from estimate_locator e
-        join estimate_dpps d on e.input_zone_id = d.input_zone_id
-          and e.analysis_name = d.analysis_name
-          and e.analysis_year = d.analysis_year
-        join surveytypes t on t.category = e.category
-        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
-        and country=?
-        and e.category='A'
-      group by e.category, surveytype
-
-      UNION
-
-      select
-        e.category "CATEGORY",
-        surveytype "SURVEYTYPE",
-        CASE WHEN SUM(actually_seen) > (SUM(e.population_estimate)-SQRT(SUM(population_variance))*1.96)
-        THEN SUM(actually_seen)
-        ELSE ROUND(SUM(e.population_estimate) - SQRT(SUM(population_variance))*1.96)
-        END "DEFINITE",
-        round(sqrt(sum(population_variance))*1.96) "PROBABLE",
-        round(sqrt(sum(population_variance))*1.96) "POSSIBLE",
-        round(sum(speculative)) "SPECUL"
-      from estimate_locator e
-        join estimate_dpps d on e.input_zone_id = d.input_zone_id
-          and e.analysis_name = d.analysis_name
-          and e.analysis_year = d.analysis_year
-        join surveytypes t on t.category = e.category
-        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
-        and country=?
-        and e.category='B'
-      group by e.category, surveytype
-
-      UNION
-
-      select
-        e.category "CATEGORY",
-        surveytype "SURVEYTYPE",
-        round(sum(definite)) "DEFINITE",
-        round(sum(probable)-sum(definite)) "PROBABLE",
-        round(sqrt(sum(population_variance))*1.96) "POSSIBLE",
-        round(sum(speculative)) "SPECUL"
-      from estimate_locator e
-        join estimate_dpps d on e.input_zone_id = d.input_zone_id
-          and e.analysis_name = d.analysis_name
-          and e.analysis_year = d.analysis_year
-        join surveytypes t on t.category = e.category
-        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
-        and country=?
-        and e.category='C'
-      group by e.category, surveytype
-
-      UNION
-
-      select
-        e.category "CATEGORY",
-        surveytype "SURVEYTYPE",
-        round(sum(definite)) "DEFINITE",
-        round(sum(probable)) "PROBABLE",
-        round(sum(possible)) "POSSIBLE",
-        round(sum(speculative)) "SPECUL"
-      from estimate_locator e
-        join estimate_dpps d on e.input_zone_id = d.input_zone_id
-          and e.analysis_name = d.analysis_name
-          and e.analysis_year = d.analysis_year
-        join surveytypes t on t.category = e.category
-        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
-        and country=?
-        and e.category='D'
-      group by e.category, surveytype
-
-      UNION
-
-      select
-        e.category "CATEGORY",
-        surveytype "SURVEYTYPE",
-        round(sum(definite)) "DEFINITE",
-        round(sum(probable)) "PROBABLE",
-        round(sum(possible)) "POSSIBLE",
-        round(sum(speculative)) "SPECUL"
-      from estimate_locator e
-        join estimate_dpps d on e.input_zone_id = d.input_zone_id
-          and e.analysis_name = d.analysis_name
-          and e.analysis_year = d.analysis_year
-        join surveytypes t on t.category = e.category
-        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
-        and country=?
-        and e.category='E'
-      group by e.category, surveytype
-
-      order by "CATEGORY"
-    SQL
+    scope = "country='#{@country}'"
+    @summary_totals_by_country = execute totalizer("country='#{@country}'",@filter,@year)
     @elephant_estimates_by_country = execute <<-SQL, @country
       select
         CASE WHEN reason_change='NC' THEN
