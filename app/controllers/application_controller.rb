@@ -40,4 +40,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def sql_escape(str)
+    conn = ActiveRecord::Base.connection.instance_variable_get("@connection")
+    conn.escape(str)
+  end
+
 end

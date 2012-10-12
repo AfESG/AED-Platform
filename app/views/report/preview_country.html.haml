@@ -148,6 +148,8 @@ All Years for #{@country}:
         - @ar = @ar + row['AREA_SQKM'].to_i
         - @pv = @pv + row['population_variance'].to_f
         - @es = @es + row['ESTIMATE'].to_i
+        - @lo = row['LON']
+        - @la = row['LAT']
         - @n = @n + 1
       %tr
         %td= @rn
@@ -156,12 +158,15 @@ All Years for #{@country}:
         %td{:style=>"text-align:center"}= @ca
         %td= @yr
         %td{:style=>"text-align:right"}= number_with_delimiter @es
-        %td{:style=>"text-align:right"}= number_with_delimiter ((Math.sqrt(@pv))*1.96).round
+        -if @pv>0
+          %td{:style=>"text-align:right"}= number_with_delimiter ((Math.sqrt(@pv))*1.96).round
+        - else
+          %td
         %td{:style=>"padding-left:10px"}= @re
         %td{:style=>"text-align:center"} -
-        %td{:style=>"text-align:right"}= number_with_delimiter @ar
-        %td= @lo
-        %td= @la
+        %td{:style=>"text-align:right"}= @ar>0 ? number_with_delimiter(@ar) : ""
+        %td{:style=>"text-align:center"}= @lo
+        %td{:style=>"text-align:center"}= @la
       - group.each do |row|
         %tr{:style=>'height:18px'}
           %td

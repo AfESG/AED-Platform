@@ -430,8 +430,7 @@ class ReportController < ApplicationController
     @filter = params[:filter]
     @preview_title = @filter.humanize.upcase
 
-    scope = "country='#{@country}'"
-    @summary_totals_by_country = execute totalizer("country='#{@country}'",@filter,@year)
+    @summary_totals_by_country = execute totalizer("country='#{sql_escape @country}'",@filter,@year)
     @elephant_estimates_by_country = execute <<-SQL, @country
       select
         e.replacement_name,
@@ -503,6 +502,7 @@ class ReportController < ApplicationController
         current_replacement_name = row['replacement_name']
       end
     end
+    @elephant_estimate_groups << group
 
     @causes_of_change_by_country = execute <<-SQL, @country
       SELECT *
