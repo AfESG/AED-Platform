@@ -447,12 +447,12 @@ class ReportController < ApplicationController
         e.input_zone_id method_and_quality,
         e.category "CATEGORY",
         e.completion_year "CYEAR",
-        CASE WHEN e.population_lower_confidence_limit IS NULL then
-          e.population_estimate
-        ELSE
+        CASE WHEN e.population_lower_confidence_limit IS NOT NULL AND (e.category='D' or e.category='E') then
           e.population_lower_confidence_limit
+        ELSE
+          e.population_estimate
         END "ESTIMATE",
-        CASE WHEN e.population_upper_confidence_limit IS NOT NULL THEN
+        CASE WHEN e.population_upper_confidence_limit IS NOT NULL AND (e.category='D' or e.category='E') THEN
           CASE WHEN e.population_upper_confidence_limit = e.population_lower_confidence_limit
             THEN ''
           ELSE
