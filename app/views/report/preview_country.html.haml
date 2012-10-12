@@ -135,10 +135,17 @@ All Years for #{@country}:
       %th.numeric{:style=>"padding-right:10px"} (km²)
       %th{:style=>'text-align:center'} Lon.
       %th{:style=>'text-align:center'} Lat.
+    - @current_replacement_name = ''
     - @elephant_estimates_by_country.each do |row|
+      - unless row['replacement_name'] == @current_replacement_name
+        - @current_replacement_name = row['replacement_name']
+        %tr
+          %td{:colspan=>12,:style=>'border-bottom:none'}= @current_replacement_name
       %tr{:style=>'height:18px'}
         %td
-          %a{:href=>"/population_submissions/#{row['population_submission_id']}"}!= row['survey_zone']
+          &#160;
+          &#160;
+          %a{:href=>"/population_submissions/#{row['population_submission_id']}"}!= row['stratum_name']
         %td= row['ReasonForChange']
         %td= row['method_and_quality'].gsub(/[\d]/,'')
         %td{:style=>"text-align:center"}= row['CATEGORY']

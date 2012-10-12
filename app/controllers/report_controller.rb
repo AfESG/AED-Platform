@@ -434,13 +434,15 @@ class ReportController < ApplicationController
     @summary_totals_by_country = execute totalizer("country='#{@country}'",@filter,@year)
     @elephant_estimates_by_country = execute <<-SQL, @country
       select
+        e.replacement_name,
         CASE WHEN reason_change='NC' THEN
           '-'
         ELSE
           reason_change
         END as "ReasonForChange",
         e.population_submission_id,
-        e.site_name || ' / ' || e.stratum_name survey_zone,
+        e.site_name,
+        e.stratum_name,
         e.input_zone_id method_and_quality,
         e.category "CATEGORY",
         e.completion_year "CYEAR",
