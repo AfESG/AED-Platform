@@ -485,7 +485,7 @@ class ReportController < ApplicationController
         join population_submissions on e.population_submission_id = population_submissions.id
         where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
         and country=?
-      order by e.site_name, e.stratum_name
+      order by e.replacement_name, e.site_name, e.stratum_name
     SQL
 
     @causes_of_change_by_country = execute <<-SQL, @country
