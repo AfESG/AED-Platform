@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120831090228) do
+ActiveRecord::Schema.define(:version => 20121012112418) do
 
   create_table "analyses", :id => false, :force => true do |t|
     t.text    "analysis_name"
@@ -28,11 +28,8 @@ ActiveRecord::Schema.define(:version => 20120831090228) do
     t.string   "reason_change"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+    t.string   "country"
   end
-
-  add_index "changes", ["analysis_name"], :name => "changes_analysis_name"
-  add_index "changes", ["analysis_year"], :name => "changes_analysis_year"
-  add_index "changes", ["reason_change"], :name => "changes_reason_change"
 
   create_table "continents", :force => true do |t|
     t.string   "name"
@@ -68,11 +65,6 @@ ActiveRecord::Schema.define(:version => 20120831090228) do
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "estimates_with_±", :id => false, :force => true do |t|
-    t.integer "estimate"
-    t.integer "±"
   end
 
   create_table "geometry_columns", :id => false, :force => true do |t|
@@ -130,6 +122,12 @@ ActiveRecord::Schema.define(:version => 20120831090228) do
     t.float    "latitude"
     t.float    "longitude"
   end
+
+# Could not dump table "protected_area_geometries" because of following StandardError
+#   Unknown type 'geometry' for column 'geometry'
+
+# Could not dump table "range_geometries" because of following StandardError
+#   Unknown type 'geometry' for column 'geometry'
 
   create_table "regions", :force => true do |t|
     t.integer  "continent_id"
@@ -374,6 +372,9 @@ ActiveRecord::Schema.define(:version => 20120831090228) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+# Could not dump table "survey_geometries" because of following StandardError
+#   Unknown type 'geometry' for column 'geometry'
 
   create_table "survey_ground_sample_count_strata", :force => true do |t|
     t.integer  "survey_ground_sample_count_id"
