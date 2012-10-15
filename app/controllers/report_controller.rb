@@ -146,50 +146,36 @@ class ReportController < ApplicationController
       @regions = nil
       @regions = execute <<-SQL, @continent
         select
-          e.continent "CONTINENT",
-          e.region "REGION",
-          round(SUM(d.definite)) "DEFINITE",
-          round(SUM(d.possible)) "POSSIBLE",
-          round(SUM(d.probable)) "PROBABLE",
-          round(SUM(d.speculative)) "SPECUL",
+          continent "CONTINENT",
+          region "REGION",
+          definite "DEFINITE",
+          possible "POSSIBLE",
+          probable "PROBABLE",
+          speculative "SPECUL",
           0 "RANGEAREA",
           0 "RANGEPERC",
           0 "SURVRANGPERC",
           0 "INFQLTYIDX",
           0 "PFS"
         from
-          estimate_locator e
-          join estimate_dpps d on e.input_zone_id = d.input_zone_id
-            and e.analysis_name = d.analysis_name
-            and e.analysis_year = d.analysis_year
-          where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
-        group by
-          e.continent, e.region
-        order by
-          e.continent, e.region;
+          dpps_sums_region
+          where analysis_name = '#{@filter}' and analysis_year = '#{@year}';
       SQL
       @regions_sum = execute <<-SQL, @continent
         select
-          e.continent "CONTINENT",
-          round(SUM(d.definite)) "DEFINITE",
-          round(SUM(d.possible)) "POSSIBLE",
-          round(SUM(d.probable)) "PROBABLE",
-          round(SUM(d.speculative)) "SPECUL",
+          continent "CONTINENT",
+          definite "DEFINITE",
+          possible "POSSIBLE",
+          probable "PROBABLE",
+          speculative "SPECUL",
           0 "RANGEAREA",
           0 "RANGEPERC",
           0 "SURVRANGPERC",
           0 "INFQLTYIDX",
           0 "PFS"
         from
-          estimate_locator e
-          join estimate_dpps d on e.input_zone_id = d.input_zone_id
-            and e.analysis_name = d.analysis_name
-            and e.analysis_year = d.analysis_year
-          where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
-        group by
-          e.continent
-        order by
-          e.continent;
+          dpps_sums_continent
+          where analysis_name = '#{@filter}' and analysis_year = '#{@year}';
       SQL
     rescue
       @regions = nil
@@ -304,45 +290,38 @@ class ReportController < ApplicationController
     @countries = nil
     @countries = execute <<-SQL, @region
       select
+        continent "CONTINENT",
         region "REGION",
         country "CNTRYNAME",
-        round(SUM(d.definite)) "DEFINITE",
-        round(SUM(d.possible)) "POSSIBLE",
-        round(SUM(d.probable)) "PROBABLE",
-        round(SUM(d.speculative)) "SPECUL",
+        definite "DEFINITE",
+        possible "POSSIBLE",
+        probable "PROBABLE",
+        speculative "SPECUL",
         0 "RANGEAREA",
         0 "RANGEPERC",
         0 "SURVRANGPERC",
         0 "INFQLTYIDX",
         0 "PFS"
-      from estimate_locator e
-        join estimate_dpps d on e.input_zone_id = d.input_zone_id
-          and e.analysis_name = d.analysis_name
-          and e.analysis_year = d.analysis_year
-        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
-          and region='#{@region}'
-      group by region, country
-      order by region, country
+      from
+        dpps_sums_country
+        where analysis_name = '#{@filter}' and analysis_year = '#{@year}' and region=?;
     SQL
-    @countries_sum = execute <<-SQL, @continent
+    @countries_sum = execute <<-SQL, @region
       select
-        round(SUM(d.definite)) "DEFINITE",
-        round(SUM(d.possible)) "POSSIBLE",
-        round(SUM(d.probable)) "PROBABLE",
-        round(SUM(d.speculative)) "SPECUL",
+        continent "CONTINENT",
+        region "REGION",
+        definite "DEFINITE",
+        possible "POSSIBLE",
+        probable "PROBABLE",
+        speculative "SPECUL",
         0 "RANGEAREA",
         0 "RANGEPERC",
         0 "SURVRANGPERC",
         0 "INFQLTYIDX",
         0 "PFS"
-      from estimate_locator e
-        join estimate_dpps d on e.input_zone_id = d.input_zone_id
-          and e.analysis_name = d.analysis_name
-          and e.analysis_year = d.analysis_year
-        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
-          and region='#{@region}'
-      group by region
-      order by region
+      from
+        dpps_sums_region
+        where analysis_name = '#{@filter}' and analysis_year = '#{@year}' and region=?;
     SQL
     @causes_of_change_by_region = execute <<-SQL, @region
       SELECT *
