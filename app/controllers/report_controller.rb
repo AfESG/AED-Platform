@@ -430,6 +430,13 @@ class ReportController < ApplicationController
     @filter = params[:filter]
     @preview_title = @filter.humanize.upcase
 
+    @baseline_total = execute <<-SQL, @country
+      select sum(definite) definite, sum(probable) probable, sum(possible) possible,
+        sum(speculative) speculative
+      from dpps_sums_country_category
+      where analysis_name = '#{@filter}' and analysis_year='2007' and country=?;
+    SQL
+
     @summary_totals_by_country = execute totalizer("country='#{sql_escape @country}'",@filter,@year)
     @elephant_estimates_by_country = execute <<-SQL, @country
       select
