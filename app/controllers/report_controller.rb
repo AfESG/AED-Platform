@@ -513,13 +513,13 @@ class ReportController < ApplicationController
 
     @causes_of_change_by_country = execute <<-SQL, @country
       SELECT *
-      FROM causes_of_change_by_country where country=?
+      FROM causes_of_change_by_country_scaled where country=?
         and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
     SQL
 
     @causes_of_change_sums_by_country = execute <<-SQL, @country
       SELECT *
-      FROM causes_of_change_sums_by_country where country=?
+      FROM causes_of_change_sums_by_country_scaled where country=?
         and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
     SQL
   end
