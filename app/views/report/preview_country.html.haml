@@ -137,20 +137,36 @@ All Years for #{@country}:
       %th{:style=>'text-align:center'} Lat.
     - @elephant_estimate_groups.each do |group|
       - @rn = @cc = @ty = @yr = @re = ''
-      - @ar = @n = @pv = @es = 0
-      - group.each do |row|
-        - @rn = row['replacement_name']
-        - @cc = row['ReasonForChange']
-        - @ca = row['CATEGORY']
-        - @ty = row['method_and_quality'].gsub(/[\d]/,'')
-        - @yr = row['CYEAR']
-        - @re = row['REFERENCE']
-        - @ar = @ar + row['AREA_SQKM'].to_i
-        - @pv = @pv + row['population_variance'].to_f
-        - @es = @es + row['ESTIMATE'].to_i
-        - @lo = row['LON']
-        - @la = row['LAT']
-        - @n = @n + 1
+      - @ar = @n = @pv = @es = @cl = 0
+      - if group.size > 1
+        - group.each do |row|
+          - @rn = row['replacement_name']
+          - @cc = row['ReasonForChange']
+          - @ca = row['CATEGORY']
+          - @ty = row['method_and_quality'].gsub(/[\d]/,'')
+          - @yr = row['CYEAR']
+          - @re = row['REFERENCE']
+          - @ar = @ar + row['AREA_SQKM'].to_i
+          - @pv = @pv + row['population_variance'].to_f
+          - @es = @es + row['ESTIMATE'].to_i
+          - @lo = row['LON']
+          - @la = row['LAT']
+          - @n = @n + 1
+      - else
+        - group.each do |row|
+          - @rn = row['replacement_name']
+          - @cc = row['ReasonForChange']
+          - @ca = row['CATEGORY']
+          - @ty = row['method_and_quality'].gsub(/[\d]/,'')
+          - @yr = row['CYEAR']
+          - @re = row['REFERENCE']
+          - @ar = row['AREA_SQKM']
+          - @pv = 0
+          - @cl = row['CL95']
+          - @es = row['ESTIMATE']
+          - @lo = row['LON']
+          - @la = row['LAT']
+          - @n = @n + 1
       %tr
         %td= @rn
         %td= @cc
@@ -161,10 +177,10 @@ All Years for #{@country}:
         -if @pv>0
           %td{:style=>"text-align:right"}= number_with_delimiter ((Math.sqrt(@pv))*1.96).round
         - else
-          %td
+          %td{:style=>"text-align:right"}= @cl.to_s!="0" ? number_with_delimiter(@cl) : ""
         %td{:style=>"padding-left:10px"}= @re
         %td{:style=>"text-align:center"} -
-        %td{:style=>"text-align:right"}= @ar>0 ? number_with_delimiter(@ar) : ""
+        %td{:style=>"text-align:right"}= @ar.to_s!="0" ? number_with_delimiter(@ar) : ""
         %td{:style=>"text-align:center"}= @lo
         %td{:style=>"text-align:center"}= @la
       - group.each do |row|
