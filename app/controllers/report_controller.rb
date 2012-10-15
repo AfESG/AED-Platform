@@ -135,6 +135,13 @@ class ReportController < ApplicationController
     @preview_title = @filter.humanize.upcase
 
     @summary_totals_by_continent = execute totalizer("1=1",@filter,@year)
+    @baseline_total = execute <<-SQL, @continent
+      select sum(definite) definite, sum(probable) probable, sum(possible) possible,
+        sum(speculative) speculative
+      from dpps_sums_continent_category
+      where analysis_name = '#{@filter}' and analysis_year='2007' and continent=?;
+    SQL
+
     begin
       @regions = nil
       @regions = execute <<-SQL, @continent
@@ -190,13 +197,13 @@ class ReportController < ApplicationController
 
     @causes_of_change_by_continent = execute <<-SQL, @continent
       SELECT *
-      FROM causes_of_change_by_continent where continent=?
+      FROM causes_of_change_by_continent_scaled where continent=?
         and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
     SQL
 
     @causes_of_change_sums_by_continent = execute <<-SQL, @continent
       SELECT *
-      FROM causes_of_change_sums_by_continent where continent=?
+      FROM causes_of_change_sums_by_continent_scaled where continent=?
         and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
     SQL
 
