@@ -152,7 +152,7 @@ select
   population_lower_confidence_limit,
   population_upper_confidence_limit,
   1 quality_level,
-  NULL actually_seen,
+  genotypes_identified actually_seen,
   survey_geometry_id
 from survey_faecal_dna_strata
   join survey_faecal_dnas on survey_faecal_dnas.id=survey_faecal_dna_id

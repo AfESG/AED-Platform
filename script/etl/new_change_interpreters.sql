@@ -25,38 +25,152 @@ order by
 
 -- Country change interpeters
 
-drop view if exists dpps_sums_country_category cascade;
-create view dpps_sums_country_category as
+drop view if exists i_dpps_sums_country_category cascade;
+create or replace view i_dpps_sums_country_category as
 select
-  d.analysis_name,
-  d.analysis_year,
-  continent,
-  region,
-  country,
-  d.category,
-  sum(definite) definite,
-  sum(probable) probable,
-  sum(possible) possible,
-  sum(speculative) speculative
-from
-  estimate_locator e
+  e.analysis_name,
+  e.analysis_year,
+  e.continent,
+  e.region,
+  e.country,
+  e.category,
+  round(sum(definite)) definite,
+  round(sum(probable)) probable,
+  round(sum(possible)) possible,
+  round(sum(speculative)) speculative
+from estimate_locator e
   join estimate_dpps d on e.input_zone_id = d.input_zone_id
     and e.analysis_name = d.analysis_name
     and e.analysis_year = d.analysis_year
+  where e.category='A'
 group by
-  d.analysis_name,
-  d.analysis_year,
-  continent,
-  region,
-  country,
-  d.category
+  e.analysis_name,
+  e.analysis_year,
+  e.continent,
+  e.region,
+  e.country,
+  e.category
+
+UNION
+
+select
+  e.analysis_name,
+  e.analysis_year,
+  e.continent,
+  e.region,
+  e.country,
+  e.category,
+  CASE WHEN SUM(actually_seen) > (SUM(e.population_estimate)-SQRT(SUM(population_variance))*1.96)
+  THEN SUM(actually_seen)
+  ELSE ROUND(SUM(e.population_estimate) - SQRT(SUM(population_variance))*1.96)
+  END definite,
+  round(sqrt(sum(population_variance))*1.96) probable,
+  round(sqrt(sum(population_variance))*1.96) possible,
+  round(sum(speculative)) speculative
+from estimate_locator e
+  join estimate_dpps d on e.input_zone_id = d.input_zone_id
+    and e.analysis_name = d.analysis_name
+    and e.analysis_year = d.analysis_year
+  where e.category='B'
+group by
+  e.analysis_name,
+  e.analysis_year,
+  e.continent,
+  e.region,
+  e.country,
+  e.category
+
+UNION
+
+select
+  e.analysis_name,
+  e.analysis_year,
+  e.continent,
+  e.region,
+  e.country,
+  e.category,
+  round(sum(definite)) definite,
+  round(sum(probable)-sum(definite)) probable,
+  round(sqrt(sum(population_variance))*1.96) possible,
+  round(sum(speculative)) speculative
+from estimate_locator e
+  join estimate_dpps d on e.input_zone_id = d.input_zone_id
+    and e.analysis_name = d.analysis_name
+    and e.analysis_year = d.analysis_year
+  where e.category='C'
+group by
+  e.analysis_name,
+  e.analysis_year,
+  e.continent,
+  e.region,
+  e.country,
+  e.category
+
+UNION
+
+select
+  e.analysis_name,
+  e.analysis_year,
+  e.continent,
+  e.region,
+  e.country,
+  e.category,
+  round(sum(definite)) definite,
+  round(sum(probable)) probable,
+  round(sum(possible)) possible,
+  round(sum(speculative)) speculative
+from estimate_locator e
+  join estimate_dpps d on e.input_zone_id = d.input_zone_id
+    and e.analysis_name = d.analysis_name
+    and e.analysis_year = d.analysis_year
+  where e.category='D'
+group by
+  e.analysis_name,
+  e.analysis_year,
+  e.continent,
+  e.region,
+  e.country,
+  e.category
+
+UNION
+
+select
+  e.analysis_name,
+  e.analysis_year,
+  e.continent,
+  e.region,
+  e.country,
+  e.category,
+  round(sum(definite)) definite,
+  round(sum(probable)) probable,
+  round(sum(possible)) possible,
+  round(sum(speculative)) speculative
+from estimate_locator e
+  join estimate_dpps d on e.input_zone_id = d.input_zone_id
+    and e.analysis_name = d.analysis_name
+    and e.analysis_year = d.analysis_year
+  where e.category='E'
+group by
+  e.analysis_name,
+  e.analysis_year,
+  e.continent,
+  e.region,
+  e.country,
+  e.category
+
 order by
-  d.analysis_name,
-  d.analysis_year,
+  analysis_name,
+  analysis_year,
   continent,
   region,
   country,
-  d.category;
+  category
+;
+
+--- Statify the pooled base query; it's too slow to run in realtime
+drop view if exists dpps_sums_country_category cascade;
+drop table if exists dpps_sums_country_category cascade;
+create table dpps_sums_country_category as select * from i_dpps_sums_country_category;
 
 drop view if exists dpps_sums_country;
 create view dpps_sums_country as
@@ -110,8 +224,8 @@ order by
   a.region,
   a.country;
 
-drop view if exists dpps_sums_country_category_reason;
-create view dpps_sums_country_category_reason as
+drop view if exists i_dpps_sums_country_category_reason;
+create view i_dpps_sums_country_category_reason as
 select * from (
   select
     d.analysis_name,
@@ -198,6 +312,11 @@ order by
   reason_change
 ;
 
+--- Statify the reason base query; it's too slow to run in realtime
+drop view if exists dpps_sums_country_category_reason cascade;
+drop table if exists dpps_sums_country_category_reason cascade;
+create table dpps_sums_country_category_reason as select * from i_dpps_sums_country_category_reason;
+
 drop view fractional_causes_of_change_by_country;
 create view fractional_causes_of_change_by_country as
 select
@@ -241,6 +360,58 @@ select
 from
   fractional_causes_of_change_by_country
 group by analysis_name,analysis_year,country;
+
+drop view if exists country_factors;
+create or replace view country_factors as
+select
+  c.analysis_name,
+  c.analysis_year,
+  c.country,
+  (actual_dif_def / CASE WHEN definite=0 THEN 1 ELSE definite END) def_factor,
+  (actual_dif_prob / CASE WHEN probable=0 THEN 1 ELSE probable END) prob_factor,
+  (actual_dif_poss / CASE WHEN possible=0 THEN 1 ELSE possible END) poss_factor,
+  (actual_dif_spec / CASE WHEN specul=0 THEN 1 ELSE specul END) spec_factor
+from causes_of_change_sums_by_country c
+join actual_diff_country a
+  on a.analysis_name = c.analysis_name
+  and a.analysis_year = c.analysis_year
+  and a.country= c. country
+;
+
+drop view causes_of_change_by_country_scaled;
+create view causes_of_change_by_country_scaled as
+select
+  c.analysis_name,
+  c.analysis_year,
+  c.country,
+  "CauseofChange",
+  round(definite * def_factor) definite,
+  round(probable * prob_factor) probable,
+  round(possible * poss_factor) possible,
+  round(specul * spec_factor) specul
+from fractional_causes_of_change_by_country c
+join country_factors a
+  on a.analysis_name = c.analysis_name
+  and a.analysis_year = c.analysis_year
+  and a.country= c.country
+;
+
+drop view if exists causes_of_change_sums_by_country_scaled;
+create or replace view causes_of_change_sums_by_country_scaled as
+select
+  c.analysis_name,
+  c.analysis_year,
+  c.country,
+  definite * def_factor definite,
+  probable * prob_factor probable,
+  possible * poss_factor possible,
+  specul * spec_factor specul
+from causes_of_change_sums_by_country c
+join country_factors a
+  on a.analysis_name = c.analysis_name
+  and a.analysis_year = c.analysis_year
+  and a.country= c.country
+;
 
 --- Regional change interpreters ---
 
