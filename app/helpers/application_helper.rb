@@ -97,4 +97,48 @@ module ApplicationHelper
     return "#{r}:"
   end
 
+  def map_stratum(level)
+    return unless level.survey_geometry_id
+    begin
+      res = "<div id='the_geom' style='margin-top: 10px; width:350px; height:300px;'>"
+      geom = ActiveRecord::Base.connection.execute "select ST_asGeoJSON(ST_setSRID(geometry,4326)) json from survey_geometries where id=#{@level.survey_geometry_id}"
+      json = JSON.parse(geom.first['json'])
+      res << <<-SCRIPT
+        <script>
+          map_initialize('the_geom',function(){ var coords=[
+      SCRIPT
+      json['coordinates'].first.first.each do |coord|
+        res << "          new google.maps.LatLng(#{coord[1]}, #{coord[0]}),\n"
+      end
+      res << <<-SCRIPT
+          ];
+          var stratum = new google.maps.Polygon({
+            paths: coords,
+            strokeColor: "#FF0000",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: "#FF0000",
+            fillOpacity: 0.35
+          });
+          stratum.setMap(map);
+          var bounds = new google.maps.LatLngBounds();
+          var paths = stratum.getPaths();
+          var path;
+          for (var p = 0; p < paths.getLength(); p++) {
+            path = paths.getAt(p);
+            for (var i = 0; i < path.getLength(); i++) {
+              bounds.extend(path.getAt(i));
+            }
+          }
+          map.fitBounds(bounds);
+
+        });
+        </script>
+      </div>
+      SCRIPT
+    rescue
+      "Could not map this stratum due to an error."
+    end
+  end
+
 end

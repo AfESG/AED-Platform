@@ -1,3 +1,12 @@
+window.map_initialize = (canvas_id, and_then) ->
+  myOptions =
+    zoom: 4
+    mapTypeId: google.maps.MapTypeId.TERRAIN
+    streetViewControl: false
+  window.map = new google.maps.Map(document.getElementById(canvas_id), myOptions)
+  window.map.setCenter new google.maps.LatLng(0, 0)
+  and_then()
+
 window.ft_initialize_below_protarea = (canvas_id, table_id, geometry_name, key_name, url_prefix, zoom, center, and_then) ->
   map = new google.maps.Map(document.getElementById(canvas_id),
     center: center
