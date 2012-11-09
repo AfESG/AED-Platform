@@ -46,7 +46,7 @@ gem 'kaminari'
 
 gem 'country_select'
 
-# gem 'appygram-rails'
+gem 'appygram-rails'
 
 # gem 'sqlite3'
 
