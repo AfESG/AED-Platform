@@ -98,6 +98,7 @@ module ApplicationHelper
   end
 
   def map_stratum(level)
+    return unless level.respond_to? :survey_geometry_id
     return unless level.survey_geometry_id
     begin
       res = "<div id='the_geom' style='margin-top: 10px; width:350px; height:300px;'>"
