@@ -37,7 +37,7 @@ GEM
       multi_json (~> 1.0)
     addressable (2.2.7)
     ansi (1.4.2)
-    appygram (1.0.3)
+    appygram (1.0.4)
     appygram-rails (1.0.1)
       appygram (~> 1.0, >= 1.0.3)
       rack
