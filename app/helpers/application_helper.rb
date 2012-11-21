@@ -86,6 +86,37 @@ module ApplicationHelper
     return false
   end
 
+  def link_for_id(unit)
+    if unit =~ /O(\d+)/
+      return "/survey_others/#{$1}"
+    elsif unit =~ /IR(\d+)/
+      return "/survey_individual_recognitions/#{$1}"
+    elsif unit =~ /AS(\d+)/
+      return "/survey_aerial_sample_count_strata/#{$1}"
+    elsif unit =~ /AT(\d+)/
+      return "/survey_aerial_total_count_strata/#{$1}"
+    elsif unit =~ /DC(\d+)/
+      return "/survey_dung_count_line_transect_strata/#{$1}"
+    elsif unit =~ /GS(\d+)/
+      return "/survey_ground_sample_count_strata/#{$1}"
+    elsif unit =~ /GT(\d+)/
+      return "/survey_ground_total_count_strata/#{$1}"
+    elsif unit =~ /GD(\d+)/
+      return "/survey_faecal_dna_strata/#{$1}"
+    else
+      return "/"
+    end
+  end
+
+  def linked_ids_for(comma_separated_list)
+    units = comma_separated_list.split(/,/)
+    links = []
+    units.each do |unit|
+      links << link_to(unit, link_for_id(unit))
+    end
+    links.join(', ').html_safe
+  end
+
   def best_label_for(tag)
     r = t "formtastic.labels.#{tag}", :default => ''
     if r.blank? and !@level.nil?
