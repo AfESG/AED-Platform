@@ -25,6 +25,8 @@
       .strapline
         The most comprehensive data on elephant population and range worldwide.
       - if user_signed_in?
+        - if current_user.admin?
+          #superuser= link_to 'Superuser', '/superuser'
         #support= link_to t('support'), 'http://www.assembla.com/spaces/aaed/support/tickets', :target => '_blank'
         #mysub= link_to t('my_submissions'), '/my_population_submissions'
         #myaccount= link_to t('my_account'), edit_user_registration_path
