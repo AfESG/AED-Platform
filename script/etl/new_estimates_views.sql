@@ -305,6 +305,7 @@ select
   completion_year,
   a.analysis_name,
   a.analysis_year,
+  a.comparison_year,
   a.analysis_year - completion_year age,
   n.replacement_name,
   reason_change,
@@ -332,6 +333,7 @@ select
   stratum_area,
   completion_year,
   a.analysis_name,
+  a.comparison_year,
   a.comparison_year,
   a.comparison_year - completion_year age,
   r.replacement_name,
@@ -372,7 +374,10 @@ select
   analysis_year,
   age,
   replacement_name,
-  reason_change,
+  CAST(CASE
+      WHEN reason_change = '-' and age > 10 and (comparison_year - completion_year <= 10) THEN 'DD'
+      ELSE reason_change
+  END AS varchar(255)) reason_change,
   citation,
   short_citation,
   population_estimate,
