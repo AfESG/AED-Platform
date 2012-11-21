@@ -23,13 +23,15 @@ Reports
 #{@country}
 
 %p
-All Years for #{@country}:
 
-%a{:href=>"/preview_report/#{@filter}/#{@species.gsub(' ','_')}/2007/#{@continent}/#{@region}/#{@country}"} 2007
+- if current_user.admin?
+  All Years for #{@country}:
 
-&mdash;
+  %a{:href=>"/preview_report/#{@filter}/#{@species.gsub(' ','_')}/2007/#{@continent}/#{@region}/#{@country}"} 2007
 
-%a{:href=>"/preview_report/#{@filter}/#{@species.gsub(' ','_')}/2011/#{@continent}/#{@region}/#{@country}"} 2011
+  &mdash;
+
+  %a{:href=>"/preview_report/#{@filter}/#{@species.gsub(' ','_')}/2011/#{@continent}/#{@region}/#{@country}"} 2011
 
 != narrative
 

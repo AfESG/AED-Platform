@@ -23,13 +23,16 @@ Site
 #{@site}
 
 %p
-All Years for #{@site}:
 
-%a{:href=>"/preview_report/#{@filter}/#{@species.gsub(' ','_')}/2007/#{@continent}/site/#{@site}"} 2007
+- if current_user.admin?
 
-&mdash;
+  All Years for #{@site}:
 
-%a{:href=>"/preview_report/#{@filter}/#{@species.gsub(' ','_')}/2011/#{@continent}/site/#{@site}"} 2011
+  %a{:href=>"/preview_report/#{@filter}/#{@species.gsub(' ','_')}/2007/#{@continent}/site/#{@site}"} 2007
+
+  &mdash;
+
+  %a{:href=>"/preview_report/#{@filter}/#{@species.gsub(' ','_')}/2011/#{@continent}/site/#{@site}"} 2011
 
 != narrative
 
