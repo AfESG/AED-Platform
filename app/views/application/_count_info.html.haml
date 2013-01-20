@@ -19,6 +19,7 @@
           - else
             No strata
 - if c.has_strata?
+  = link_to "Show aggregates", c
   - for b in c.strata do
     = render :partial => 'count_stratum_info', :locals => {:b => b}
   - if edit_allowed
