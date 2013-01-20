@@ -46,8 +46,6 @@ gem 'kaminari'
 
 gem 'country_select'
 
-gem 'appygram-rails'
-
 # gem 'sqlite3'
 
 # Use unicorn as the web server
@@ -85,4 +83,5 @@ end
 
 group :production do
   gem 'thin'
+  gem 'appygram-rails'
 end
