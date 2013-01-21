@@ -138,8 +138,12 @@ module ApplicationHelper
     area_sqkm = 0
     estimate = 0
     level.strata.each do |stratum|
-      estimate = estimate + stratum.population_estimate
-      area_sqkm = area_sqkm + stratum.stratum_area
+      unless stratum.population_estimate.nil?
+        estimate = estimate + stratum.population_estimate
+      end
+      unless stratum.stratum_area.nil?
+        area_sqkm = area_sqkm + stratum.stratum_area
+      end
       begin
         geom = ActiveRecord::Base.connection.execute "select ST_asGeoJSON(ST_setSRID(geometry,4326)) json from survey_geometries where id=#{stratum.survey_geometry_id}"
         json = JSON.parse(geom.first['json'])
