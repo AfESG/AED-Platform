@@ -50,7 +50,7 @@ select
   population_lower_confidence_limit,
   population_upper_confidence_limit,
   CASE
-    WHEN dung_decay_rate_measurement_site is not null and dung_decay_rate_measurement_site!='' THEN 1
+    WHEN dung_decay_rate_measurement_method != 'Decay rate NOT measured on site' and dung_decay_rate_measurement_site != '' and dung_decay_rate_measurement_site!='' THEN 1
     ELSE 0
   END quality_level,
   actually_seen,
