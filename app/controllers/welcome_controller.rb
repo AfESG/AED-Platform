@@ -58,37 +58,48 @@ class WelcomeController < ApplicationController
   end
 
   def recalc
+    return if current_user.nil?
     return unless current_user.admin?
-    execute <<-SQL
-      begin;
+    if defined? $RECALC_RUNNING and $RECALC_RUNNING == true
+      render :text => 'A recalculation may already be running. Please wait a bit before trying again.'
+      return
+    end
+    Thread.new {
+      logger.info("Recalc started")
+      $RECALC_RUNNING = true
+      execute <<-SQL
+        begin;
 
-      delete from dpps_sums_continent_category;
-      insert into dpps_sums_continent_category
-      select * from i_dpps_sums_continent_category;
+        delete from dpps_sums_continent_category;
+        insert into dpps_sums_continent_category
+        select * from i_dpps_sums_continent_category;
 
-      delete from dpps_sums_continent_category_reason;
-      insert into dpps_sums_continent_category_reason
-      select * from i_dpps_sums_continent_category_reason;
+        delete from dpps_sums_continent_category_reason;
+        insert into dpps_sums_continent_category_reason
+        select * from i_dpps_sums_continent_category_reason;
 
-      delete from dpps_sums_region_category;
-      insert into dpps_sums_region_category
-      select * from i_dpps_sums_region_category;
+        delete from dpps_sums_region_category;
+        insert into dpps_sums_region_category
+        select * from i_dpps_sums_region_category;
 
-      delete from dpps_sums_region_category_reason;
-      insert into dpps_sums_region_category_reason
-      select * from i_dpps_sums_region_category_reason;
+        delete from dpps_sums_region_category_reason;
+        insert into dpps_sums_region_category_reason
+        select * from i_dpps_sums_region_category_reason;
 
-      delete from dpps_sums_country_category;
-      insert into dpps_sums_country_category
-      select * from i_dpps_sums_country_category;
+        delete from dpps_sums_country_category;
+        insert into dpps_sums_country_category
+        select * from i_dpps_sums_country_category;
 
-      delete from dpps_sums_country_category_reason;
-      insert into dpps_sums_country_category_reason
-      select * from i_dpps_sums_country_category_reason;
+        delete from dpps_sums_country_category_reason;
+        insert into dpps_sums_country_category_reason
+        select * from i_dpps_sums_country_category_reason;
 
-      commit;
-    SQL
-    render :text => 'Change interpreters recalculated.'
+        commit;
+      SQL
+      $RECALC_RUNNING = false
+      logger.info("Recalc finished")
+    }
+    render :text => 'Change interpreters recalculating in background. Please wait at least 2 minutes before running this again.'
   end
 
 end
