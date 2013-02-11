@@ -1,23 +1,25 @@
 %h1 #{@year} Regional Totals for #{@preview_title}: #{@region}
-%a{:href=>'/report'}Reports
 
-&gt;
+.crumbs
+  %a{:href=>'/report'}Reports
 
-%a{:href=>"/report/#{@species.gsub(' ','_')}"} #{@species}
+  &gt;
 
-&gt;
+  %a{:href=>"/report/#{@species.gsub(' ','_')}"} #{@species}
 
-= @preview_nav
+  &gt;
 
-&gt;
+  = @preview_nav
 
-%a{:href=>"/preview_report/#{@filter}/#{@species.gsub(' ','_')}/#{@year}/#{@continent}"} #{@continent}
+  &gt;
 
-&gt;
+  %a{:href=>"/preview_report/#{@filter}/#{@species.gsub(' ','_')}/#{@year}/#{@continent}"} #{@continent}
 
-#{@region}
+  &gt;
 
-%p
+  #{@region}
+
+  %p
 
 /
 

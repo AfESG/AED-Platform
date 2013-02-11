@@ -1,17 +1,19 @@
 %h1 #{@year} Continental Totals for #{@preview_title}
-%a{:href=>'/report'}Reports
 
-&gt;
+.crumbs
+  %a{:href=>'/report'}Reports
 
-%a{:href=>"/report/#{@species.gsub(' ','_')}"} #{@species}
+  &gt;
 
-&gt;
+  %a{:href=>"/report/#{@species.gsub(' ','_')}"} #{@species}
 
-= @preview_nav
+  &gt;
 
-&gt;
+  = @preview_nav
 
-#{@continent}
+  &gt;
+
+  #{@continent}
 
 %p
 /

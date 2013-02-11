@@ -653,3 +653,23 @@ form {
 .public_link{
   margin-bottom: 10px;
 }
+
+// print overrides
+@media print
+{
+    #superuser, #support, #mysub, #myaccount, #logout, .nav, .crumbs, .report_narrative_links {
+        display:none;
+    }
+    h1 {
+      padding: 0px;
+      margin: 0px;
+      font-weight: bold;
+    }
+    a:link:after, a:visited:after {
+      content: "" !important;
+    }
+    a {
+      font-weight: bold !important;
+      text-decoration: none !important;
+    }
+}
