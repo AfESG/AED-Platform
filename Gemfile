@@ -1,5 +1,7 @@
 source 'http://rubygems.org'
 
+ruby '1.9.3'
+
 gem 'rails', '~>3.2.11'
 
 # Rails 3.1 - Asset Pipeline
@@ -22,7 +24,7 @@ gem 'haml'
 
 gem 'slim'
 
-gem 'formtastic'
+gem 'formtastic', '~> 2.1.1'
 
 gem 'flutie'
 
