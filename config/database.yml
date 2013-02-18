@@ -11,7 +11,7 @@ development:
 test:
   encoding: unicode
   adapter: postgresql
-  database: aaed_development
+  database: aaed_test
   pool: 5
   timeout: 5000
 
