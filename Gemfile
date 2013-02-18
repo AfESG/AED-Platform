@@ -51,10 +51,12 @@ gem 'country_select'
 # gem 'sqlite3'
 
 # Use unicorn as the web server
-# gem 'unicorn'
+gem 'unicorn'
 
 # Deploy with Capistrano
-# gem 'capistrano'
+gem 'capistrano'
+gem 'rvm-capistrano'
+gem 'capistrano-unicorn'
 
 # To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)
 # gem 'ruby-debug'
@@ -84,6 +86,5 @@ group :development, :test do
 end
 
 group :production do
-  gem 'thin'
   gem 'appygram-rails'
 end
