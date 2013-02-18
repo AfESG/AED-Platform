@@ -10,11 +10,19 @@ class ReportNarrativesController < ApplicationController
     end
   end
 
+  def redirect_for(uri)
+    if uri =~ /_report/
+      return "/preview"+uri
+    else
+      return "/report/"+uri
+    end
+  end
+
   # GET /report_narratives/1
   # GET /report_narratives/1.json
   def show
     @report_narrative = ReportNarrative.find(params[:id])
-    redirect_to "/report/#{@report_narrative.uri}", :only_path => true
+    redirect_to redirect_for(@report_narrative.uri), :only_path => true
   end
 
   # GET /report_narratives/new
@@ -39,7 +47,7 @@ class ReportNarrativesController < ApplicationController
     @report_narrative = ReportNarrative.new(params[:report_narrative])
 
     if @report_narrative.save
-      redirect_to "/report/#{@report_narrative.uri}", :only_path => true
+      redirect_to redirect_for(@report_narrative.uri), :only_path => true
     else
       render action: "new"
     end
@@ -51,7 +59,7 @@ class ReportNarrativesController < ApplicationController
     @report_narrative = ReportNarrative.find(params[:id])
 
     if @report_narrative.update_attributes(params[:report_narrative])
-      redirect_to "/report/#{@report_narrative.uri}", :only_path => true
+      redirect_to redirect_for(@report_narrative.uri), :only_path => true
     else
       render action: "edit"
     end
