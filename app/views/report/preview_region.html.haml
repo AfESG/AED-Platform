@@ -1,15 +1,15 @@
-%h1 #{@year} Regional Totals for #{@preview_title}: #{@region}
+%h1 #{@year} Regional Totals for #{@region} ("#{@preview_title}" analysis)
 
 .crumbs
   %a{:href=>'/report'}Reports
 
   &gt;
 
-  %a{:href=>"/report/#{@species.gsub(' ','_')}"} #{@species}
+  #{@species}
 
   &gt;
 
-  = @preview_nav
+  #{@year}
 
   &gt;
 
@@ -19,9 +19,7 @@
 
   #{@region}
 
-  %p
-
-/
+%p
 
   All Years for #{@region}:
 
@@ -29,7 +27,7 @@
 
   &mdash;
 
-  %a{:href=>"/preview_report/#{@filter}/#{@species.gsub(' ','_')}/2011/#{@continent}/#{@region}"} 2011
+  %a{:href=>"/preview_report/#{@filter}/#{@species.gsub(' ','_')}/2012/#{@continent}/#{@region}"} 2012
 
 != narrative
 

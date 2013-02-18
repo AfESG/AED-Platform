@@ -1,15 +1,15 @@
-%h1 #{@preview_title}: #{@country}, #{@year}
+%h1 #{@country}, #{@year} ("#{@preview_title}" analysis)
 
 .crumbs
   Reports
 
   &gt;
 
-  %a{:href=>"/report/#{@species.gsub(' ','_')}"} #{@species}
+  #{@species}
 
   &gt;
 
-  = @preview_nav
+  = @year
 
   &gt;
 
@@ -23,16 +23,14 @@
 
   #{@country}
 
-  %p
-
-/
+%p
   All Years for #{@country}:
 
   %a{:href=>"/preview_report/#{@filter}/#{@species.gsub(' ','_')}/2007/#{@continent}/#{@region}/#{@country}"} 2007
 
   &mdash;
 
-  %a{:href=>"/preview_report/#{@filter}/#{@species.gsub(' ','_')}/2011/#{@continent}/#{@region}/#{@country}"} 2011
+  %a{:href=>"/preview_report/#{@filter}/#{@species.gsub(' ','_')}/2012/#{@continent}/#{@region}/#{@country}"} 2012
 
 != narrative
 

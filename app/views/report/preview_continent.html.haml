@@ -1,29 +1,29 @@
-%h1 #{@year} Continental Totals for #{@preview_title}
+%h1 #{@year} Continental Totals ("#{@preview_title}" analysis)
 
 .crumbs
   %a{:href=>'/report'}Reports
 
   &gt;
 
-  %a{:href=>"/report/#{@species.gsub(' ','_')}"} #{@species}
+  #{@species}
 
   &gt;
 
-  = @preview_nav
+  #{@year}
 
   &gt;
 
-  #{@continent}
+  #{@continent} 
 
 %p
-/
+
   All Years for #{@continent}:
 
   %a{:href=>"/preview_report/#{@filter}/#{@species.gsub(' ','_')}/2007/#{@continent}"} 2007
 
   &mdash;
 
-  %a{:href=>"/preview_report/#{@filter}/#{@species.gsub(' ','_')}/2011/#{@continent}"} 2011
+  %a{:href=>"/preview_report/#{@filter}/#{@species.gsub(' ','_')}/2012/#{@continent}"} 2012
 
 != narrative
 
