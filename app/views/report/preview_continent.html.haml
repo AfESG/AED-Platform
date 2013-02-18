@@ -49,6 +49,12 @@
         - @sposs = @sposs + row['POSSIBLE'].to_i
         %td.numeric= number_with_delimiter row['SPECUL']
         - @sspec = @sspec + row['SPECUL'].to_i
+    %tr.totals{:style => 'height: 24px; font-weight: bold'}
+      %td Totals #{@year}
+      %td.numeric= number_with_delimiter @sdef
+      %td.numeric= number_with_delimiter @sprob
+      %td.numeric= number_with_delimiter @sposs
+      %td.numeric= number_with_delimiter @sspec
     - if @year==2012
       -@baseline_total.each do |base|
         %tr.totals{:style => 'height: 24px; font-weight: bold'}
@@ -57,12 +63,6 @@
           %td.numeric= number_with_delimiter base['probable']
           %td.numeric= number_with_delimiter base['possible']
           %td.numeric= number_with_delimiter base['speculative']
-    %tr.totals{:style => 'height: 24px; font-weight: bold'}
-      %td Totals #{@year}
-      %td.numeric= number_with_delimiter @sdef
-      %td.numeric= number_with_delimiter @sprob
-      %td.numeric= number_with_delimiter @sposs
-      %td.numeric= number_with_delimiter @sspec
 
 - if !@causes_of_change_by_continent.nil? && @causes_of_change_by_continent.num_tuples > 0
   %h2 Interpretation of Changes in Estimates from Previous Report
