@@ -90,7 +90,7 @@ module ApplicationHelper
     if unit =~ /O(\d+)/
       return "/survey_others/#{$1}"
     elsif unit =~ /IR(\d+)/
-      return "/survey_individual_recognitions/#{$1}"
+      return "/survey_individual_registrations/#{$1}"
     elsif unit =~ /AS(\d+)/
       return "/survey_aerial_sample_count_strata/#{$1}"
     elsif unit =~ /AT(\d+)/
