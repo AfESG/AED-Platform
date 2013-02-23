@@ -45,7 +45,7 @@ class ReportNarrativesController < ApplicationController
   # POST /report_narratives.json
   def create
     @report_narrative = ReportNarrative.new(params[:report_narrative])
-
+    @report_narrative.uri = @report_narrative.uri.gsub(' ','_').gsub('%20','_')
     if @report_narrative.save
       redirect_to redirect_for(@report_narrative.uri), :only_path => true
     else
@@ -59,6 +59,8 @@ class ReportNarrativesController < ApplicationController
     @report_narrative = ReportNarrative.find(params[:id])
 
     if @report_narrative.update_attributes(params[:report_narrative])
+      @report_narrative.uri = @report_narrative.uri.gsub(' ','_').gsub('%20','_')
+      @report_narrative.save
       redirect_to redirect_for(@report_narrative.uri), :only_path => true
     else
       render action: "edit"
