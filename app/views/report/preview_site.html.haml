@@ -13,7 +13,7 @@
 
   &gt;
 
-  %a{:href=>"/preview_report/#{@filter}/#{@species}/#{@year}/#{@continent}"} #{@continent}
+  %a{:href=>"/preview_report/#{@filter}/#{@species.gsub(' ','_')}/#{@year}/#{@continent}"} #{@continent}
 
   &gt;
 

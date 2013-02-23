@@ -13,11 +13,11 @@
 
   &gt;
 
-  %a{:href=>"/preview_report/#{@filter}/#{@species}/#{@year}/#{@continent}"} #{@continent}
+  %a{:href=>"/preview_report/#{@filter}/#{@species.gsub(' ','_')}/#{@year}/#{@continent}"} #{@continent}
 
   &gt;
 
-  %a{:href=>"/preview_report/#{@filter}/#{@species}/#{@year}/#{@continent}/#{@region.gsub(' ','_')}"} #{@region}
+  %a{:href=>"/preview_report/#{@filter}/#{@species.gsub(' ','_')}/#{@year}/#{@continent}/#{@region.gsub(' ','_')}"} #{@region}
 
   &gt;
 

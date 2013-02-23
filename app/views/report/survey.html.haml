@@ -8,19 +8,19 @@ Reports
 
 &gt;
 
-%a{:href=>"/report/#{@species}/#{@year}"} #{@year}
+%a{:href=>"/report/#{@species.gsub(' ','_')}/#{@year}"} #{@year}
 
 &gt;
 
-%a{:href=>"/report/#{@species}/#{@year}/#{@continent}"} #{@continent}
+%a{:href=>"/report/#{@species.gsub(' ','_')}/#{@year}/#{@continent}"} #{@continent}
 
 &gt;
 
-%a{:href=>"/report/#{@species}/#{@year}/#{@continent}/#{@region.gsub(' ','_')}"} #{@region}
+%a{:href=>"/report/#{@species.gsub(' ','_')}/#{@year}/#{@continent}/#{@region.gsub(' ','_')}"} #{@region}
 
 &gt;
 
-%a{:href=>"/report/#{@species}/#{@year}/#{@continent}/#{@region.gsub(' ','_')}/#{@country.gsub(' ','_')}"} #{@country}
+%a{:href=>"/report/#{@species.gsub(' ','_')}/#{@year}/#{@continent}/#{@region.gsub(' ','_')}/#{@country.gsub(' ','_')}"} #{@country}
 
 &gt;
 
