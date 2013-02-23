@@ -204,6 +204,8 @@
           %td{:style=>'text-align:center'}= row['LON']
           %td{:style=>'text-align:center'}= row['LAT']
 
+!= footnote
+
 %p
   * Range of informed guess
 %p
@@ -221,8 +223,6 @@
   = link_to 'http://www.elephantdatabase.org/reliability.', 'http://www.elephantdatabase.org/reliability'
   As a result, totals do not
   necessarily match the simple sum of the entries within a given category.
-
-!= footnote
 
 :javascript
   function toggle_section(key){
