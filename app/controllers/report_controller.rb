@@ -146,19 +146,20 @@ class ReportController < ApplicationController
       @regions = nil
       @regions = execute <<-SQL, @continent
         select
-          continent "CONTINENT",
-          region "REGION",
+          d.continent "CONTINENT",
+          d.region "REGION",
           definite "DEFINITE",
           possible "POSSIBLE",
           probable "PROBABLE",
           speculative "SPECUL",
-          0 "RANGEAREA",
-          0 "RANGEPERC",
-          0 "SURVRANGPERC",
+          ROUND(cm.range_area) "RANGEAREA",
+          ROUND(cm.percent_continental_range) "RANGEPERC",
+          ROUND(cm.percent_range_assessed) "SURVRANGPERC",
           0 "INFQLTYIDX",
           0 "PFS"
         from
-          dpps_sums_region
+          dpps_sums_region d
+          join continental_range_table cm on d.region = cm.region
           where analysis_name = '#{@filter}' and analysis_year = '#{@year}';
       SQL
       @regions_sum = execute <<-SQL, @continent
