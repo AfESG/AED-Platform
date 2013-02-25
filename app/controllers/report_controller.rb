@@ -299,7 +299,7 @@ class ReportController < ApplicationController
         speculative "SPECUL",
         ROUND(rm.range_area) "RANGEAREA",
         ROUND(rm.percent_regional_range) "RANGEPERC",
-        0 "SURVRANGPERC",
+        ROUND(rm.percent_range_assessed) "SURVRANGPERC",
         0 "INFQLTYIDX",
         0 "PFS"
       from
