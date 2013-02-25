@@ -195,6 +195,20 @@ class ReportController < ApplicationController
         and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
     SQL
 
+    @area_of_range_covered_by_continent = execute <<-SQL
+      SELECT surveytype, ROUND(known) known, ROUND(possible) possible, ROUND(total) total
+      FROM continental_area_of_range_covered
+      union
+      SELECT 'Unassessed Range', ROUND(known) known, ROUND(possible) possible, ROUND(total) total
+      FROM continental_area_of_range_covered_unassessed
+      order by surveytype
+    SQL
+
+    @area_of_range_covered_sum_by_continent = execute <<-SQL, @region
+      SELECT ROUND(known) known, ROUND(possible) possible, ROUND(total) total
+      FROM continental_area_of_range_covered_totals
+    SQL
+
   end
 
   def continent
@@ -338,6 +352,19 @@ class ReportController < ApplicationController
       SELECT *
       FROM causes_of_change_sums_by_region_scaled where region=?
         and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
+    SQL
+    @area_of_range_covered_by_region = execute <<-SQL, @region, @region
+      SELECT surveytype, ROUND(known) known, ROUND(possible) possible, ROUND(total) total
+      FROM regional_area_of_range_covered where region=?
+      union
+      SELECT 'Unassessed Range', ROUND(known) known, ROUND(possible) possible, ROUND(total) total
+      FROM regional_area_of_range_covered_unassessed where region=?
+      order by surveytype
+    SQL
+
+    @area_of_range_covered_sum_by_region = execute <<-SQL, @region
+      SELECT ROUND(known) known, ROUND(possible) possible, ROUND(total) total
+      FROM regional_area_of_range_covered_totals where region=?
     SQL
   end
 

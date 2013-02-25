@@ -76,6 +76,25 @@
           - ['definite','probable','possible','specul'].each do |key|
             %td.numeric= signed_number row[key]
 
+- if !@area_of_range_covered_by_continent.nil? && @area_of_range_covered_by_continent.num_tuples > 0
+  %h2 Area of Range Covered by Each Data Category (km²)
+  %table{:style => 'font-size:16px'}
+    %tr
+      %th Data Category
+      %th.numeric Known Range
+      %th.numeric Possible Range
+      %th.numeric Total Range
+    - @area_of_range_covered_by_continent.each do |row|
+      %tr{:style => 'height: 24px;'}
+        %td= number_with_delimiter row['surveytype']
+        - ['known','possible','total'].each do |key|
+          %td.numeric= number_or_zero row[key]
+    - @area_of_range_covered_sum_by_continent.each do |row|
+      %tr.totals{:style => 'height: 24px; font-weight: bold'}
+        %td Totals
+        - ['known','possible','total'].each do |key|
+          %td.numeric= number_or_zero row[key]
+
 - if !@regions.nil? && @regions.num_tuples > 0
   %h2 Continental and Regional Totals and Data Quality
   %table{:style => 'font-size:16px'}
