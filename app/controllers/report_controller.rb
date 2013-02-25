@@ -321,9 +321,10 @@ class ReportController < ApplicationController
         ROUND(rm.range_area) "RANGEAREA",
         ROUND(rm.percent_regional_range) "RANGEPERC",
         ROUND(rm.percent_range_assessed) "SURVRANGPERC",
-        0 "INFQLTYIDX",
-        0 "PFS"
-      from
+        to_char(((definite+probable)/(definite+probable+possible+speculative))*(rm.range_assessed/range_area),'999999D99') "INFQLTYIDX",
+        round(log(((definite+probable)/(definite+probable+possible+speculative))*(rm.range_assessed/range_area)+1/(rm.range_area/ca.continental_range))) "PFS"
+       from
+        (select distinct continental_range from continental_range_table) ca,
         dpps_sums_region d
         join regional_range_totals rm on d.region = rm.region
         where analysis_name = '#{@filter}' and analysis_year = '#{@year}' and d.region=?;
