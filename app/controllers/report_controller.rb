@@ -291,20 +291,21 @@ class ReportController < ApplicationController
     @countries = execute <<-SQL, @region
       select
         continent "CONTINENT",
-        region "REGION",
-        country "CNTRYNAME",
+        d.region "REGION",
+        d.country "CNTRYNAME",
         definite "DEFINITE",
         possible "POSSIBLE",
         probable "PROBABLE",
         speculative "SPECUL",
-        0 "RANGEAREA",
-        0 "RANGEPERC",
+        ROUND(rm.range_area) "RANGEAREA",
+        ROUND(rm.percent_regional_range) "RANGEPERC",
         0 "SURVRANGPERC",
         0 "INFQLTYIDX",
         0 "PFS"
       from
-        dpps_sums_country
-        where analysis_name = '#{@filter}' and analysis_year = '#{@year}' and region=?;
+        dpps_sums_country d
+        join regional_range_table rm on d.country = rm.country
+        where analysis_name = '#{@filter}' and analysis_year = '#{@year}' and d.region=?;
     SQL
     @countries_sum = execute <<-SQL, @region
       select
@@ -487,6 +488,11 @@ class ReportController < ApplicationController
         where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
         and country=?
       order by e.replacement_name, e.site_name, e.stratum_name
+    SQL
+
+    @coverage_table = execute <<-SQL, @country
+      SELECT * from survey_range_intersection_metrics where
+        country=? and analysis_name = '#{@filter}'
     SQL
 
     @elephant_estimate_groups = []
