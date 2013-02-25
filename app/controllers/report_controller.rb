@@ -311,20 +311,21 @@ class ReportController < ApplicationController
     SQL
     @countries_sum = execute <<-SQL, @region
       select
-        continent "CONTINENT",
-        region "REGION",
+        d.continent "CONTINENT",
+        d.region "REGION",
         definite "DEFINITE",
         possible "POSSIBLE",
         probable "PROBABLE",
         speculative "SPECUL",
-        0 "RANGEAREA",
-        0 "RANGEPERC",
-        0 "SURVRANGPERC",
+        ROUND(rm.range_area) "RANGEAREA",
+        ROUND(rm.percent_regional_range) "RANGEPERC",
+        ROUND(rm.percent_range_assessed) "SURVRANGPERC",
         0 "INFQLTYIDX",
         0 "PFS"
       from
-        dpps_sums_region
-        where analysis_name = '#{@filter}' and analysis_year = '#{@year}' and region=?;
+        dpps_sums_region d
+        join regional_range_totals rm on d.region = rm.region
+        where analysis_name = '#{@filter}' and analysis_year = '#{@year}' and d.region=?;
     SQL
     @causes_of_change_by_region = execute <<-SQL, @region
       SELECT *
