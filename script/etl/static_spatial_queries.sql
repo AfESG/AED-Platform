@@ -56,7 +56,7 @@ drop view continental_range_metrics;
 create or replace view continental_range_metrics as select continent, range, range_quality, SUM(area_sqkm) area_sqkm from regional_range_metrics group by continent, range, range_quality;
 
 drop view survey_geometry_locator;
-create or replace view survey_geometry_locator as select distinct site_name, analysis_name, analysis_year, region, category, reason_change, population_estimate, country, input_zone_id, survey_geometry from estimate_locator, import_geometries where input_zone=input_zone_id and geom is not null;
+create or replace view survey_geometry_locator as select distinct site_name, analysis_name, analysis_year, region, category, reason_change, population_estimate, country, input_zone_id, geom as survey_geometry from estimate_locator, import_geometries where input_zone=input_zone_id and geom is not null;
 
 ###
 ### survey range intersections: static, expensive
