@@ -301,10 +301,11 @@ class ReportController < ApplicationController
         speculative "SPECUL",
         ROUND(rm.range_area) "RANGEAREA",
         ROUND(rm.percent_regional_range) "RANGEPERC",
-        ROUND(rm.percent_range_assessed) "SURVRANGPERC",
-        0 "INFQLTYIDX",
-        0 "PFS"
+        ROUND(rm.percent_range_assessed) "SURVRANGPERC", 
+        to_char(((definite+probable)/(definite+probable+possible+speculative))*(rm.range_assessed/range_area),'999999D99') "INFQLTYIDX",
+        round(log(((definite+probable)/(definite+probable+possible+speculative))*(rm.range_assessed/range_area)+1/(rm.range_area/ca.continental_range))) "PFS"
       from
+        (select distinct continental_range from continental_range_table) ca,
         dpps_sums_country d
         join regional_range_table rm on d.country = rm.country
         where analysis_name = '#{@filter}' and analysis_year = '#{@year}' and d.region=?;
