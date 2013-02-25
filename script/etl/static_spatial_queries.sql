@@ -92,7 +92,9 @@ select
   k.country,
   k.known,
   p.possible,
-  (k.known+p.possible) total
+  ((CASE WHEN k.known IS NULL THEN 0 ELSE k.known END)
+   +
+   (CASE WHEN p.possible IS NULL THEN 0 ELSE p.possible END)) total
 from
 (select
   m.region,
@@ -101,7 +103,7 @@ from
 from country_range_metrics m
 where range=1 and range_quality='Known'
 group by m.region, m.country) k
-join
+left join
 (select
   m.region,
   m.country,
