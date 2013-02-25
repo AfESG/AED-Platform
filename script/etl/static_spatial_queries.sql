@@ -85,17 +85,19 @@ create table add_range as select s.* from survey_geometry_locator s where analys
 ### Area of range tables
 ###
 
-drop view area_of_range_extant;
+drop view area_of_range_extant cascade;
 create or replace view area_of_range_extant as
 select
-  k.region,
-  k.country,
+  c.region,
+  c.cntryname country,
   k.known,
   p.possible,
   ((CASE WHEN k.known IS NULL THEN 0 ELSE k.known END)
    +
    (CASE WHEN p.possible IS NULL THEN 0 ELSE p.possible END)) total
 from
+country c
+left join
 (select
   m.region,
   m.country,
@@ -103,6 +105,7 @@ from
 from country_range_metrics m
 where range=1 and range_quality='Known'
 group by m.region, m.country) k
+on k.country = c.cntryname
 left join
 (select
   m.region,
@@ -111,10 +114,10 @@ left join
 from country_range_metrics m
 where range=1 and range_quality='Possible'
 group by m.region, m.country) p
-on k.country = p.country
+on p.country = c.cntryname
 order by region, country;
 
-drop view area_of_range_covered;
+drop view area_of_range_covered cascade;
 create or replace view area_of_range_covered as
 select
   k.region,
@@ -148,7 +151,7 @@ group by m.country, m.region, t.surveytype) p
 on k.country = p.country and k.surveytype = p.surveytype
 order by region, country, surveytype;
 
-drop view area_of_range_covered_subtotals;
+drop view area_of_range_covered_subtotals cascade;
 create or replace view area_of_range_covered_subtotals as
 select
   region,
@@ -160,7 +163,7 @@ from area_of_range_covered
 group by region, country
 order by region, country;
 
-drop view area_of_range_covered_unassessed;
+drop view area_of_range_covered_unassessed cascade;
 create or replace view area_of_range_covered_unassessed as
 select
   x.region,
@@ -172,7 +175,7 @@ from area_of_range_extant x join
 area_of_range_covered_subtotals n on x.country = n.country
 order by x.region, x.country;
 
-drop view area_of_range_covered_totals;
+drop view area_of_range_covered_totals cascade;
 create view area_of_range_covered_totals as
 select
   region,
