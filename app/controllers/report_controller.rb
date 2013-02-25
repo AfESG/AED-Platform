@@ -525,6 +525,17 @@ class ReportController < ApplicationController
       FROM causes_of_change_sums_by_country_scaled where country=?
         and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
     SQL
+
+    @area_of_range_covered_by_country = execute <<-SQL, @country
+      SELECT surveytype, ROUND(known) known, ROUND(possible) possible, ROUND(total) total
+      FROM area_of_range_covered where country=?
+    SQL
+
+    @area_of_range_covered_sum_by_country = execute <<-SQL, @country
+      SELECT ROUND(known) known, ROUND(possible) possible, ROUND(total) total
+      FROM area_of_range_covered_totals where country=?
+    SQL
+
   end
 
   def preview_site
