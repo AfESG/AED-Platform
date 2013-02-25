@@ -528,9 +528,13 @@ class ReportController < ApplicationController
         and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
     SQL
 
-    @area_of_range_covered_by_country = execute <<-SQL, @country
+    @area_of_range_covered_by_country = execute <<-SQL, @country, @country
       SELECT surveytype, ROUND(known) known, ROUND(possible) possible, ROUND(total) total
       FROM area_of_range_covered where country=?
+      union
+      SELECT 'Unassessed Range', ROUND(known) known, ROUND(possible) possible, ROUND(total) total
+      FROM area_of_range_covered_unassessed where country=?
+      order by surveytype
     SQL
 
     @area_of_range_covered_sum_by_country = execute <<-SQL, @country
