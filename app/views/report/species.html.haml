@@ -13,6 +13,17 @@
   <strong>Want data?</strong><br />
   Request to download<br/>
   data <a href="/data_request_forms/new">here.</a> 
+
+-['2013'].each do |r|
+  .report_cover
+    = link_to "/preview_report/2013_africa/Loxodonta_africana/2012/Africa" do
+      = image_tag "aesr#{r}_cover_150w.png"
+    .more
+      = link_to "/preview_report/2013_africa/Loxodonta_africana/2012/Africa" do
+        <h5>#{r} Provisional African Elephant Status Report</h5>
+      .authors IUCN African Elephant Specialist Group
+
+
 -['2007'].each do |r|
   .report_cover
     = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
