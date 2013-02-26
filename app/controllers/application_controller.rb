@@ -2,6 +2,24 @@ class ApplicationController < ActionController::Base
 
   before_filter :authenticate
 
+  def allowed_preview?
+    if params[:filter] == '2013_africa' and params[:year] == '2012'
+      return true
+    end
+    if current_user
+      current_user.admin?
+    else
+      false
+    end
+  end
+
+  def maybe_authenticate_user!
+    if allowed_preview?
+      return true
+    end
+    authenticate_user!
+  end
+
   def authenticate_superuser!
     unless authenticate_user!
       return false

@@ -22,7 +22,7 @@ class ReportController < ApplicationController
     @year = params[:year]
   end
 
-  before_filter :authenticate_user!, :only => [:preview_continent, :preview_region, :preview_country]
+  before_filter :maybe_authenticate_user!, :only => [:preview_continent, :preview_region, :preview_country]
 
   def totalizer(scope, filter, year)
     <<-SQL
@@ -127,7 +127,7 @@ class ReportController < ApplicationController
   end
 
   def preview_continent
-    return unless current_user.admin?
+    return unless allowed_preview?
     @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
@@ -288,7 +288,7 @@ class ReportController < ApplicationController
   end
 
   def preview_region
-    return unless current_user.admin?
+    return unless allowed_preview?
     @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
@@ -446,7 +446,7 @@ class ReportController < ApplicationController
   end
 
   def preview_country
-    return unless current_user.admin?
+    return unless allowed_preview?
     @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
@@ -572,7 +572,7 @@ class ReportController < ApplicationController
   end
 
   def preview_site
-    return unless current_user.admin?
+    return unless allowed_preview?
     @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
