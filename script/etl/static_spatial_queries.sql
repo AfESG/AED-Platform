@@ -40,22 +40,22 @@ drop table continental_range_totals;
 ###
 
 drop table country_range;
-create table country_range as select g.cntryname country, g.range, g.rangequali range_quality, ST_SetSRID(ST_Intersection(ST_SetSRID(geometry,4326),ST_SetSRID(geom,4326)),4326) range_geometry from range_geometries g, country c where ST_Intersects(ST_SetSRID(geometry,4326),ST_SetSRID(geom,4326));
+create table country_range as select c.cntryname country, g.range, g.rangequali range_quality, ST_Buffer(ST_SetSRID(ST_Intersection(ST_SetSRID(geometry,4326),ST_SetSRID(geom,4326)),4326),0.0) range_geometry from range_geometries g, country c where ST_Intersects(ST_SetSRID(geometry,4326),ST_SetSRID(geom,4326));
 
-drop table country_range_metrics;
+drop table country_range_metrics cascade;
 create table country_range_metrics as select 'Africa'::text continent, region, country, range, range_quality, SUM(ST_Area(range_geometry::geography,true))/1000000 area_sqkm from country_range join country on cntryname=country where range=1 group by region, country, range, range_quality order by region, country, range, range_quality;
 
 ###
 ### derived metrics
 ###
 
-drop view regional_range_metrics;
+drop view if exists regional_range_metrics;
 create or replace view regional_range_metrics as select continent, region, range, range_quality, SUM(area_sqkm) area_sqkm from country_range_metrics group by continent, region, range, range_quality;
 
-drop view continental_range_metrics;
+drop view if exists continental_range_metrics;
 create or replace view continental_range_metrics as select continent, range, range_quality, SUM(area_sqkm) area_sqkm from regional_range_metrics group by continent, range, range_quality;
 
-drop view survey_geometry_locator;
+drop view if exists survey_geometry_locator;
 create or replace view survey_geometry_locator as select distinct site_name, analysis_name, analysis_year, region, category, reason_change, population_estimate, country, input_zone_id, geom as survey_geometry from estimate_locator, import_geometries where input_zone=input_zone_id and geom is not null;
 
 ###
@@ -63,12 +63,12 @@ create or replace view survey_geometry_locator as select distinct site_name, ana
 ###
 
 drop table survey_geometry_locator_buffered;
-create table survey_geometry_locator_buffered as select site_name, analysis_name, analysis_year, region, category, reason_change, population_estimate, country, input_zone_id, ST_Buffer(survey_geometry,0.0000001) survey_geometry from survey_geometry_locator;
+create table survey_geometry_locator_buffered as select site_name, analysis_name, analysis_year, region, category, reason_change, population_estimate, country, input_zone_id, ST_Buffer(survey_geometry,0.000000001) survey_geometry from survey_geometry_locator;
 
 drop table survey_range_intersections;
 create table survey_range_intersections as select analysis_name, analysis_year, region, category, l.country, range_quality, ST_Intersection(survey_geometry,range_geometry) from survey_geometry_locator_buffered l join country_range c on ST_Intersects(survey_geometry,range_geometry) where range=1;
 
-drop table survey_range_intersection_metrics;
+drop table survey_range_intersection_metrics cascade;
 create table survey_range_intersection_metrics as select analysis_name, analysis_year, region, range_quality, category, country, ST_Area(st_intersection::geography,true)/1000000 area_sqkm from survey_range_intersections;
 
 ###
@@ -85,7 +85,7 @@ create table add_range as select s.* from survey_geometry_locator s where analys
 ### Area of range tables
 ###
 
-drop view area_of_range_extant cascade;
+drop view if exists area_of_range_extant cascade;
 create or replace view area_of_range_extant as
 select
   c.region,
@@ -117,7 +117,7 @@ group by m.region, m.country) p
 on p.country = c.cntryname
 order by region, country;
 
-drop view area_of_range_covered cascade;
+drop view if exists area_of_range_covered cascade;
 create or replace view area_of_range_covered as
 select
   k.region,
@@ -151,7 +151,7 @@ group by m.country, m.region, t.surveytype) p
 on k.country = p.country and k.surveytype = p.surveytype
 order by region, country, surveytype;
 
-drop view area_of_range_covered_subtotals cascade;
+drop view if exists area_of_range_covered_subtotals cascade;
 create or replace view area_of_range_covered_subtotals as
 select
   region,
@@ -163,7 +163,7 @@ from area_of_range_covered
 group by region, country
 order by region, country;
 
-drop view area_of_range_covered_unassessed cascade;
+drop view if exists area_of_range_covered_unassessed cascade;
 create or replace view area_of_range_covered_unassessed as
 select
   x.region,
@@ -175,7 +175,7 @@ from area_of_range_extant x join
 area_of_range_covered_subtotals n on x.country = n.country
 order by x.region, x.country;
 
-drop view area_of_range_covered_totals cascade;
+drop view if exists area_of_range_covered_totals cascade;
 create view area_of_range_covered_totals as
 select
   region,
@@ -191,7 +191,7 @@ from (
 group by region, country
 order by region, country;
 
-drop view regional_area_of_range_covered;
+drop view if exists regional_area_of_range_covered;
 create or replace view regional_area_of_range_covered as
 select
   region,
@@ -204,7 +204,7 @@ area_of_range_covered
 group by region, surveytype
 order by region, surveytype;
 
-drop view regional_area_of_range_covered_unassessed;
+drop view if exists regional_area_of_range_covered_unassessed;
 create or replace view regional_area_of_range_covered_unassessed as
 select
   region,
@@ -215,7 +215,7 @@ from area_of_range_covered_unassessed
 group by region
 order by region;
 
-drop view regional_area_of_range_covered_totals;
+drop view if exists regional_area_of_range_covered_totals;
 create or replace view regional_area_of_range_covered_totals as
 select
   region,
@@ -226,7 +226,7 @@ from area_of_range_covered_totals
 group by region
 order by region;
 
-drop view continental_area_of_range_covered;
+drop view if exists continental_area_of_range_covered;
 create or replace view continental_area_of_range_covered as
 select
   surveytype,
@@ -238,7 +238,7 @@ area_of_range_covered
 group by surveytype
 order by surveytype;
 
-drop view continental_area_of_range_covered_unassessed;
+drop view if exists continental_area_of_range_covered_unassessed;
 create or replace view continental_area_of_range_covered_unassessed as
 select
   sum(known) known,
@@ -246,7 +246,7 @@ select
   sum(total) total
 from area_of_range_covered_unassessed;
 
-drop view continental_area_of_range_covered_totals;
+drop view if exists continental_area_of_range_covered_totals;
 create or replace view continental_area_of_range_covered_totals as
 select
   sum(known) known,
@@ -258,7 +258,7 @@ from area_of_range_covered_totals;
 ### Regional and continental range tables
 ###
 
-drop view regional_range_table;
+drop view if exists regional_range_table;
 create or replace view regional_range_table as
 select
   r.region,
@@ -276,7 +276,7 @@ from
 group by r.region, m.country
 order by r.region, m.country;
 
-drop view regional_range_totals;
+drop view if exists regional_range_totals;
 create or replace view regional_range_totals as
 select
   region,
@@ -290,7 +290,7 @@ regional_range_table
 group by region, regional_range
 order by region;
 
-drop view continental_range_table;
+drop view if exists continental_range_table;
 create or replace view continental_range_table as
 select
   'Africa'::text continent,
@@ -308,7 +308,7 @@ from
 group by n.continent, r.region
 order by n.continent, r.region;
 
-drop view continental_range_totals;
+drop view if exists continental_range_totals;
 create or replace view continental_range_totals as
 select
   continent,
@@ -321,3 +321,4 @@ from
 continental_range_table
 group by continent
 order by continent;
+
