@@ -23,6 +23,28 @@
 
   #{@country}
 
+%p
+All Years for #{@country}:
+
+%a{:href=>"/preview_report/2013_africa/#{@species.gsub(' ','_')}/2012/#{@continent}/#{@region.gsub(' ','_')}/#{@country.gsub(' ','_')}"} 2013
+
+&mdash;
+
+%a{:href=>"/report/#{@species.gsub(' ','_')}/2007/#{@continent}/#{@region.gsub(' ','_')}/#{@country.gsub(' ','_')}"} 2007
+
+&mdash;
+
+%a{:href=>"/report/#{@species.gsub(' ','_')}/2002/#{@continent}/#{@region.gsub(' ','_')}/#{@country.gsub(' ','_')}"} 2002
+
+&mdash;
+
+%a{:href=>"/report/#{@species.gsub(' ','_')}/1998/#{@continent}/#{@region.gsub(' ','_')}/#{@country.gsub(' ','_')}"} 1998
+
+&mdash;
+
+%a{:href=>"/report/#{@species.gsub(' ','_')}/1995/#{@continent}/#{@region.gsub(' ','_')}/#{@country.gsub(' ','_')}"} 1995
+
+
 != narrative
 
 - if @summary_totals_by_country.num_tuples > 0

@@ -15,6 +15,26 @@
 
   #{@continent} 
 
+%p
+All Years for #{@continent}:
+%a{:href=>"/preview_report/2013_africa/#{@species.gsub(' ','_')}/2012/#{@continent}"} 2013
+
+&mdash;
+
+%a{:href=>"/report/#{@species.gsub(' ','_')}/2007/#{@continent}"} 2007
+
+&mdash;
+
+%a{:href=>"/report/#{@species.gsub(' ','_')}/2002/#{@continent}"} 2002
+
+&mdash;
+
+%a{:href=>"/report/#{@species.gsub(' ','_')}/1998/#{@continent}"} 1998
+
+&mdash;
+
+%a{:href=>"/report/#{@species.gsub(' ','_')}/1995/#{@continent}"} 1995
+
 != narrative
 
 - if @summary_totals_by_continent.num_tuples > 0
