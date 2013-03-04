@@ -19,7 +19,7 @@ window.map_initialize = (canvas_id, and_then) ->
       window.map.setCenter new google.maps.LatLng(0, 0)
       and_then()
 
-window.ft_initialize_below_protarea = (canvas_id, table_id, geometry_name, key_name, url_prefix, zoom, center, and_then) ->
+window.ft_initialize_below_protareax = (canvas_id, table_id, geometry_name, key_name, url_prefix, zoom, center, and_then) ->
   map = new google.maps.Map(document.getElementById(canvas_id),
     center: center
     zoom: zoom
@@ -29,6 +29,8 @@ window.ft_initialize_below_protarea = (canvas_id, table_id, geometry_name, key_n
     query:
       select: geometry_name
       from: table_id
+    templateId: 2
+    styleId: 2
     map: map
     options:
       suppressInfoWindows: true
