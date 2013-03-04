@@ -38,9 +38,15 @@
 .feature_legend
   | featured map:
 .feature_name
-  | African Elephant Range (AESR 2007)
+  | African Elephant Range (Provisional AESR 2013)
 
-= render 'range'
+#canvas_holder
+  #ftcanvas
+  #key
+    div Dark Purple - Known Range
+    div Light Purple - Possible Range
+    div Grey - Doubtful Range
+    div Yellow - Protected Areas
 
 - if @has_surveys
   coffee:
@@ -61,9 +67,13 @@
 
       setTimeout "tick(-1)", 1000  if at_end
     jQuery(document).ready ($) ->
-      i = 0
-      while i <= ticker_max
-        markMap "/assets/orange_marker" + i + ".png", "/population_submissions/" + ticker_ids[i], ticker_lats[i], ticker_longs[i]
-        i++
+      window.load_google_maps ->
+        zoom = 4;
+        center = new google.maps.LatLng(-4.43, 11.54);
+        ft_initialize_below_protarea('ftcanvas', 2899026, 'geometry', 'ROWID', '/popup/2007/', zoom, center, ->);
+        i = 0
+        while i <= ticker_max
+          markMap "/assets/orange_marker" + i + ".png", "/population_submissions/" + ticker_ids[i], ticker_lats[i], ticker_longs[i]
+          i++
     last_h = ""
     tick -1

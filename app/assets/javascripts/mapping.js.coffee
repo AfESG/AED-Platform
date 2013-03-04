@@ -1,11 +1,23 @@
+window.load_google_maps = (and_then) ->
+  window.google_maps_loaded = ->
+    window.initialLocation = new google.maps.LatLng(0, 0)
+    window.bounds = new google.maps.LatLngBounds()
+    and_then()
+  script = document.createElement("script")
+  script.type = "text/javascript"
+  script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAuwIPG89zk9eAJmFpdCzkOdNMd02zZRIU&sensor=false&callback=google_maps_loaded"
+  document.body.appendChild(script)
+
 window.map_initialize = (canvas_id, and_then) ->
-  myOptions =
-    zoom: 4
-    mapTypeId: google.maps.MapTypeId.TERRAIN
-    streetViewControl: false
-  window.map = new google.maps.Map(document.getElementById(canvas_id), myOptions)
-  window.map.setCenter new google.maps.LatLng(0, 0)
-  and_then()
+  jQuery(document).ready ($) ->
+    window.load_google_maps ->
+      myOptions =
+        zoom: 4
+        mapTypeId: google.maps.MapTypeId.TERRAIN
+        streetViewControl: false
+      window.map = new google.maps.Map(document.getElementById(canvas_id), myOptions)
+      window.map.setCenter new google.maps.LatLng(0, 0)
+      and_then()
 
 window.ft_initialize_below_protarea = (canvas_id, table_id, geometry_name, key_name, url_prefix, zoom, center, and_then) ->
   map = new google.maps.Map(document.getElementById(canvas_id),

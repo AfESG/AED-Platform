@@ -10,10 +10,11 @@
     div style='margin-top:10px' Yellow - Protected Areas
 
 javascript:
-  var zoom = 4;
-  var center = new google.maps.LatLng(-4.43, 11.54);
-
   jQuery(document).ready(function($){
+    window.load_google_maps(function(){
+      var zoom = 4;
+      var center = new google.maps.LatLng(-4.43, 11.54);
       ft_initialize('ftcanvas', 2896260, 'location', 'objectid', '/popup/2007/', zoom, center, function(){});
+    });
   });
 
