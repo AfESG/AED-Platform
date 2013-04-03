@@ -365,6 +365,16 @@ class ReportController < ApplicationController
       FROM causes_of_change_sums_by_region_scaled where region=?
         and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
     SQL
+    @causes_of_change_by_region_u = execute <<-SQL, @region
+      SELECT *
+      FROM causes_of_change_by_region where region=?
+        and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
+    SQL
+    @causes_of_change_sums_by_region_u = execute <<-SQL, @region
+      SELECT *
+      FROM causes_of_change_sums_by_region where region=?
+        and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
+    SQL
     @area_of_range_covered_by_region = execute <<-SQL, @region, @region
       SELECT surveytype, ROUND(known) known, ROUND(possible) possible, ROUND(total) total
       FROM regional_area_of_range_covered where region=?
@@ -564,6 +574,30 @@ class ReportController < ApplicationController
     @causes_of_change_sums_by_country = execute <<-SQL, @country
       SELECT *
       FROM causes_of_change_sums_by_country_scaled where country=?
+        and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
+    SQL
+
+    @causes_of_change_by_country = execute <<-SQL, @country
+      SELECT *
+      FROM causes_of_change_by_country_scaled where country=?
+        and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
+    SQL
+
+    @causes_of_change_sums_by_country = execute <<-SQL, @country
+      SELECT *
+      FROM causes_of_change_sums_by_country_scaled where country=?
+        and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
+    SQL
+
+    @causes_of_change_by_country_u = execute <<-SQL, @country
+      SELECT *
+      FROM causes_of_change_by_country where country=?
+        and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
+    SQL
+
+    @causes_of_change_sums_by_country_u = execute <<-SQL, @country
+      SELECT *
+      FROM causes_of_change_sums_by_country where country=?
         and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
     SQL
 

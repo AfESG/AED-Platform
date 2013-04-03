@@ -80,8 +80,30 @@ All Years for #{@region}:
           %td.numeric= number_with_delimiter base['speculative']
 
 - if current_user and current_user.admin?
+  - if !@causes_of_change_by_region_u.nil? && @causes_of_change_by_region_u.num_tuples > 0
+    %h2 Interpretation of Changes in Estimates from Previous Report (Before Scaling 1)
+
+    %table{:style => 'font-size:16px'}
+      %tr
+        %th{:width => '40%'} Cause of Change
+        %th.numeric{:width => '15%'} Definite
+        %th.numeric{:width => '15%'} Probable
+        %th.numeric{:width => '15%'} Possible
+        %th.numeric{:width => '15%'} Speculative
+      - @causes_of_change_by_region_u.each do |row|
+        %tr{:style => 'height: 24px;'}
+          %td= row['CauseofChange']
+          - ['definite','probable','possible','specul'].each do |key|
+            %td.numeric= signed_number row[key]
+      - unless @causes_of_change_sums_by_region_u.nil?
+        - @causes_of_change_sums_by_region_u.each do |row|
+          %tr.totals{:style => 'height: 24px; font-weight: bold'}
+            %td Totals
+            - ['definite','probable','possible','specul'].each do |key|
+              %td.numeric= signed_number row[key]
+
   - if !@causes_of_change_by_region.nil? && @causes_of_change_by_region.num_tuples > 0
-    %h2 Interpretation of Changes in Estimates from Previous Report
+    %h2 Interpretation of Changes in Estimates from Previous Report (After Scaling 1)
 
     %table{:style => 'font-size:16px'}
       %tr

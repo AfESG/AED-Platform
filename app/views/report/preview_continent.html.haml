@@ -76,7 +76,7 @@ All Years for #{@continent}:
 
 - if current_user and current_user.admin?
   - if !@causes_of_change_by_continent_u.nil? && @causes_of_change_by_continent_u.num_tuples > 0
-    %h2 Interpretation of Changes in Estimates from Previous Report (Before Scaling)
+    %h2 Interpretation of Changes in Estimates from Previous Report (Before Scaling 1)
 
     %table{:style => 'font-size:16px'}
       %tr
@@ -96,8 +96,9 @@ All Years for #{@continent}:
             %td Totals
             - ['definite','probable','possible','specul'].each do |key|
               %td.numeric= signed_number row[key]
+
   - if !@causes_of_change_by_continent.nil? && @causes_of_change_by_continent.num_tuples > 0
-    %h2 Interpretation of Changes in Estimates from Previous Report (After Scaling)
+    %h2 Interpretation of Changes in Estimates from Previous Report (After Scaling 1)
 
     %table{:style => 'font-size:16px'}
       %tr
