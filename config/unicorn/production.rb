@@ -1,4 +1,4 @@
-listen 5000
+listen ENV['UNICORN_PORT']
 worker_processes 4
 timeout 120
 pid "public/system/unicorn.pid"
