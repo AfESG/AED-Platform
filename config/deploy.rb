@@ -22,7 +22,7 @@ end
 if target == 'STAGING'
   puts "Deploying to staging"
   default_environment['UNICORN_PORT'] = '3000'
-  default_environment['POSTGRESQL_DATABASE'] = 'osprey-watch_staging'
+  default_environment['POSTGRESQL_DATABASE'] = 'aaed_staging'
   default_environment['HOSTNAME'] = 'staging.elephantdatabase.org'
   set :deploy_to, '/u/staging'
 end
