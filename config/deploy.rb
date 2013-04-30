@@ -9,6 +9,7 @@ set :use_sudo, false
 target = ENV['TARGET'] || 'WWW'
 
 server "pg.elephantdatabase.org", :app, :web, :db, :primary => true
+set :user, "aaed"
 
 if target == 'WWW'
   puts "Deploying to production"
