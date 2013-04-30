@@ -8,14 +8,23 @@ set :use_sudo, false
 
 target = ENV['TARGET'] || 'WWW'
 
-if target=='WWW'
-  puts "Deploying to production AAED"
-  server "pg.elephantdatabase.org", :app, :web, :db, :primary => true
-  set :user, "aaed"
-else
-  puts "Deploying to staging AAED"
-  server "nonexistentstaging.elephantdatabase.org", :app, :web, :db, :primary => true
-  set :user, "aaed"
+server "pg.elephantdatabase.org", :app, :web, :db, :primary => true
+
+if target == 'WWW'
+  puts "Deploying to production"
+
+  default_environment['UNICORN_PORT'] = '5000'
+  default_environment['POSTGRESQL_DATABASE'] = 'aaed_production'
+  default_environment['HOSTNAME'] = 'www.elephantdatabase.org'
+  set :deploy_to, '/u/apps'
+end
+
+if target == 'STAGING'
+  puts "Deploying to staging"
+  default_environment['UNICORN_PORT'] = '3000'
+  default_environment['POSTGRESQL_DATABASE'] = 'osprey-watch_staging'
+  default_environment['HOSTNAME'] = 'staging.elephantdatabase.org'
+  set :deploy_to, '/u/staging'
 end
 
 set :rvm_ruby_string, 'ruby-1.9.3-p194'

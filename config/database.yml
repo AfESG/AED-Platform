@@ -3,7 +3,6 @@ development:
   adapter: postgresql
   database: aaed_development
   pool: 5
-  timeout: 5000
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -13,11 +12,9 @@ test:
   adapter: postgresql
   database: aaed_test
   pool: 5
-  timeout: 5000
 
 production:
   encoding: unicode
   adapter: postgresql
-  database: aaed_production
+  database: <%=ENV['POSTGRESQL_DATABASE']%>
   pool: 5
-  timeout: 5000
