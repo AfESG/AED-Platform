@@ -120,3 +120,8 @@ window.addExistingZone = (population_submission_id, lat, lng) ->
 
 window.map = undefined
 
+$ ->
+  $('.hideable').hide()
+
+window.toggle_hideables = ->
+  $('.hideable').toggle(500)
