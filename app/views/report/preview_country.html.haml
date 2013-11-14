@@ -130,7 +130,7 @@ All Years for #{@country}:
             - ['definite','probable','possible','specul'].each do |key|
               %td.numeric= signed_number row[key]
   .toggle{:style => 'margin-top:-20px; margin-bottom: 10px; text-align: right'}
-    %a{:href => 'javascript:toggle_hideables()'} toggle scaling
+    %a{:onclick => 'toggle_hideables()'} toggle scaling
 
 - if !@area_of_range_covered_by_country.nil? && @area_of_range_covered_by_country.num_tuples > 0
   %h2 Area of Range Covered by Each Data Category (km²)
