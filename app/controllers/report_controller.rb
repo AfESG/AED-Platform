@@ -517,7 +517,7 @@ class ReportController < ApplicationController
           to_char(ROUND(e.population_confidence_interval),'9999999')
         END "CL95",
         e.short_citation "REFERENCE",
-        round(log(((definite+probable+0.001)/(definite+probable+possible+speculative+0.001))+1/(a.area_sqkm/rm.range_area))) "PFS",
+        '-' "PFS",
         e.stratum_area "AREA_SQKM",
         CASE WHEN longitude<0 THEN
           to_char(abs(longitude),'999D9')||'W'
@@ -537,14 +537,10 @@ class ReportController < ApplicationController
         join estimate_dpps d on e.input_zone_id = d.input_zone_id
           and e.analysis_name = d.analysis_name
           and e.analysis_year = d.analysis_year
-        join estimate_locator_areas a on e.input_zone_id = a.input_zone_id
-          and e.analysis_name = a.analysis_name
-          and e.analysis_year = a.analysis_year
         join surveytypes t on t.category = e.category
         join population_submissions on e.population_submission_id = population_submissions.id
-        join regional_range_table rm on e.country = rm.country
         where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
-        and e.country=?
+        and country=?
       order by e.replacement_name, e.site_name, e.stratum_name
     SQL
 
