@@ -518,6 +518,10 @@ class ReportController < ApplicationController
         END "CL95",
         e.short_citation "REFERENCE",
         round(log(((definite+probable+0.001)/(definite+probable+possible+speculative+0.001))+1/(a.area_sqkm/rm.range_area))) "PFS",
+        definite+probable "DP",
+        definite+probable+possible+speculative "DPPS",
+        rm.range_area "RA",
+        a.area_sqkm "CALC_SQKM",
         e.stratum_area "AREA_SQKM",
         CASE WHEN longitude<0 THEN
           to_char(abs(longitude),'999D9')||'W'
