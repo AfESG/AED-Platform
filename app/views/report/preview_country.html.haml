@@ -228,7 +228,7 @@ All Years for #{@country}:
         - else
           %td{:style=>"text-align:right"}= @cl.to_s!="0" ? number_with_delimiter(@cl) : ""
         %td{:style=>"padding-left:10px"}= @re
-        %td{:style=>"text-align:center"} -
+        %td{:style=>"text-align:center"}= @pf
         %td{:style=>"text-align:right"}= @ar.to_s!="0" ? number_with_delimiter(@ar) : ""
         %td{:style=>"text-align:center"}= @lo
         %td{:style=>"text-align:center"}= @la
