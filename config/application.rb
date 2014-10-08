@@ -55,7 +55,7 @@ module Aaed
     config.static_cache_control = "public, max-age=3600"
 
     # Mail settings 
-    config.action_mailer.default_url_options = { :host => "www.elephant-database.org" }
+    config.action_mailer.default_url_options = { :host => "www.elephantdatabase.org" }
 
     my_date_formats = { :default => '%d/%m/%Y' }
     Time::DATE_FORMATS.merge!(my_date_formats)
