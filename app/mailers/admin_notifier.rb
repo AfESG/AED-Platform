@@ -4,7 +4,7 @@ class AdminNotifier < ActionMailer::Base
   def data_request_form_submitted(data_request_form, user)
     @user = user
     @data_request_form = data_request_form
-    mail :to => "Diane.Skinner@iucn.org", :bcc => "heittman.rob@gmail.com"
+    mail :to => "afesg@iucn.org", :bcc => "heittman.rob@gmail.com"
   end
 
   def data_request_form_thanks(data_request_form, user)
