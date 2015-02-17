@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   before_filter :authenticate
 
   def allowed_preview?
-    if params[:filter] == '2013_africa_final' and params[:year] == '2013'
+    if params[:filter] == '2013_africa' and params[:year] == '2012'
       return true
     end
     if current_user
