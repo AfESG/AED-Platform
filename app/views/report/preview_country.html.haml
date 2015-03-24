@@ -225,7 +225,7 @@ All Years for #{@country}:
       - @pf = (Math.log10(((@dp+0.001)/(@dpps+0.001))+1/(@car/@ra))).round
       %tr
         %td
-          %a{:href=>"javascript:toggle_section('#{@rn}')", :style=>'text-decoration:none'} +
+          %a{:href=>"javascript:toggle_section('#{@rn.gsub(/[^\w\d]/,'')}')", :style=>'text-decoration:none'} +
           = @rn
         %td= @cc
         %td= @ty
@@ -242,7 +242,7 @@ All Years for #{@country}:
         %td{:style=>"text-align:center"}= @lo
         %td{:style=>"text-align:center"}= @la
       - group.each do |row|
-        %tr{:style=>'height:18px; display:none', :data => {:section=>"#{@rn}"} }
+        %tr{:style=>'height:18px; display:none', :data => {:section=>"#{@rn.gsub(/[^\w\d]/,'')}"} }
           %td
             &#160;
             &#160;
