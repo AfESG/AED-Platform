@@ -1,10 +1,13 @@
-delete from survey_geometries;
-insert into survey_geometries (id,geometry) select distinct survey_geo::integer, geom from peter_step_3 where survey_geo::integer != 0;
-select setval('survey_geometry_id_seq',max(id)+1) from survey_geometries;
-insert into survey_geometries select nextval('survey_geometry_id_seq'), geom from (select distinct geom from peter_step_3 where survey_geo::integer = 0 and geom is not null) s;
-update peter_step_3 set survey_geo=survey_geometries.id from survey_geometries where ST_Text(geom) = ST_Text(geometry) and survey_geo::integer =0;
+alter table inputzone_2013_africa_final4b add column survey_geo integer;
+update inputzone_2013_africa_final4b set survey_geo=0;
 
-create or replace view import_geometries as select unnest(regexp_split_to_array(input_zone::text, ','::text)) as input_zone, survey_geo::integer, geom from peter_step_3;
+delete from survey_geometries;
+insert into survey_geometries (id,geometry) select distinct survey_geo::integer, geom from inputzone_2013_africa_final4b;
+select setval('survey_geometry_id_seq',0) from survey_geometries;
+insert into survey_geometries select nextval('survey_geometry_id_seq'), geom from (select distinct geom from inputzone_2013_africa_final4b where survey_geo::integer = 0 and geom is not null) s;
+update inputzone_2013_africa_final4b set survey_geo=survey_geometries.id from survey_geometries where ST_Text(geom) = ST_Text(geometry) and survey_geo::integer =0;
+
+create or replace view import_geometries as select unnest(regexp_split_to_array(input_zone::text, ','::text)) as input_zone, survey_geo::integer, geom from inputzone_2013_africa_final4b;
 update survey_ground_total_count_strata s set survey_geometry_id=survey_geo from (select substr(input_zone,3)::integer id, survey_geo from import_geometries where input_zone like 'GT%' and survey_geo is not null) i where s.id=i.id;
 update survey_dung_count_line_transect_strata s set survey_geometry_id=survey_geo from (select substr(input_zone,3)::integer id, survey_geo from import_geometries where input_zone like 'DC%' and survey_geo is not null) i where s.id=i.id;
 update survey_aerial_total_count_strata s set survey_geometry_id=survey_geo from (select substr(input_zone,3)::integer id, survey_geo from import_geometries where input_zone like 'AT%' and survey_geo is not null) i where s.id=i.id;
@@ -76,10 +79,10 @@ create table survey_range_intersection_metrics as select analysis_name, analysis
 ###
 
 drop table review_range;
-create table review_range as select s.* from survey_geometry_locator s where analysis_name='2013_africa' and analysis_year='2012' and ((reason_change='NP' and population_estimate=0) or (reason_change='RS' and population_estimate=0) or (reason_change='NG' and population_estimate=0) or (reason_change='DA') or (reason_change='DD'));
+create table review_range as select s.* from survey_geometry_locator s where analysis_name='2013_africa_final' and analysis_year='2013' and ((reason_change='NP' and population_estimate=0) or (reason_change='RS' and population_estimate=0) or (reason_change='NG' and population_estimate=0) or (reason_change='DA') or (reason_change='DD'));
 
 drop table add_range;
-create table add_range as select s.* from survey_geometry_locator s where analysis_name='2013_africa' and analysis_year='2012' and ((reason_change='NP' and population_estimate>0) or (reason_change='NG' and population_estimate>0) or (reason_change='NG' and population_estimate>0));
+create table add_range as select s.* from survey_geometry_locator s where analysis_name='2013_africa_final' and analysis_year='2013' and ((reason_change='NP' and population_estimate>0) or (reason_change='NG' and population_estimate>0) or (reason_change='NG' and population_estimate>0));
 
 ###
 ### Area of range tables
@@ -136,7 +139,7 @@ from
   sum(area_sqkm) known
 from survey_range_intersection_metrics m
 join surveytypes t on t.category = m.category
-where m.analysis_name='2013_africa' and m.analysis_year=2012 and range_quality='Known'
+where m.analysis_name='2013_africa_final' and m.analysis_year=2013 and range_quality='Known'
 group by m.country, m.region, t.surveytype) k
 left join
 (select
@@ -146,7 +149,7 @@ left join
   sum(area_sqkm) possible
 from survey_range_intersection_metrics m
 join surveytypes t on t.category = m.category
-where m.analysis_name='2013_africa' and m.analysis_year=2012 and range_quality='Possible'
+where m.analysis_name='2013_africa_final' and m.analysis_year=2013 and range_quality='Possible'
 group by m.country, m.region, t.surveytype) p
 on k.country = p.country and k.surveytype = p.surveytype
 order by region, country, surveytype;
@@ -272,7 +275,7 @@ from
   (select country, sum(area_sqkm) area_sqkm from country_range_metrics group by country) m
   join country c on c.cntryname = m.country
   join (select region, sum(area_sqkm) area_sqkm from regional_range_metrics group by region) r on r.region = c.region
-  join (select country, sum(area_sqkm) area_sqkm from survey_range_intersection_metrics where analysis_name='2013_africa' and analysis_year=2012 group by country) sm on sm.country = m.country
+  join (select country, sum(area_sqkm) area_sqkm from survey_range_intersection_metrics where analysis_name='2013_africa_final' and analysis_year=2013 group by country) sm on sm.country = m.country
 group by r.region, m.country
 order by r.region, m.country;
 
@@ -304,7 +307,7 @@ from
   (select region, sum(area_sqkm) area_sqkm from regional_range_metrics group by region) m
   join region r on r.region = m.region
   join (select 'Africa'::text continent, sum(area_sqkm) area_sqkm from continental_range_metrics) n on n.continent = r.continent
-  join (select region, sum(area_sqkm) area_sqkm from survey_range_intersection_metrics where analysis_name='2013_africa' and analysis_year=2012 group by region) sm on sm.region = m.region
+  join (select region, sum(area_sqkm) area_sqkm from survey_range_intersection_metrics where analysis_name='2013_africa_final' and analysis_year=2013 group by region) sm on sm.region = m.region
 group by n.continent, r.region
 order by n.continent, r.region;
 
@@ -321,4 +324,5 @@ from
 continental_range_table
 group by continent
 order by continent;
+
 
