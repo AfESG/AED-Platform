@@ -361,7 +361,7 @@ select
 --- Adds the synthetic LCL95 value used in pooling.
 ---
 drop view if exists estimate_factors_analyses_categorized;
-create view estimate_factors_analyses_categorized as
+create or replace view estimate_factors_analyses_categorized as
 select
   estimate_type,
   input_zone_id,
@@ -375,7 +375,7 @@ select
   age,
   replacement_name,
   CAST(CASE
-      WHEN reason_change = '-' and age > 10 and (comparison_year - completion_year <= 10) THEN 'DD'
+      WHEN reason_change = '-' and age >= 10 and (comparison_year - completion_year <= 10) THEN 'DD'
       ELSE reason_change
   END AS varchar(255)) reason_change,
   citation,
@@ -399,7 +399,7 @@ select
 
     --- old surveys always 'E' ---
 
-    WHEN age>10 THEN 'E'
+    WHEN age>=10 THEN 'E'
 
     --- dung counts ---
 
