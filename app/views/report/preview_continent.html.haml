@@ -17,7 +17,7 @@
 
 %p
 All Years for #{@continent}:
-%a{:href=>"/preview_report/2013_africa/#{@species.gsub(' ','_')}/2012/#{@continent}"} 2013
+%a{:href=>"/preview_report/2013_africa_final/#{@species.gsub(' ','_')}/2013/#{@continent}"} 2013
 
 &mdash;
 
@@ -65,7 +65,7 @@ All Years for #{@continent}:
       %td.numeric= number_with_delimiter @sprob
       %td.numeric= number_with_delimiter @sposs
       %td.numeric= number_with_delimiter @sspec
-    - if @year==2012
+    - if @year==2013
       -@baseline_total.each do |base|
         %tr.totals{:style => 'height: 24px; font-weight: bold'}
           %td Totals 2007
