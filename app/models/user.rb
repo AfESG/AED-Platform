@@ -10,4 +10,8 @@ class User < ActiveRecord::Base
   attr_accessible :name, :job_title, :department, :organization, :phone, :fax, :address_1, :address_2, :address_3, :city, :country, :admin, :email, :password, :password_confirmation, :remember_me
   validates_presence_of :name
 
+  def active_for_authentication?
+    super and !self.disabled?
+  end
+
 end

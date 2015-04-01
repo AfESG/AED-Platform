@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121012112418) do
+ActiveRecord::Schema.define(:version => 20150401012229) do
 
   create_table "analyses", :id => false, :force => true do |t|
     t.text    "analysis_name"
@@ -45,6 +45,15 @@ ActiveRecord::Schema.define(:version => 20121012112418) do
     t.integer  "region_id"
   end
 
+  create_table "country_range_metrics", :id => false, :force => true do |t|
+    t.text    "continent"
+    t.string  "region",        :limit => 20
+    t.string  "country",       :limit => 50
+    t.decimal "range",                       :precision => 10, :scale => 0
+    t.string  "range_quality", :limit => 10
+    t.float   "area_sqkm"
+  end
+
   create_table "data_request_forms", :force => true do |t|
     t.string   "name"
     t.string   "title"
@@ -67,14 +76,79 @@ ActiveRecord::Schema.define(:version => 20121012112418) do
     t.datetime "updated_at"
   end
 
-  create_table "geometry_columns", :id => false, :force => true do |t|
-    t.string  "f_table_catalog",   :limit => 256, :null => false
-    t.string  "f_table_schema",    :limit => 256, :null => false
-    t.string  "f_table_name",      :limit => 256, :null => false
-    t.string  "f_geometry_column", :limit => 256, :null => false
-    t.integer "coord_dimension",                  :null => false
-    t.integer "srid",                             :null => false
-    t.string  "type",              :limit => 30,  :null => false
+  create_table "dpps_sums_continent_category", :id => false, :force => true do |t|
+    t.text    "analysis_name"
+    t.integer "analysis_year"
+    t.string  "continent"
+    t.text    "category"
+    t.float   "definite"
+    t.float   "probable"
+    t.float   "possible"
+    t.float   "speculative"
+  end
+
+  create_table "dpps_sums_continent_category_reason", :id => false, :force => true do |t|
+    t.text    "analysis_name"
+    t.integer "analysis_year"
+    t.string  "continent"
+    t.text    "category"
+    t.string  "reason_change"
+    t.float   "definite"
+    t.float   "probable"
+    t.float   "possible"
+    t.float   "speculative"
+  end
+
+  create_table "dpps_sums_country_category", :id => false, :force => true do |t|
+    t.text    "analysis_name"
+    t.integer "analysis_year"
+    t.string  "continent"
+    t.string  "region"
+    t.string  "country"
+    t.text    "category"
+    t.float   "definite"
+    t.float   "probable"
+    t.float   "possible"
+    t.float   "speculative"
+  end
+
+  create_table "dpps_sums_country_category_reason", :id => false, :force => true do |t|
+    t.text    "analysis_name"
+    t.integer "analysis_year"
+    t.string  "continent"
+    t.string  "region"
+    t.string  "country"
+    t.text    "category"
+    t.string  "reason_change"
+    t.float   "definite"
+    t.float   "probable"
+    t.float   "possible"
+    t.float   "speculative"
+  end
+
+  create_table "dpps_sums_region_category", :id => false, :force => true do |t|
+    t.text    "analysis_name"
+    t.integer "analysis_year"
+    t.string  "continent"
+    t.string  "region"
+    t.text    "category"
+    t.float   "definite"
+    t.float   "probable"
+    t.float   "possible"
+    t.float   "speculative"
+  end
+
+  create_table "dpps_sums_region_category_reason", :id => false, :force => true do |t|
+    t.text    "analysis_name"
+    t.integer "analysis_year"
+    t.string  "continent"
+    t.string  "region"
+    t.text    "category"
+    t.string  "reason_change"
+    t.float   "definite"
+    t.float   "probable"
+    t.float   "possible"
+    t.float   "speculative"
   end
 
   create_table "mike_sites", :force => true do |t|
@@ -123,11 +197,14 @@ ActiveRecord::Schema.define(:version => 20121012112418) do
     t.float    "longitude"
   end
 
-# Could not dump table "protected_area_geometries" because of following StandardError
-#   Unknown type 'geometry' for column 'geometry'
-
-# Could not dump table "range_geometries" because of following StandardError
-#   Unknown type 'geometry' for column 'geometry'
+  create_table "range_discrepancies", :id => false, :force => true do |t|
+    t.integer "gid"
+    t.integer "actual"
+    t.float   "calculated"
+    t.integer "range",      :limit => 2
+    t.string  "rangequali", :limit => 10
+    t.text    "centroid"
+  end
 
   create_table "regions", :force => true do |t|
     t.integer  "continent_id"
@@ -373,9 +450,6 @@ ActiveRecord::Schema.define(:version => 20121012112418) do
     t.datetime "updated_at"
   end
 
-# Could not dump table "survey_geometries" because of following StandardError
-#   Unknown type 'geometry' for column 'geometry'
-
   create_table "survey_ground_sample_count_strata", :force => true do |t|
     t.integer  "survey_ground_sample_count_id"
     t.string   "stratum_name"
@@ -471,6 +545,16 @@ ActiveRecord::Schema.define(:version => 20121012112418) do
     t.integer  "survey_geometry_id"
   end
 
+  create_table "survey_range_intersection_metrics", :id => false, :force => true do |t|
+    t.text    "analysis_name"
+    t.integer "analysis_year"
+    t.string  "region"
+    t.string  "range_quality", :limit => 10
+    t.text    "category"
+    t.string  "country"
+    t.float   "area_sqkm"
+  end
+
   create_table "surveytypes", :id => false, :force => true do |t|
     t.string  "category",      :limit => 8
     t.string  "surveytype"
@@ -478,8 +562,8 @@ ActiveRecord::Schema.define(:version => 20121012112418) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                 :default => "", :null => false
-    t.string   "encrypted_password",     :limit => 128, :default => "", :null => false
+    t.string   "email",                                 :default => "",    :null => false
+    t.string   "encrypted_password",     :limit => 128, :default => "",    :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -505,6 +589,7 @@ ActiveRecord::Schema.define(:version => 20121012112418) do
     t.boolean  "admin"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "disabled",                              :default => false
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
