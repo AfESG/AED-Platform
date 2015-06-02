@@ -76,8 +76,8 @@ All Years for #{@region}:
       %td.numeric= number_with_delimiter @sspec
     - if @year==2013
       -@baseline_total.each do |base|
-        %tr.totals{:style => 'height: 24px; font-weight: bold'}
-          %td Totals 2007
+        %tr.totals{:style => 'height: 24px;'}
+          %td Totals 2006
           %td.numeric= number_with_delimiter base['definite']
           %td.numeric= number_with_delimiter base['probable']
           %td.numeric= number_with_delimiter base['possible']
