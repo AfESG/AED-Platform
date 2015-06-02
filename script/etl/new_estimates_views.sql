@@ -375,7 +375,7 @@ select
   age,
   replacement_name,
   CAST(CASE
-      WHEN reason_change = '-' and age >= 10 and (comparison_year - completion_year <= 10) THEN 'DD'
+      WHEN reason_change = '-' and age >= 10 and (comparison_year - completion_year <= 10) AND NOT (estimate_type='O' and (quality_level IS NULL or quality_level != 1)) THEN 'DD'
       ELSE reason_change
   END AS varchar(255)) reason_change,
   citation,
