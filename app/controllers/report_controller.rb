@@ -508,21 +508,13 @@ class ReportController < ApplicationController
         e.input_zone_id method_and_quality,
         e.category "CATEGORY",
         e.completion_year "CYEAR",
-        CASE WHEN e.population_lower_confidence_limit IS NOT NULL AND (e.category='D' or e.category='E') then
-          e.population_lower_confidence_limit
-        ELSE
-          e.population_estimate
-        END "ESTIMATE",
-        CASE WHEN e.population_upper_confidence_limit IS NOT NULL AND (e.category='D' or e.category='E') THEN
-          CASE WHEN e.population_lower_confidence_limit IS NULL and e.population_estimate IS NOT NULL THEN
-            to_char(e.population_upper_confidence_limit-e.population_estimate,'9999999') || '*'
-          WHEN e.population_upper_confidence_limit = e.population_lower_confidence_limit
-            THEN ''
-          ELSE
-            to_char(e.population_upper_confidence_limit-e.population_lower_confidence_limit,'9999999') || '*'
-          END
-        ELSE
+        e.population_estimate "ESTIMATE",
+        CASE WHEN e.population_upper_confidence_limit IS NOT NULL THEN
+          to_char(e.population_upper_confidence_limit-e.population_estimate,'9999999') || '*'
+        WHEN e.population_confidence_interval IS NOT NULL THEN
           to_char(ROUND(e.population_confidence_interval),'9999999')
+        ELSE
+          ''
         END "CL95",
         e.short_citation "REFERENCE",
         round(log(((definite+probable+0.001)/(definite+probable+possible+speculative+0.001))+1/(a.area_sqkm/rm.range_area))) "PFS",
