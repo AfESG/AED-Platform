@@ -1,4 +1,8 @@
-%h1 #{@preview_title}: #{@site}, #{@year}
+%h1
+  %div
+    = @site
+  %div{:style=>'font-size: 20px;'}
+    = @preview_title
 
 .crumbs
   Reports

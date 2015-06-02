@@ -1,4 +1,8 @@
-%h1 #{@year} Regional Totals for #{@region} ("#{@preview_title}" analysis)
+%h1
+  %div
+    = @region
+  %div{:style=>'font-size: 20px;'}
+    = @preview_title
 
 .crumbs
   %a{:href=>'/report'}Reports

@@ -126,13 +126,21 @@ class ReportController < ApplicationController
     SQL
   end
 
+  # define official titles for certain filters
+  def official_title(filter)
+    if filter == "2013_africa_final"
+      return "Provisional African Elephant Population Estimates: update to 31 Dec 2013"
+    end
+    return nil
+  end
+
   def preview_continent
     return unless allowed_preview?
     @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
     @filter = params[:filter]
-    @preview_title = @filter.humanize.upcase
+    @preview_title = official_title(@filter) or @filter.humanize.upcase
 
     @summary_totals_by_continent = execute totalizer("1=1",@filter,@year)
     @baseline_total = execute <<-SQL, @continent
@@ -306,7 +314,7 @@ class ReportController < ApplicationController
     @continent = params[:continent]
     @region = params[:region].gsub('_',' ')
     @filter = params[:filter]
-    @preview_title = @filter.humanize.upcase
+    @preview_title = official_title(@filter) or @filter.humanize.upcase
 
     @summary_totals_by_region = execute totalizer("region='#{@region}'",@filter,@year)
     @baseline_total = execute <<-SQL, @region
@@ -475,7 +483,7 @@ class ReportController < ApplicationController
     @region = params[:region].gsub('_',' ')
     @country = params[:country].gsub('_',' ')
     @filter = params[:filter]
-    @preview_title = @filter.humanize.upcase
+    @preview_title = official_title(@filter) or @filter.humanize.upcase
 
     @baseline_total = execute <<-SQL, @country
       select sum(definite) definite, sum(probable) probable, sum(possible) possible,
@@ -632,7 +640,7 @@ class ReportController < ApplicationController
     @continent = params[:continent]
     @site = params[:site].gsub('_',' ')
     @filter = params[:filter]
-    @preview_title = @filter.humanize.upcase
+    @preview_title = official_title(@filter) or @filter.humanize.upcase
 
     @summary_totals_by_site = execute <<-SQL, @site
       select

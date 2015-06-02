@@ -1,4 +1,8 @@
-%h1 #{@country}, #{@year} ("#{@preview_title}" analysis)
+%h1
+  %div
+    = @country
+  %div{:style=>'font-size: 20px;'}
+    = @preview_title
 
 .crumbs
   Reports
