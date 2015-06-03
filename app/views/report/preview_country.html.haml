@@ -239,7 +239,7 @@ All Years for #{@country}:
         -if @pv>0
           %td{:style=>"text-align:right"}= number_with_delimiter ((Math.sqrt(@pv))*1.96).round
         - else
-          %td{:style=>"text-align:right"}= @cl.to_s.gsub!(/[^\d]/, "")!="0" ? number_with_delimiter(@cl) : ""
+          %td{:style=>"text-align:right"}= @cl.to_s.gsub(/[^\d]/, "")!="0" ? number_with_delimiter(@cl) : ""
         %td{:style=>"padding-left:10px"}= @re
         %td{:style=>"text-align:center"}= @pf
         %td{:style=>"text-align:right"}= @ar.to_s!="0" ? number_with_delimiter(@ar) : ""
@@ -256,7 +256,7 @@ All Years for #{@country}:
           %td{:style=>"text-align:center"}= row['CATEGORY']
           %td= row['CYEAR']
           %td.numeric= number_with_delimiter row['ESTIMATE']
-          %td.numeric= row['CL95'].to_s.gsub!(/[^\d]/, '')!="0" ? (number_with_delimiter row['CL95']) : ""
+          %td.numeric= row['CL95'].to_s.gsub(/[^\d]/, '')!="0" ? (number_with_delimiter row['CL95']) : ""
           %td{:style=>"padding-left:10px"}= row['REFERENCE']
           %td{:style=>'text-align:center'}= row['PFS']
           %td.numeric{:style=>"padding-right:10px"}= number_with_delimiter row['AREA_SQKM']
