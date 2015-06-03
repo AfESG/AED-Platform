@@ -510,9 +510,13 @@ class ReportController < ApplicationController
         e.completion_year "CYEAR",
         e.population_estimate "ESTIMATE",
         CASE WHEN e.population_upper_confidence_limit IS NOT NULL THEN
-          to_char(e.population_upper_confidence_limit-e.population_estimate,'9999999') || '*'
+          CASE WHEN e.estimate_type='O' THEN
+            to_char(e.population_upper_confidence_limit-e.population_estimate,'999,999') || '*'
+          ELSE
+            to_char(e.population_upper_confidence_limit-e.population_estimate,'999,999')
+          END
         WHEN e.population_confidence_interval IS NOT NULL THEN
-          to_char(ROUND(e.population_confidence_interval),'9999999')
+          to_char(ROUND(e.population_confidence_interval),'999,999')
         ELSE
           ''
         END "CL95",
@@ -531,11 +535,11 @@ class ReportController < ApplicationController
           to_char(abs(longitude),'999D9')||'E'
         END "LON",
         CASE WHEN latitude<0 THEN
-          to_char(abs(latitude),'990D9')||'S'
+          to_char(abs(latitude),'999D9')||'S'
         WHEN latitude=0 THEN
           '0.0'
         ELSE
-          to_char(abs(latitude),'990D9')||'N'
+          to_char(abs(latitude),'999D9')||'N'
         END "LAT"
       from estimate_locator e
         join estimate_dpps d on e.input_zone_id = d.input_zone_id
