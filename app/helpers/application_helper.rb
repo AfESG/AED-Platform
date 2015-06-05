@@ -201,12 +201,15 @@ module ApplicationHelper
       json = JSON.parse(geom.first['json'])
       res << <<-SCRIPT
         <script>
-          map_initialize('the_geom',function(){ var coords=[
+          map_initialize('the_geom',function(){
       SCRIPT
-      json['coordinates'].first.first.each do |coord|
-        res << "          new google.maps.LatLng(#{coord[1]}, #{coord[0]}),\n"
-      end
-      res << <<-SCRIPT
+      json['coordinates'].each do |poly|
+        puts "POLY"
+        res << "        var coords=["
+        poly.first.each do |coord|
+          res << "          new google.maps.LatLng(#{coord[1]}, #{coord[0]}),\n"
+        end
+        res << <<-SCRIPT
           ];
           var stratum = new google.maps.Polygon({
             paths: coords,
@@ -226,6 +229,9 @@ module ApplicationHelper
               bounds.extend(path.getAt(i));
             }
           }
+        SCRIPT
+      end
+      res << <<-SCRIPT
           map.fitBounds(bounds);
 
         });
