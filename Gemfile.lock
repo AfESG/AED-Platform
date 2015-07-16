@@ -92,6 +92,7 @@ GEM
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
     kgio (2.8.0)
+    leaflet-rails (0.7.4)
     mail (2.4.4)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
@@ -219,6 +220,7 @@ DEPENDENCIES
   hpricot
   jquery-rails
   kaminari
+  leaflet-rails
   maruku
   nofxx-georuby
   paper_trail
@@ -235,3 +237,6 @@ DEPENDENCIES
   turn
   uglifier
   unicorn
+
+BUNDLED WITH
+   1.10.3
