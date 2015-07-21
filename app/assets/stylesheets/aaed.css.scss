@@ -3,6 +3,39 @@ body{
   margin: 0px;
   padding: 0px;
 }
+div#top {
+  widh: 1000px;
+}
+html body div#page div#top div#iucn-logos {
+  float: left;
+  position: relative;
+  width: 200px;
+}
+html body div#page div#top div#iucn-logos a#logo-iucn img {
+  height: 40px;
+  margin-right: 25px;
+}
+html body div#page div#top div#iucn-logos a#logo-ssc img {
+  width: 80px;
+  margin-bottom: 0;
+}
+html body div#page div#top div#top-links{
+  float: right;
+  position: relative;
+  width: 250px;
+}
+a#logo-aed img{
+    right: 150px;
+    position: absolute;
+    top: 40px;
+    height: 100px;
+}
+a#logo-afesg {
+    left: 690px;
+    position: absolute;
+    top: 40px;
+}
+
 .strapline {
   position: absolute;
   top: 72px;
@@ -286,7 +319,7 @@ div.survey_results {
 .survey_results table td.total{
 }
 .survey_results table tr.totals{
-	background-color: #EEEEFF; 	
+	background-color: #EEEEFF;
 }
 
 .survey_results table th{
