@@ -316,7 +316,7 @@ ActiveRecord::Schema.define(:version => 20150401012229) do
     t.float    "population_confidence_interval"
     t.boolean  "population_no_precision_estimate_available"
     t.integer  "average_speed"
-    t.integer  "average_transect_spacing"
+    t.float    "average_transect_spacing"
     t.integer  "average_searching_rate"
     t.integer  "transects_covered"
     t.integer  "transects_covered_total_length"
