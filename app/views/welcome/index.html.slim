@@ -39,6 +39,19 @@
   | African Elephant Range (2012)
 
 = map container_id: "leaflet_map", center: {latlng: [-5.364, 20.775], zoom: 5}
+javascript:
+    var range_map = new L.geoJson();
+    range_map.addTo(map);
+
+    $.ajax({
+      dataType: "json",
+      url: "/current_range_map.geojson",
+      success: function(data) {
+        $(data.features).each(function(key, data) {
+            range_map.addData(data);
+        });
+      }
+    }).error(function() {});
 
 - if @has_surveys
   coffee:
