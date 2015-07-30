@@ -91,6 +91,8 @@ Aaed::Application.routes.draw do
   match 'population_submissions/:id/submit' => 'population_submissions#submit'
   match 'my_population_submissions' => 'population_submissions#my'
 
+  match 'analysis_2013' => 'population_submissions#analysis_2013'
+
   match 'species/:species_id/range_states' => 'species#range_states'
 
   match 'maps/asian_range' => 'welcome#asian_range'
