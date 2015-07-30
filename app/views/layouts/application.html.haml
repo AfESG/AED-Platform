@@ -19,19 +19,12 @@
       })();
   %body
     #page
-      %div#top
-        %div#iucn-logos
-          %a#logo-iucn{:href=>'www.iucn.org'}
-            = image_tag 'iucn_logo.jpg', :alt=>'IUCN'
-          %a#logo-ssc{:href=>'http://www.iucn.org/about/work/programmes/species/about_ssc/'}
-            = image_tag 'ssc2005web_res.gif', :alt=>'Species Survival Commission'
-
-      %a#logo-afesg{:href=>'/'}
-        = image_tag 'logo-AfESGcolour.gif', :alt=>'African Elephant Specialist Group'
-      .strapline
-        The most comprehensive data on elephant population and range worldwide.
       %a#logo-aed{:href=>'/'}
         = image_tag 'elephant-database-logo.png', :alt=>'Elephant Database'
+      .strapline
+        The most comprehensive data on elephant population and range worldwide.
+      %a#logo-afesg{:href=>'/'}
+        = image_tag 'logo-AfESGcolour.gif', :alt=>'African Elephant Specialist Group'
       - if user_signed_in?
         - if current_user.admin?
           #superuser= link_to 'Superuser', '/superuser'
@@ -48,7 +41,7 @@
         .navItem= raw(get_nav_item('Maps', '/maps'))
         .navItem= raw(get_nav_item('Add Data', '/submissions/new'))
         .navItem= raw(get_nav_item('About', '/about'))
-      %div
+      
         - if(!flash[:notice].nil?)
           .notice= flash[:notice]
         - if(!flash[:alert].nil?)
@@ -58,4 +51,12 @@
         - if(!flash[:success].nil?)
           .success= flash[:success]
       = yield
-      #legal= t('legal').gsub('$today$',"#{Date.today.year}")
+      #footer
+        %span#iucn-logos
+          %a#logo-iucn{:href=>'http://www.iucn.org/'}
+            = image_tag 'iucn_logo.jpg', :alt=>'IUCN'
+          %a#logo-ssc{:href=>'http://www.iucn.org/about/work/programmes/species/about_ssc/'}
+            = image_tag 'ssc2005web_res.gif', :alt=>'Species Survival Commission'
+        %span#legal
+          %p
+            = t('legal').gsub('$today$',"#{Date.today.year}")
