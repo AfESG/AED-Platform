@@ -1,6 +1,7 @@
 class WelcomeController < ApplicationController
 
   def index
+    render layout: 'bootstrapped'
   end
 
   def execute(*array)
