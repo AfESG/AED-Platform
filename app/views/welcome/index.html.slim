@@ -1,6 +1,3 @@
-#map
-= map(:center => {:latlng => [-5.364,20.775], :zoom => 5})
-
 .ticker_bar
   .ticker_item
     .ticker_no
@@ -42,6 +39,8 @@
   | featured map:
 .feature_name
   | African Elephant Range (2012)
+
+= map container_id: "leaflet_map", center: {latlng: [-5.364, 20.775], zoom: 5}
 
 - if @has_surveys
   coffee:
