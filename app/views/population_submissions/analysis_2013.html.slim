@@ -1,0 +1,34 @@
+h1 = t '.title'
+
+.info
+  |  This is the data for the 2013 analysis
+
+table
+  thead
+    tr
+      th= sortable 'site_name', 'Input Zone'
+      th= sortable 'country', 'Country'
+      th= sortable 'survey_type', 'Type of Survey'
+      th= sortable 'completion_year', 'Year of Survey'
+      th Estimate
+      th= sortable 'citation', 'Source'
+      th= sortable 'data_licensing', 'Data Licensing'
+      th= sortable 'created_at', 'Date Created'
+
+  tbody
+    - for p in @population_submissions
+      - if p.released? or (!current_user.nil? and current_user.admin?)
+        - if p.submitted?
+          tr class=cycle(:odd, :even)
+            td
+              - unless p.released?
+                strong NEW
+              = link_to p do
+                = "#{p.site_name} #{p.designate}"
+            td = (p.submission.nil? or p.submission.country.nil?) ? '???' : p.submission.country.name
+            td = p.survey_type
+            td = p.completion_year
+            td = p.estimate
+            td = p.source
+            td == p.data_licensing_link
+            td = p.created_at
