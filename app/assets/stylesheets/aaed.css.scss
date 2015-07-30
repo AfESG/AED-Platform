@@ -3,43 +3,21 @@ body{
   margin: 0px;
   padding: 0px;
 }
-div#top {
-  widh: 1000px;
-}
-html body div#page div#top div#iucn-logos {
-  float: left;
-  position: relative;
-  width: 200px;
-}
-html body div#page div#top div#iucn-logos a#logo-iucn img {
-  height: 40px;
-  margin-right: 25px;
-}
-html body div#page div#top div#iucn-logos a#logo-ssc img {
-  width: 80px;
-  margin-bottom: 0;
-}
-html body div#page div#top div#top-links{
-  float: right;
-  position: relative;
-  width: 250px;
-}
-a#logo-aed img{
-    right: 150px;
-    position: absolute;
-    top: 40px;
-    height: 100px;
-}
-a#logo-afesg {
-    left: 690px;
-    position: absolute;
-    top: 40px;
-}
 
+a#logo-aed img{
+   width: 250px;
+   margin-top: 10px;
+}
+a#logo-afesg img{
+    position: absolute;
+    left: 680px;
+    width: 170px;
+    top: 25px;
+}
 .strapline {
   position: absolute;
   top: 72px;
-  left: 390px;
+  left: 340px;
   width: 300px;
   font-family: "Droid Sans";
   font-size: 14px;
@@ -59,10 +37,10 @@ td.numeric {
 a{
   color: #118300;
 }
-.logo{
+/*.logo{
   margin-top: 10px;
   padding-bottom: 10px;
-}
+}*/
 .user_section{
   float: right;
 }
@@ -71,6 +49,34 @@ a{
   right: 50px;
   top: 50px;
   width: 73px;
+}
+html body div#page div#footer{
+	background-color: white;
+    height: 55px;
+    margin-left: 20px;
+    margin-top: 10px;
+}
+html body div#page div#footer span#iucn-logos a#logo-iucn{
+	text-decoration: none;
+}
+html body div#page div#footer span#iucn-logos a#logo-iucn img{
+	margin-bottom: 0;
+    margin-right: 5px;
+    width: 50px;
+}
+html body div#page div#footer span#iucn-logos a#logo-ssc img {
+    margin-bottom: 0;
+    margin-left: 5px;
+    width: 70px;
+}
+html body div#page div#footer span#legal{
+	font-size: xx-small;
+    padding-top: 20px;
+}
+html body div#page div#footer span#legal p{
+	float: right;
+    margin-top: 10px;
+    width: 800px;
 }
 .want_data {
   font-size: 14px;
@@ -127,11 +133,11 @@ a{
 .navItem .selected {
   color: #777;
 }
-#legal{
+/*#legal{
   clear: both;
   padding-top: 20px;
   font-size: xx-small;
-}
+}*/
 iframe{
   border: none;
 }
