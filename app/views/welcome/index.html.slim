@@ -16,11 +16,11 @@
       .feature_legend
         /| featured map:/
       .feature_name
-        | African Elephant Range (2012)
+        | African Elephant Range (2014)
 .container
   .row
     .col-xs-12
-      = map container_id: "leaflet_map", center: {latlng: [-5.364, 20.775], zoom: 5}
+      = map container_id: "leaflet_map", center: {latlng: [-12.04, 18.59], zoom: 4}
       javascript:
           var range_map = new L.geoJson();
           var myStyle = {
@@ -30,10 +30,10 @@
           };
           function style(feature) {
             switch (feature.properties.RangeType) {
-              case 'Known': return {color: "#4A9E59","weight": 1,"opacity": 0.1,"fillColor": "#4A9E59","fillOpacity": 0.5};
-              case 'Possible': return {color: "#90EE90","weight": 5,"opacity": 0.1,"fillColor": "#90EE90","fillOpacity": 0.5};
-              case 'Doubtful': return {color: "#BFBFBF","weight": 3,"opacity": 0.1,"fillColor": "#BFBFBF","fillOpacity": 0.5};
-              case 'Non-range': return {color: "#BFBFBF","weight": 3,"opacity": 0.1,"fillColor": "#BFBFBF","fillOpacity": 0.5};
+              case 'Known': return {color: "#d94701","weight": 1,"opacity": 0.1,"fillColor": "#d94701","fillOpacity": 0.6};
+              case 'Possible': return {color: "#fd8d3c","weight": 5,"opacity": 0.1,"fillColor": "#fd8d3c","fillOpacity": 0.6};
+              case 'Doubtful': return {color: "#fdbe85","weight": 3,"opacity": 0.1,"fillColor": "#fdbe85","fillOpacity": 0.6};
+              case 'Non-range': return {color: "#feedde","weight": 3,"opacity": 0.1,"fillColor": "#feedde","fillOpacity": 0.6};
             }
           }
 
