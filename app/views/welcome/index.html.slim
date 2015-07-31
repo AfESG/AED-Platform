@@ -14,7 +14,7 @@
             .ticker_legend
               | new surveys
       .feature_legend
-        | featured map:
+        /| featured map:/
       .feature_name
         | African Elephant Range (2012)
 .container
@@ -25,10 +25,7 @@
           var range_map = new L.geoJson();
           range_map.addTo(map);
 
-.feature_name
-  | African Elephant Range (2012)
-
-        $.ajax({
+          $.ajax({
             dataType: "json",
             url: "/current_range_map.geojson",
             success: function(data) {
