@@ -23,14 +23,31 @@
       = map container_id: "leaflet_map", center: {latlng: [-5.364, 20.775], zoom: 5}
       javascript:
           var range_map = new L.geoJson();
-          range_map.addTo(map);
-
-          $.ajax({
-            dataType: "json",
-            url: "/current_range_map.geojson",
-            success: function(data) {
-              $(data.features).each(function(key, data) {
-                  range_map.addData(data);
-              });
+          var myStyle = {
+            "color": "#ff7800",
+            "weight": 5,
+            "opacity": 0.65
+          };
+          function style(feature) {
+            switch (feature.properties.RangeType) {
+              case 'Known': return {color: "#4A9E59","weight": 1,"opacity": 0.1,"fillColor": "#4A9E59","fillOpacity": 0.5};
+              case 'Possible': return {color: "#90EE90","weight": 5,"opacity": 0.1,"fillColor": "#90EE90","fillOpacity": 0.5};
+              case 'Doubtful': return {color: "#BFBFBF","weight": 3,"opacity": 0.1,"fillColor": "#BFBFBF","fillOpacity": 0.5};
+              case 'Non-range': return {color: "#BFBFBF","weight": 3,"opacity": 0.1,"fillColor": "#BFBFBF","fillOpacity": 0.5};
             }
-          }).error(function() {});
+          }
+
+          function onEachFeature(feature, layer) {
+            if (feature.properties && feature.properties.RangeType) {
+              layer.bindPopup(feature.properties.RangeType);
+            }
+          }
+
+          $.getJSON("/current_range_map.geojson", function(data) {
+            var range_map = L.geoJson(data, {style: style, onEachFeature: onEachFeature});
+            range_map.addTo(map);
+          });
+
+          /*, {
+            onEachFeature: function (feature, layer) {
+              layer.bindPopup(feature.properties.name);*/
