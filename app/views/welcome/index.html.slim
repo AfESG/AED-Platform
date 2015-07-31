@@ -38,9 +38,14 @@
           }
 
           function onEachFeature(feature, layer) {
-            if (feature.properties && feature.properties.RangeType) {
-              layer.bindPopup(feature.properties.RangeType);
+            var popupContent = "<b>Country</b>: " +  feature.properties.CNTRYNAME + "<br><b>Type of range</b>: " +  feature.properties.RangeType
+            if (feature.properties.AREA_SQKM){
+              popupContent += "<br><b>Range Area</b>: " + feature.properties.AREA_SQKM  + ' km²';
             }
+            if (feature.properties.PHENOTYPE){
+              popupContent += "<br><b>Phenotype</b>: " + feature.properties.PHENOTYPE;
+            }
+            layer.bindPopup(popupContent);
           }
 
           $.getJSON("/current_range_map.geojson", function(data) {
