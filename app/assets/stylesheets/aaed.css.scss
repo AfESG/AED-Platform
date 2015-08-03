@@ -7,7 +7,7 @@ body{
 body.bootstrapped {
   background-color: #fff;
 }
-
+/*banner*/
 a#logo-aed img{
    width: 250px;
    margin-top: 10px;
@@ -54,30 +54,31 @@ a{
   top: 30px;
   width: 73px;
 }
-html body div#page div#footer{
+
+div#footer{
 	background-color: white;
     height: 55px;
     margin-left: 20px;
     margin-top: 10px;
 }
-html body.bootstrapped div.container span#iucn-logos a#logo-iucn {
+span#iucn-logos a#logo-iucn {
 	text-decoration: none;
 }
-html body.bootstrapped div.container span#iucn-logos a#logo-iucn img{
+span#iucn-logos a#logo-iucn img{
 	margin-bottom: 0;
     margin-right: 5px;
     width: 50px;
 }
-html body.bootstrapped div.container span#iucn-logos a#logo-ssc img {
+span#iucn-logos a#logo-ssc img {
     margin-bottom: 0;
     margin-left: 5px;
     width: 70px;
 }
-html body.bootstrapped div.container span#legal{
+span#legal{
 	font-size: xx-small;
     padding-top: 20px;
 }
-html body.bootstrapped div.container span#legal p{
+span#legal p{
 	float: right;
     margin-top: 10px;
     width: 85%;
