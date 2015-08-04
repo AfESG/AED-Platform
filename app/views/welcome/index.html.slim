@@ -1,25 +1,18 @@
 .container
   .row
     .col-xs-12
-      .ticker_bar
-        .ticker_item
-          .ticker_no
-            = contributors
-          .ticker_legend
-            | contributors
-        = link_to population_submissions_path do
-          .ticker_item
-            .ticker_no
-              = new_surveys
-            .ticker_legend
-              | new surveys
-      .feature_legend
-        /| featured map:/
-      .feature_name
-        | African Elephant Range (2014)
+      nav.navbar.navbar-default
+        ul.nav.nav-pills
+          li: a href="/preview_report/2013_africa_final/Loxodonta_africana/2013/Africa" Tables
+          li: a href="/maps" Maps
+          li: a href="/submissions/new" Add Data
+          li: a href="/about" About
+      
 .container
   .row
     .col-xs-12
+      .feature_name
+        | African Elephant Range (2014)
       = map container_id: "leaflet_map", center: {latlng: [-12.04, 18.59], zoom: 4}
       javascript:
           var range_map = new L.geoJson();

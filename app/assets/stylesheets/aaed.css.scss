@@ -28,6 +28,22 @@ a#logo-afesg img{
   line-height: 18px;
   color: #2b1100;
 }
+/*navigation menu*/
+nav.navbar.navbar-default{
+  background-color: #d0ddbf;
+}
+ul.nav.nav-pills{
+  margin-left: 7px;
+}
+ul.nav.nav-pills li a{
+  margin-top: 5px;
+  text-decoration: none;
+  color: #23527c;
+}
+.nav > li > a:hover, .nav > li > a:focus {
+    background-color: #fdbe85;
+    color: white;
+}
 sup {
   vertical-align: super;
   font-size: smaller;
