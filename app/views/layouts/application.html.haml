@@ -41,7 +41,7 @@
         .navItem= raw(get_nav_item('Maps', '/maps'))
         .navItem= raw(get_nav_item('Add Data', '/submissions/new'))
         .navItem= raw(get_nav_item('About', '/about'))
-
+      %div
         - if(!flash[:notice].nil?)
           .notice= flash[:notice]
         - if(!flash[:alert].nil?)
