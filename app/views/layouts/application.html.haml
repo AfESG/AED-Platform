@@ -36,12 +36,12 @@
         #support= link_to t('support'), 'http://www.assembla.com/spaces/aaed/support/tickets', :target => '_blank'
         #register= link_to t('register'), new_user_registration_path
         #login= link_to t('log_in'), new_user_session_path
-      .nav
+      .nav-old
         .navItem= raw(get_nav_item('Tables', '/preview_report/2013_africa_final/Loxodonta_africana/2013/Africa'))
         .navItem= raw(get_nav_item('Maps', '/maps'))
         .navItem= raw(get_nav_item('Add Data', '/submissions/new'))
         .navItem= raw(get_nav_item('About', '/about'))
-      
+
         - if(!flash[:notice].nil?)
           .notice= flash[:notice]
         - if(!flash[:alert].nil?)
