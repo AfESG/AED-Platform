@@ -20,29 +20,25 @@ html
   body.bootstrapped
     .container
       .row
-        .col-xs-12
-          a#logo-aed href='/'
-            = image_tag 'elephant-database-logo.png', :alt=>'Elephant Database'
-          .strapline
-            | The most comprehensive data on elephant population and range worldwide.
-          a#logo-afesg href='/'
-            = image_tag 'logo-AfESGcolour.gif', :alt=>'African Elephant Specialist Group'
-          - if user_signed_in?
-            - if current_user.admin?
-              #superuser= link_to 'Superuser', '/superuser'
-            #support= link_to t('support'), 'http://www.assembla.com/spaces/aaed/support/tickets', :target => '_blank'
-            #mysub= link_to t('my_submissions'), '/my_population_submissions'
-            #myaccount= link_to t('my_account'), edit_user_registration_path
-            #logout= link_to t('log_out'), destroy_user_session_path, :method => :delete
-          - else
-            #support= link_to t('support'), 'http://www.assembla.com/spaces/aaed/support/tickets', :target => '_blank'
-            #register= link_to t('register'), new_user_registration_path
-            #login= link_to t('log_in'), new_user_session_path
-          .nav
-            .navItem= raw(get_nav_item('Tables', '/preview_report/2013_africa_final/Loxodonta_africana/2013/Africa'))
-            .navItem= raw(get_nav_item('Maps', '/maps'))
-            .navItem= raw(get_nav_item('Add Data', '/submissions/new'))
-            .navItem= raw(get_nav_item('About', '/about'))
+        div id="top"
+          .col-xs-12
+            a#logo-aed href='/'
+              = image_tag 'elephant-database-logo.png', :alt=>'Elephant Database'
+            .strapline
+              | The most comprehensive data on elephant population and range worldwide.
+            a#logo-afesg href='/'
+              = image_tag 'logo-AfESGcolour.gif', :alt=>'African Elephant Specialist Group'
+            - if user_signed_in?
+              - if current_user.admin?
+                #superuser= link_to 'Superuser', '/superuser'
+              #support= link_to t('support'), 'http://www.assembla.com/spaces/aaed/support/tickets', :target => '_blank'
+              #mysub= link_to t('my_submissions'), '/my_population_submissions'
+              #myaccount= link_to t('my_account'), edit_user_registration_path
+              #logout= link_to t('log_out'), destroy_user_session_path, :method => :delete
+            - else
+              #support= link_to t('support'), 'http://www.assembla.com/spaces/aaed/support/tickets', :target => '_blank'
+              #register= link_to t('register'), new_user_registration_path
+              #login= link_to t('log_in'), new_user_session_path
 
         - if(!flash[:notice].nil?)
           .notice= flash[:notice]
