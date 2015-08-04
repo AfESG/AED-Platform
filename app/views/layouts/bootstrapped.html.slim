@@ -20,25 +20,36 @@ html
   body.bootstrapped
     .container
       .row
-        div id="top"
+        #top
           .col-xs-12
             a#logo-aed href='/'
               = image_tag 'elephant-database-logo.png', :alt=>'Elephant Database'
-            .strapline
-              | The most comprehensive data on elephant population and range worldwide.
             a#logo-afesg href='/'
               = image_tag 'logo-AfESGcolour.gif', :alt=>'African Elephant Specialist Group'
-            - if user_signed_in?
-              - if current_user.admin?
-                #superuser= link_to 'Superuser', '/superuser'
-              #support= link_to t('support'), 'http://www.assembla.com/spaces/aaed/support/tickets', :target => '_blank'
-              #mysub= link_to t('my_submissions'), '/my_population_submissions'
-              #myaccount= link_to t('my_account'), edit_user_registration_path
-              #logout= link_to t('log_out'), destroy_user_session_path, :method => :delete
-            - else
-              #support= link_to t('support'), 'http://www.assembla.com/spaces/aaed/support/tickets', :target => '_blank'
-              #register= link_to t('register'), new_user_registration_path
-              #login= link_to t('log_in'), new_user_session_path
+    .container
+      .row
+        .col-xs-12
+          nav.navbar.navbar-default
+            span id="menu"
+              ul.nav.nav-pills
+                li: a href="/preview_report/2013_africa_final/Loxodonta_africana/2013/Africa" Tables
+                li: a href="/maps" Maps
+                li: a href="/submissions/new" Add Data
+                li: a href="/about" About
+            span id="registration"
+              ul.nav.nav-pills
+                - if user_signed_in?
+                  - if current_user.admin?
+                    li: a href="/superuser" Superuser
+                  li: a href="http://www.assembla.com/spaces/aaed/support/tickets" target='_blank' Support
+                  li: a href="/my_population_submissions" My submissions
+                  li = link_to 'My account', edit_user_registration_path
+                  li = link_to 'Sign Out', destroy_user_session_path, method: :delete
+                - else
+                  li: a href="http://www.assembla.com/spaces/aaed/support/tickets" target='_blank' Support
+                  li: a href=new_user_registration_path Register
+                  li = link_to 'Register', new_user_registration_path
+                  li = link_to 'Log in', new_user_session_path
 
         - if(!flash[:notice].nil?)
           .notice= flash[:notice]
