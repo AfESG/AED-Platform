@@ -1,3 +1,5 @@
+require "rvm/capistrano"
+
 set :application, "aaed"
 set :repository,  "git@github.com:AfESG/AEDwebsite.git"
 
