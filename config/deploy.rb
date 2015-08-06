@@ -30,7 +30,9 @@ if target == 'STAGING'
 end
 
 set :rvm_ruby_string, 'ruby-2.1.6'
-set :rvm_type, :user
+
+before 'deploy', 'rvm:install_rvm'
+before 'deploy', 'rvm:install_ruby'
 
 require 'bundler/capistrano'
 
