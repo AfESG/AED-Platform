@@ -46,7 +46,7 @@ GEM
       nokogiri (>= 1.4.4)
       uuidtools (~> 2.1)
     bcrypt-ruby (3.0.1)
-    bootstrap-sass (3.3.1.0)
+    bootstrap-sass (3.1.1.1)
       sass (~> 3.2)
     builder (3.0.4)
     capistrano (2.15.6)
@@ -209,7 +209,7 @@ PLATFORMS
 DEPENDENCIES
   appygram-rails
   aws-sdk
-  bootstrap-sass
+  bootstrap-sass (~> 3.1.1)
   capistrano
   capistrano-unicorn
   coffee-rails

@@ -13,7 +13,7 @@ end
 
 gem 'jquery-rails'
 gem 'leaflet-rails'
-gem 'bootstrap-sass'
+gem 'bootstrap-sass', '~> 3.1.1'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
