@@ -29,7 +29,7 @@ if target == 'STAGING'
   set :branch,  "homepage"
 end
 
-set :rvm_ruby_string, 'ruby-1.9.3-p194'
+set :rvm_ruby_string, 'ruby-2.1.6'
 set :rvm_type, :user
 
 require 'bundler/capistrano'
