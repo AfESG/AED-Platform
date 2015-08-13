@@ -1,4 +1,4 @@
-%h1 Log in
+h1 Log in
 = semantic_form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
   = f.inputs do
     = f.input :email
@@ -7,6 +7,4 @@
       = f.input :remember_me, :as => :boolean
   = f.actions do
     = f.action :submit, label: 'Log in'
-  = f.buttons do
-    = f.commit_button :log_in
 = render :partial => "devise/shared/links"
