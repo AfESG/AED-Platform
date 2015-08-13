@@ -59,51 +59,51 @@ Aaed::Application.routes.draw do
 
   resources :population_submission_attachments
 
-  match 'population_submission_attachments/download/:id' => 'population_submission_attachments#download'
+  get 'population_submission_attachments/download/:id' => 'population_submission_attachments#download'
 
-  match 'data_request_forms/thanks' => 'data_request_forms#thanks'
+  get 'data_request_forms/thanks' => 'data_request_forms#thanks'
 
   resources :data_request_forms
 
-  match 'about' => 'about#index'
-  match 'about/darp' => 'about#darp'
+  get 'about' => 'about#index'
+  get 'about/darp' => 'about#darp'
 
-  match 'superuser' => 'superuser#index'
+  get 'superuser' => 'superuser#index'
 
-  match 'report/references' => 'report#references'
-  match 'report/:species/:year/:continent/:region/:country/:survey' => 'report#survey'
-  match 'report/:species/:year/:continent/:region/:country' => 'report#country'
-  match 'report/:species/:year/:continent/:region' => 'report#region'
-  match 'report/:species/:year/:continent' => 'report#continent'
-  match 'preview_report/:filter/:species/:year/:continent' => 'report#preview_continent'
-  match 'preview_report/:filter/:species/:year/:continent/:region' => 'report#preview_region'
-  match 'preview_report/:filter/:species/:year/:continent/site/:site' => 'report#preview_site'
-  match 'preview_report/:filter/:species/:year/:continent/:region/:country' => 'report#preview_country'
-  match 'preview_report/:filter/bibliography' => 'report#bibliography'
-  match 'report/:species/:year' => 'report#year'
-  match 'report/:species' => 'report#species'
-  match 'report' => 'report#index'
+  get 'report/references' => 'report#references'
+  get 'report/:species/:year/:continent/:region/:country/:survey' => 'report#survey'
+  get 'report/:species/:year/:continent/:region/:country' => 'report#country'
+  get 'report/:species/:year/:continent/:region' => 'report#region'
+  get 'report/:species/:year/:continent' => 'report#continent'
+  get 'preview_report/:filter/:species/:year/:continent' => 'report#preview_continent'
+  get 'preview_report/:filter/:species/:year/:continent/:region' => 'report#preview_region'
+  get 'preview_report/:filter/:species/:year/:continent/site/:site' => 'report#preview_site'
+  get 'preview_report/:filter/:species/:year/:continent/:region/:country' => 'report#preview_country'
+  get 'preview_report/:filter/bibliography' => 'report#bibliography'
+  get 'report/:species/:year' => 'report#year'
+  get 'report/:species' => 'report#species'
+  get 'report' => 'report#index'
 
-  match 'find/:year/:objectid' => 'find#historical'
-  match 'range_popup/:source_id' => 'find#range_popup'
-  match 'popup/:year/:objectid' => 'find#popup'
+  get 'find/:year/:objectid' => 'find#historical'
+  get 'range_popup/:source_id' => 'find#range_popup'
+  get 'popup/:year/:objectid' => 'find#popup'
 
-  match 'population_submissions/:id/submit' => 'population_submissions#submit'
-  match 'my_population_submissions' => 'population_submissions#my'
+  get 'population_submissions/:id/submit' => 'population_submissions#submit'
+  get 'my_population_submissions' => 'population_submissions#my'
 
-  match 'analysis_2013' => 'population_submissions#analysis_2013'
+  get 'analysis_2013' => 'population_submissions#analysis_2013'
 
-  match 'species/:species_id/range_states' => 'species#range_states'
+  get 'species/:species_id/range_states' => 'species#range_states'
 
-  match 'maps/asian_range' => 'welcome#asian_range'
-  match 'maps/range' => 'welcome#range'
-  match 'maps/zones' => 'welcome#zones'
-  match 'maps' => 'welcome#maps'
-  match 'mike_report' => 'welcome#mike_report'
-  match 'reliability' => 'welcome#reliability'
+  get 'maps/asian_range' => 'welcome#asian_range'
+  get 'maps/range' => 'welcome#range'
+  get 'maps/zones' => 'welcome#zones'
+  get 'maps' => 'welcome#maps'
+  get 'mike_report' => 'welcome#mike_report'
+  get 'reliability' => 'welcome#reliability'
 
-  match 'crash' => 'welcome#crash'
-  match 'recalc' => 'welcome#recalc'
+  get 'crash' => 'welcome#crash'
+  get 'recalc' => 'welcome#recalc'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

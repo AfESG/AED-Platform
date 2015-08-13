@@ -1,19 +1,16 @@
 source 'http://rubygems.org'
 
-# ruby '1.9.3'
+ruby '2.2.2'
 
-gem 'rails', '~>3.2.11'
+gem 'rails', '~>4.2'
 
-# Rails 3.1 - Asset Pipeline
-group :assets do
-  gem 'sass-rails'
-  gem 'coffee-rails'
-  gem 'uglifier'
-end
+gem 'sass-rails'
+gem 'coffee-rails'
+gem 'uglifier'
 
 gem 'jquery-rails'
 gem 'leaflet-rails'
-gem 'bootstrap-sass', '~> 3.1.1'
+gem 'bootstrap-sass'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -26,9 +23,8 @@ gem 'haml'
 
 gem 'slim'
 
-gem 'formtastic', '~> 2.1.1'
-
-gem 'flutie'
+gem 'formtastic'
+gem 'formtastic-bootstrap'
 
 gem 'maruku'
 
@@ -59,6 +55,8 @@ gem 'unicorn'
 gem 'capistrano'
 gem 'rvm-capistrano', require:false
 gem 'capistrano-unicorn'
+
+gem 'protected_attributes'
 
 # To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)
 # gem 'ruby-debug'

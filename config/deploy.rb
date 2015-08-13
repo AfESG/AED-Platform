@@ -32,7 +32,7 @@ if target == 'STAGING'
   set :branch,  "homepage"
 end
 
-set :rvm_ruby_string, 'ruby-2.1.6'
+set :rvm_ruby_string, 'ruby-2.2.2@aaed'
 
 before 'deploy', 'rvm:install_rvm'
 before 'deploy', 'rvm:install_ruby'
