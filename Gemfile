@@ -24,8 +24,7 @@ gem 'haml'
 gem 'slim'
 
 gem 'formtastic'
-
-gem 'flutie'
+gem 'formtastic-bootstrap'
 
 gem 'maruku'
 
