@@ -1,0 +1,22 @@
+h1= t('.title')
+p= link_to t('.new'), new_survey_other_path
+
+table
+  thead
+    tr
+      th= SurveyOther.human_attribute_name :population_submission_id
+      th= SurveyOther.human_attribute_name :other_method_description
+      th= SurveyOther.human_attribute_name :population_estimate_min
+      th= SurveyOther.human_attribute_name :population_estimate_max
+      th colspan=3 = t 'actions'
+  
+  tbody
+    - for survey_other in @survey_others
+      tr  class=cycle(:odd, :even)  
+        td= survey_other.population_submission_id
+        td= survey_other.other_method_description
+        td= survey_other.population_estimate_min
+        td= survey_other.population_estimate_max
+        td.action= link_to t('show'), survey_other
+        td.action= link_to t('edit'), edit_survey_other_path(survey_other)
+        td.action= link_to t('destroy'), survey_other, :confirm => t('are_you_sure'), :method => :delete

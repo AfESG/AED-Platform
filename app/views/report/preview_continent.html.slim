@@ -1,0 +1,191 @@
+h1
+  div
+    | Continental Totals
+  div style=('font-size: 20px;') 
+    = @preview_title
+
+.crumbs
+  a href='/report' Reports
+
+  | &gt;
+
+  a href=("/report/#{@species.gsub(' '),'_')}"} #{@species 
+
+  | &gt;
+
+  #{@year}
+
+  | &gt;
+
+  #{@continent}
+
+p
+| All Years for #{@continent}:
+a href=("/preview_report/2013_africa_final/#{@species.gsub(' '),'_')}/2013/#{@continent}"  2013
+
+| &mdash;
+
+a href=("/report/#{@species.gsub(' '),'_')}/2007/#{@continent}"  2007
+
+| &mdash;
+
+a href=("/report/#{@species.gsub(' '),'_')}/2002/#{@continent}"  2002
+
+| &mdash;
+
+a href=("/report/#{@species.gsub(' '),'_')}/1998/#{@continent}"  1998
+
+| &mdash;
+
+a href=("/report/#{@species.gsub(' '),'_')}/1995/#{@continent}"  1995
+
+== narrative
+
+- if @summary_totals_by_continent.num_tuples > 0
+  h2 style=('margin-top:20px'} Summary Totals for #{@continent) 
+
+  table style='font-size:16px' 
+    tr
+      th width='40%'  Data Category
+      th.numeric width='15%'  Definite
+      th.numeric width='15%'  Probable
+      th.numeric width='15%'  Possible
+      th.numeric width='15%'  Speculative
+    -@sdef = @sprob = @sposs = @sspec = 0
+    -@summary_totals_by_continent.each do |row|
+      tr style=('height: 24px') 
+        td= row['SURVEYTYPE']
+        td.numeric= number_with_delimiter row['DEFINITE']
+        - @sdef = @sdef + row['DEFINITE'].to_i
+        td.numeric= number_with_delimiter row['PROBABLE']
+        - @sprob = @sprob + row['PROBABLE'].to_i
+        td.numeric= number_with_delimiter row['POSSIBLE']
+        - @sposs = @sposs + row['POSSIBLE'].to_i
+        td.numeric= number_with_delimiter row['SPECUL']
+        - @sspec = @sspec + row['SPECUL'].to_i
+    tr.totals style=('height: 24px; font-weight: bold') 
+      td Totals # @year 
+      td.numeric= number_with_delimiter @sdef
+      td.numeric= number_with_delimiter @sprob
+      td.numeric= number_with_delimiter @sposs
+      td.numeric= number_with_delimiter @sspec
+    - if @year==2013
+      -@baseline_total.each do |base|
+        tr.totals style=('height: 24px; font-style: italic;') 
+          td Totals 2006
+          td.numeric= number_with_delimiter base['definite']
+          td.numeric= number_with_delimiter base['probable']
+          td.numeric= number_with_delimiter base['possible']
+          td.numeric= number_with_delimiter base['speculative']
+
+- if current_user and current_user.admin?
+  - if !@causes_of_change_by_continent_u.nil? && @causes_of_change_by_continent_u.num_tuples > 0
+    h2 Interpretation of Changes in Estimates from Previous Report
+
+    table style='font-size:16px' 
+      tr
+        th width='40%'  Cause of Change
+        th.numeric width='15%'  Definite
+        th.numeric width='15%'  Probable
+        th.numeric width='15%'  Possible
+        th.numeric width='15%'  Speculative
+      - @causes_of_change_by_continent_u.each do |row|
+        tr style=('height: 24px;') 
+          td= row['CauseofChange']
+          - ['definite','probable','possible','specul'].each do |key|
+            td.numeric= signed_number row[key]
+      - unless @causes_of_change_sums_by_continent_u.nil?
+        - @causes_of_change_sums_by_continent_u.each do |row|
+          tr.hideable.totals style=('height: 24px; font-weight: bold') 
+            td Totals
+            - ['definite','probable','possible','specul'].each do |key|
+              td.numeric= signed_number row[key]
+
+  - if !@causes_of_change_by_continent.nil? && @causes_of_change_by_continent.num_tuples > 0
+    h2.hideable Interpretation of Changes in Estimates from Previous Report (2007 Scaling)
+
+    table.hideable style='font-size:16px' 
+      tr
+        th width='40%'  Cause of Change
+        th.numeric width='15%'  Definite
+        th.numeric width='15%'  Probable
+        th.numeric width='15%'  Possible
+        th.numeric width='15%'  Speculative
+      - @causes_of_change_by_continent.each do |row|
+        tr style=('height: 24px;') 
+          td= row['CauseofChange']
+          - ['definite','probable','possible','specul'].each do |key|
+            td.numeric= signed_number row[key]
+      - unless @causes_of_change_sums_by_continent.nil?
+        - @causes_of_change_sums_by_continent.each do |row|
+          tr.totals style=('height: 24px; font-weight: bold') 
+            td Totals
+            - ['definite','probable','possible','specul'].each do |key|
+              td.numeric= signed_number row[key]
+
+  .toggle style=('margin-top:-20px; margin-bottom: 10px; text-align: right') 
+    a onclick='toggle_hideables()'  toggle scaling
+
+- if !@area_of_range_covered_by_continent.nil? && @area_of_range_covered_by_continent.num_tuples > 0
+  h2 Area of Range Covered by Each Data Category (km²)
+  table style='font-size:16px' 
+    tr
+      th Data Category
+      th.numeric Known Range
+      th.numeric Possible Range
+      th.numeric Total Range
+    - @area_of_range_covered_by_continent.each do |row|
+      tr style=('height: 24px;') 
+        td= number_with_delimiter row['surveytype']
+        - ['known','possible','total'].each do |key|
+          td.numeric= number_or_zero row[key]
+    - @area_of_range_covered_sum_by_continent.each do |row|
+      tr.totals style=('height: 24px; font-weight: bold') 
+        td Totals
+        - ['known','possible','total'].each do |key|
+          td.numeric= number_or_zero row[key]
+
+- if !@regions.nil? && @regions.num_tuples > 0
+  h2 Continental and Regional Totals and Data Quality
+  table style='font-size:16px' 
+    tr
+      th Region
+      th.numeric Definite
+      th.numeric Probable
+      th.numeric Possible
+      th.numeric Speculative
+      th.numeric Range Area (km²)
+      th.numeric % of Continental Range
+      th.numeric % of Range Assessed
+      th.numeric
+        | IQI<sup>1</sup
+      th.numeric
+        | PFS<sup>2</sup
+    - @regions.each do |row|
+      - unless row['RANGEAREA'].nil?
+        tr style=('height: 24px;') 
+          td
+            a href=("/preview_report/#{@filter}/#{@species.gsub(' '),'_')}/#{@year}/#{@continent}/#{row['REGION'].gsub(' ','_')}"} #{row['REGION'] 
+          - ['DEFINITE','PROBABLE','POSSIBLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX','PFS'].each do |key|
+            td.numeric= number_with_delimiter row[key]
+    - @regions_sum.each do |row|
+      tr.totals style=('height: 24px; font-weight: bold') 
+        td Totals
+        - ['DEFINITE','PROBABLE','POSSIBLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX'].each do |key|
+          td.numeric= number_with_delimiter row[key]
+        td
+
+== footnote
+
+p
+  sup 1
+  | IQI: Information Quality Index: This index quantifies overall data quality at the regional level based on the precision of estimates and the proportion of assessed elephant range (i.e. range for which estimates are available). The IQI ranges from zero (no reliable information) to one (perfect information).
+p
+  sup 2
+  | PFS: Priority for Future Surveys, ranked from 1 to 5 (highest to lowest). Based on the precision of estimates and the proportion of national range accounted for by the site in question, PFS is a measure of the importance and urgency for future population surveys. All areas of unassessed range have a priority of 1. See Introduction for details on how the PFS is derived.
+p
+  | Note that totals for the Definite, Probable, and Possible categories are derived
+  | by pooling the variances of individual estimates, as described at
+  = link_to 'http://www.elephantdatabase.org/reliability.', 'http://www.elephantdatabase.org/reliability'
+  | As a result, totals do not
+  | necessarily match the simple sum of the entries within a given category.

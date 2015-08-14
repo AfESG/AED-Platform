@@ -1,0 +1,49 @@
+.restated_survey_info
+  = render :partial => "submission_info", :locals => { :s => @submission }
+= semantic_form_for @submission do |f|
+  = render "shared/error_messages", :target => @submission
+  = f.inputs do
+    = f.input :species, :as => :select, :collection => Species.find(:all), :member_label => :scientific_name
+    = f.input :country, :as => :select, :collection => @submission.range_states
+    = f.input :phenotype, :as => :select, :collection => ["Savanna", "Forest", "Both", "Unknown"]
+    = f.input :phenotype_basis, :as => :select, :collection => ["Genetic evidence gathered on-site", "Appearance of elephants", "Geographical location", "Habitat"]
+    = f.input :data_type, :as => :hidden, :value => 'Population estimate'
+    = f.input :right_to_grant_permission, :required => true, :as => :radio, :collection => {"Yes, I have the right to grant permission to IUCN to use the data as specified" => true, "No, I do not have the right to grant permission, please email the following person:" => false}
+    = f.input :permission_email, :as => :email
+  = f.buttons
+
+javascript:
+  | var load_species = function(){
+    | var species_id = this.value;
+    | $('#submission_country_id').html('');
+    | $.ajax({
+      | dataType: "jsonp",
+      | url: '/species/'+species_id+"/range_states.js",
+      | success: function (range_states) {
+        | if(range_states.length<1){
+          | alert("No range states found for that species.")
+        | } else {
+          | for(var i=0; i<range_states.length; i++){
+            | $('#submission_country_id').append('<option value="'+range_states[i].id+'">'+range_states[i].name+'</option>')
+          | }
+        | }
+      | },
+      | failure: function () {
+        | alert("Server error retrieving range states.");
+      | }
+    | });
+  | }
+
+  | $('#submission_species_id').change(load_species);
+
+  | function hide_and_show_things(){
+    | $('#submission_right_to_grant_permission_false').each(function(){
+      | if(this.checked == true){
+        | $('#submission_permission_email_input').show()
+      | } else {
+        | $('#submission_permission_email_input').hide()
+      | }
+    | })
+  | }
+  | $('input[type=radio]').change(hide_and_show_things);
+  | hide_and_show_things();
