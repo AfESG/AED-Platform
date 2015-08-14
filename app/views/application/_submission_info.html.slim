@@ -1,0 +1,47 @@
+- if s.id.nil?
+  .submission_info
+    .submission_tip
+      | Information about your submission will appear here as you complete each data entry screen.
+- else
+  .submission_info
+    - if edit_allowed
+      .edit_link
+        = link_to image_tag("editable.png"), edit_submission_path(s)
+        = link_to image_tag("delete.png"), s, :confirm => t('are_you_sure'), :method => :delete
+    .submission_header
+      - unless s.country.nil?
+        .submission_country= s.country.name
+      - if s.is_mike_site?
+        .submission_mike_site MIKE site
+      - unless s.species.nil?
+        .submission_species= s.species.scientific_name
+        .submission_common_name= s.species.common_name
+        - unless s.phenotype == "" or s.phenotype == "Unknown"
+          .submission_phenotype
+            | Phenotype: #{s.phenotype}
+            - unless s.phenotype_basis == ""
+              | (based on #{s.phenotype_basis.downcase})
+    .submission_parameters
+      - unless s.user.nil?
+        .submission_user
+          - if s.user == current_user
+            - unless edit_allowed
+              .warn
+                | This report has been submitted to AfESG and can no longer be edited. If you need access to one of your completed submissions,
+                = link_to 'contact the Data Manager', '/contact'
+                = '.'
+            | Your contribution,
+          - else
+            | Data contributed by #{s.user.email},
+          - if s.right_to_grant_permission == false and s.permission_email != ''
+            | on behalf of #{s.permission_email},
+          | last updated #{s.updated_at}
+  - for p in s.population_submissions do
+    =render :partial => 'population_submission_info', :locals => {:p => p}
+  - if s.population_submissions.size < 1
+    - if edit_allowed
+      .add_actions
+        = link_to new_submission_population_submission_path(s) do
+          = image_tag('plus.png')
+          | Add a population estimate
+

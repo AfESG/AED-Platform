@@ -1,0 +1,175 @@
+h1 # @country}, #{@year 
+
+| Reports
+
+| &gt;
+
+a href=("/report/#{@species.gsub(' '),'_')}"} #{@species 
+
+| &gt;
+
+a href=("/report/#{@species.gsub(' '),'_')}/#{@year}"} #{@year 
+
+| &gt;
+
+a href=("/report/#{@species.gsub(' '),'_')}/#{@year}/#{@continent}"} #{@continent 
+
+| &gt;
+
+a href=("/report/#{@species.gsub(' '),'_')}/#{@year}/#{@continent}/#{@region.gsub(' ','_')}"} #{@region 
+
+| &gt; #{@country}
+
+p
+| All Years for #{@country}:
+
+a href=("/preview_report/2013_africa_final/#{@species.gsub(' '),'_')}/2013/#{@continent}/#{@region.gsub(' ','_')}/#{@country.gsub(' ','_')}"  2013
+
+| &mdash;
+
+a href=("/report/#{@species.gsub(' '),'_')}/2007/#{@continent}/#{@region.gsub(' ','_')}/#{@country.gsub(' ','_')}"  2007
+
+| &mdash;
+
+a href=("/report/#{@species.gsub(' '),'_')}/2002/#{@continent}/#{@region.gsub(' ','_')}/#{@country.gsub(' ','_')}"  2002
+
+| &mdash;
+
+a href=("/report/#{@species.gsub(' '),'_')}/1998/#{@continent}/#{@region.gsub(' ','_')}/#{@country.gsub(' ','_')}"  1998
+
+| &mdash;
+
+a href=("/report/#{@species.gsub(' '),'_')}/1995/#{@continent}/#{@region.gsub(' ','_')}/#{@country.gsub(' ','_')}"  1995
+
+
+== narrative
+
+- if @summary_totals_by_country.num_tuples > 0
+  h2 style=('margin-top:20px'} #{@year} Summary Totals for #{@country) 
+
+  table style='font-size:16px' 
+    tr
+      th width='40%'  Data Category
+      th.numeric width='15%'  Definite
+      th.numeric width='15%'  Probable
+      th.numeric width='15%'  Possible
+      th.numeric width='15%'  Speculative
+    -@summary_totals_by_country.each do |row|
+      tr style=('height: 24px') 
+        td= row['SURVEYTYPE']
+        td.numeric= number_with_delimiter row['DEFINITE']
+        td.numeric= number_with_delimiter row['PROBABLE']
+        td.numeric= number_with_delimiter row['POSSIBLE']
+        td.numeric= number_with_delimiter row['SPECUL']
+    -@summary_sums_by_country.each do |row|
+      tr.totals style=('height: 24px; font-weight: bold') 
+        td Totals # @year 
+        td.numeric= number_with_delimiter row['DEFINITE']
+        td.numeric= number_with_delimiter row['PROBABLE']
+        td.numeric= number_with_delimiter row['POSSIBLE']
+        td.numeric= number_with_delimiter row['SPECUL']
+- else
+  h2 No estimates were available for # @country} in #{@year 
+- if !@causes_of_change_by_country.nil? && @causes_of_change_by_country.num_tuples > 0
+  h2 Interpretation of Changes in Estimates from Previous Report
+
+  table style='font-size:16px' 
+    tr
+      th width='40%'  Cause of Change
+      th.numeric width='15%'  Definite
+      th.numeric width='15%'  Probable
+      th.numeric width='15%'  Possible
+      th.numeric width='15%'  Speculative
+    - @causes_of_change_by_country.each do |row|
+      tr style=('height: 24px;') 
+        td= row['CauseofChange']
+        - ['definite','probable','possible','specul'].each do |key|
+          td.numeric= signed_number row[key]
+    - unless @causes_of_change_sums_by_country.nil?
+      - @causes_of_change_sums_by_country.each do |row|
+        tr.totals style=('height: 24px; font-weight: bold') 
+          td Totals
+          - ['definite','probable','possible','specul'].each do |key|
+            td.numeric= signed_number row[key]
+
+- if !@area_of_range_covered_by_country.nil? && @area_of_range_covered_by_country.num_tuples > 0
+  h2 Area of Range Covered by Each Data Category (km²)
+  table style='font-size:16px' 
+    tr
+      th Data Category
+      th.numeric Known Range
+      th.numeric Possible Range
+      th.numeric Total Range
+    - @area_of_range_covered_by_country.each do |row|
+      tr style=('height: 24px;') 
+        td= number_with_delimiter row['surveytype']
+        - ['known','possible','total'].each do |key|
+          td.numeric= number_or_zero row[key]
+    - @area_of_range_covered_sum_by_country.each do |row|
+      tr.totals style=('height: 24px; font-weight: bold') 
+        td Totals
+        - ['known','possible','total'].each do |key|
+          td.numeric= number_or_zero row[key]
+
+- if @elephant_estimates_by_country.num_tuples > 0
+  h2 # @country : Elephant Estimates
+  table
+    tr
+      th style="border:none" 
+        - if @year.to_i==2007
+          th style="border:none"  Cause of
+      th colspan=3 style="text-align:center" 
+        | Survey Details
+        sup 2
+      th colspan=2 style="text-align:center"  Number of Elephants
+      th style="border:none" 
+      th style="border:none" 
+      th.numeric style=("border:none; padding-right:10px")  Area
+      th colspan=2 style="text-align:center"  Map Location
+    tr
+      th Input Zone
+      - if @year.to_i==2007
+        th
+          | Change
+          sup 1
+      th Type
+      th Reliab.
+      th Year
+      th.numeric Estimate
+      th.numeric 95% C.L.
+      th style="padding-left:10px"  Source
+      th
+        | PFS
+        sup 3
+      th.numeric style="padding-right:10px"  (km²)
+      th style='text-align:center'  Lon.
+      th style='text-align:center'  Lat.
+    - @elephant_estimates_by_country.each do |row|
+      tr style='height:18px' 
+        td
+          a href=("#{@country.gsub(' '),'_')}/#{row['OBJECTID']}" = row['survey_zone']
+        - if @year.to_i==2007
+          td= row['ReasonForChange']
+        td= row['method_and_quality']
+        td style="text-align:center" = row['CATEGORY']
+        td= row['CYEAR']
+        td.numeric= number_with_delimiter row['ESTIMATE']
+        td.numeric= number_with_delimiter row['CL95']
+        td style="padding-left:10px" = row['REFERENCE']
+        td style='text-align:center' = row['PFS']
+        td.numeric style="padding-right:10px" = number_with_delimiter row['AREA_SQKM']
+        td style='text-align:center' = row['LON']
+        td style='text-align:center' = row['LAT']
+
+p
+  | * Range of informed guess
+p
+  sup 1
+  | Key to Causes of Change (only tracked since 2007): DA: Different Area; DD: Data Degraded; DT: Different Technique; NA: New Analysis; NG: New Guess; NP: New population; PL: Population Lost; RS: Repeat Survey (RS ́ denotes a repeat survey that is not statistically comparable for reasons such as different season); –––: No Change
+p
+  sup 2
+  | Key to Survey Types: AC: Aerial Count, not specified; AS: Aerial Sample Count; AT: Aerial Total Count; DC: Dung Count; EX: Extrapolation from GIS; GD: Genetic Dung Count; GS: Ground Sample Count; GT: Ground Total Count; IG: Informed Guess; IR: Individual Registration; OG: Other Guess. Survey Type is followed by an indicator of survey quality, ranked from 1 to 3 (best to worst). Survey Reliability is keyed A-E (best to worst) as <a href='/reliability'>outlined in this table</a
+p
+  sup 3
+  | PFS: Priority for Future Surveys, ranked from 1 to 5 (highest to lowest). Based on the precision of estimates and the proportion of national range accounted for by the site in question, PFS is a measure of the importance and urgency for future population surveys. All areas of unassessed range have a priority of 1. See Introduction for details on how the PFS is derived.
+== footnote

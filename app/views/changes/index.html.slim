@@ -1,0 +1,28 @@
+h1= t('.title')
+p= link_to t('.new'), new_change_path
+
+table
+  thead
+    tr
+      th= Change.human_attribute_name :analysis_name
+      th= Change.human_attribute_name :analysis_year
+      th= Change.human_attribute_name :country
+      th= Change.human_attribute_name :replacement_name
+      th= Change.human_attribute_name :replaced_strata
+      th= Change.human_attribute_name :new_strata
+      th= Change.human_attribute_name :reason_change
+      th colspan=3 = t 'actions'
+  
+  tbody
+    - for change in @changes
+      tr  class=cycle(:odd, :even)  
+        td= change.analysis_name
+        td= change.analysis_year
+        td= change.country
+        td= change.replacement_name
+        td= linked_ids_for change.replaced_strata
+        td= linked_ids_for change.new_strata
+        td= change.reason_change
+        td.action= link_to t('show'), change
+        td.action= link_to t('edit'), edit_change_path(change)
+        td.action= link_to t('destroy'), change, :confirm => t('are_you_sure'), :method => :delete

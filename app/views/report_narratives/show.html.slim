@@ -1,0 +1,13 @@
+h1= t '.title'
+p
+  = link_to t('back'), report_narratives_path
+  = link_to t('edit'), edit_report_narrative_path(@report_narrative)
+  = link_to t('.new'), new_report_narrative_path
+
+dl
+  dt= ReportNarrative.human_attribute_name :uri
+  dd= @report_narrative.uri
+  dt= ReportNarrative.human_attribute_name :narrative
+  dd= @report_narrative.narrative
+  dt= ReportNarrative.human_attribute_name :footnote
+  dd= @report_narrative.footnote

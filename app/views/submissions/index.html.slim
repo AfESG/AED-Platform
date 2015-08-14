@@ -1,0 +1,35 @@
+h1= t('.title')
+
+table
+  thead
+    tr
+      th= sortable 'user', 'User'
+      th= sortable 'site_name', 'Site Name'
+      th= sortable 'country', 'Country'
+      th= sortable 'phenotype', 'Phenotype'
+      th Pop
+      th Rng
+      th= sortable 'right_to_grant_permission', 'Perm'
+      th= sortable 'submitted', 'Submitted'
+      th= sortable 'released', 'Released'
+      th= sortable 'created_at', 'Created'
+      th= sortable 'updated_at', 'Updated'
+      th colspan=3 = t 'actions'
+
+  tbody
+    - for submission in @submissions
+      tr  class=cycle(:odd, :even)  
+        td= submission.user.nil?? '???' : submission.user.name
+        td= submission.population_submissions[0].nil?? '' : submission.population_submissions[0].site_name
+        td= submission.country
+        td= submission.phenotype
+        td= submission.data_type == 'Population estimate' ? 'X' : ''
+        td= submission.data_type == 'Range polygon' ? 'X' : ''
+        td= submission.right_to_grant_permission ? 'Y' : 'N'
+        td= submission.population_submissions[0].nil?? '' : (submission.population_submissions[0].submitted ? 'Y' : 'N')
+        td= submission.population_submissions[0].nil?? '' : (submission.population_submissions[0].released ? 'Y' : 'N')
+        td= submission.created_at
+        td= submission.updated_at
+        td.action= link_to t('show'), submission
+        td.action= link_to t('edit'), edit_submission_path(submission)
+        td.action= link_to t('destroy'), submission, :confirm => t('are_you_sure'), :method => :delete

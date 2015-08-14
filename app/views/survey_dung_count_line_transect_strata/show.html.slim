@@ -1,0 +1,178 @@
+h1= t '.title'
+.restated_survey_info
+  = render :partial => "submission_info", :locals => { :s => @submission }
+.show
+  h4
+    - if @level.stratum_name == ''
+      .count_stratum_name Stratum ## @level.id 
+    - else
+      .count_stratum_name= @level.stratum_name
+  .show_stratum
+    == best_label_for 'stratum_area'
+    = @level.stratum_area
+  .show_stratum
+    == best_label_for 'population_estimate'
+    = @level.population_estimate
+  .show_stratum
+    == best_label_for 'population_variance'
+    = @level.population_variance
+  .show_stratum
+    == best_label_for 'population_standard_error'
+    = @level.population_standard_error
+  .show_stratum
+    == best_label_for 'population_t'
+    = @level.population_t
+  .show_stratum
+    == best_label_for 'population_degrees_of_freedom'
+    = @level.population_degrees_of_freedom
+  .show_stratum
+    == best_label_for 'population_confidence_interval'
+    = @level.population_confidence_interval
+  .show_stratum
+    == best_label_for 'population_lower_confidence_limit'
+    = @level.population_lower_confidence_limit
+  .show_stratum
+    == best_label_for 'population_upper_confidence_limit'
+    = @level.population_upper_confidence_limit
+  .show_stratum
+    == best_label_for 'population_no_precision_estimate_available'
+    = @level.population_no_precision_estimate_available
+  .show_stratum
+    == best_label_for 'population_asymmetric_lower_confidence_interval'
+    = @level.population_asymmetric_lower_confidence_interval
+  .show_stratum
+    == best_label_for 'population_asymmetric_upper_confidence_interval'
+    = @level.population_asymmetric_upper_confidence_interval
+  .show_stratum
+    == best_label_for 'transects_covered'
+    = @level.transects_covered
+  .show_stratum
+    == best_label_for 'transects_covered_total_length'
+    = @level.transects_covered_total_length
+  .show_stratum
+    == best_label_for 'strip_width'
+    = @level.strip_width
+  .show_stratum
+    == best_label_for 'observations'
+    = @level.observations
+  .show_stratum
+    == best_label_for 'observations_distance_method'
+    = @level.observations_distance_method
+  .show_stratum
+    == best_label_for 'actually_seen'
+    = @level.actually_seen
+  .show_stratum
+    == best_label_for 'dung_piles'
+    = @level.dung_piles
+  .show_stratum
+    == best_label_for 'dung_decay_rate_measurement_method'
+    = @level.dung_decay_rate_measurement_method
+  .show_stratum
+    == best_label_for 'dung_decay_rate_estimate_used'
+    = @level.dung_decay_rate_estimate_used
+  .show_stratum
+    == best_label_for 'dung_decay_rate_measurement_site'
+    = @level.dung_decay_rate_measurement_site
+  .show_stratum
+    == best_label_for 'dung_decay_rate_measurement_year'
+    = @level.dung_decay_rate_measurement_year
+  .show_stratum
+    == best_label_for 'dung_decay_rate_reference'
+    = @level.dung_decay_rate_reference
+  .show_stratum
+    == best_label_for 'dung_decay_rate_variance'
+    = @level.dung_decay_rate_variance
+  .show_stratum
+    == best_label_for 'dung_decay_rate_standard_error'
+    = @level.dung_decay_rate_standard_error
+  .show_stratum
+    == best_label_for 'dung_decay_rate_t'
+    = @level.dung_decay_rate_t
+  .show_stratum
+    == best_label_for 'dung_decay_rate_degrees_of_freedom'
+    = @level.dung_decay_rate_degrees_of_freedom
+  .show_stratum
+    == best_label_for 'dung_decay_rate_confidence_interval'
+    = @level.dung_decay_rate_confidence_interval
+  .show_stratum
+    == best_label_for 'dung_decay_rate_lower_confidence_limit'
+    = @level.dung_decay_rate_lower_confidence_limit
+  .show_stratum
+    == best_label_for 'dung_decay_rate_upper_confidence_limit'
+    = @level.dung_decay_rate_upper_confidence_limit
+  .show_stratum
+    == best_label_for 'dung_decay_rate_no_precision_estimate_available'
+    = @level.dung_decay_rate_no_precision_estimate_available
+  .show_stratum
+    == best_label_for 'defecation_rate_measured_on_site'
+    = @level.defecation_rate_measured_on_site
+  .show_stratum
+    == best_label_for 'defecation_rate_estimate_used'
+    = @level.defecation_rate_estimate_used
+  .show_stratum
+    == best_label_for 'defecation_rate_measurement_site'
+    = @level.defecation_rate_measurement_site
+  .show_stratum
+    == best_label_for 'defecation_rate_reference'
+    = @level.defecation_rate_reference
+  .show_stratum
+    == best_label_for 'defecation_rate_variance'
+    = @level.defecation_rate_variance
+  .show_stratum
+    == best_label_for 'defecation_rate_standard_error'
+    = @level.defecation_rate_standard_error
+  .show_stratum
+    == best_label_for 'defecation_rate_t'
+    = @level.defecation_rate_t
+  .show_stratum
+    == best_label_for 'defecation_rate_degrees_of_freedom'
+    = @level.defecation_rate_degrees_of_freedom
+  .show_stratum
+    == best_label_for 'defecation_rate_confidence_interval'
+    = @level.defecation_rate_confidence_interval
+  .show_stratum
+    == best_label_for 'defecation_rate_lower_confidence_limit'
+    = @level.defecation_rate_lower_confidence_limit
+  .show_stratum
+    == best_label_for 'defecation_rate_upper_confidence_limit'
+    = @level.defecation_rate_upper_confidence_limit
+  .show_stratum
+    == best_label_for 'defecation_rate_no_precision_estimate_available'
+    = @level.defecation_rate_no_precision_estimate_available
+  .show_stratum
+    == best_label_for 'dung_density_estimate'
+    = @level.dung_density_estimate
+  .show_stratum
+    == best_label_for 'dung_density_variance'
+    = @level.dung_density_variance
+  .show_stratum
+    == best_label_for 'dung_density_standard_error'
+    = @level.dung_density_standard_error
+  .show_stratum
+    == best_label_for 'dung_density_t'
+    = @level.dung_density_t
+  .show_stratum
+    == best_label_for 'dung_density_degrees_of_freedom'
+    = @level.dung_density_degrees_of_freedom
+  .show_stratum
+    == best_label_for 'dung_density_confidence_interval'
+    = @level.dung_density_confidence_interval
+  .show_stratum
+    == best_label_for 'dung_density_lower_confidence_limit'
+    = @level.dung_density_lower_confidence_limit
+  .show_stratum
+    == best_label_for 'dung_density_upper_confidence_limit'
+    = @level.dung_density_upper_confidence_limit
+  .show_stratum
+    == best_label_for 'dung_density_asymmetric_upper_confidence_interval'
+    = @level.dung_density_asymmetric_upper_confidence_interval
+  .show_stratum
+    == best_label_for 'dung_density_asymmetric_lower_confidence_interval'
+    = @level.dung_density_asymmetric_lower_confidence_interval
+  .show_stratum
+    == best_label_for 'dung_density_no_precision_estimate_available'
+    = @level.dung_density_no_precision_estimate_available
+  .show_stratum
+    == best_label_for 'dung_encounter_rate'
+    = @level.dung_encounter_rate
+  == map_stratum @level

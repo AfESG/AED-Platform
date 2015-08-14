@@ -1,0 +1,26 @@
+h1= t('.title')
+p= link_to t('.new'), new_survey_individual_registration_path
+
+table
+  thead
+    tr
+      th= SurveyIndividualRegistration.human_attribute_name :population_submission_id
+      th= SurveyIndividualRegistration.human_attribute_name :population_estimate
+      th= SurveyIndividualRegistration.human_attribute_name :population_upper_range
+      th= SurveyIndividualRegistration.human_attribute_name :monitoring_years
+      th= SurveyIndividualRegistration.human_attribute_name :monitoring_frequency
+      th= SurveyIndividualRegistration.human_attribute_name :fenced_site
+      th colspan=3 = t 'actions'
+  
+  tbody
+    - for survey_individual_registration in @survey_individual_registrations
+      tr  class=cycle(:odd, :even)  
+        td= survey_individual_registration.population_submission_id
+        td= survey_individual_registration.population_estimate
+        td= survey_individual_registration.population_upper_range
+        td= survey_individual_registration.monitoring_years
+        td= survey_individual_registration.monitoring_frequency
+        td= survey_individual_registration.fenced_site
+        td.action= link_to t('show'), survey_individual_registration
+        td.action= link_to t('edit'), edit_survey_individual_registration_path(survey_individual_registration)
+        td.action= link_to t('destroy'), survey_individual_registration, :confirm => t('are_you_sure'), :method => :delete

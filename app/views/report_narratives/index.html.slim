@@ -1,0 +1,15 @@
+h1 All Narratives and Footnotes
+
+table
+  thead
+    tr
+      th= ReportNarrative.human_attribute_name :uri
+      th colspan=3 = t 'actions'
+
+  tbody
+    - for report_narrative in @report_narratives
+      tr  class=cycle(:odd, :even)  
+        td= report_narrative.uri
+        td.action= link_to t('show'), report_narrative
+        td.action= link_to t('edit'), edit_report_narrative_path(report_narrative)
+        td.action= link_to t('destroy'), report_narrative, :confirm => t('are_you_sure'), :method => :delete
