@@ -5,45 +5,45 @@ h1
     = @preview_title
 
 .crumbs
-  a href='/report' Reports
+  a href='/report'
+  ' Reports
 
-  | &gt;
+  ' &gt;
 
   a href="/report/#{@species.gsub(' ','_')}"
+    = @species
 
-  = @species
-
-  | &gt;
+  '  &gt;
 
   = @year
 
-  | &gt;
+  '  &gt;
 
   a href=("/preview_report/#{@filter}/#{@species.gsub(' ','_')}/#{@year}/#{@continent}")
     = @continent
 
-  | &gt;
+  '  &gt;
 
   = @region
 
 p
-| All Years for #{@region}:
+' All Years for #{@region}:
 
 a href=("/preview_report/2013_africa/#{@species.gsub(' ','_')}/2013/#{@continent}/#{@region.gsub(' ','_')}")  2013
 
-| &mdash;
+' &mdash;
 
 a href=("/report/#{@species.gsub(' ','_')}/2007/#{@continent}/#{@region.gsub(' ','_')}") 2007
 
-| &mdash;
+' &mdash;
 
 a href=("/report/#{@species.gsub(' ','_')}/2002/#{@continent}/#{@region.gsub(' ','_')}") 2002
 
-| &mdash;
+' &mdash;
 
 a href=("/report/#{@species.gsub(' ','_')}/1998/#{@continent}/#{@region.gsub(' ','_')}") 1998
 
-| &mdash;
+' &mdash;
 
 a href=("/report/#{@species.gsub(' ','_')}/1995/#{@continent}/#{@region.gsub(' ','_')}") 1995
 
