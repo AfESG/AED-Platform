@@ -5,7 +5,10 @@ class Species < ActiveRecord::Base
   attr_accessible
 
   has_many :species_range_state_countries
-  has_many :range_states, :through => :species_range_state_countries, :source => 'country', :order => 'name'
+  has_many :range_states, -> {
+      order 'name'
+    }, :through => :species_range_state_countries,
+    :source => 'country'
   has_many :submissions
 
   def to_s
