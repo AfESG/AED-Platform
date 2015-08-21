@@ -1,1 +1,20 @@
-' Hello world
+.container
+  .row
+    .col-xs-12
+      h1 Submissions search form
+  .row
+    .col-md-4
+      ' Country
+      input type='text'
+    .col-md-4
+      ' Survey Year
+      input type='text'
+    .col-md-4
+      ' Released
+      input name='released' type='radio' value='Yes'
+      ' Yes
+      input name='released' type='radio' value='No'
+      ' No
+  .row
+    .col-xs-12 style='text-align:center'
+      input type='submit' value='Search'
