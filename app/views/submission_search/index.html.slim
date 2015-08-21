@@ -17,20 +17,21 @@
             option value=year
               = year
       .col-md-4
-        ' Released
-        input name='released' type='radio' value='true' checked='checked'
-        ' Yes
-        input name='released' type='radio' value='false'
-        ' No
+        - if user_signed_in? && current_user.admin?
+          ' Released
+          input name='released' type='radio' value='true' checked='checked'
+          ' Yes
+          input name='released' type='radio' value='false'
+          ' No
     .row
       .col-xs-12 style='text-align:center'
         input type='submit' value='Search'
   .row
     .col-xs-12
       - if @search_results
-        - @search_results.each do |result|
-          table
-            tr
-              td= result['short_citation']
-              td= result['data_licensing']
-              td= result['released']
+        table
+          - @search_results.each do |result|
+              tr
+                td= result['short_citation']
+                td= result['data_licensing']
+                td= result['released']
