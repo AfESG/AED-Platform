@@ -25,6 +25,7 @@ end
 
 if target == 'STAGING'
   puts "Deploying to staging"
+  default_environment['authenticate_all_requests'] = 'tusker'
   default_environment['UNICORN_PORT'] = '3000'
   default_environment['POSTGRESQL_DATABASE'] = 'aaed_staging'
   default_environment['HOSTNAME'] = 'staging.elephantdatabase.org'
