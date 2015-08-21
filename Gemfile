@@ -12,6 +12,9 @@ gem 'jquery-rails'
 gem 'leaflet-rails'
 gem 'bootstrap-sass'
 
+#Admin interface
+gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'
+
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
