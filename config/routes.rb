@@ -106,6 +106,8 @@ Aaed::Application.routes.draw do
   get 'crash' => 'welcome#crash'
   get 'recalc' => 'welcome#recalc'
 
+  get 'submission_search' => 'submission_search#index'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
