@@ -4,25 +4,27 @@
       .col-xs-12
         h1 Submissions search form
     .row
-      .col-md-4
+      label
         ' Country
-        select name='country'
-          - Country.order(:name).each do |country|
-            option value=country.id
-              = country.name
-      .col-md-4
+      select name='country' class='form-control'
+        - Country.order(:name).each do |country|
+          option value=country.id
+            = country.name
+      label
         ' Survey Year
-        select name='survey_year'
-          - 2002.upto(2013).each do |year|
-            option value=year
-              = year
-      .col-md-4
-        - if user_signed_in? && current_user.admin?
+      select name='survey_year' class='form-control'
+        - 2002.upto(2013).each do |year|
+          option value=year
+            = year
+      - if user_signed_in? && current_user.admin?
+        label
           ' Released
-          input name='released' type='radio' value='true' checked='checked'
-          ' Yes
-          input name='released' type='radio' value='false'
-          ' No
+          label class="radio-inline"
+            input name='released' type='radio' value='true' checked='checked'
+            ' Yes
+          label class="radio-inline"
+            input name='released' type='radio' value='false'
+            ' No
     .row
       .col-xs-12 style='text-align:center'
         input type='submit' value='Search' class='btn btn-primary'
