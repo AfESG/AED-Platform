@@ -17,6 +17,5 @@ class SubmissionSearchController < ApplicationController
         LIMIT 10
       SQL
     end
-    render layout: 'bootstrapped'
   end
 end
