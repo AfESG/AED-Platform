@@ -33,6 +33,7 @@ class SubmissionSearchController < ApplicationController
           right join estimate_factors_analyses e on e.population_submission_id = ps.id
           WHERE ps.completion_year=#{params[:survey_year]}
           AND c.id=#{params[:country]}
+          AND released is true
           GROUP BY e.population_submission_id, e.site_name, ps.survey_type , ps.short_citation, released,  data_licensing, u.name
           ORDER BY  e.site_name;
           SQL
