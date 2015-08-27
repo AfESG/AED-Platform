@@ -8,7 +8,7 @@
       div class="form-group"
         label
           ' Country
-        select id='select_country' class='form-control'
+        select name='country' class='form-control'
           - Country.order(:name).each do |country|
             option value=country.id
               = country.name
@@ -23,9 +23,9 @@
         div class="form-group"
           label
             ' Released
-          input name='released_yes' type='radio' value='true' checked='checked'
+          input name='released' type='radio' value='true' checked='checked'
             ' Yes
-          input name='released_no' type='radio' value='false'
+          input name='released' type='radio' value='false'
             ' No
     .row
       .col-xs-12 style='text-align:center'
