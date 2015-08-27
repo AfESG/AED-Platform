@@ -1,29 +1,31 @@
 .container
-  form action="submission_search"
+  .row
+    .col-xs-12
+      h1 Submissions search form
+      
+  form action="submission_search" class='form-inline'
     .row
-      .col-xs-12
-        h1 Submissions search form
-    .row
-      label
-        ' Country
-      select name='country' class='form-control'
-        - Country.order(:name).each do |country|
-          option value=country.id
-            = country.name
-      label
-        ' Survey Year
-      select name='survey_year' class='form-control'
-        - 2002.upto(2013).each do |year|
-          option value=year
-            = year
-      - if user_signed_in? && current_user.admin?
+      div class="form-group"
         label
-          ' Released
-          label class="radio-inline"
-            input name='released' type='radio' value='true' checked='checked'
+          ' Country
+        select id='select_country' class='form-control'
+          - Country.order(:name).each do |country|
+            option value=country.id
+              = country.name
+      div class="form-group"
+        label
+          ' Survey Year
+        select name='survey_year' class='form-control'
+          - 2002.upto(2013).each do |year|
+            option value=year
+              = year
+      - if user_signed_in? && current_user.admin?
+        div class="form-group"
+          label
+            ' Released
+          input name='released_yes' type='radio' value='true' checked='checked'
             ' Yes
-          label class="radio-inline"
-            input name='released' type='radio' value='false'
+          input name='released_no' type='radio' value='false'
             ' No
     .row
       .col-xs-12 style='text-align:center'
