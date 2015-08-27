@@ -33,13 +33,21 @@
       - if @search_results
         table class='table table-responsive table-striped'
           tr
+            th Site Name
+            th Survey Type
             th Source
-            th Data Licensing
+            th Estimate
             - if user_signed_in? && current_user.admin? 
               th Released
+              th Data Licensing
+              th Submitter
           - @search_results.each do |result|
               tr
+                td= result['site_name']
+                td= result['survey_type']
                 td= result['short_citation']
-                td= result['data_licensing']
+                td= result['estimate']
                 - if user_signed_in? && current_user.admin?
                   td= result['released']
+                  td= result['data_licensing']
+                  td= result['name']

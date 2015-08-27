@@ -11,21 +11,34 @@ class SubmissionSearchController < ApplicationController
     if params[:country] and !params[:country].blank?
       if params[:released] and !params[:released].blank?
         @search_results = execute <<-SQL
-          SELECT *
-          FROM population_submissions
-          WHERE completion_year=#{params[:survey_year]}
+          SELECT  distinct (e.population_submission_id), e.site_name, ps.survey_type, ps.short_citation, sum(population_estimate) as estimate, released,  data_licensing, u.name
+          FROM population_submissions ps
+          join submissions sub on ps. submission_id = sub.id
+          join countries c on c.id= sub.country_id
+          join users u on u.id = sub.user_id
+          right join estimate_factors_analyses e on e.population_submission_id = ps.id
+          WHERE ps.completion_year=#{params[:survey_year]}
+          AND c.id= #{params[:country]}
           AND released=#{params[:released]}
-          LIMIT 10
+          GROUP BY e.population_submission_id, e.site_name, ps.survey_type , ps.short_citation, released,  data_licensing, u.name
+          ORDER BY  e.site_name;
           SQL
       else
         @search_results = execute <<-SQL
-          SELECT *
-          FROM population_submissions
-          WHERE completion_year=#{params[:survey_year]}
-          LIMIT 10
+          SELECT  distinct (e.population_submission_id), e.site_name, ps.survey_type, ps.short_citation, sum(population_estimate) as estimate, released,  data_licensing, u.name
+          FROM population_submissions ps
+          join submissions sub on ps. submission_id = sub.id
+          join countries c on c.id= sub.country_id
+          join users u on u.id = sub.user_id
+          right join estimate_factors_analyses e on e.population_submission_id = ps.id
+          WHERE ps.completion_year=#{params[:survey_year]}
+          AND c.id=#{params[:country]}
+          GROUP BY e.population_submission_id, e.site_name, ps.survey_type , ps.short_citation, released,  data_licensing, u.name
+          ORDER BY  e.site_name;
           SQL
       end
     end
     render layout: 'bootstrapped'
   end
 end
+#@population_submissions = PopulationSubmission.joins(:submission).joins('join countries on submissions.country_id=countries.id').where("population_submissions.id in (select population_submission_id from estimate_factors_analyses where analysis_name='2013_africa_final')").order(translated_sort_column + ' ' + sort_direction);
