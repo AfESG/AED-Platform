@@ -1,37 +1,55 @@
 .container
-  form action="submission_search"
+  .row
+    .col-xs-12
+      h1 Submissions search form
+      
+  form action="submission_search" class='form-inline'
     .row
-      .col-xs-12
-        h1 Submissions search form
-    .row
-      .col-md-4
-        ' Country
-        select name='country'
+      div class="form-group"
+        label
+          ' Country
+        select name='country' class='form-control'
           - Country.order(:name).each do |country|
             option value=country.id
               = country.name
-      .col-md-4
-        ' Survey Year
-        select name='survey_year'
+      div class="form-group"
+        label
+          ' Survey Year
+        select name='survey_year' class='form-control'
           - 2002.upto(2013).each do |year|
             option value=year
               = year
-      .col-md-4
-        - if user_signed_in? && current_user.admin?
-          ' Released
+      - if user_signed_in? && current_user.admin?
+        div class="form-group"
+          label
+            ' Released
           input name='released' type='radio' value='true' checked='checked'
-          ' Yes
+            ' Yes
           input name='released' type='radio' value='false'
-          ' No
+            ' No
     .row
       .col-xs-12 style='text-align:center'
-        input type='submit' value='Search'
+        input type='submit' value='Search' class='btn btn-primary'
   .row
     .col-xs-12
       - if @search_results
-        table
+        table class='table table-responsive table-striped'
+          tr
+            th Site Name
+            th Survey Type
+            th Source
+            th Estimate
+            - if user_signed_in? && current_user.admin? 
+              th Released
+              th Data Licensing
+              th Submitter
           - @search_results.each do |result|
               tr
+                td= result['site_name']
+                td= result['survey_type']
                 td= result['short_citation']
-                td= result['data_licensing']
-                td= result['released']
+                td= result['estimate']
+                - if user_signed_in? && current_user.admin?
+                  td= result['released']
+                  td= result['data_licensing']
+                  td= result['name']
