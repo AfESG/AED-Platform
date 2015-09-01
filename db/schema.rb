@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(version: 20150821111744) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "region_id"
+    t.boolean "is_surveyed"
   end
 
 # Could not dump table "country" because of following StandardError

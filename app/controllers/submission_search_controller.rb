@@ -7,7 +7,6 @@ class SubmissionSearchController < ApplicationController
   end
 
   def index
-    # TODO: make :country work with some joins
     if params[:country] and !params[:country].blank?
       if user_signed_in? && current_user.admin?
         @search_results = execute <<-SQL

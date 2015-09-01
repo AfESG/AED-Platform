@@ -9,7 +9,7 @@
         label
           ' Country
         select name='country' class='form-control'
-          - Country.order(:name).each do |country|
+          - Country.where("is_surveyed=true").order(:name).each do |country|
             option value=country.id
               = country.name
       div class="form-group"
