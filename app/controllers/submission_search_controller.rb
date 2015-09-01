@@ -10,7 +10,7 @@ class SubmissionSearchController < ApplicationController
     if params[:country] and !params[:country].blank?
       if user_signed_in? && current_user.admin?
         @search_results = execute <<-SQL
-          SELECT  distinct (e.population_submission_id), e.site_name, ps.survey_type, ps.short_citation, sum(population_estimate) as estimate, released,  data_licensing, u.name
+          SELECT  distinct (e.population_submission_id), ps.site_name, ps.survey_type, ps.short_citation, sum(population_estimate) as estimate, released,  data_licensing, u.name
           FROM population_submissions ps
           join submissions sub on ps. submission_id = sub.id
           join countries c on c.id= sub.country_id
@@ -19,12 +19,12 @@ class SubmissionSearchController < ApplicationController
           WHERE ps.completion_year=#{params[:survey_year]}
           AND c.id= #{params[:country]}
           AND released=#{params[:released]}
-          GROUP BY e.population_submission_id, e.site_name, ps.survey_type , ps.short_citation, released,  data_licensing, u.name
-          ORDER BY  e.site_name;
+          GROUP BY e.population_submission_id, ps.site_name, ps.survey_type , ps.short_citation, released,  data_licensing, u.name
+          ORDER BY  ps.site_name;
           SQL
       else
         @search_results = execute <<-SQL
-          SELECT  distinct (e.population_submission_id), e.site_name, ps.survey_type, ps.short_citation, sum(population_estimate) as estimate, released,  data_licensing, u.name
+          SELECT  distinct (e.population_submission_id), ps.site_name, ps.survey_type, ps.short_citation, sum(population_estimate) as estimate, released,  data_licensing, u.name
           FROM population_submissions ps
           join submissions sub on ps. submission_id = sub.id
           join countries c on c.id= sub.country_id
@@ -33,8 +33,8 @@ class SubmissionSearchController < ApplicationController
           WHERE ps.completion_year=#{params[:survey_year]}
           AND c.id=#{params[:country]}
           AND released=true
-          GROUP BY e.population_submission_id, e.site_name, ps.survey_type , ps.short_citation, released,  data_licensing, u.name
-          ORDER BY  e.site_name;
+          GROUP BY e.population_submission_id, ps.site_name, ps.survey_type , ps.short_citation, released,  data_licensing, u.name
+          ORDER BY  ps.site_name;
           SQL
       end
     end
