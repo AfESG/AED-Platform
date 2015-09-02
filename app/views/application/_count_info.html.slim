@@ -39,7 +39,7 @@
       - if c.respond_to? "population_estimate"
         .count_stratum_estimate= c.population_estimate
       - if c.respond_to? "population_estimate_min"
-        .count_stratum_estimate= "# c.population_estimate_min}-#{c.population_estimate_max "
+        .count_stratum_estimate= "#{c.population_estimate_min}-#{c.population_estimate_max}"
       =link_to c do
         .count_stratum_name
           | Survey Type:
