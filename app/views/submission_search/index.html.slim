@@ -53,7 +53,9 @@
               th Submitter
           - @search_results.each do |result|
               tr
-                td= result['site_name']
+                td
+                  = link_to "/population_submissions/#{result['population_submission_id']}" do
+                    = result['site_name']
                 td= result['survey_type']
                 td= result['short_citation']
                 td= result['estimate']
