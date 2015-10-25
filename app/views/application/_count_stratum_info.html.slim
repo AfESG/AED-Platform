@@ -1,0 +1,18 @@
+.count_stratum_info
+  - if edit_allowed
+    .edit_link
+      = link_to image_tag("editable.png"), guess_edit_stratum_path(b)
+      = link_to image_tag("delete.png"), b, :confirm => t('are_you_sure_delete_stratum'), :method => :delete
+  .count_stratum_header
+    .count_stratum_estimate= b.population_estimate
+    =link_to guess_show_stratum_path(b) do
+      - if b.stratum_name == ''
+        .count_stratum_name Stratum ## b.id 
+      - else
+        .count_stratum_name= b.stratum_name
+    .count_stratum_parameters
+      -unless b.stratum_area.nil?
+        - if b.stratum_area > 0
+          = b.stratum_area
+          | km²
+

@@ -1,0 +1,10 @@
+h1= t '.title'
+p= link_to t('back'), report_narratives_path
+= semantic_form_for @report_narrative do |f|
+  = f.inputs do
+    = f.input :uri, :as => 'hidden', :value => params[:uri]
+    = f.input :narrative
+    = f.input :footnote
+
+  = f.buttons do
+    = f.commit_button

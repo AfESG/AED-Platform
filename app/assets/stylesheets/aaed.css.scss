@@ -3,15 +3,108 @@ body{
   margin: 0px;
   padding: 0px;
 }
+
+body.bootstrapped {
+  background-color: #fff;
+}
+/*top banner*/
+a#logo-aed img{
+   width: 250px;
+   margin-top: 10px;
+}
+a#logo-afesg img{
+    position: absolute;
+    left: 65%;
+    width: 170px;
+    top: 25px;
+}
+body.bootstrapped div.container div.row div#top{
+    background-image: asset-url("iceage2.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 97% 100%;
+    height: 230px;
+}
+body.bootstrapped div.container div.row div#top div.col-xs-12 a#logo-afesg img{
+  float: right;
+      left: 0;
+      margin-bottom: 0;
+      margin-right: 10px;
+      padding-right: 0;
+      position: relative;
+      right: 0;
+      top: 5px;
+      width: 12%;
+}
+html body.bootstrapped div.container div.row div#top div.col-xs-12 a#logo-aed img{
+  margin-bottom: 0;
+  margin-left: 10px;
+  margin-top: 5px;
+  width: 17%;
+}
 .strapline {
   position: absolute;
   top: 72px;
-  left: 390px;
+  left: 340px;
   width: 300px;
   font-family: "Droid Sans";
   font-size: 14px;
   line-height: 18px;
   color: #2b1100;
+}
+/*navigation menu*/
+nav.navbar.navbar-default{
+  background-color: #d0ddbf;
+}
+span#menu{
+  float: left;
+}
+span#registration{
+  float: right;
+}
+nav.navbar.navbar-default{
+  margin-bottom: 5px;
+}
+ul.nav.nav-pills{
+  margin-left: 7px;
+}
+ul.nav.nav-pills li a{
+  margin-top: 5px;
+  text-decoration: none;
+  color: #23527c;
+}
+.nav > li > a:hover, .nav > li > a:focus {
+    background-color: #fdbe85;
+    color: white;
+}
+
+.row {
+  margin: 0px;
+}
+
+//h1 bootstrapped
+div.col-xs-12 h1{
+  margin-top: 5px;
+  background-color: #fdbe85;
+  color: #23527c;
+  font-family: "Droid Sans";
+  font-size: 30px;
+  font-weight: normal;
+  padding: 10px;
+  text-align: center;
+}
+
+// form controls
+div.form-group label{
+  margin-left: 20px;
+  margin-right: 20px;
+}
+form.form-inline div.row div.col-xs-12 input.btn.btn-primary{
+  margin: 10px;
+}
+/*TITLE feature name*/
+div.col-xs-12 div.feature_name{
+  text-align: center;
 }
 sup {
   vertical-align: super;
@@ -26,18 +119,47 @@ td.numeric {
 a{
   color: #118300;
 }
-.logo{
+/*.logo{
   margin-top: 10px;
   padding-bottom: 10px;
-}
+}*/
 .user_section{
   float: right;
 }
-.nav{
+.nav-old{
   position: absolute;
   right: 50px;
-  top: 50px;
+  top: 30px;
   width: 73px;
+}
+
+div#footer{
+	background-color: white;
+    height: 55px;
+    margin-left: 20px;
+    margin-top: 10px;
+}
+span#iucn-logos a#logo-iucn {
+	text-decoration: none;
+}
+span#iucn-logos a#logo-iucn img{
+	margin-bottom: 0;
+    margin-right: 5px;
+    width: 50px;
+}
+span#iucn-logos a#logo-ssc img {
+    margin-bottom: 0;
+    margin-left: 5px;
+    width: 70px;
+}
+span#legal{
+	font-size: xx-small;
+    padding-top: 20px;
+}
+span#legal p{
+	float: right;
+    margin-top: 10px;
+    width: 85%;
 }
 .want_data {
   font-size: 14px;
@@ -94,11 +216,11 @@ a{
 .navItem .selected {
   color: #777;
 }
-#legal{
+/*#legal{
   clear: both;
   padding-top: 20px;
   font-size: xx-small;
-}
+}*/
 iframe{
   border: none;
 }
@@ -286,7 +408,7 @@ div.survey_results {
 .survey_results table td.total{
 }
 .survey_results table tr.totals{
-	background-color: #EEEEFF; 	
+	background-color: #EEEEFF;
 }
 
 .survey_results table th{
@@ -565,10 +687,6 @@ h5 {
 .count_stratum_info {
   margin-left: 40px;
 }
-form {
-  float: left;
-  width: 500px;
-}
 #ftcanvas {
   width: 100%;
   height: 500px;
@@ -672,4 +790,14 @@ form {
       font-weight: bold !important;
       text-decoration: none !important;
     }
+}
+
+div.notice, #flash_notice {
+  margin-bottom: 30px;
+  margin-top: 0;
+  top: 30px;
+}
+body.bootstrapped div.container div.row div.notice{
+  margin-bottom: 5px;
+  margin-top: 5px;
 }

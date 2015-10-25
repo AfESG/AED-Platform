@@ -1,8 +1,5 @@
 class WelcomeController < ApplicationController
 
-  def index
-  end
-
   def execute(*array)
     sql = ActiveRecord::Base.send(:sanitize_sql_array, array)
     return ActiveRecord::Base.connection.execute(sql)

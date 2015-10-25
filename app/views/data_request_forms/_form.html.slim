@@ -1,0 +1,46 @@
+= semantic_form_for @data_request_form do |f|
+  = render "shared/error_messages", :target => @data_request_form
+  = f.inputs do
+    = f.input :name
+    = f.input :title
+    = f.input :department
+    = f.input :organization
+    = f.input :telephone
+    = f.input :fax
+    = f.input :email
+    = f.input :website
+    = f.input :address
+    = f.input :town
+    = f.input :post_code
+    = f.input :state
+    = f.input :country
+    = f.input :extracts
+    = f.input :research
+    - if @show_status != nil
+      = f.input :status, :as => :select, :collection => ['Approved','Denied']
+  markdown:
+    | The release of AED digital data is subject to the acceptance of the following conditions:
+
+    | 1.  The authors, prior to submission, publication or dissemination
+        | of any output containing any views, alterations, manipulations
+        | or analysis of digital data extracted from the African Elephant
+        | Database, must submit to the DRWG, for review and comment, a
+        | final draft of all materials intended for dissemination.
+    | 2.  Any alteration to digital data supplied by the AED and intended
+        | for publication, dissemination or placement in the public domain,
+        | must be accompanied by a statement by the author(s), clearly
+        | describing the nature of any alterations effected on data
+        | extracted from the African Elephant Database. The author(s)
+        | must also submit to the Data Review Working Group the altered
+        | dataset in its entirety for review, and grant express permission
+        | to the AfESG for possible integration of the altered data into
+        | the African Elephant Database, should the DRWG so recommend.
+    | 3.  Digital Data Extracts released to any person or group will remain
+        | the property of the AfESG and shall not be passed on to any third party.
+    | 4.  Any AED data used in papers, reports, publications or any other
+        | output will be given proper acknowledgement, as described in the Annex.
+    | 5.  The AfESG secretariat will be provided with 2 copies of any
+        | document or output in which AED data is used.
+
+    | I hereby agree to abide by the above conditions.
+  = f.buttons

@@ -14,7 +14,7 @@ class MikeSite < ActiveRecord::Base
   has_many :survey_individual_registrations
   has_many :survey_others
 
-  default_scope :order => 'site_code ASC'
+  default_scope { order('site_code ASC') } 
 
   def to_s
     "#{site_code} #{site_name}"

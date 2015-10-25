@@ -1,0 +1,11 @@
+h1 Narratives and Footnotes
+p
+  = link_to 'All narratives and footnotes', report_narratives_path
+= semantic_form_for @report_narrative do |f|
+  = f.inputs do
+    = f.input :uri
+    = f.input :narrative
+    = f.input :footnote
+
+  = f.buttons do
+    = f.commit_button

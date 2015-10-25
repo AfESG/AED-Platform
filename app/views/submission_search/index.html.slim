@@ -1,0 +1,65 @@
+.container
+  .row
+    .col-xs-12
+      h1 Submissions search form
+
+  form action="submission_search" class='form-inline'
+    .row
+      div class="form-group"
+        label
+          ' Country
+        select name='country' class='form-control'
+          - Country.where("is_surveyed=true").order(:name).each do |country|
+            - if country.id.to_s == params[:country]
+              option value=country.id selected='selected'
+                = country.name
+            - else
+              option value=country.id
+                = country.name
+      div class="form-group"
+        label
+          ' Survey Year
+        select name='survey_year' class='form-control'
+          - 2002.upto(2013).each do |year|
+            - if year.to_s == params[:survey_year]
+              option value=year selected='selected'
+                = year
+            - else
+              option value=year
+                = year
+      - if user_signed_in? && current_user.admin?
+        div class="form-group"
+          label
+            ' Released
+          input name='released' type='radio' value='true' checked='checked'
+            ' Yes
+          input name='released' type='radio' value='false'
+            ' No
+    .row
+      .col-xs-12 style='text-align:center'
+        input type='submit' value='Search' class='btn btn-primary'
+  .row
+    .col-xs-12
+      - if @search_results
+        table class='table table-responsive table-striped'
+          tr
+            th Site Name
+            th Survey Type
+            th Source
+            th Estimate
+            - if user_signed_in? && current_user.admin?
+              th Released
+              th Data Licensing
+              th Submitter
+          - @search_results.each do |result|
+              tr
+                td
+                  = link_to "/population_submissions/#{result['population_submission_id']}" do
+                    = result['site_name']
+                td= result['survey_type']
+                td= result['short_citation']
+                td= result['estimate']
+                - if user_signed_in? && current_user.admin?
+                  td= result['released']
+                  td= result['data_licensing']
+                  td= result['name']
