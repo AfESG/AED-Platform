@@ -10,20 +10,22 @@
         = link_to image_tag("delete.png"), p, :confirm => t('are_you_sure'), :method => :delete
     .population_submission_header
       .population_submission_site_name
-        #{p.site_name}
-        #{p.designate}
+        = p.site_name
+        = p.designate
       .population_submission_survey_completed
-        #{p.completion_year}
+        = p.completion_year
     .population_submission_parameters
       .population_submission_licensing
         ==p.data_licensing_link
         -unless p.embargo_date.nil?
           | Embargoed until #{p.embargo_date}
       .population_submission_area
-        #{p.area} km²
+        = p.area
+        '  km²
       .population_submission_season
         -if p.season == "Wet" or p.season == "Dry"
-          #{p.season} season
+          = p.season
+          ' season
         -if p.season == "Both"
           | Both wet and dry seasons
   - unless p.survey_type.blank?
@@ -50,4 +52,3 @@
           = link_to "Abstract and citation", "/population_submissions/#{p.id}/submit"
         - else
           = link_to "Submit this population data to AfESG", "/population_submissions/#{p.id}/submit"
-
