@@ -8,8 +8,8 @@ set :use_sudo, false
 
 target = ENV['TARGET'] || 'WWW'
 
-server "pg.elephantdatabase.org", :app, :web, :db, :primary => true
-set :user, "aaed"
+server "aed.elephantdatabase.org", :app, :web, :db, :primary => true
+set :user, "aed"
 
 if target == 'WWW'
   puts "Deploying to production"
@@ -17,18 +17,19 @@ if target == 'WWW'
   default_environment['UNICORN_PORT'] = '5000'
   default_environment['POSTGRESQL_DATABASE'] = 'aaed_production'
   default_environment['HOSTNAME'] = 'www.elephantdatabase.org'
-  set :deploy_to, '/u/apps'
+  set :deploy_to, '/u/production'
 end
 
 if target == 'STAGING'
-  puts "Deploying to staging"
-  default_environment['UNICORN_PORT'] = '3000'
+  puts "Deploying to production"
+
+  default_environment['UNICORN_PORT'] = '4000'
   default_environment['POSTGRESQL_DATABASE'] = 'aaed_staging'
-  default_environment['HOSTNAME'] = 'staging.elephantdatabase.org'
+  default_environment['HOSTNAME'] = 'www.elephantdatabase.org'
   set :deploy_to, '/u/staging'
 end
 
-set :rvm_ruby_string, 'ruby-1.9.3-p194'
+set :rvm_ruby_string, 'ruby-1.9.3-p551'
 set :rvm_type, :user
 
 require 'bundler/capistrano'
