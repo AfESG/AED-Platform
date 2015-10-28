@@ -21,11 +21,12 @@ if target == 'WWW'
 end
 
 if target == 'STAGING'
-  puts "Deploying to production"
+  puts "Deploying to staging"
 
   default_environment['UNICORN_PORT'] = '4000'
   default_environment['POSTGRESQL_DATABASE'] = 'aed_staging'
   default_environment['HOSTNAME'] = 'www.elephantdatabase.org'
+  default_environment['authenticate_all_requests'] = 'practicum'
   set :deploy_to, '/u/staging'
 end
 
