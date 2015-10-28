@@ -1,5 +1,6 @@
 set :application, "aaed"
-set :repository,  "git@github.com:rfc2616/aaed.git"
+set :repository,  "git@github.com:AfESG/AEDWebsite.git"
+set :branch,  "rails-3.2-maintenance"
 
 set :scm, :git
 
