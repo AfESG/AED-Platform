@@ -15,7 +15,7 @@ if target == 'WWW'
   puts "Deploying to production"
 
   default_environment['UNICORN_PORT'] = '5000'
-  default_environment['POSTGRESQL_DATABASE'] = 'aaed_production'
+  default_environment['POSTGRESQL_DATABASE'] = 'aed_production'
   default_environment['HOSTNAME'] = 'www.elephantdatabase.org'
   set :deploy_to, '/u/production'
 end
@@ -24,7 +24,7 @@ if target == 'STAGING'
   puts "Deploying to production"
 
   default_environment['UNICORN_PORT'] = '4000'
-  default_environment['POSTGRESQL_DATABASE'] = 'aaed_staging'
+  default_environment['POSTGRESQL_DATABASE'] = 'aed_staging'
   default_environment['HOSTNAME'] = 'www.elephantdatabase.org'
   set :deploy_to, '/u/staging'
 end
