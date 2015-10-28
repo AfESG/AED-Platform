@@ -53,6 +53,8 @@ GEM
       net-sftp (>= 2.0.0)
       net-ssh (>= 2.0.14)
       net-ssh-gateway (>= 1.1.0)
+    capistrano-rvm (0.0.3)
+      capistrano
     capistrano-unicorn (0.1.6)
       capistrano
     choice (0.1.6)
@@ -161,8 +163,6 @@ GEM
     ruby_parser (3.1.1)
       sexp_processor (~> 4.1)
     rubyzip (0.9.9)
-    rvm-capistrano (1.2.7)
-      capistrano (>= 2.0.0)
     sass (3.2.5)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
@@ -207,6 +207,7 @@ DEPENDENCIES
   appygram-rails
   aws-sdk
   capistrano
+  capistrano-rvm
   capistrano-unicorn
   coffee-rails
   country_select
@@ -229,9 +230,11 @@ DEPENDENCIES
   rails-erd
   roo
   ruby_parser
-  rvm-capistrano
   sass-rails
   slim
   turn
   uglifier
   unicorn
+
+BUNDLED WITH
+   1.10.6
