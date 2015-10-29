@@ -58,13 +58,16 @@ html
           .error= flash[:error]
         - if(!flash[:success].nil?)
           .success= flash[:success]
-    = yield
     .container
-      span#iucn-logos
-        a#logo-iucn href='http://www.iucn.org/'
-          = image_tag 'iucn_logo.jpg', :alt=>'IUCN'
-        a#logo-ssc href='http://www.iucn.org/about/work/programmes/species/about_ssc/'
-          = image_tag 'ssc2005web_res.gif', :alt=>'Species Survival Commission'
-      span#legal
-        p
-          = t('legal').gsub('$today$',"#{Date.today.year}")
+      = yield
+    .container
+      .row style='margin-top: 10px;'
+        .col-xs-12
+          span#iucn-logos
+            a#logo-iucn href='http://www.iucn.org/'
+              = image_tag 'iucn_logo.jpg', :alt=>'IUCN'
+            a#logo-ssc href='http://www.iucn.org/about/work/programmes/species/about_ssc/'
+              = image_tag 'ssc2005web_res.gif', :alt=>'Species Survival Commission'
+          span#legal
+            p
+              = t('legal').gsub('$today$',"#{Date.today.year}")

@@ -6,4 +6,12 @@ class SurveyOthersController < ApplicationController
     @level
   end
 
+  def level_display
+    nil
+  end
+
+  def level_form
+    'layouts/survey_crud_form'
+  end
+
 end

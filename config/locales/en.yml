@@ -368,6 +368,31 @@ en:
   new_survey_ground_total_block: "New Ground Total Block"
   new_point_observation: "New point observation"
   all_submissions: "All Submissions"
+  footnotes:
+    iqi:
+      "IQI: Information Quality Index: This index quantifies overall data quality at the regional level based on the 
+      precision of estimates and the proportion of assessed elephant range (i.e. range for which estimates are available). 
+      The IQI ranges from zero (no reliable information) to one (perfect information)."
+    causes_of_change:
+      "Key to Causes of Change (only tracked since 2007): DA: Different Area; DD: Data Degraded; DT: Different Technique; 
+      NA: New Analysis; NG: New Guess; NP: New population; PL: Population Lost; RS: Repeat Survey (RS ́ denotes a repeat 
+      survey that is not statistically comparable for reasons such as different season); –––: No Change"
+    survey_types:
+      "Key to Survey Types: AC: Aerial Count, not specified; AS: Aerial Sample Count; AT: Aerial Total Count; DC: Dung 
+      Count; EX: Extrapolation from GIS; GD: Genetic Dung Count; GS: Ground Sample Count; GT: Ground Total Count; IG: 
+      Informed Guess; IR: Individual Registration; OG: Other Guess. Survey Type is followed by an indicator of survey quality, 
+      ranked from 1 to 3 (best to worst). Survey Reliability is keyed A-E (best to worst) as <a href='/reliability'>outlined 
+      in this table</a>."
+    pfs:
+      "PFS: Priority for Future Surveys, ranked from 1 to 5 (highest to lowest). Based on the precision of 
+      estimates and the proportion of national range accounted for by the site in question, PFS is a measure 
+      of the importance and urgency for future population surveys. All areas of unassessed range have a priority 
+      of 1. See Introduction for details on how the PFS is derived."
+    derived_warning:
+      "Note that totals for the Definite, Probable, and Possible categories are derived by pooling the variances of 
+      individual estimates, as described at <a href='http://www.elephantdatabase.org/reliability'>
+      http://www.elephantdatabase.org/reliability</a>. As a result, totals do not necessarily match the simple 
+      sum of the entries within a given category."
   embargoed_until: 
     <strong>Embargoed until</strong><br/> Your survey data will be used to create pooled estimates at the national, 
     sub-regional and continental level, and any GIS boundaries will be used for making maps of elephant 

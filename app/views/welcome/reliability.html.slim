@@ -1,90 +1,92 @@
-h1 Survey Reliability
+.row
+  .col-xs-12
+    h1 Survey Reliability
 
-| Categorization of elephant population estimates according to survey type and contribution of each to the four categories of elephant numbers.
+    p.lead Categorization of elephant population estimates according to survey type and contribution of each to the four categories of elephant numbers.
 
-table.survey_reliability
-  tr
-    td <b>Survey Reliability</b>
-    td <b>Survey type(s)</b>
-    td <b>Categorization of estimates</b>
-  tr
-    td A
-    td 
-      | * INDIVIDUAL REGISTRATIONS (IR)
-      br
-      | * AERIAL TOTAL COUNTS (AT)
-      br
-      | * GROUND TOTAL COUNTS (GT)
-    td
-      | DEFINITE = the population estimate.
-      br
-      | PROBABLE = none.
-      br
-      | POSSIBLE = none.
-      br
-      | SPECULATIVE = none.
-  tr
-    td B
-    td
-      | * AERIAL SAMPLE COUNTS (AS)or GROUND SAMPLE COUNTS (GS) with 95% confidence limits
-      br
-      | * DUNG COUNTS (DC) with 95% confidence limits and an estimate of dung decay rate obtained on site
-    td
-      | DEFINITE = the lower 95% confidence limit of the population estimate (there are at least this number of elephants) or the number actually seen, whichever is greater.
-      br
-      | PROBABLE = the difference<sup>a</sup> between the estimate and the lower confidence limit, or between the estimate and the actual number seen or between the estimate and zero, if the lower confidence limit is negative<sup>b</sup>.
-      br
-      | POSSIBLE = the difference between the upper confidence limit and the estimate.
-      br
-      | SPECULATIVE = none.
-  tr
-    td C
-    td
-      | * DUNG COUNTS (DC) with 95% confidence limits but no on-site measurement of dung decay rate
-      br
-      | * GENETIC DUNG COUNTS (GD)
-    td
-      | DEFINITE = none, or the number actually seen, if given<sup>c</sup>.
-      br
-      | PROBABLE = the population estimate.
-      br
-      | POSSIBLE = the difference between the upper confidence limit and the estimate.
-      br
-      | SPECULATIVE = none.
-  tr
-    td D
-    td
-      | * AERIAL SAMPLE COUNTS (AS), GROUND SAMPLE COUNTS (GS) and DUNG COUNTS (DC) without 95% confidence limits
-      br
-      | * INFORMED GUESSES (IG)
-    td
-      | DEFINITE = the number actually seen, if given.
-      br
-      | PROBABLE = none.
-      br
-      | POSSIBLE = the population estimate or the lower estimate if a range is given, minus the actual number seen, if given.
-      br
-      | SPECULATIVE = the difference between upper and lower estimates, if given
-  tr
-    td E
-    td
-      | * OTHER GUESSES (OG)
-      br
-      | * Any of the above survey types in which the estimate is over 10 years old
-    td  
-      | DEFINITE = the number actually seen, if given.
-      br
-      | PROBABLE = none.
-      br
-      | POSSIBLE = none.
-      br
-      | SPECULATIVE = the estimate, or the mean of the upper and lower limit, minus the actual number seen, if given.
+    table.table.survey_reliability
+      tr
+        td <b>Survey Reliability</b>
+        td <b>Survey type(s)</b>
+        td <b>Categorization of estimates</b>
+      tr
+        td A
+        td 
+          | * INDIVIDUAL REGISTRATIONS (IR)
+          br
+          | * AERIAL TOTAL COUNTS (AT)
+          br
+          | * GROUND TOTAL COUNTS (GT)
+        td
+          | DEFINITE = the population estimate.
+          br
+          | PROBABLE = none.
+          br
+          | POSSIBLE = none.
+          br
+          | SPECULATIVE = none.
+      tr
+        td B
+        td
+          | * AERIAL SAMPLE COUNTS (AS)or GROUND SAMPLE COUNTS (GS) with 95% confidence limits
+          br
+          | * DUNG COUNTS (DC) with 95% confidence limits and an estimate of dung decay rate obtained on site
+        td
+          | DEFINITE = the lower 95% confidence limit of the population estimate (there are at least this number of elephants) or the number actually seen, whichever is greater.
+          br
+          | PROBABLE = the difference<sup>a</sup> between the estimate and the lower confidence limit, or between the estimate and the actual number seen or between the estimate and zero, if the lower confidence limit is negative<sup>b</sup>.
+          br
+          | POSSIBLE = the difference between the upper confidence limit and the estimate.
+          br
+          | SPECULATIVE = none.
+      tr
+        td C
+        td
+          | * DUNG COUNTS (DC) with 95% confidence limits but no on-site measurement of dung decay rate
+          br
+          | * GENETIC DUNG COUNTS (GD)
+        td
+          | DEFINITE = none, or the number actually seen, if given<sup>c</sup>.
+          br
+          | PROBABLE = the population estimate.
+          br
+          | POSSIBLE = the difference between the upper confidence limit and the estimate.
+          br
+          | SPECULATIVE = none.
+      tr
+        td D
+        td
+          | * AERIAL SAMPLE COUNTS (AS), GROUND SAMPLE COUNTS (GS) and DUNG COUNTS (DC) without 95% confidence limits
+          br
+          | * INFORMED GUESSES (IG)
+        td
+          | DEFINITE = the number actually seen, if given.
+          br
+          | PROBABLE = none.
+          br
+          | POSSIBLE = the population estimate or the lower estimate if a range is given, minus the actual number seen, if given.
+          br
+          | SPECULATIVE = the difference between upper and lower estimates, if given
+      tr
+        td E
+        td
+          | * OTHER GUESSES (OG)
+          br
+          | * Any of the above survey types in which the estimate is over 10 years old
+        td  
+          | DEFINITE = the number actually seen, if given.
+          br
+          | PROBABLE = none.
+          br
+          | POSSIBLE = none.
+          br
+          | SPECULATIVE = the estimate, or the mean of the upper and lower limit, minus the actual number seen, if given.
 
-.survey_reliability
-  | a. Rounded to the nearest whole number if necessary.
-  br
-  | b. If the lower confidence limit of the estimate is a negative figure, the estimate will be zero or, if reported, the actual number of elephants seen in the survey.
-  br
-  | c. For dung counts it is assumed that there are no elephants unless any are observed directly (which is seldom the case). This is because, unlike with aerial surveys, where the estimate is almost invariably lower than the true population size, dung counts may underestimate or overestimate the population size, depending on the choice of parameters used (such as forest area, decay rate, or the mathematical model used). For genetic dung counts (GD) the number of distinct genotypes identified is regarded as the number of elephants actually “seen”.
+    .survey_reliability
+      | a. Rounded to the nearest whole number if necessary.
+      br
+      | b. If the lower confidence limit of the estimate is a negative figure, the estimate will be zero or, if reported, the actual number of elephants seen in the survey.
+      br
+      | c. For dung counts it is assumed that there are no elephants unless any are observed directly (which is seldom the case). This is because, unlike with aerial surveys, where the estimate is almost invariably lower than the true population size, dung counts may underestimate or overestimate the population size, depending on the choice of parameters used (such as forest area, decay rate, or the mathematical model used). For genetic dung counts (GD) the number of distinct genotypes identified is regarded as the number of elephants actually “seen”.
 
 

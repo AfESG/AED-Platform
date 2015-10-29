@@ -1,20 +1,22 @@
-h1 Users
+.row
+  .col-xs-12
+    h1 Users
 
-=paginate @users
-table
-  tr
-    th Email
-    th Name
-    th Confirmed
-    th
-    th
-    th
-  - @users.each do |user|
-    tr
-      td= user.email
-      td= user.name
-      td= user.confirmed_at
-      td= link_to 'Show', user
-      td= link_to 'Edit', edit_user_path(user)
-      td= link_to t('destroy'), user, :confirm => "You are about to remove the user \"# user.email \". Do you wish to proceed?", :method => :delete
-br/
+    =paginate @users
+    table.table
+      tr
+        th Email
+        th Name
+        th Confirmed
+        th
+        th
+        th
+      - @users.each do |user|
+        tr
+          td= user.email
+          td= user.name
+          td= user.confirmed_at
+          td= link_to 'Show', user
+          td= link_to 'Edit', edit_user_path(user)
+          td= link_to t('destroy'), user, :confirm => "You are about to remove the user \"# user.email \". Do you wish to proceed?", :method => :delete
+    br/

@@ -1,0 +1,31 @@
+- preview = local_assigns[:preview] || false
+
+- if !@countries.nil? && @countries.num_tuples > 0
+  h2 Country and Regional Totals and Data Quality
+  table.table style='font-size:16px' 
+    tr
+      th Country
+      th.numeric Definite
+      th.numeric Probable
+      th.numeric Possible
+      th.numeric Speculative
+      th.numeric Range Area (km²)
+      th.numeric % of Regional Range
+      th.numeric % of Range Assessed
+      th.numeric IQI<sup>1</sup>
+      th.numeric PFS<sup>2</sup>
+    - @countries.each do |row|
+      - unless row['RANGEAREA'].nil?
+        tr style=('height: 24px;') 
+          td
+            - if preview
+              a href=("#{@region.gsub(' ','_')}/#{u row['CNTRYNAME'].gsub(' ','_')}") = row['CNTRYNAME']
+            - else
+              a href=("#{@region.gsub(' ','_')}/#{u row['CNTRYNAME'].gsub(' ','_')}") = row['CNTRYNAME'] 
+          - ['DEFINITE','PROBABLE','POSSIBLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX','PFS'].each do |key|
+            td.numeric= number_with_delimiter row[key]
+    - @countries_sum.each do |row|
+      tr.totals style=('height: 24px; font-weight: bold') 
+        td Totals
+        - ['DEFINITE','PROBABLE','POSSIBLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX','PFS'].each do |key|
+          td.numeric= number_with_delimiter row[key]

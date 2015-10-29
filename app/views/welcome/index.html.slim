@@ -1,47 +1,46 @@
-.container
-  .row
-    .col-xs-12
-      .feature_name
-        | African Elephant Range (2014)
-      = map container_id: "leaflet_map", center: {latlng: [-12.04, 18.59], zoom: 4}
-      javascript:
-          var range_map = new L.geoJson();
-          //addition of scale
-          L.control.scale({position:'bottomleft', metric:true, imperial:false }).addTo(map);
-          //style
-          function style(feature) {
-            switch (feature.properties.RangeType) {
-              case 'Known': return {color: "#d94701","weight": 1,"opacity": 0.1,"fillColor": "#d94701","fillOpacity": 0.6};
-              case 'Possible': return {color: "#fd8d3c","weight": 5,"opacity": 0.1,"fillColor": "#fd8d3c","fillOpacity": 0.6};
-              case 'Doubtful': return {color: "#fdbe85","weight": 3,"opacity": 0.1,"fillColor": "#fdbe85","fillOpacity": 0.6};
-              case 'Non-range': return {color: "#feedde","weight": 3,"opacity": 0.1,"fillColor": "#feedde","fillOpacity": 0.6};
-            }
+.row
+  .col-xs-12
+    .feature_name
+      | African Elephant Range (2014)
+    = map container_id: "leaflet_map", center: {latlng: [-12.04, 18.59], zoom: 4}
+    javascript:
+        var range_map = new L.geoJson();
+        //addition of scale
+        L.control.scale({position:'bottomleft', metric:true, imperial:false }).addTo(map);
+        //style
+        function style(feature) {
+          switch (feature.properties.RangeType) {
+            case 'Known': return {color: "#d94701","weight": 1,"opacity": 0.1,"fillColor": "#d94701","fillOpacity": 0.6};
+            case 'Possible': return {color: "#fd8d3c","weight": 5,"opacity": 0.1,"fillColor": "#fd8d3c","fillOpacity": 0.6};
+            case 'Doubtful': return {color: "#fdbe85","weight": 3,"opacity": 0.1,"fillColor": "#fdbe85","fillOpacity": 0.6};
+            case 'Non-range': return {color: "#feedde","weight": 3,"opacity": 0.1,"fillColor": "#feedde","fillOpacity": 0.6};
           }
+        }
 
-          //legend display
-          var legend = L.control({position: 'bottomleft'});
-          legend.onAdd = function (map) {
-            var div = L.DomUtil.create('div', 'info legend');
-            div.innerHTML = "<i style='background:#d94701;'></i> Known Range" +
-                            "<br> <i style='background:#fd8d3c;'></i> Possible Range" +
-                            "<br> <i style='background:#fdbe85;'></i> Doubtful Range" +
-                            "<br> <i style='background:#feedde;'></i> Non Range";
-            return div;
+        //legend display
+        var legend = L.control({position: 'bottomleft'});
+        legend.onAdd = function (map) {
+          var div = L.DomUtil.create('div', 'info legend');
+          div.innerHTML = "<i style='background:#d94701;'></i> Known Range" +
+                          "<br> <i style='background:#fd8d3c;'></i> Possible Range" +
+                          "<br> <i style='background:#fdbe85;'></i> Doubtful Range" +
+                          "<br> <i style='background:#feedde;'></i> Non Range";
+          return div;
+        }
+        legend.addTo(map);
+
+        function onEachFeature(feature, layer) {
+          var popupContent = "<b>Country</b>: " +  feature.properties.CNTRYNAME + "<br><b>Type of range</b>: " +  feature.properties.RangeType
+          if (feature.properties.AREA_SQKM){
+            popupContent += "<br><b>Range Area</b>: " + feature.properties.AREA_SQKM  + ' km²';
           }
-          legend.addTo(map);
-
-          function onEachFeature(feature, layer) {
-            var popupContent = "<b>Country</b>: " +  feature.properties.CNTRYNAME + "<br><b>Type of range</b>: " +  feature.properties.RangeType
-            if (feature.properties.AREA_SQKM){
-              popupContent += "<br><b>Range Area</b>: " + feature.properties.AREA_SQKM  + ' km²';
-            }
-            if (feature.properties.PHENOTYPE){
-              popupContent += "<br><b>Phenotype</b>: " + feature.properties.PHENOTYPE;
-            }
-            layer.bindPopup(popupContent);
+          if (feature.properties.PHENOTYPE){
+            popupContent += "<br><b>Phenotype</b>: " + feature.properties.PHENOTYPE;
           }
+          layer.bindPopup(popupContent);
+        }
 
-          $.getJSON("/current_range_map.geojson", function(data) {
-            var range_map = L.geoJson(data, {style: style, onEachFeature: onEachFeature});
-            range_map.addTo(map);
-          });
+        $.getJSON("/current_range_map.geojson", function(data) {
+          var range_map = L.geoJson(data, {style: style, onEachFeature: onEachFeature});
+          range_map.addTo(map);
+        });

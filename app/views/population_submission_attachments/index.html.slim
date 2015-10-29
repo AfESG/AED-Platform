@@ -1,14 +1,15 @@
-h1= t('.title')
-p= link_to t('.new'), new_population_submission_attachment_path
+.row
+  .col-xs-12
+    h1= t('.title')
+    p= link_to t('.new'), new_population_submission_attachment_path
 
-table
-  thead
-    tr
-      th colspan=3 = t 'actions'
-  
-  tbody
-    - for population_submission_attachment in @population_submission_attachments
-      tr  class=cycle(:odd, :even)  
-        td.action= link_to t('show'), population_submission_attachment
-        td.action= link_to t('edit'), edit_population_submission_attachment_path(population_submission_attachment)
-        td.action= link_to t('destroy'), population_submission_attachment, :confirm => t('are_you_sure'), :method => :delete
+    table.table
+      thead
+        tr
+          th colspan=3 = t 'actions'
+      tbody
+        - for population_submission_attachment in @levels
+          tr  class=cycle(:odd, :even)  
+            td.action= link_to t('show'), population_submission_attachment
+            td.action= link_to t('edit'), edit_population_submission_attachment_path(population_submission_attachment)
+            td.action= link_to t('destroy'), population_submission_attachment, :confirm => t('are_you_sure'), :method => :delete

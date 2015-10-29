@@ -1,0 +1,21 @@
+- species   = local_assigns[:species] || @species
+- year      = local_assigns[:year] || @year
+- continent = local_assigns[:continent] || @continent
+- region    = local_assigns[:region] || @region
+- country   = local_assigns[:country] || @country
+- survey    = local_assigns[:survey] || @survey_zone
+
+ol.breadcrumb
+  li Reports
+  - if species
+    li = link_to_if year, species, "/report/#{species.gsub(' ','_')}"
+  - if year
+    li = link_to_if continent, year, "/report/#{species.gsub(' ','_')}/#{year}"
+  - if continent
+    li = link_to_if region, continent, "/report/#{species.gsub(' ','_')}/#{year}/#{continent}"
+  - if region
+    li = link_to_if country, region, "/report/#{species.gsub(' ','_')}/#{year}/#{continent}/#{region.gsub(' ','_')}"
+  - if country
+    li = link_to_if survey, country, "/report/#{species.gsub(' ','_')}/#{year}/#{continent}/#{region.gsub(' ','_')}/#{country.gsub(' ','_')}"
+  - if survey
+    li = "#{survey['survey_zone']} #{survey['designate']}"

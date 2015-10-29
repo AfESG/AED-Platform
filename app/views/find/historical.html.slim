@@ -1,5 +1,7 @@
-a target='_top' href="/report/#{@species}/#{@year}/#{@continent}/#{@region}/#{@country}/#{@objectid}" 
-  | If you aren't redirected, click here.
+.row
+  .col-xs-12
+    a target='_top' href="/report/#{@species}/#{@year}/#{@continent}/#{@region}/#{@country}/#{@objectid}" 
+      | If you aren't redirected, click here.
 
-javascript:
-  | window.parent.location.href = "/report/#{escape_once @species}/#{escape_once @year}/#{escape_once @continent}/#{escape_once @region}/#{escape_once @country}/#{escape_once @objectid}"
+    javascript:
+      window.parent.location.href = "/report/#{escape_once @species}/#{escape_once @year}/#{escape_once @continent}/#{escape_once @region}/#{escape_once @country}/#{escape_once @objectid}"

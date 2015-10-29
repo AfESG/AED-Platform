@@ -1,0 +1,18 @@
+- authors = local_assigns[:authors]
+- year    = local_assigns[:year]
+- r       = year
+
+.report_cover
+  = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
+    = image_tag "aesr#{r}_cover_150w.png"
+  .more
+    = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
+      h5 #{r} African Elephant Status Report
+    .authors = authors
+    .links
+      ' Explore the <a href="http://african-elephant.org/aed/aesr2007.html" target="_blank">full text of the #{year} report</a> (PDF) and its
+      = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
+        ' errata
+      ' or
+      = link_to 'bibliography', '/report/references'
+      | .

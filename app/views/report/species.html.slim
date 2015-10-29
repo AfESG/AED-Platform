@@ -1,90 +1,33 @@
-h1
-  | Available Reports for
-  em # @species 
+.row
+  .col-xs-12
+    h1
+      | Available Reports for
+      em #{@species}
 
-a href='/report' Reports
+    = render 'breadcrumbs'
 
-| &gt;
+    div style=('margin-top: 20px') 
+    .want_data
+      strong Want data?
+      br
+      | Request to download
+      br
+      | data <a href="/data_request_forms/new">here.</a>
 
-#{@species}
+    -['2013'].each do |r|
+      .report_cover
+        = link_to "/preview_report/2013_africa_final/Loxodonta_africana/2013/Africa" do
+          = image_tag "aesr#{r}_cover_150w.png"
+        .more
+          = link_to "/preview_report/2013_africa_final/Loxodonta_africana/2013/Africa" do
+            h5 Provisional African Elephant Population Estimates: update to 31 Dec 2013
+          .authors IUCN African Elephant Specialist Group
 
-div style=('margin-top: 20px') 
-.want_data
-  | <strong>Want data?</strong><br /
-  | Request to download<br/
-  | data <a href="/data_request_forms/new">here.</a
-
--['2013'].each do |r|
-  .report_cover
-    = link_to "/preview_report/2013_africa_final/Loxodonta_africana/2013/Africa" do
-      = image_tag "aesr#{r}_cover_150w.png"
-    .more
-      = link_to "/preview_report/2013_africa_final/Loxodonta_africana/2013/Africa" do
-        | <h5>Provisional African Elephant Population Estimates: update to 31 Dec 2013</h5
-      .authors IUCN African Elephant Specialist Group
+    - @past_reports.each do |report|
+      = render 'yearly_status', report
 
 
--['2007'].each do |r|
-  .report_cover
-    = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
-      = image_tag "aesr#{r}_cover_150w.png"
-    .more
-      = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
-        | <h5>#{r} African Elephant Status Report</h5
-      .authors J.J. Blanc, R.F.W. Barnes, G.C. Craig, H.T. Dublin, C.R. Thouless, I. Douglas-Hamilton, and J.A. Hart
-      .links
-        | Explore the <a href="http://african-elephant.org/aed/aesr2007.html" target="_blank">full text of the 2007 report</a> (PDF) and its
-        =link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
-          | errata
-        | or
-        =link_to 'bibliography', '/report/references'
-
--['2002'].each do |r|
-  .report_cover
-    = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
-      = image_tag "aesr#{r}_cover_150w.png"
-    .more
-      = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
-        | <h5>#{r} African Elephant Status Report</h5
-      .authors J.J. Blanc, C.R. Thouless, J.A. Hart, H.T. Dublin, I. Douglas-Hamilton, G.C. Craig and R.F.W. Barnes
-      .links
-        | Explore the <a href="http://african-elephant.org/aed/aesr2002.html" target="_blank">full text of the 2002 report</a> (PDF) and its
-        =link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
-          | errata
-        | or
-        =link_to 'bibliography', '/report/references'
-
--['1998'].each do |r|
-  .report_cover
-    = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
-      = image_tag "aesr#{r}_cover_150w.png"
-    .more
-      = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
-        | <h5>#{r} African Elephant Status Report</h5
-      .authors R.F.W. Barnes, G.C. Craig, H.T. Dublin, G. Overton, W. Simons and C.R. Thouless
-      .links
-      | Explore the <a href="http://african-elephant.org/aed/aed98.html" target="_blank">full text of the 1998 report</a> (PDF) and its
-      =link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
-        | errata
-      | or
-      =link_to 'bibliography', '/report/references'
-
--['1995'].each do |r|
-  .report_cover
-    = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
-      = image_tag "aesr#{r}_cover_150w.png"
-    .more
-      = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
-        | <h5>#{r} African Elephant Status Report</h5
-      .authors M.Y. Said, R.N. Chunge, G.C. Craig, C.R. Thouless, R.F.W. Barnes and H.T. Dublin
-      .links
-        | Explore the <a href="http://african-elephant.org/aed/aed95.html" target="_blank">full text of the 1995 report</a> (PDF) and its
-        =link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
-          | errata
-        | or
-        =link_to 'bibliography', '/report/references'
-
-p
-p
-p
-p
+    p
+    p
+    p
+    p
