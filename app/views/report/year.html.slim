@@ -1,71 +1,65 @@
-h1 African Elephant Status Report # @year 
+.row
+  .col-xs-12
+    h1 African Elephant Status Report #{@year}
 
-a href='/report' Reports
+    = render 'breadcrumbs'
 
-| &gt;
+    div style='margin-top:20px' 
 
-a href=("/report/#{@species.gsub(' '),'_')}"} #{@species 
-
-| &gt;
-
-#{@year}
-
-div style='margin-top:20px' 
-
-a href=("/report/#{@species.gsub(' '),'_')}/#{@year}/Africa"  Continental totals for Africa
-- if @year.to_i==2007
-  p
-  .errata
-    | The 2007 African Elephant Status Report contained a number of errata.  These have been fixed in the display of data found on www.elephantdatabase.org, but for the purposes of clarity, they are briefly outlined below.
-    p
-    ol
-      li
-        | Range figures for the following input zones are incorrect:
-        ul
+    a href=("/report/#{@species.gsub(' ','_')}/#{@year}/Africa")  Continental totals for Africa
+    - if @year.to_i==2007
+      p
+      .errata
+        | The 2007 African Elephant Status Report contained a number of errata.  These have been fixed in the display of data found on www.elephantdatabase.org, but for the purposes of clarity, they are briefly outlined below.
+        p
+        ol
           li
-            em Rest of Gabon Forest Range
-            | (page 64);
+            | Range figures for the following input zones are incorrect:
+            ul
+              li
+                em Rest of Gabon Forest Range
+                | (page 64);
+              li
+                em Rest of Northern Botswana
+                | (page 124); and
+              li
+                em Zambezia Province
+                | (page 134).
           li
-            em Rest of Northern Botswana
-            | (page 124); and
+            | Source for input zone
+            em Queen Elizabeth Conservation Area
+            | should be
+            em Wanyama, 2006
+            | (page 108). The reference was also omitted on page 256 and should read:
+            ul
+              li
+                | Wanyama, F. (2006). Queen Elizabeth National Park Wildlife Census Report, July 2006, Uganda, Kampala: Uganda Wildlife Authority.
           li
-            em Zambezia Province
-            | (page 134).
-      li
-        | Source for input zone
-        em Queen Elizabeth Conservation Area
-        | should be
-        em Wanyama, 2006
-        | (page 108). The reference was also omitted on page 256 and should read:
-        ul
+            | Cause of change for input zone
+            em Tekezze Valley Wildlife Reserve
+            | is ‘NA’, resulting in slightly adjusted numbers in the
+            em Ethiopia Interpretation of Changes in Estimates from Previous Report
+            | table (pages 77-78).
           li
-            | Wanyama, F. (2006). Queen Elizabeth National Park Wildlife Census Report, July 2006, Uganda, Kampala: Uganda Wildlife Authority.
-      li
-        | Cause of change for input zone
-        em Tekezze Valley Wildlife Reserve
-        | is ‘NA’, resulting in slightly adjusted numbers in the
-        em Ethiopia Interpretation of Changes in Estimates from Previous Report
-        | table (pages 77-78).
-      li
-        em Munyawama Game Reserve
-        | was inadvertently omitted from the input zones in South Africa (page 146).  This has been rectified and slightly impacts the South Africa national-level totals (page 145), the Southern Africa regional-level totals (page 113), as well as the interpretation of changes at these three levels.
-      li
-        | An error in assignment of the cause of change for the Luiana East and West Partial Reserves (page 120) slightly impacts the interpretation of changes for Angola (page 119), Southern Africa (page 113) and the continent (page 23).
-- if @year.to_i==2002
-  p
-  .errata
-    | The 2002 African Elephant Status Report contained an erratum.  This has been fixed in the display of data found on www.elephantdatabase.org, but for the purposes of clarity, it is briefly outlined below.
-    p
-    ol
-      li
-        | The continental summary totals (page 19) are incorrectly displayed.  The numbers that appear in the detail cells under POSSIBLE should be under PROBABLE, and vice versa. The totals row is correct.
-- if @year.to_i==1995
-  p
-  .errata
-    | The 1995 African Elephant Status Report contained a number of errata.  These have been fixed in the display of data found on www.elephantdatabase.org, but for the purposes of clarity, they are briefly outlined below.
-    p
-    ol
-      li
-        | The summary totals for Ghana as reflected in the West Africa sub-regional table on page 157 are incorrect.  The numbers as reflected in the Ghana summary on page 173 are correct.
-      li
-        | Additional small inconsistencies in both range and summary totals have been corrected in the display of data found on www.elephantdatabase.org.
+            em Munyawama Game Reserve
+            | was inadvertently omitted from the input zones in South Africa (page 146).  This has been rectified and slightly impacts the South Africa national-level totals (page 145), the Southern Africa regional-level totals (page 113), as well as the interpretation of changes at these three levels.
+          li
+            | An error in assignment of the cause of change for the Luiana East and West Partial Reserves (page 120) slightly impacts the interpretation of changes for Angola (page 119), Southern Africa (page 113) and the continent (page 23).
+    - if @year.to_i==2002
+      p
+      .errata
+        | The 2002 African Elephant Status Report contained an erratum.  This has been fixed in the display of data found on www.elephantdatabase.org, but for the purposes of clarity, it is briefly outlined below.
+        p
+        ol
+          li
+            | The continental summary totals (page 19) are incorrectly displayed.  The numbers that appear in the detail cells under POSSIBLE should be under PROBABLE, and vice versa. The totals row is correct.
+    - if @year.to_i==1995
+      p
+      .errata
+        | The 1995 African Elephant Status Report contained a number of errata.  These have been fixed in the display of data found on www.elephantdatabase.org, but for the purposes of clarity, they are briefly outlined below.
+        p
+        ol
+          li
+            | The summary totals for Ghana as reflected in the West Africa sub-regional table on page 157 are incorrect.  The numbers as reflected in the Ghana summary on page 173 are correct.
+          li
+            | Additional small inconsistencies in both range and summary totals have been corrected in the display of data found on www.elephantdatabase.org.

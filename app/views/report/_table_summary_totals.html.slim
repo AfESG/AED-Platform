@@ -1,0 +1,33 @@
+- year           = local_assigns[:year] || @year
+- level          = local_assigns[:level]
+- summary_totals = local_assigns[:totals]
+- summary_sums   = local_assigns[:sums]
+
+
+- if summary_totals.num_tuples > 0
+  h2 style=('margin-top:20px') = "#{year} Summary Totals for #{level}"
+
+  table.table style='font-size:16px' 
+    tr
+      th width='40%'  Data Category
+      th.numeric width='15%'  Definite
+      th.numeric width='15%'  Probable
+      th.numeric width='15%'  Possible
+      th.numeric width='15%'  Speculative
+    - summary_totals.each do |row|
+      tr style=('height: 24px') 
+        td= row['SURVEYTYPE']
+        td.numeric= number_with_delimiter row['DEFINITE']
+        td.numeric= number_with_delimiter row['PROBABLE']
+        td.numeric= number_with_delimiter row['POSSIBLE']
+        td.numeric= number_with_delimiter row['SPECUL']
+    - summary_sums.each do |row|
+      tr.totals style=('height: 24px; font-weight: bold') 
+        td Totals #{year}
+        td.numeric= number_with_delimiter row['DEFINITE']
+        td.numeric= number_with_delimiter row['PROBABLE']
+        td.numeric= number_with_delimiter row['POSSIBLE']
+        td.numeric= number_with_delimiter row['SPECUL']
+- else
+  h2 No estimates were available for #{level} in #{year}
+

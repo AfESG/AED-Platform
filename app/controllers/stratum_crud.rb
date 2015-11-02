@@ -10,6 +10,10 @@ module StratumCrud
     eval "@level.#{@level.count_base_name} = @level.count_class.find(id_param)"
   end
 
+  def level_display
+    nil
+  end
+
   def index
     raise ActiveRecord::RecordNotFound
   end

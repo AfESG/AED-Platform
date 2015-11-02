@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
 
   before_filter :authenticate
+  before_filter :configure_permitted_parameters, if: :devise_controller?
 
   def allowed_preview?
     if params[:filter] == '2013_africa_final' and params[:year] == '2013'
@@ -61,6 +62,10 @@ class ApplicationController < ActionController::Base
   def sql_escape(str)
     conn = ActiveRecord::Base.connection.instance_variable_get("@connection")
     conn.escape(str)
+  end
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.for(:sign_up) { |u| u.permit! }
   end
 
 end

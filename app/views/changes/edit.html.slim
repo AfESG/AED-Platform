@@ -1,5 +1,7 @@
-h1= t '.title'
-p
-  = link_to t('back'), changes_path
-  = link_to t('show'), @change
-= render 'form'
+.row
+  .col-xs-12
+    h1= t '.title'
+    p
+      = link_to t('back'), changes_path
+      = link_to t('show'), @change
+    = render 'form'

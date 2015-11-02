@@ -1,0 +1,19 @@
+- species   = local_assigns[:species] || @species
+- year      = local_assigns[:year] || @year
+- continent = local_assigns[:continent] || @continent
+- site      = local_assigns[:site] || @site
+- region    = local_assigns[:region] || @region
+- country   = local_assigns[:country] || @country
+
+
+ol.breadcrumb
+  li = link_to 'Reports', report_path
+  li = link_to species, "/report/#{@species.gsub(' ','_')}"
+  li = year
+  li = link_to_unless region.nil? && site.nil?, continent, "/preview_report/#{@filter}/#{species.gsub(' ','_')}/#{year}/#{continent}"
+  - if region
+    li = link_to_if country, region, "/preview_report/#{@filter}/#{species.gsub(' ','_')}/#{year}/#{continent}/#{region.gsub(' ','_')}"
+    - if country
+      li = country
+  - elsif site
+    li = site

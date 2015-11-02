@@ -14,5 +14,5 @@
     = f.input :country
     - if current_user.admin?
       = f.input :admin
-  = f.buttons do
-    = f.commit_button :update
+  = f.actions do
+    = f.action :submit

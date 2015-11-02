@@ -1,34 +1,36 @@
-h1 = t '.title'
+.row
+  .col-xs-12
+    h1 = t '.title'
 
-table
-  thead
-    tr
-      th Input Zone
-      th Country
-      th Type of Survey
-      th Year of Survey
-      th Estimate
-      th Source
-      th Data Licensing
-      th Created
-      th Submitted
-      th Released
+    table.table
+      thead
+        tr
+          th Input Zone
+          th Country
+          th Type of Survey
+          th Year of Survey
+          th Estimate
+          th Source
+          th Data Licensing
+          th Created
+          th Submitted
+          th Released
 
-  tbody
-    - for p in @population_submissions
-      tr class=cycle(:odd, :even)
-        td
-          - unless p.released?
-            strong NEW 
-          = link_to p do
-            = "#{p.site_name} #{p.designate}"
-        td = (p.submission.nil? or p.submission.country.nil?) ? '???' : p.submission.country.name
-        td = p.survey_type
-        td = p.completion_year
-        td = p.estimate
-        td = p.source
-        td == p.data_licensing_link
-        td = p.created_at
-        td = p.submitted?? 'Y' : 'N'
-        td = p.released?? 'Y' : 'N'
+      tbody
+        - for p in @population_submissions
+          tr class=cycle(:odd, :even)
+            td
+              - unless p.released?
+                strong NEW 
+              = link_to p do
+                = "#{p.site_name} #{p.designate}"
+            td = (p.submission.nil? or p.submission.country.nil?) ? '???' : p.submission.country.name
+            td = p.survey_type
+            td = p.completion_year
+            td = p.estimate
+            td = p.source
+            td == p.data_licensing_link
+            td = p.created_at
+            td = p.submitted?? 'Y' : 'N'
+            td = p.released?? 'Y' : 'N'
 

@@ -1,0 +1,27 @@
+- totals   = local_assigns[:totals]
+- sums     = local_assigns[:sums]
+- hideable = local_assigns[:hideable] || false
+- title    = local_assigns[:title] || 'Interpretation of Changes in Estimates from Previous Report'
+
+- if !totals.nil? && totals.num_tuples > 0
+  h2 class=(hideable ? 'hideable' : nil) = title
+
+  table class=(hideable ? 'table hideable' : 'table') style='font-size:16px' 
+    tr
+      th width='40%'  Cause of Change
+      th.numeric width='15%'  Definite
+      th.numeric width='15%'  Probable
+      th.numeric width='15%'  Possible
+      th.numeric width='15%'  Speculative
+    - totals.each do |row|
+      tr style=('height: 24px;') 
+        td= row['CauseofChange']
+        - ['definite','probable','possible','specul'].each do |key|
+          td.numeric= signed_number row[key]
+    - unless sums.nil?
+      - sums.each do |row|
+        tr.totals style=('height: 24px; font-weight: bold') 
+          td Totals
+          - ['definite','probable','possible','specul'].each do |key|
+            td.numeric= signed_number row[key]
+

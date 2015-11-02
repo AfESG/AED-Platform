@@ -12,6 +12,10 @@
 
 module SurveyCrud
 
+  def set_title
+    @title = I18n.t 'title', scope: "#{level_base_name.pluralize}.#{params[:action]}"
+  end
+
   def edit_allowed
     if current_user.nil?
       return false
@@ -46,6 +50,14 @@ module SurveyCrud
     eval "#{level_class_name}"
   end
 
+  def level_form
+    'layouts/survey_crud_form'
+  end
+
+  def level_display
+    'layouts/survey_display'
+  end
+
   # this allows the use of the Rails convention of a specifically
   # named class variable in views, e.g. @survey_aerial_transect_count,
   # but just @level will do fine, and is preferred going forward
@@ -55,25 +67,31 @@ module SurveyCrud
   end
 
   def index
+    set_title
     @levels = level_class.all
   end
 
   def show
+    set_title
     @level = level_class.find(params[:id])
     find_parents @level
     enable_named_class_variable
+    render template: level_display if level_display
   end
 
   def new
+    set_title
     @level = level_class.new
     if respond_to? 'connect_parent'
       connect_parent
       find_parents @level
     end
     enable_named_class_variable
+    render template: level_form if level_form
   end
 
   def edit
+    set_title
     @level = level_class.find(params[:id])
     find_parents @level
     enable_named_class_variable
@@ -86,6 +104,7 @@ module SurveyCrud
       redirect_to @level
       return
     end
+    render template: level_form if level_form
   end
 
   def create

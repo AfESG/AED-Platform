@@ -1,34 +1,36 @@
-h1= t '.title'
-.restated_survey_info
-  = render :partial => "submission_info", :locals => { :s => @submission }
-h4
-  - if @level.stratum_name == ''
-    .count_stratum_name Stratum ## @level.id 
-  - else
-    .count_stratum_name= @level.stratum_name
-.show_stratum
-  == best_label_for 'stratum_area'
-  = @level.stratum_area
-.show_stratum
-  == best_label_for 'population_estimate'
-  = @level.population_estimate
-.show_stratum
-  == best_label_for 'transects_covered'
-  = @level.transects_covered
-.show_stratum
-  == best_label_for 'transects_covered_total_length'
-  = @level.transects_covered_total_length
-.show_stratum
-  == best_label_for 'person_hours'
-  = @level.person_hours
-.show_stratum
-  == best_label_for 'strip_width'
-  = @level.strip_width
-.show_stratum
-  == best_label_for 'observations'
-  = @level.observations
-.show_stratum
-  == best_label_for 'actually_seen'
-  = @level.actually_seen
-== map_stratum @level
+.row
+  .col-xs-12
+    h1= t '.title'
+    .restated_survey_info
+      = render :partial => "submission_info", :locals => { :s => @submission }
+    h4
+      - if @level.stratum_name.blank?
+        .count_stratum_name = "Stratum ##{@level.id}"
+      - else
+        .count_stratum_name= @level.stratum_name
+    .show_stratum
+      == best_label_for 'stratum_area'
+      = @level.stratum_area
+    .show_stratum
+      == best_label_for 'population_estimate'
+      = @level.population_estimate
+    .show_stratum
+      == best_label_for 'transects_covered'
+      = @level.transects_covered
+    .show_stratum
+      == best_label_for 'transects_covered_total_length'
+      = @level.transects_covered_total_length
+    .show_stratum
+      == best_label_for 'person_hours'
+      = @level.person_hours
+    .show_stratum
+      == best_label_for 'strip_width'
+      = @level.strip_width
+    .show_stratum
+      == best_label_for 'observations'
+      = @level.observations
+    .show_stratum
+      == best_label_for 'actually_seen'
+      = @level.actually_seen
+    == map_stratum @level
 
