@@ -77,6 +77,7 @@ Aaed::Application.routes.draw do
   get 'report/:species/:year/:continent/:region' => 'report#region'
   get 'report/:species/:year/:continent' => 'report#continent'
   get 'preview_report/:filter/:species/:year/:continent' => 'report#preview_continent'
+  get 'preview_report/:filter/:species/:year/:continent/corrections' => 'report#preview_corrections'
   get 'preview_report/:filter/:species/:year/:continent/:region' => 'report#preview_region'
   get 'preview_report/:filter/:species/:year/:continent/site/:site' => 'report#preview_site'
   get 'preview_report/:filter/:species/:year/:continent/:region/:country' => 'report#preview_country'

@@ -146,6 +146,15 @@ class ReportController < ApplicationController
     return nil
   end
 
+  def preview_corrections
+    return unless allowed_preview?
+    @species = params[:species].gsub('_',' ')
+    @year = params[:year].to_i
+    @continent = params[:continent]
+    @filter = params[:filter]
+    @preview_title = official_title(@filter) or @filter.humanize.upcase
+  end
+
   def preview_continent
     return unless allowed_preview?
     @species = params[:species].gsub('_',' ')
