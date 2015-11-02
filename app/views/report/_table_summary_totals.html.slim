@@ -23,7 +23,10 @@
         td.numeric= number_with_delimiter row['SPECUL']
     - summary_sums.each do |row|
       tr.totals style=('height: 24px; font-weight: bold') 
-        td Totals #{year}
+        td
+          | Total
+          - if year == 2007
+            | s 2006
         td.numeric= number_with_delimiter row['DEFINITE']
         td.numeric= number_with_delimiter row['PROBABLE']
         td.numeric= number_with_delimiter row['POSSIBLE']
