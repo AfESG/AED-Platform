@@ -84,6 +84,7 @@ group :development do
 end
 
 group :development, :test do
+  gem 'roo'
   gem 'ruby_parser'
   gem 'hpricot'
 end

@@ -5,4 +5,5 @@ log/*.log
 tmp/
 .sass-cache/
 public/assets
+public/uploads
 /config/database.yml
