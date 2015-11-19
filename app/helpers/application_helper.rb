@@ -40,7 +40,7 @@ module ApplicationHelper
 
   # this shows all users ... everybody's new
   def contributors
-    User.find(:all).count
+    User.where(disabled: false).count
   end
 
   def guess_new_count_path(p)

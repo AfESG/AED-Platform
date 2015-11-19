@@ -8,39 +8,13 @@ body.bootstrapped {
   background-color: #fff;
 }
 /*top banner*/
-a#logo-aed img{
-   width: 250px;
-   margin-top: 10px;
+#logo-aed img{
+  width: 143px;
+  padding: 10px;
 }
-a#logo-afesg img{
-    position: absolute;
-    left: 65%;
-    width: 170px;
-    top: 25px;
-}
-body.bootstrapped div.container div.row div#top{
-    background-image: asset-url("iceage2.jpg");
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: 97% 100%;
-    height: 230px;
-}
-body.bootstrapped div.container div.row div#top div.col-xs-12 a#logo-afesg img{
-  float: right;
-      left: 0;
-      margin-bottom: 0;
-      margin-right: 10px;
-      padding-right: 0;
-      position: relative;
-      right: 0;
-      top: 5px;
-      width: 12%;
-}
-html body.bootstrapped div.container div.row div#top div.col-xs-12 a#logo-aed img{
-  margin-bottom: 0;
-  margin-left: 10px;
-  margin-top: 5px;
-  width: 17%;
+#logo-afesg img{
+  width: 100px;
+  padding: 10px;
 }
 .strapline {
   position: absolute;
