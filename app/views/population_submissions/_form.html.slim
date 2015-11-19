@@ -1,22 +1,25 @@
-.restated_survey_info
-  = render :partial => "submission_info", :locals => { :s => @submission }
-= semantic_form_for @population_submission do |f|
-  = render "shared/error_messages", :target => @population_submission
-  = f.inputs do
-    = f.input :submission_id, :as => :hidden, :input_html => { :value => @submission.id }
-    = f.input :data_licensing, :as => :radio, :collection => {raw(t("creative_commons")) => "CC", raw(t("embargoed_until")) => "CC/EM", raw(t("controlled_redistribution")) => "CR"}
-    = f.input :embargo_date, :required => true, :as => :date
-    = f.input :site_name
-    = f.input :designate
-    = f.input :area
-    #map_canvas style=('width: 400px; height: 400px; margin-bottom: 15px;') 
-    = f.input :latitude
-    = f.input :longitude
-    = f.input :completion_year, :as => :select, :collection => Time.now.year.downto(1980)
-    = f.input :completion_month, :as => :select, :collection => {"January" => 1, "February" => 2, "March" => 3, "April" => 4, "May" => 5, "June" => 6, "July" => 7, "August" => 8, "September" => 9, "October" => 10, "November" => 11, "December" => 12}
-    = f.input :season, :as => :select, :collection => ["Wet", "Dry", "Both", "Unknown"]
-    = f.input :survey_type, :as => :select, :collection => {"Aerial total count (AT)" => 'AT', "Aerial sample count (AS)" => 'AS', "Ground total count (GT)" => 'GT', "Ground sample count (GS)" => 'GS', "Dung count (DC)" => 'DC', "Faecal DNA survey (GD)" => 'GD', "Individual registration (IR)" => 'IR', "Other" => 'O'}
-  = f.actions
+.row
+  .col-sm-4
+    .restated_survey_info
+      = render :partial => "submission_info", :locals => { :s => @submission }
+  .col-sm-8
+    = semantic_form_for @population_submission do |f|
+      = render "shared/error_messages", :target => @population_submission
+      = f.inputs do
+        = f.input :submission_id, :as => :hidden, :input_html => { :value => @submission.id }
+        = f.input :data_licensing, :as => :radio, :collection => {raw(t("creative_commons")) => "CC", raw(t("embargoed_until")) => "CC/EM", raw(t("controlled_redistribution")) => "CR"}
+        = f.input :embargo_date, :required => true, :as => :date
+        = f.input :site_name
+        = f.input :designate
+        = f.input :area
+        #map_canvas style=('width: 400px; height: 400px; margin-bottom: 15px;') 
+        = f.input :latitude
+        = f.input :longitude
+        = f.input :completion_year, :as => :select, :collection => Time.now.year.downto(1980)
+        = f.input :completion_month, :as => :select, :collection => {"January" => 1, "February" => 2, "March" => 3, "April" => 4, "May" => 5, "June" => 6, "July" => 7, "August" => 8, "September" => 9, "October" => 10, "November" => 11, "December" => 12}
+        = f.input :season, :as => :select, :collection => ["Wet", "Dry", "Both", "Unknown"]
+        = f.input :survey_type, :as => :select, :collection => {"Aerial total count (AT)" => 'AT', "Aerial sample count (AS)" => 'AS', "Ground total count (GT)" => 'GT', "Ground sample count (GS)" => 'GS', "Dung count (DC)" => 'DC', "Faecal DNA survey (GD)" => 'GD', "Individual registration (IR)" => 'IR', "Other" => 'O'}
+      = f.actions
 
 javascript:
   function hide_and_show_things(){

@@ -1,6 +1,8 @@
 .row
   .col-xs-12
     h1 Register
+.row
+  .col-sm-8.col-sm-offset-2
     = semantic_form_for resource, :as => resource_name , :url => registration_path(resource_name) do |f|
       = devise_error_messages!
       = f.inputs do
@@ -18,7 +20,7 @@
         = f.input :address_3
         = f.input :city
         = f.input :country
-      = f.submit class: 'btn btn.primary', value: t('register')
+      = f.submit class: 'btn btn.primary', value: 'Register'
     = render :partial => "devise/shared/links"
 
     /!/ resource, :as => resource_name, :url => registration_path(resource_name)

@@ -1,6 +1,8 @@
 .row.
   .col-xs-12
-    h2 Forgot your password?
+    h1 Forgot your password?
+.row
+  .col-sm-8.col-sm-offset-2
     = semantic_form_for resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post } do |f|
       - ee=devise_error_messages!
       - if !ee.empty?
