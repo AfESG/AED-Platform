@@ -1,6 +1,8 @@
 .row
   .col-xs-12
     h1 Log in
+.row
+  .col-sm-8.col-sm-offset-2
     = semantic_form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
       = f.inputs do
         = f.input :email

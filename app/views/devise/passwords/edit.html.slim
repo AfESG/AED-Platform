@@ -1,6 +1,8 @@
 .row
   .col-xs-12
-    h2 Change your password
+    h1 Change your password
+.row
+  .col-sm-8.col-sm-offset-2
     = semantic_form_for resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put } do |f|
       = devise_error_messages!
 
@@ -14,6 +16,5 @@
         = f.input :address_1, :as => 'hidden', :input_html => { :value => 'x' }
         = f.input :city, :as => 'hidden', :input_html => { :value => 'x' }
         = f.input :country, :as => 'hidden', :input_html => { :value => 'x' }
-      = f.actions do
-        = f.action :submit, label: :change_my_password
+      = f.submit class: 'btn btn.primary', value: 'Change my password'
     = render :partial => "devise/shared/links"
