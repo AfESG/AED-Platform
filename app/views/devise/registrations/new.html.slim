@@ -18,9 +18,7 @@
         = f.input :address_3
         = f.input :city
         = f.input :country
-      = f.actions do
-        = f.submit :register
-
+      = f.submit class: 'btn btn.primary', value: t('register')
     = render :partial => "devise/shared/links"
 
     /!/ resource, :as => resource_name, :url => registration_path(resource_name)
