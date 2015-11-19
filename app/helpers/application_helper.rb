@@ -21,11 +21,20 @@ module ApplicationHelper
     return link_to text, path
   end
 
+  def recent_submissions_scope
+    # defined as submissions not yet included in any analysis
+    PopulationSubmission.joins(:submission).joins('join countries on submissions.country_id=countries.id').where('population_submissions.id not in (select population_submission_id from estimate_factors_analyses) and EXTRACT(YEAR FROM population_submissions.created_at)>=2015')
+  end
+
+  def recent_released_submissions_scope
+    recent_submissions_scope.where('released=true and submitted=true')
+  end
+
   def last_three_surveys # inefficient!
     displayed = 0
     max = 3
     result = []
-    PopulationSubmission.where(:released => true).order('id DESC').each do |population_submission|
+    recent_released_submissions_scope.order('id DESC').each do |population_submission|
       result << population_submission
       displayed = displayed + 1
       break if displayed >= max
@@ -35,7 +44,7 @@ module ApplicationHelper
 
   # this shows all PS in the new model ... they're all new
   def new_surveys
-    PopulationSubmission.where(:released => true).count
+    recent_released_submissions_scope.count
   end
 
   # this shows all users ... everybody's new

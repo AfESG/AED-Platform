@@ -543,12 +543,6 @@ h5 {
   background-color: #2b1100;
 }
 .ticker_item {
-  float: left;
-  background-color: #ffe6d5;
-  margin-top: 10px;
-  margin-left: 10px;
-  padding: 10px;
-  border-radius: 5px;
 }
 .ticker_no {
   font-family: "Droid Sans";
@@ -560,29 +554,20 @@ h5 {
   text-decoration: none;
   color: #2b1100;
 }
-#ticker_text a {
-  color: #fff;
-}
 .ticker_legend{
   font-family: "Droid Sans";
   line-height: 1;
 }
 #ticker_text {
-  float: right;
-  width: 700px;
-  white-space: nowrap;
-  overflow: hidden;
-  color: #fff;
-  font-family: "Droid Sans";
-  font-size: 16px;
-  margin-top: 10px;
-  padding-top: 20px;
-  margin-right: 15px;
+  color: #333;
+}
+#ticker_text a {
+  color: #333;
 }
 #ticker_text img {
-  float: left;
-  margin-top: -7px;
-  margin-right: 15px;
+  margin-top: -5px;
+  height: 20px;
+  margin-right: 10px;
 }
 .ticker_tick {
   display: none;
