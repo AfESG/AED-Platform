@@ -544,13 +544,13 @@ h5 {
   margin-top: 10px;
   margin-left: 10px;
   padding: 10px;
-  height: 40px;
   border-radius: 5px;
 }
 .ticker_no {
   font-family: "Droid Sans";
   font-weight: bold;
   font-size: 24px;
+  line-height: 1;
 }
 .ticker_bar a  {
   text-decoration: none;
@@ -561,6 +561,7 @@ h5 {
 }
 .ticker_legend{
   font-family: "Droid Sans";
+  line-height: 1;
 }
 #ticker_text {
   float: right;
