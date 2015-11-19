@@ -8,39 +8,13 @@ body.bootstrapped {
   background-color: #fff;
 }
 /*top banner*/
-a#logo-aed img{
-   width: 250px;
-   margin-top: 10px;
+#logo-aed img{
+  width: 143px;
+  padding: 10px;
 }
-a#logo-afesg img{
-    position: absolute;
-    left: 65%;
-    width: 170px;
-    top: 25px;
-}
-body.bootstrapped div.container div.row div#top{
-    background-image: asset-url("iceage2.jpg");
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: 97% 100%;
-    height: 230px;
-}
-body.bootstrapped div.container div.row div#top div.col-xs-12 a#logo-afesg img{
-  float: right;
-      left: 0;
-      margin-bottom: 0;
-      margin-right: 10px;
-      padding-right: 0;
-      position: relative;
-      right: 0;
-      top: 5px;
-      width: 12%;
-}
-html body.bootstrapped div.container div.row div#top div.col-xs-12 a#logo-aed img{
-  margin-bottom: 0;
-  margin-left: 10px;
-  margin-top: 5px;
-  width: 17%;
+#logo-afesg img{
+  width: 100px;
+  padding: 10px;
 }
 .strapline {
   position: absolute;
@@ -53,6 +27,10 @@ html body.bootstrapped div.container div.row div#top div.col-xs-12 a#logo-aed im
   color: #2b1100;
 }
 /*navigation menu*/
+.navbar {
+  border-radius: 0px;
+}
+
 nav.navbar.navbar-default{
   background-color: #d0ddbf;
 }
@@ -98,6 +76,7 @@ div.col-xs-12 h1{
 div.form-group label{
   margin-left: 20px;
   margin-right: 20px;
+  font-weight: normal;
 }
 form.form-inline div.row div.col-xs-12 input.btn.btn-primary{
   margin: 10px;
@@ -569,13 +548,13 @@ h5 {
   margin-top: 10px;
   margin-left: 10px;
   padding: 10px;
-  height: 40px;
   border-radius: 5px;
 }
 .ticker_no {
   font-family: "Droid Sans";
   font-weight: bold;
   font-size: 24px;
+  line-height: 1;
 }
 .ticker_bar a  {
   text-decoration: none;
@@ -586,6 +565,7 @@ h5 {
 }
 .ticker_legend{
   font-family: "Droid Sans";
+  line-height: 1;
 }
 #ticker_text {
   float: right;

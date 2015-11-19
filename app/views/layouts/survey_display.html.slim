@@ -3,4 +3,5 @@
     h1 = @title
     .restated_survey_info
       = render :partial => "submission_info", :locals => { :s => @submission }
-    == map_aggregate @level
+    - if @level.respond_to? 'strata'
+      == map_aggregate @level

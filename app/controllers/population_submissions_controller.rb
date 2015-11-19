@@ -43,6 +43,11 @@ class PopulationSubmissionsController < ApplicationController
     eval "new_#{level_base_name}_#{@level.count_base_name}_path(@level)"
   end
 
+  # Use our own view instead of the default supplied one.
+  def level_display
+    nil
+  end
+
   def submit
     edit
   end
