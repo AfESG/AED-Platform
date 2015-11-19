@@ -1,39 +1,38 @@
+- image_height = '80px'
+
 .row
   .col-xs-12
     h1 About Elephant Database
+
+    .partners
+      = link_to "http://www.iucn.org" do
+        = image_tag "iucn_logo.jpg"
+      = link_to "http://www.iucn.org/about/work/programmes/species/about_ssc/" do
+        = image_tag "ssc2005web_res.gif"
+      = link_to "http://african-elephant.org/" do
+        = image_tag "afesgRGBTxtSml.gif"
+
     markdown:
 
-      ElephantDatabase.org is the online home of the African and Asian Elephant Database, a joint project of the
-      IUCN African Elephant Specialist Group (AfESG) and Asian Elephant Specialist Group (AsESG).
+      ElephantDatabase.org is the online home of the African Elephant Database,
+      maintained by the [IUCN SSC African Elephant Specialist Group (AfESG)](http://www.iucn.org/african_elephant).
 
-      ElephantDatabase.org presents data from past African Elephant Status Reports, as well as the latest
-      survey data reported to either specialist group.  Data on this web site is made available under a
-      [Creative Commons Attribution-NonCommercial-ShareAlike](http://creativecommons.org/licenses/by-nc-sa/3.0/)
-      license.
+      ElephantDatabase.org presents data from past [African Elephant Status Reports](report/Loxodonta_africana),
+      as well as more recent survey data reported to the specialist group. Data on this web site is made available under a
+      [Creative Commons Attribution-NonCommercial-ShareAlike license](http://creativecommons.org/licenses/by-nc-sa/4.0).
 
-      Past African Elephant Status Reports, including a large amount of narrative information, are available
-      in PDF format from [the AfESG web site](http://african-elephant.org)
-
-      Getting Involved
-      ----------------
-
-      ElephantDatabase.org is an Open Source software project.  Every aspect of the database is powered by
-      free and open source software.  We are especially thankful for
-      [PostgreSQL](http://www.postgresql.org"),
-      [PostGIS](http://postgis.refractions.net),
-      and the open source tools that make them possible.
-
-      We also would like to thank [Google Fusion Tables](http://google.com/fusiontables) for serving up
+      ElephantDatabase.org is an Open Source software project.  Every aspect of 
+      the database is powered by free and open source software.  We are especially 
+      thankful for [PostgreSQL](http://www.postgresql.org"),
+      [PostGIS](http://postgis.refractions.net), and the open source tools that 
+      make them possible.  We also would like to thank 
+      [Google Fusion Tables](http://google.com/fusiontables) for serving up
       simple and free visualizations of our geospatial data.
-
-      The African and Asian Elephant Specialist Groups are volunteer organizations, and this site and its
-      software systems are maintained principally by volunteers.  We have an ambitious roadmap, and need
-      your help to continue to grow.  Join us on [Assembla](http://www.assembla.com/spaces/aaed).
 
       Request Data
       ----------------
 
-      To obtain direct data access to African Elephant data only, please review our
+      To obtain direct data access to African elephant data, please review our
         [data access and release policy](/about/darp) and
         complete the [data request form](/data_request_forms/new) online.
 
@@ -43,30 +42,32 @@
       ElephantDatabase.org would not have been possible without our great donors and partners:
 
     .partners
-      = link_to "http://www.iucn.org" do
-        = image_tag "iucn_logo.jpg"
-      = link_to "http://www.iucn.org/about/work/programmes/species/about_ssc/" do
-        = image_tag "ssc2005web_res.gif"
-      = link_to "http://african-elephant.org/" do
-        = image_tag "afesgRGBTxtSml.gif"
-      = link_to "http://www.asesg.org/" do
-        = image_tag "AsESG-logo2.png"
-      br
-      = link_to "http://www.cites.org/eng/prog/MIKE/index.shtml" do
-        = image_tag "cites-logo.jpg"
-      = link_to "http://www.cites.org/eng/prog/MIKE/index.shtml" do
-        = image_tag "logo-mike2.png"
-      = link_to "http://www.solertium.com" do
-        = image_tag "solertium-logo.png"
-      br
+      = link_to "http://africanelephantfund.org" do
+        = image_tag "aef-logo.png", height: image_height
+      = link_to "https://www.awf.org" do
+        = image_tag "awf-logo.png", height: image_height
+      = link_to "https://www.gov.uk/government/organisations/department-for-environment-food-rural-affairs" do
+        = image_tag "defra-logo.jpg", height: image_height
       = link_to "http://www.fws.gov/international/dic/species/species.html" do
-        = image_tag "usfws_logo.png"
+        = image_tag "usfws_logo.png", height: image_height
+      = link_to "http://www.wwf.org" do
+        = image_tag "wwf-logo.png", height: image_height
+      br
+      = link_to "http://www.asesg.org/" do
+        = image_tag "AsESG-logo2.png", height: image_height
       = link_to "http://ec.europa.eu/environment/cites/home_en.htm" do
-        = image_tag "eu-logo.jpg"
-      = link_to "http://www.tusk.org/" do
-        = image_tag "tusk-logo.png"
+        = image_tag "eu-logo.jpg", height: image_height
+      = link_to "http://www.cites.org/eng/prog/MIKE/index.shtml" do
+        = image_tag "cites-logo.jpg", height: image_height
+      = link_to "http://www.cites.org/eng/prog/MIKE/index.shtml" do
+        = image_tag "logo-mike2.png", height: image_height
       = link_to "http://www.savetheelephants.org/" do
-        = image_tag "ste-logo.png"
+        = image_tag "ste-logo.png", height: image_height
+      = link_to "http://www.tusk.org/" do
+        = image_tag "tusk-logo.png", height: image_height
+      br
+      = link_to "http://www.solertium.com" do
+        = image_tag "solertium-logo.png", height: image_height
 
     markdown:
       Technology
@@ -76,10 +77,10 @@
 
     .partners
       = link_to "http://www.postgresql.org/" do
-        = image_tag "Postgresql_elephant.png"
+        = image_tag "Postgresql_elephant.png", height: image_height
       = link_to "http://postgis.refractions.net/" do
-        = image_tag "PostGIS_logo_100h.png"
+        = image_tag "PostGIS_logo_100h.png", height: image_height
       = link_to "http://www.ruby-lang.org/en/" do
-        = image_tag "Ruby_logo.png"
+        = image_tag "Ruby_logo.png", height: image_height
       = link_to "http://rubyonrails.org/" do
-        = image_tag "Ruby_on_Rails.png"
+        = image_tag "Ruby_on_Rails.png", height: image_height
