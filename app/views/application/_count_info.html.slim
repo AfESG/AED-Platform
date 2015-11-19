@@ -8,7 +8,7 @@
       .count_transects
         - if !c.total_possible_transects.nil? and c.total_possible_transects>0
           = c.total_possible_transects
-          | transects
+          '  transects
     - if c.has_strata?
       .count_strata
         - if c.stratum_level_data_submitted == true

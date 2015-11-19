@@ -20,7 +20,7 @@
           .submission_phenotype
             | Phenotype: #{s.phenotype}
             - unless s.phenotype_basis == ""
-              | (based on #{s.phenotype_basis.downcase})
+              '  (based on #{s.phenotype_basis.downcase})
     .submission_parameters
       - unless s.user.nil?
         .submission_user
@@ -32,9 +32,9 @@
                 = '.'
             | Your contribution,
           - else
-            | Data contributed by #{s.user.email},
+            | Data contributed by #{s.user.email}, 
           - if s.right_to_grant_permission == false and s.permission_email != ''
-            | on behalf of #{s.permission_email},
+            | on behalf of #{s.permission_email}, 
           | last updated #{s.updated_at}
   - for p in s.population_submissions do
     =render :partial => 'population_submission_info', :locals => {:p => p}
