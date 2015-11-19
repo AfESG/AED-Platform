@@ -1,0 +1,70 @@
+- raw_totals = local_assigns[:totals] || @alt_summary_totals
+- round      = local_assigns[:rounded] || false
+- year       = local_assigns[:year] || @year
+- level      = local_assigns[:level]
+
+- if raw_totals.count == 0
+  h2 No estimates were available for #{level} in #{year}
+- else
+  h2 style=('margin-top:20px') = "Summary Totals for #{level}"
+
+  - area_total = {}
+  - @alt_areas.each { |row| area_total[row['category']] = row }
+  - area_candidate = @alt_areas.first
+
+  - table_totals = {}
+  - data_columns = ['ESTIMATE', 'CONFIDENCE', 'GUESS_MIN', 'GUESS_MAX']
+
+  - merged_categories = ['F', 'G']
+
+  - totals = {}
+  - raw_totals.each do |row|
+    - if merged_categories.include?(row['CATEGORY'])
+      - totals[row['CATEGORY']] = row unless row['GUESS_MIN'].blank?
+    - else
+      - totals[row['CATEGORY']] = row
+
+  table.table style='font-size:16px'
+    tr
+      th
+      th colspan='2' Estimates from Surveys
+      th colspan='2' Guesses
+      th % range of known and possible 
+      th area (km<sup>2</sup>)
+    tr
+      th Survey category
+      th Estimate
+      th &plusmn; 95% CL
+      th From
+      th To
+      th
+      th
+
+    - keys = totals.keys
+    - merged_keys = keys.select { |key| merged_categories.include?(key) }
+    - keys.each_with_index do |category, index|
+      - row = totals[category]
+      tr
+        td = row['SURVEYTYPE']
+        - data_columns.each do |column|
+          td = add_and_display row, column, table_totals, column.eql?('CONFIDENCE') ? false : round
+        - unless merged_categories.include?(row['CATEGORY'])
+          td rowspan=(merged_categories.include?(keys[index+1] || nil) ? merged_keys.count + 1 : 1)
+            = add_and_display_area area_total[row['CATEGORY']], 'CATEGORY_RANGE_ASSESSED', table_totals
+        td = (round_area(area_total[row['CATEGORY']]['AREA']) || 0) unless merged_categories.include?(row['CATEGORY'])
+
+    tr
+      td Unassessed Range
+      td = unused_cell
+      td = unused_cell
+      td = unused_cell
+      td = unused_cell
+      td = round_area 100 - (table_totals['CATEGORY_RANGE_ASSESSED'] || 0)  
+    tr
+      td = 'Total'
+      - data_columns.each do |column|
+        td = number_with_delimiter(round ? rounded(table_totals[column].to_i) : table_totals[column].to_i)
+      td 100
+      td = round_area area_candidate['range_area']
+
+

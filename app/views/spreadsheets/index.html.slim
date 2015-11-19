@@ -1,0 +1,26 @@
+.row
+  .col-xs-12
+    h1 Spreadsheet Verification
+
+    h2 Upload a new spreadsheet
+    p.lead
+      ' Upload a new spreadsheet
+      - if @sheets.any?
+        ' or replace an existing spreadsheet
+      | to review.
+    = form_tag spreadsheets_path, { :multipart => true } do
+      div = file_field_tag 'file'
+      div = submit_tag
+
+    - if @sheets.any?
+      h2 Review an existing spreadsheet
+      table.table
+        thead
+          tr
+            th Name
+            th Upload Date
+        tbody
+          - @sheets.each do |sheet|
+            tr
+              td = link_to sheet[:name], spreadsheet_path(sheet[:name])
+              td = sheet[:created_at]
