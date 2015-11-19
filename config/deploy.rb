@@ -1,8 +1,5 @@
-require "rvm/capistrano"
-require "rvm/capistrano/gem_install_uninstall"
-
 set :application, "aaed"
-set :repository,  "git@github.com:AfESG/AEDwebsite.git"
+set :repository,  "git@github.com:AfESG/AEDWebsite.git"
 
 set :scm, :git
 
@@ -11,32 +8,40 @@ set :use_sudo, false
 
 target = ENV['TARGET'] || 'WWW'
 
-server "pg.elephantdatabase.org", :app, :web, :db, :primary => true
-set :user, "aaed"
+server "aed.elephantdatabase.org", :app, :web, :db, :primary => true
+set :user, "aed"
 
 if target == 'WWW'
   puts "Deploying to production"
 
   default_environment['UNICORN_PORT'] = '5000'
-  default_environment['POSTGRESQL_DATABASE'] = 'aaed_production'
+  default_environment['POSTGRESQL_DATABASE'] = 'aed_production'
   default_environment['HOSTNAME'] = 'www.elephantdatabase.org'
-  set :deploy_to, '/u/apps'
+  set :deploy_to, '/u/production'
 end
 
 if target == 'STAGING'
   puts "Deploying to staging"
-  default_environment['authenticate_all_requests'] = 'tusker'
-  default_environment['UNICORN_PORT'] = '3000'
-  default_environment['POSTGRESQL_DATABASE'] = 'aaed_staging'
+
+  default_environment['UNICORN_PORT'] = '4000'
+  default_environment['POSTGRESQL_DATABASE'] = 'aed_staging'
   default_environment['HOSTNAME'] = 'staging.elephantdatabase.org'
+  default_environment['authenticate_all_requests'] = 'practicum'
   set :deploy_to, '/u/staging'
-  set :branch,  "homepage"
+end
+
+if target == 'DEV'
+  puts "Deploying to dev"
+
+  default_environment['UNICORN_PORT'] = '3000'
+  default_environment['POSTGRESQL_DATABASE'] = 'aed_development'
+  default_environment['HOSTNAME'] = 'dev.elephantdatabase.org'
+  default_environment['authenticate_all_requests'] = 'practicum'
+  set :deploy_to, '/u/dev'
 end
 
 set :rvm_ruby_string, 'ruby-2.2.2@aaed'
-
-before 'deploy', 'rvm:install_rvm'
-before 'deploy', 'rvm:install_ruby'
+set :rvm_type, :user
 
 require 'bundler/capistrano'
 
