@@ -4,7 +4,7 @@
     p= link_to t('back'), report_narratives_path
     = semantic_form_for @report_narrative do |f|
       = f.inputs do
-        = f.input :uri, :as => 'hidden', :value => params[:uri]
+        = f.input :uri, :as => 'hidden'
         = f.input :narrative
         = f.input :footnote
 
