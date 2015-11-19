@@ -1,3 +1,6 @@
+require "rvm/capistrano"
+require "rvm/capistrano/gem_install_uninstall"
+
 set :application, "aaed"
 set :repository,  "git@github.com:AfESG/AEDWebsite.git"
 
