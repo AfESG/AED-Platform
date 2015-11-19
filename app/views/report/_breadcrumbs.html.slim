@@ -6,7 +6,7 @@
 - survey    = local_assigns[:survey] || @survey_zone
 
 ol.breadcrumb
-  li Reports
+  li = link_to 'Reports', report_path
   - if species
     li = link_to_if year, species, "/report/#{species.gsub(' ','_')}"
   - if year

@@ -22,10 +22,10 @@ class ReportController < ApplicationController
   def species
     @species = params[:species].gsub('_',' ')
     @past_reports = [
-      { year: '2007', authors: 'J.J. Blanc, R.F.W. Barnes, G.C. Craig, H.T. Dublin, C.R. Thouless, I. Douglas-Hamilton, and J.A. Hart' },
-      { year: '2002', authors: 'J.J. Blanc, C.R. Thouless, J.A. Hart, H.T. Dublin, I. Douglas-Hamilton, G.C. Craig and R.F.W. Barnes' },
-      { year: '1998', authors: 'R.F.W. Barnes, G.C. Craig, H.T. Dublin, G. Overton, W. Simons and C.R. Thouless' },
-      { year: '1995', authors: 'M.Y. Said, R.N. Chunge, G.C. Craig, C.R. Thouless, R.F.W. Barnes and H.T. Dublin' }
+      { year: '2007', full_text: '033', authors: 'J.J. Blanc, R.F.W. Barnes, G.C. Craig, H.T. Dublin, C.R. Thouless, I. Douglas-Hamilton, and J.A. Hart' },
+      { year: '2002', full_text: '029', authors: 'J.J. Blanc, C.R. Thouless, J.A. Hart, H.T. Dublin, I. Douglas-Hamilton, G.C. Craig and R.F.W. Barnes' },
+      { year: '1998', full_text: '022', authors: 'R.F.W. Barnes, G.C. Craig, H.T. Dublin, G. Overton, W. Simons and C.R. Thouless' },
+      { year: '1995', full_text: '011', authors: 'M.Y. Said, R.N. Chunge, G.C. Craig, C.R. Thouless, R.F.W. Barnes and H.T. Dublin' }
     ]
   end
 
@@ -144,6 +144,15 @@ class ReportController < ApplicationController
       return "Provisional African Elephant Population Estimates: update to 31 Dec 2013"
     end
     return nil
+  end
+
+  def preview_corrections
+    return unless allowed_preview?
+    @species = params[:species].gsub('_',' ')
+    @year = params[:year].to_i
+    @continent = params[:continent]
+    @filter = params[:filter]
+    @preview_title = official_title(@filter) or @filter.humanize.upcase
   end
 
   def preview_continent
