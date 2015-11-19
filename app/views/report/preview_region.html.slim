@@ -20,7 +20,19 @@
 
     == narrative
 
-    = render 'table_preview_summary_totals', level: @region, totals: @summary_totals_by_region, baselines: @baseline_total
+    div style='margin-top: 20px'
+      ul.nav.nav-tabs role='tablist'
+        li.active = link_to 'DPPS Calculations', '#dpps', 'aria-controls': 'dpps', role: 'tab', 'data-toggle': 'tab'
+        li = link_to 'Alternate, No Rounding', '#altdpps', 'aria-controls': 'altdpps', role: 'tab', 'data-toggle': 'tab'
+        li = link_to 'Alternate, Rounded', '#altdppsrounded', 'aria-controls': 'altdppsrounded', role: 'tab', 'data-toggle': 'tab'
+
+      .tab-content
+        .tab-pane.active#dpps role='tabpanel'
+          = render 'table_preview_summary_totals', level: @region, totals: @summary_totals_by_region, baselines: @baseline_total
+        .tab-pane#altdpps role='tabpanel'
+          = render 'table_alt_dpps', level: @region, totals: @alt_summary_totals
+        .tab-pane#altdppsrounded role='tabpanel'
+          = render 'table_alt_dpps', level: @region, totals: @alt_summary_totals, rounded: true
 
     - if current_user and current_user.admin?
       = render 'table_causes_of_change', totals: @causes_of_change_by_region_u, sums: @causes_of_change_sums_by_region_u
