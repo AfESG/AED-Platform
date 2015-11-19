@@ -111,6 +111,7 @@
           tr
             td
               a href="javascript:toggle_section('#{@rn.gsub(/[^\w\d]/,'')}')" style='text-decoration:none'  +
+              '
               = @rn
             td= @cc
             td= @ty
@@ -127,11 +128,10 @@
             td style="text-align:center" = @lo
             td style="text-align:center" = @la
           - group.each do |row|
-            tr style=('height:18px; display:none')
-              td
-                | &#160;
-                | &#160;
-                a href="/population_submissions/#{row['population_submission_id']}" != row['stratum_name']
+            tr data-section=("#{@rn.gsub(/[^\w\d]/,'')}") style=('height:18px; display:none')
+              td 
+                div style='margin-left:20px;'
+                  a href="/population_submissions/#{row['population_submission_id']}" = row['stratum_name']
               td= row['ReasonForChange']
               td= row['method_and_quality'].gsub(/[\d]/,'')
               td style="text-align:center" = row['CATEGORY']

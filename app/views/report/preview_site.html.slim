@@ -85,7 +85,7 @@
         - @elephant_estimates_by_site.each do |row|
           tr style='height:18px' 
             td
-              a href="/population_submissions/#{row['population_submission_id']}" != row['survey_zone']
+              a href="/population_submissions/#{row['population_submission_id']}" = row['survey_zone']
             td= row['ReasonForChange']
             td= row['method_and_quality'].gsub(/[\d]/,'')
             td style="text-align:center" = row['CATEGORY']
