@@ -29,6 +29,7 @@ class ReportNarrativesController < ApplicationController
   # GET /report_narratives/new.json
   def new
     @report_narrative = ReportNarrative.new
+    @report_narrative.uri = params[:uri]
 
     respond_to do |format|
       format.html # new.html.erb
