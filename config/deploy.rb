@@ -40,7 +40,7 @@ if target == 'DEV'
   set :deploy_to, '/u/dev'
 end
 
-set :rvm_ruby_string, 'ruby-2.2.2@aaed'
+set :rvm_ruby_string, 'ruby-2.2.3@aed'
 set :rvm_type, :user
 
 require 'bundler/capistrano'
