@@ -1,0 +1,56 @@
+.row
+  .col-xs-12
+    h1 Spreadsheet Verification Results
+
+    - @sheets.each do |result|
+      - sheet  = result[:sheet]
+      - errors = []
+      h2 = result[:name]
+      h3 Expected Results:
+      table.table
+        tr
+          th Survey category
+          th Estimate
+          th &plusmn; 95% CL
+          th From
+          th To
+          th Range
+        - result[:expected].each do |category, row|
+          tr
+            - row.each do |key, value|
+              - if key == 'CATEGORY' || key == 'RANGE'
+                td = value
+              - elsif value.blank? || value == '--'
+                td = value
+              - else
+                - expected = value.to_i rescue nil
+                - actual   = result[:actual][category][key].to_i rescue nil
+                - if expected.nil?
+                  td = value
+                - elsif expected == actual
+                  td.success = value
+                - else
+                  td.danger = value
+                  - errors << { category: row['CATEGORY'], key: key, expected: expected, actual: actual }
+      - if errors.any?
+        p.text-danger 
+          i.glyphicon.glyphicon-remove-sign
+          '
+          | The following columns did not match as expected:
+        table.table
+          tr
+            td Category
+            td Column
+            td Expected Value
+            td Computed Value
+          - errors.each do |error|
+            tr
+              td = error[:category]
+              td = error[:key]
+              td = error[:expected]
+              td = error[:actual]
+      - else
+        p.text-success
+          i.glyphicon.glyphicon-ok-sign
+          '
+          | No errors were found in calculations.
