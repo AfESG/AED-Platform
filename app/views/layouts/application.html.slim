@@ -18,7 +18,7 @@ html
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
   body.bootstrapped
-    .container
+    .container-fluid
       .row
         #top
           .col-xs-6
@@ -27,7 +27,7 @@ html
           .col-xs-6 style='text-align:right'
             a#logo-afesg href='/'
               = image_tag 'logo-AfESGcolour.gif', :alt=>'African Elephant Specialist Group'
-    .container
+    .container-fluid
       .row
         .col-xs-12
           nav.navbar.navbar-default
@@ -65,9 +65,9 @@ html
           .error= flash[:error]
         - if(!flash[:success].nil?)
           .success= flash[:success]
-    .container
+    .container-fluid
       = yield
-    .container
+    .container-fluid
       .row style='margin-top: 10px;'
         .col-xs-12
           span#iucn-logos
