@@ -1,15 +1,18 @@
-.restated_survey_info
-  = render :partial => "submission_info", :locals => { :s => @submission }
-= semantic_form_for @survey_other do |f|
-  = render "shared/error_messages", :target => @survey_other
-  = f.inputs do
-    = f.input :population_submission_id, :as => :hidden, :input_html => { :value => @population_submission.id }
-    = f.input :other_method_description
-    = f.input :population_estimate_min
-    = f.input :population_estimate_max
-    = f.input :actually_seen
-    -if current_user.admin?
-      = f.input :informed
-      = f.input :is_mike_site, :as => :radio
-      = f.input :mike_site
-  = f.actions
+.row
+  .col-sm-4
+    .restated_survey_info
+      = render :partial => "submission_info", :locals => { :s => @submission }
+  .col-sm-8
+    = semantic_form_for @survey_other do |f|
+      = render "shared/error_messages", :target => @survey_other
+      = f.inputs do
+        = f.input :population_submission_id, :as => :hidden, :input_html => { :value => @population_submission.id }
+        = f.input :other_method_description
+        = f.input :population_estimate_min
+        = f.input :population_estimate_max
+        = f.input :actually_seen
+        -if current_user.admin?
+          = f.input :informed
+          = f.input :is_mike_site, :as => :radio
+          = f.input :mike_site
+      = f.actions
