@@ -1,68 +1,71 @@
-.restated_survey_info
-  = render :partial => "submission_info", :locals => { :s => @submission }
-= semantic_form_for @survey_dung_count_line_transect_stratum do |f|
-  = render "shared/error_messages", :target => @survey_dung_count_line_transect_stratum
-  = f.inputs do
-    = f.input :survey_dung_count_line_transect_id, :as => :hidden, :input_html => { :value => @level.parent_count.id }
-    = f.input :stratum_name
-    = f.input :stratum_area
-    = f.input :population_estimate
-    = f.input :population_variance
-    = f.input :population_standard_error
-    = f.input :population_t
-    = f.input :population_degrees_of_freedom
-    = f.input :population_confidence_interval
-    = f.input :population_lower_confidence_limit
-    = f.input :population_upper_confidence_limit
-    = f.input :population_asymmetric_lower_confidence_interval
-    = f.input :population_asymmetric_upper_confidence_interval
-    = f.input :population_no_precision_estimate_available
-    = f.input :transects_covered
-    = f.input :transects_covered_total_length
-    = f.input :individual_transect_length
-    = f.input :strip_width
-    = f.input :observations
-    = f.input :observations_distance_method, :as => :select, :collection => ["By eye", "Using instruments"]
-    = f.input :actually_seen
-    = f.input :dung_piles
-    = f.input :dung_decay_rate_measurement_method, :as => :select, :collection => ["Decay rate NOT measured on site", "Prospectively", "Retrospectively"]
-    = f.input :dung_decay_rate_estimate_used
-    = f.input :dung_decay_rate_measurement_site
-    = f.input :dung_decay_rate_measurement_year
-    = f.input :dung_decay_rate_reference
-    = f.input :dung_decay_rate_variance
-    = f.input :dung_decay_rate_standard_error
-    = f.input :dung_decay_rate_t
-    = f.input :dung_decay_rate_degrees_of_freedom
-    = f.input :dung_decay_rate_confidence_interval
-    = f.input :dung_decay_rate_lower_confidence_limit
-    = f.input :dung_decay_rate_upper_confidence_limit
-    = f.input :dung_decay_rate_no_precision_estimate_available
-    = f.input :defecation_rate_measured_on_site, :as => :radio
-    = f.input :defecation_rate_estimate_used
-    = f.input :defecation_rate_measurement_site
-    = f.input :defecation_rate_reference
-    = f.input :defecation_rate_variance
-    = f.input :defecation_rate_standard_error
-    = f.input :defecation_rate_t
-    = f.input :defecation_rate_degrees_of_freedom
-    = f.input :defecation_rate_confidence_interval
-    = f.input :defecation_rate_lower_confidence_limit
-    = f.input :defecation_rate_upper_confidence_limit
-    = f.input :defecation_rate_no_precision_estimate_available
-    = f.input :dung_density_estimate
-    = f.input :dung_density_variance
-    = f.input :dung_density_standard_error
-    = f.input :dung_density_t
-    = f.input :dung_density_degrees_of_freedom
-    = f.input :dung_density_confidence_interval
-    = f.input :dung_density_lower_confidence_limit
-    = f.input :dung_density_upper_confidence_limit
-    = f.input :dung_density_asymmetric_upper_confidence_interval
-    = f.input :dung_density_asymmetric_lower_confidence_interval
-    = f.input :dung_density_no_precision_estimate_available
-    = f.input :dung_encounter_rate
-    -if current_user.admin?
-      = f.input :is_mike_site, :as => :radio
-      = f.input :mike_site
-  = render 'strata_actions', f: f
+.row
+  .col-sm-4
+    .restated_survey_info
+      = render :partial => "submission_info", :locals => { :s => @submission }
+  .col-sm-8
+    = semantic_form_for @survey_dung_count_line_transect_stratum do |f|
+      = render "shared/error_messages", :target => @survey_dung_count_line_transect_stratum
+      = f.inputs do
+        = f.input :survey_dung_count_line_transect_id, :as => :hidden, :input_html => { :value => @level.parent_count.id }
+        = f.input :stratum_name
+        = f.input :stratum_area
+        = f.input :population_estimate
+        = f.input :population_variance
+        = f.input :population_standard_error
+        = f.input :population_t
+        = f.input :population_degrees_of_freedom
+        = f.input :population_confidence_interval
+        = f.input :population_lower_confidence_limit
+        = f.input :population_upper_confidence_limit
+        = f.input :population_asymmetric_lower_confidence_interval
+        = f.input :population_asymmetric_upper_confidence_interval
+        = f.input :population_no_precision_estimate_available
+        = f.input :transects_covered
+        = f.input :transects_covered_total_length
+        = f.input :individual_transect_length
+        = f.input :strip_width
+        = f.input :observations
+        = f.input :observations_distance_method, :as => :select, :collection => ["By eye", "Using instruments"]
+        = f.input :actually_seen
+        = f.input :dung_piles
+        = f.input :dung_decay_rate_measurement_method, :as => :select, :collection => ["Decay rate NOT measured on site", "Prospectively", "Retrospectively"]
+        = f.input :dung_decay_rate_estimate_used
+        = f.input :dung_decay_rate_measurement_site
+        = f.input :dung_decay_rate_measurement_year
+        = f.input :dung_decay_rate_reference
+        = f.input :dung_decay_rate_variance
+        = f.input :dung_decay_rate_standard_error
+        = f.input :dung_decay_rate_t
+        = f.input :dung_decay_rate_degrees_of_freedom
+        = f.input :dung_decay_rate_confidence_interval
+        = f.input :dung_decay_rate_lower_confidence_limit
+        = f.input :dung_decay_rate_upper_confidence_limit
+        = f.input :dung_decay_rate_no_precision_estimate_available
+        = f.input :defecation_rate_measured_on_site, :as => :radio
+        = f.input :defecation_rate_estimate_used
+        = f.input :defecation_rate_measurement_site
+        = f.input :defecation_rate_reference
+        = f.input :defecation_rate_variance
+        = f.input :defecation_rate_standard_error
+        = f.input :defecation_rate_t
+        = f.input :defecation_rate_degrees_of_freedom
+        = f.input :defecation_rate_confidence_interval
+        = f.input :defecation_rate_lower_confidence_limit
+        = f.input :defecation_rate_upper_confidence_limit
+        = f.input :defecation_rate_no_precision_estimate_available
+        = f.input :dung_density_estimate
+        = f.input :dung_density_variance
+        = f.input :dung_density_standard_error
+        = f.input :dung_density_t
+        = f.input :dung_density_degrees_of_freedom
+        = f.input :dung_density_confidence_interval
+        = f.input :dung_density_lower_confidence_limit
+        = f.input :dung_density_upper_confidence_limit
+        = f.input :dung_density_asymmetric_upper_confidence_interval
+        = f.input :dung_density_asymmetric_lower_confidence_interval
+        = f.input :dung_density_no_precision_estimate_available
+        = f.input :dung_encounter_rate
+        -if current_user.admin?
+          = f.input :is_mike_site, :as => :radio
+          = f.input :mike_site
+      = render 'strata_actions', f: f
