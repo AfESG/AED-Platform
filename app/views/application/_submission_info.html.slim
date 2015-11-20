@@ -6,7 +6,8 @@
   .submission_info
     - if edit_allowed
       .edit_link
-        = link_to image_tag("editable.png"), edit_submission_path(s)
+        = link_to edit_submission_path(s) do
+          .glyphicon.glyphicon-pencil
         = link_to image_tag("delete.png"), s, :confirm => t('are_you_sure'), :method => :delete
     .submission_header
       - unless s.country.nil?
@@ -30,7 +31,7 @@
                 | This report has been submitted to AfESG and can no longer be edited. If you need access to one of your completed submissions,
                 = link_to 'contact the Data Manager', '/contact'
                 = '.'
-            | Your contribution,
+            | Your contribution, 
           - else
             | Data contributed by #{s.user.email}, 
           - if s.right_to_grant_permission == false and s.permission_email != ''
@@ -42,6 +43,6 @@
     - if edit_allowed
       .add_actions
         = link_to new_submission_population_submission_path(s) do
-          = image_tag('plus.png')
-          | Add a population estimate
+          .glyphicon.glyphicon-plus
+          |  Add a population estimate
 
