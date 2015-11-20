@@ -1,6 +1,6 @@
 development:
   encoding: unicode
-  adapter: postgresql
+  adapter: postgis
   database: aaed_development
   pool: 5
   username: postgres
@@ -12,12 +12,12 @@ development:
 # Do not set this db to the same as development or production.
 test:
   encoding: unicode
-  adapter: postgresql
+  adapter: postgis
   database: aaed_test
   pool: 5
 
 production:
   encoding: unicode
-  adapter: postgresql
+  adapter: postgis
   database: <%=ENV['POSTGRESQL_DATABASE']%>
   pool: 5
