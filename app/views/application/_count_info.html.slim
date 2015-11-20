@@ -1,7 +1,8 @@
 .count_info
   - if edit_allowed
     .edit_link
-      = link_to image_tag("editable.png"), guess_edit_count_path(c)
+      = link_to guess_edit_count_path(c) do
+        .glyphicon.glyphicon-pencil
       = link_to image_tag("delete.png"), c, :confirm => t('are_you_sure'), :method => :delete
   .count_header
     - if(c.respond_to? "total_possible_transects")
@@ -26,13 +27,13 @@
     - if c.stratum_level_data_submitted == true
       .stratum_add_actions
         = link_to guess_new_stratum_path(c) do
-          = image_tag('plus.png')
-          | Add a stratum
+          .glyphicon.glyphicon-plus
+          |  Add a stratum
     - elsif c.strata.size < 1
       .stratum_add_actions
         = link_to guess_new_stratum_path(c) do
-          = image_tag('plus.png')
-          | Report aggregates as a single stratum
+          .glyphicon.glyphicon-plus
+          |  Report aggregates as a single stratum
 - else
   .count_stratum_info
     .count_stratum_header
@@ -42,7 +43,7 @@
         .count_stratum_estimate= "#{c.population_estimate_min}-#{c.population_estimate_max}"
       =link_to c do
         .count_stratum_name
-          | Survey Type:
+          | Survey Type: 
           = c.population_submission.survey_type
       .count_stratum_parameters
         == '&#160;'
