@@ -1,11 +1,8 @@
 development:
   encoding: unicode
   adapter: postgis
-  database: aaed_development
+  database: aed_development
   pool: 5
-  username: postgres
-  password: postgres
-  host: localhost
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
