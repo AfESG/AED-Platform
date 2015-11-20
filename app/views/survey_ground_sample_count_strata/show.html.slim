@@ -1,8 +1,11 @@
 .row
   .col-xs-12
     h1= t '.title'
+.row
+  .col-sm-4
     .restated_survey_info
       = render :partial => "submission_info", :locals => { :s => @submission }
+  .col-sm-8
     h4
       - if @level.stratum_name.blank?
         .count_stratum_name = "Stratum ##{@level.id}"

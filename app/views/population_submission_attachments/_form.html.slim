@@ -1,27 +1,30 @@
-.restated_survey_info
-  = render :partial => "submission_info", :locals => { :s => @submission }
-= semantic_form_for @population_submission_attachment, :html => { :enctype=>'multipart/form-data'} do |f|
-  .submit_confirmation
-    | Please submit your full survey report to allow evaluation of the survey data submitted. Please
-    | also submit any polygons available from the survey, including the survey zone, the elephant
-    | results, and any available data on protected area boundaries. This will enable us to process
-    | and utilize your data more effectively. Thank you!
-  .submit_confirmation
-    | As a reminder, you have licensed your overall data as
-  .submit_confirmation
-    ==@population_submission.data_licensing_link
-    br
-    -unless @population_submission.embargo_date.nil?
-      | Embargoed until #{@population_submission.embargo_date}
-  .file_uploader
-    = f.inputs do
-      = f.input :population_submission_id, :as => :hidden, :input_html => { :value => @population_submission.id }
-      = f.input :attachment_type, :as => :select, :collection => ['Survey report','Survey Shapefile','Range Shapefile','Other']
+.row
+  .col-sm-4
+    .restated_survey_info
+      = render :partial => "submission_info", :locals => { :s => @submission }
+  .col-sm-8
+    = semantic_form_for @population_submission_attachment, :html => { :enctype=>'multipart/form-data'} do |f|
       .submit_confirmation
-        | You can supply restricted attachments that will not be shared on this site under the general
-        | licensing terms of your submission. If this is such an attachment, tick this box. Only the
-        | administrators of the site will interact with your submission and only for
-        | the purpose of aggregating data. Any information incorporated from this file (e.g.
+        | Please submit your full survey report to allow evaluation of the survey data submitted. Please
+        | also submit any polygons available from the survey, including the survey zone, the elephant
+        | results, and any available data on protected area boundaries. This will enable us to process
+        | and utilize your data more effectively. Thank you!
+      .submit_confirmation
+        | As a reminder, you have licensed your overall data as
+      .submit_confirmation
+        ==@population_submission.data_licensing_link
+        br
+        -unless @population_submission.embargo_date.nil?
+          | Embargoed until #{@population_submission.embargo_date}
+      .file_uploader
+        = f.inputs do
+          = f.input :population_submission_id, :as => :hidden, :input_html => { :value => @population_submission.id }
+          = f.input :attachment_type, :as => :select, :collection => ['Survey report','Survey Shapefile','Range Shapefile','Other']
+          .submit_confirmation
+            | You can supply restricted attachments that will not be shared on this site under the general
+            | licensing terms of your submission. If this is such an attachment, tick this box. Only the
+            | administrators of the site will interact with your submission and only for
+            | the purpose of aggregating data. Any information incorporated from this file (e.g.
         | GIS geometries) will be attributed using the citation you provided here.
       = f.input :restrict
       = f.input :file

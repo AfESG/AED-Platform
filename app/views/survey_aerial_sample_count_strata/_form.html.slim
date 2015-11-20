@@ -1,30 +1,33 @@
-.restated_survey_info
-  = render :partial => "submission_info", :locals => { :s => @submission }
-= semantic_form_for @survey_aerial_sample_count_stratum do |f|
-  = render "shared/error_messages", :target => @survey_aerial_sample_count_stratum
-  = f.inputs do
-    = f.input :survey_aerial_sample_count_id, :as => :hidden, :input_html => { :value => @level.parent_count.id }
-    = f.input :stratum_name
-    = f.input :stratum_area
-    = f.input :population_estimate
-    = f.input :population_variance
-    = f.input :population_standard_error
-    = f.input :population_t
-    = f.input :population_degrees_of_freedom
-    = f.input :population_confidence_interval
-    = f.input :population_lower_confidence_limit
-    = f.input :population_upper_confidence_limit
-    = f.input :population_no_precision_estimate_available
-    = f.input :sampling_intensity
-    = f.input :transects_covered
-    = f.input :transects_covered_total_length
-    = f.input :seen_in_transects
-    = f.input :seen_outside_transects
-    = f.input :carcasses_fresh
-    = f.input :carcasses_old
-    = f.input :carcasses_very_old
-    = f.input :carcasses_age_unknown
-    -if current_user.admin?
-      = f.input :is_mike_site, :as => :radio
-      = f.input :mike_site
-  = render 'strata_actions', f: f
+.row
+  .col-sm-4
+    .restated_survey_info
+      = render :partial => "submission_info", :locals => { :s => @submission }
+  .col-sm-8
+    = semantic_form_for @survey_aerial_sample_count_stratum do |f|
+      = render "shared/error_messages", :target => @survey_aerial_sample_count_stratum
+      = f.inputs do
+        = f.input :survey_aerial_sample_count_id, :as => :hidden, :input_html => { :value => @level.parent_count.id }
+        = f.input :stratum_name
+        = f.input :stratum_area
+        = f.input :population_estimate
+        = f.input :population_variance
+        = f.input :population_standard_error
+        = f.input :population_t
+        = f.input :population_degrees_of_freedom
+        = f.input :population_confidence_interval
+        = f.input :population_lower_confidence_limit
+        = f.input :population_upper_confidence_limit
+        = f.input :population_no_precision_estimate_available
+        = f.input :sampling_intensity
+        = f.input :transects_covered
+        = f.input :transects_covered_total_length
+        = f.input :seen_in_transects
+        = f.input :seen_outside_transects
+        = f.input :carcasses_fresh
+        = f.input :carcasses_old
+        = f.input :carcasses_very_old
+        = f.input :carcasses_age_unknown
+        -if current_user.admin?
+          = f.input :is_mike_site, :as => :radio
+          = f.input :mike_site
+      = render 'strata_actions', f: f

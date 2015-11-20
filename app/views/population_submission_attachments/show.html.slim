@@ -1,8 +1,11 @@
 .row
   .col-xs-12
     h1 Attachment
+.row
+  .col-sm-4
     .restated_survey_info
       = render :partial => "submission_info", :locals => { :s => @submission }
+  .col-sm-8
     h4= @population_submission_attachment.file_file_name
     .attachment_details
       | Details:

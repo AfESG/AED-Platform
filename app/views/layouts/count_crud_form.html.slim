@@ -1,8 +1,11 @@
 .row
   .col-xs-12
     h1 = @title
+.row
+  .col-sm-4
     .restated_survey_info
       = render :partial => "submission_info", :locals => { :s => @submission }
+  .col-sm-8
     = semantic_form_for @level do |f|
       = render "shared/error_messages", :target => @level
       = f.inputs do

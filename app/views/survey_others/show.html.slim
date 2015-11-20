@@ -1,8 +1,11 @@
 .row
   .col-xs-12
     h1 = @title
+.row
+  .col-sm-4
     .restated_survey_info
       = render :partial => "submission_info", :locals => { :s => @submission }
+  .col-sm-8
     .show_stratum
       == best_label_for 'other_method_description'
       = @level.other_method_description

@@ -1,9 +1,11 @@
 .row
   .col-xs-12
     h1 Population Survey
+.row
+  .col-sm-4
     .restated_survey_info
       =render :partial => 'submission_info', :locals => { :s => @submission }
-
+  .col-sm-8
     .public_abstract= @population_submission.abstract
     .public_citation
       | Source: 

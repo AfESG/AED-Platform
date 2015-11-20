@@ -1,9 +1,12 @@
-.restated_survey_info
-  = render :partial => "submission_info", :locals => { :s => @submission }
-= semantic_form_for @survey_aerial_total_count do |f|
-  = render "shared/error_messages", :target => @survey_aerial_total_count
-  = f.inputs do
-    = f.input :population_submission_id, :as => :hidden, :input_html => { :value => @population_submission.id }
-    = f.input :surveyed_at_stratum_level, :as => :radio
-    = f.input :stratum_level_data_submitted, :as => :radio
-  = f.actions
+.row
+  .col-sm-4
+    .restated_survey_info
+      = render :partial => "submission_info", :locals => { :s => @submission }
+  .col-sm-8
+    = semantic_form_for @survey_aerial_total_count do |f|
+      = render "shared/error_messages", :target => @survey_aerial_total_count
+      = f.inputs do
+        = f.input :population_submission_id, :as => :hidden, :input_html => { :value => @population_submission.id }
+        = f.input :surveyed_at_stratum_level, :as => :radio
+        = f.input :stratum_level_data_submitted, :as => :radio
+      = f.actions

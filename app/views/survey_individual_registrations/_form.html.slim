@@ -1,16 +1,19 @@
-.restated_survey_info
-  = render :partial => "submission_info", :locals => { :s => @submission }
-= semantic_form_for @survey_individual_registration do |f|
-  = render "shared/error_messages", :target => @survey_individual_registration
-  = f.inputs do
-    = f.input :population_submission_id, :as => :hidden, :input_html => { :value => @population_submission.id }
-    = f.input :population_estimate
-    = f.input :population_upper_range
-    = f.input :monitoring_years, :as => :select, :collection => Time.now.year.downto(1950)
-    = f.input :monitoring_frequency, :as => :select, :collection => ["Weekly", "Monthly", "Quarterly", "Annually", "Every several years", "Unknown"]
-    = f.input :fenced_site, :as => :select, :collection => ["Yes", "No", "Partly", "Unknown"]
-    = f.input :porous_fenced_site, :as => :select, :collection => ["Yes", "No", "Unknown"]
-    -if current_user.admin?
-      = f.input :is_mike_site, :as => :radio
-      = f.input :mike_site
-  = f.actions
+.row
+  .col-sm-4
+    .restated_survey_info
+      = render :partial => "submission_info", :locals => { :s => @submission }
+  .col-sm-8
+    = semantic_form_for @survey_individual_registration do |f|
+      = render "shared/error_messages", :target => @survey_individual_registration
+      = f.inputs do
+        = f.input :population_submission_id, :as => :hidden, :input_html => { :value => @population_submission.id }
+        = f.input :population_estimate
+        = f.input :population_upper_range
+        = f.input :monitoring_years, :as => :select, :collection => Time.now.year.downto(1950)
+        = f.input :monitoring_frequency, :as => :select, :collection => ["Weekly", "Monthly", "Quarterly", "Annually", "Every several years", "Unknown"]
+        = f.input :fenced_site, :as => :select, :collection => ["Yes", "No", "Partly", "Unknown"]
+        = f.input :porous_fenced_site, :as => :select, :collection => ["Yes", "No", "Unknown"]
+        -if current_user.admin?
+          = f.input :is_mike_site, :as => :radio
+          = f.input :mike_site
+      = f.actions
