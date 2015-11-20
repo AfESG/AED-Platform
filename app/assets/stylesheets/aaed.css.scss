@@ -75,9 +75,11 @@ ul.nav.nav-pills li a{
 }
 // form controls
 div.form-group label{
-  margin-left: 20px;
-  margin-right: 20px;
-  font-weight: normal;
+  font-weight: bold;
+  color: #555;
+  font-size: small;
+  margin-bottom: 5px;
+  margin-top: 10px;
 }
 form.form-inline div.row div.col-xs-12 input.btn.btn-primary{
   margin: 10px;
