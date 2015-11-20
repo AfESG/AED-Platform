@@ -132,9 +132,9 @@ module ApplicationHelper
       r = t "formtastic.labels.#{@level.class.name.underscore}.#{tag}", :default => ''
     end
     if r.blank?
-      return "#{tag}<b>?</b>:"
+      return "#{tag}<b>?</b>: "
     end
-    return "#{r}:"
+    return "#{r}: "
   end
 
   def map_aggregate(level)
