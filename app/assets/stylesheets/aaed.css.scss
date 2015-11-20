@@ -9,12 +9,13 @@ body.bootstrapped {
 }
 /*top banner*/
 #logo-aed img{
-  width: 143px;
-  padding: 10px;
+  width: 190px;
+  padding: 0px;
 }
 #logo-afesg img{
-  width: 100px;
-  padding: 10px;
+  width: 125px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 .strapline {
   position: absolute;
@@ -69,7 +70,9 @@ ul.nav.nav-pills li a{
 .row {
   margin: 0px;
 }
-
+.breadcrumb {
+  border-radius: 0px;
+}
 // form controls
 div.form-group label{
   margin-left: 20px;
