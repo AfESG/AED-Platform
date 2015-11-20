@@ -1,23 +1,26 @@
-.restated_survey_info
-  = render :partial => "submission_info", :locals => { :s => @submission }
-= semantic_form_for @survey_aerial_total_count_stratum do |f|
-  = render "shared/error_messages", :target => @survey_aerial_total_count_stratum
-  = f.inputs do
-    = f.input :survey_aerial_total_count_id, :as => :hidden, :input_html => { :value => @level.parent_count.id }
-    = f.input :stratum_name
-    = f.input :stratum_area
-    = f.input :population_estimate
-    = f.input :average_speed
-    = f.input :average_transect_spacing
-    = f.input :average_searching_rate
-    = f.input :transects_covered
-    = f.input :transects_covered_total_length
-    = f.input :observations
-    = f.input :carcasses_fresh
-    = f.input :carcasses_old
-    = f.input :carcasses_very_old
-    = f.input :carcasses_age_unknown
-    -if current_user.admin?
-      = f.input :is_mike_site, :as => :radio
-      = f.input :mike_site
-  = render 'strata_actions', f: f
+.row
+  .col-sm-4
+    .restated_survey_info
+      = render :partial => "submission_info", :locals => { :s => @submission }
+  .col-sm-8
+    = semantic_form_for @survey_aerial_total_count_stratum do |f|
+      = render "shared/error_messages", :target => @survey_aerial_total_count_stratum
+      = f.inputs do
+        = f.input :survey_aerial_total_count_id, :as => :hidden, :input_html => { :value => @level.parent_count.id }
+        = f.input :stratum_name
+        = f.input :stratum_area
+        = f.input :population_estimate
+        = f.input :average_speed
+        = f.input :average_transect_spacing
+        = f.input :average_searching_rate
+        = f.input :transects_covered
+        = f.input :transects_covered_total_length
+        = f.input :observations
+        = f.input :carcasses_fresh
+        = f.input :carcasses_old
+        = f.input :carcasses_very_old
+        = f.input :carcasses_age_unknown
+        -if current_user.admin?
+          = f.input :is_mike_site, :as => :radio
+          = f.input :mike_site
+      = render 'strata_actions', f: f
