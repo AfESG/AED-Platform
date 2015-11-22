@@ -341,7 +341,7 @@ class ReportController < ApplicationController
     @filter = params[:filter]
     @preview_title = official_title(@filter) or @filter.humanize.upcase
 
-    @alt_summary_totals = execute alt_dpps("r.name = '#{@region}'", @year, @filter)
+    @alt_summary_totals = execute alt_dpps("region = '#{@region}'", @year, @filter)
     @alt_areas          = execute alt_dpps_area("region = '#{@region}'", @year, @filter)
 
     @summary_totals_by_region = execute totalizer("region='#{@region}'",@filter,@year)
