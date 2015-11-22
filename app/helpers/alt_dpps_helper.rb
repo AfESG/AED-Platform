@@ -3,7 +3,7 @@ module AltDppsHelper
   @@blank_cells = nil
 
   def unused_cell
-    '&mdash;'.html_safe
+    content_tag :td, '&mdash;'.html_safe, class: 'text-center'
   end
 
   def rounded number
@@ -16,6 +16,12 @@ module AltDppsHelper
 
   def round_area area
     area.to_f.round(1)
+  end
+
+  def round_area_cell area, opts={}
+    defaults = { class: 'numeric' }
+    defaults.merge!(opts[:attrs]) if opts[:attrs]
+    content_tag :td, round_area(area), defaults
   end
 
   def is_blank_cell? row, column
@@ -33,7 +39,7 @@ module AltDppsHelper
     return !values.nil? && values.include?(column)
   end
 
-  def add_and_display_area row, column, totals
+  def add_and_display_area_cell row, column, totals, opts={}
     totals[column] ||= 0
     value = row[column] || 0
     if value.nil?
@@ -41,19 +47,22 @@ module AltDppsHelper
     else
       num = value.to_f
       totals[column] += num
-      round_area num
+      round_area_cell num, opts
     end
   end
 
-  def add_and_display row, column, totals, round=false
+  def add_and_display_cell row, column, totals, opts
     totals[column] ||= 0
+    round = opts[:round] || false
     value = row[column]
     if value.nil? || is_blank_cell?(row, column)
       unused_cell
     else
       num = value.to_i
       totals[column] += num
-      number_with_delimiter(round ? rounded(num) : num)
+      defaults = { class: 'numeric' }
+      defaults.merge!(opts[:attrs]) if opts[:attrs]
+      content_tag :td, number_with_delimiter(round ? rounded(num) : num), defaults
     end
   end
 

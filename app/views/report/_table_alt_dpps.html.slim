@@ -47,24 +47,22 @@
       tr
         td = row['SURVEYTYPE']
         - data_columns.each do |column|
-          td = add_and_display row, column, table_totals, column.eql?('CONFIDENCE') ? false : round
+          = add_and_display_cell row, column, table_totals, round: column.eql?('CONFIDENCE') ? false : round
         - unless merged_categories.include?(row['CATEGORY'])
           td rowspan=(merged_categories.include?(keys[index+1] || nil) ? merged_keys.count + 1 : 1)
-            = add_and_display_area area_total[row['CATEGORY']], 'CATEGORY_RANGE_ASSESSED', table_totals
-        td = (round_area(area_total[row['CATEGORY']]['AREA']) || 0) unless merged_categories.include?(row['CATEGORY'])
+          = add_and_display_area_cell area_total[row['CATEGORY']], 'CATEGORY_RANGE_ASSESSED', table_totals, attrs: { rowspan: merged_categories.include?(keys[index+1] || nil) ? merged_keys.count + 1 : 1 }
+        = (round_area_cell(area_total[row['CATEGORY']]['AREA']) || 0) unless merged_categories.include?(row['CATEGORY'])
 
     tr
       td Unassessed Range
-      td = unused_cell
-      td = unused_cell
-      td = unused_cell
-      td = unused_cell
-      td = round_area 100 - (table_totals['CATEGORY_RANGE_ASSESSED'] || 0)  
+      - 4.times.each do |i|
+        = unused_cell
+      = round_area_cell 100 - (table_totals['CATEGORY_RANGE_ASSESSED'] || 0)  
     tr
       td = 'Total'
       - data_columns.each do |column|
-        td = number_with_delimiter(round ? rounded(table_totals[column].to_i) : table_totals[column].to_i)
-      td 100
-      td = round_area area_candidate['range_area']
+        td.numeric = number_with_delimiter(round ? rounded(table_totals[column].to_i) : table_totals[column].to_i)
+      td.numeric 100
+      = round_area_cell area_candidate['range_area']
 
 
