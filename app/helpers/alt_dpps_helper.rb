@@ -178,7 +178,7 @@ module AltDppsHelper
 
       SELECT
         'F' as "CATEGORY",
-        'Data degraded' as "SURVEYTYPE",
+        'Degraded Data' as "SURVEYTYPE",
         0 as "ESTIMATE",
         0 as "CONFIDENCE",
         sum(e.population_estimate) as "GUESS_MIN",
@@ -224,7 +224,7 @@ module AltDppsHelper
         END "CATEGORY",
         CASE
           WHEN e.completion_year > #{year - 10} THEN surveytype
-          ELSE 'Data degraded'
+          ELSE 'Degraded Data'
         END "SURVEYTYPE",
         sum(e.actually_seen) as seen, 
         sum(e.population_estimate) as estimate,
