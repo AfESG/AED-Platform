@@ -24,6 +24,10 @@ module AltDppsHelper
     content_tag :td, round_area(area), defaults
   end
 
+  def round_area_sqkm_cell area
+    content_tag :td, number_with_delimiter(area.to_f.round), class: 'numeric'
+  end
+
   def is_blank_cell? row, column
     @@blank_cells ||= {
       'A': ['CONFIDENCE', 'GUESS_MIN', 'GUESS_MAX'],
