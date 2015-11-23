@@ -3,7 +3,7 @@ class StratumLevelValidator < ActiveModel::Validator
     if record.surveyed_at_stratum_level.nil?
       record.errors[:surveyed_at_stratum_level] << "can't be blank"
     end
-    if record.surveyed_at_stratum_level.nil?
+    if record.stratum_level_data_submitted.nil?
       record.errors[:stratum_level_data_submitted] << "can't be blank"
     end
   end
