@@ -45,6 +45,12 @@ gem 'kaminari'
 
 gem 'country_select'
 
+gem 'rubyzip'
+
+gem 'rgeo-shapefile'
+
+gem 'rgeo-geojson'
+
 # gem 'sqlite3'
 
 # Use unicorn as the web server

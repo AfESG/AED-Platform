@@ -103,6 +103,7 @@ GEM
       sort_alphabetical (~> 1.0)
     currencies (0.4.2)
     dalli (2.7.4)
+    dbf (3.0.1)
     devise (3.5.2)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -218,6 +219,11 @@ GEM
     rgeo-activerecord (4.0.0)
       activerecord (~> 4.2)
       rgeo (~> 0.3)
+    rgeo-geojson (0.3.1)
+      rgeo (~> 0.3)
+    rgeo-shapefile (0.2.3)
+      dbf (>= 1.7.0)
+      rgeo (>= 0.3.3)
     roo (2.1.1)
       nokogiri (~> 1)
       rubyzip (~> 1.1, < 2.0.0)
@@ -296,8 +302,11 @@ DEPENDENCIES
   rails (~> 4.2)
   rails-erd
   rails_admin!
+  rgeo-geojson
+  rgeo-shapefile
   roo
   ruby_parser
+  rubyzip
   rvm-capistrano
   sass-rails
   slim
