@@ -156,7 +156,7 @@ en:
         precision:
         man_hours: "Where each independent survey team is counted as one \"man\""
       population_submission:
-        designate: "(e.g. National Park, Wildlife Reserve, etc.)"
+        designate: "(e.g. National Park, Wildlife Reserve, etc. Use 'Landscape' or 'Ecosystem' to designate larger areas.)"
       data_request_form:
         email:
           Enter your own email address, or the email address of an appropriate
