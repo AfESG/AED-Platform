@@ -3,7 +3,7 @@ module AltDppsHelper
   @@blank_cells = nil
 
   def unused_cell
-    '&mdash;'.html_safe
+    content_tag :td, '&mdash;'.html_safe, class: 'text-center'
   end
 
   def rounded number
@@ -16,6 +16,16 @@ module AltDppsHelper
 
   def round_area area
     area.to_f.round(1)
+  end
+
+  def round_area_cell area, opts={}
+    defaults = { class: 'numeric' }
+    defaults.merge!(opts[:attrs]) if opts[:attrs]
+    content_tag :td, round_area(area), defaults
+  end
+
+  def round_area_sqkm_cell area
+    content_tag :td, number_with_delimiter(area.to_f.round), class: 'numeric'
   end
 
   def is_blank_cell? row, column
@@ -33,7 +43,7 @@ module AltDppsHelper
     return !values.nil? && values.include?(column)
   end
 
-  def add_and_display_area row, column, totals
+  def add_and_display_area_cell row, column, totals, opts={}
     totals[column] ||= 0
     value = row[column] || 0
     if value.nil?
@@ -41,19 +51,22 @@ module AltDppsHelper
     else
       num = value.to_f
       totals[column] += num
-      round_area num
+      round_area_cell num, opts
     end
   end
 
-  def add_and_display row, column, totals, round=false
+  def add_and_display_cell row, column, totals, opts
     totals[column] ||= 0
+    round = opts[:round] || false
     value = row[column]
     if value.nil? || is_blank_cell?(row, column)
       unused_cell
     else
       num = value.to_i
       totals[column] += num
-      number_with_delimiter(round ? rounded(num) : num)
+      defaults = { class: 'numeric' }
+      defaults.merge!(opts[:attrs]) if opts[:attrs]
+      content_tag :td, number_with_delimiter(round ? rounded(num) : num), defaults
     end
   end
 
@@ -91,15 +104,9 @@ module AltDppsHelper
         sum(e.population_estimate) as "ESTIMATE",
         0 as "CONFIDENCE",
         0 as "GUESS_MIN",
-        0 as "GUESS_MAX",
-        sum(ps.area) as "AREA"
+        0 as "GUESS_MAX"
       FROM
-        estimate_factors_analyses_categorized e
-      JOIN population_submissions ps ON ps.id = e.population_submission_id
-      JOIN submissions s ON ps.submission_id = s.id
-      JOIN countries c ON s.country_id = c.id
-      JOIN regions r ON c.region_id = r.id
-      JOIN surveytypes st ON e.category = st.category
+        estimate_factors_analyses_categorized_for_add e
       WHERE 
         e.analysis_year = #{year}
         #{analysis_name}
@@ -115,15 +122,9 @@ module AltDppsHelper
         sum(e.population_estimate) as "ESTIMATE",
         1.96*sqrt(sum(e.population_variance)) as "CONFIDENCE",
         0 as "GUESS_MIN",
-        0 as "GUESS_MAX",
-        sum(ps.area) as "AREA"
+        0 as "GUESS_MAX"
       FROM
-        estimate_factors_analyses_categorized e
-      JOIN population_submissions ps ON ps.id = e.population_submission_id
-      JOIN submissions s ON ps.submission_id = s.id
-      JOIN countries c ON s.country_id = c.id
-      JOIN regions r ON c.region_id = r.id
-      JOIN surveytypes st ON e.category = st.category
+        estimate_factors_analyses_categorized_for_add e
       WHERE 
         e.analysis_year = #{year}
         #{analysis_name}
@@ -139,15 +140,9 @@ module AltDppsHelper
         sum(e.actually_seen) as "ESTIMATE",
         0 as "CONFIDENCE",
         sum(e.population_estimate) - sum(e.actually_seen) as "GUESS_MIN",
-        sum(e.population_estimate) - sum(e.actually_seen) as "GUESS_MAX",
-        sum(ps.area) as "AREA"
+        sum(e.population_estimate) - sum(e.actually_seen) as "GUESS_MAX"
       FROM
-        estimate_factors_analyses_categorized e
-      JOIN population_submissions ps ON ps.id = e.population_submission_id
-      JOIN submissions s ON ps.submission_id = s.id
-      JOIN countries c ON s.country_id = c.id
-      JOIN regions r ON c.region_id = r.id
-      JOIN surveytypes st ON e.category = st.category
+        estimate_factors_analyses_categorized_for_add e
       WHERE 
         e.analysis_year = #{year}
         #{analysis_name}
@@ -163,15 +158,9 @@ module AltDppsHelper
         sum(e.actually_seen) as "ESTIMATE",
         0 as "CONFIDENCE",
         sum(e.population_lower_confidence_limit) - sum(e.actually_seen) as "GUESS_MIN",
-        sum(e.population_upper_confidence_limit) - sum(e.actually_seen) as "GUESS_MAX",
-        sum(ps.area) as "AREA"
+        sum(e.population_upper_confidence_limit) - sum(e.actually_seen) as "GUESS_MAX"
       FROM
-        estimate_factors_analyses_categorized e
-      JOIN population_submissions ps ON ps.id = e.population_submission_id
-      JOIN submissions s ON ps.submission_id = s.id
-      JOIN countries c ON s.country_id = c.id
-      JOIN regions r ON c.region_id = r.id
-      JOIN surveytypes st ON e.category = st.category
+        estimate_factors_analyses_categorized_for_add e
       WHERE 
         e.analysis_year = #{year}
         #{analysis_name}
@@ -187,15 +176,9 @@ module AltDppsHelper
         sum(e.actually_seen) as "ESTIMATE",
         0 as "CONFIDENCE",
         sum(e.population_lower_confidence_limit) - sum(e.actually_seen) as "GUESS_MIN",
-        sum(e.population_upper_confidence_limit) - sum(e.actually_seen) as "GUESS_MAX",
-        sum(ps.area) as "AREA"
+        sum(e.population_upper_confidence_limit) - sum(e.actually_seen) as "GUESS_MAX"
       FROM
-        estimate_factors_analyses_categorized e
-      JOIN population_submissions ps ON ps.id = e.population_submission_id
-      JOIN submissions s ON ps.submission_id = s.id
-      JOIN countries c ON s.country_id = c.id
-      JOIN regions r ON c.region_id = r.id
-      JOIN surveytypes st ON e.category = st.category
+        estimate_factors_analyses_categorized_for_add e
       WHERE 
         e.analysis_year = #{year}
         #{analysis_name}
@@ -208,19 +191,13 @@ module AltDppsHelper
 
       SELECT
         'F' as "CATEGORY",
-        'Data degraded' as "SURVEYTYPE",
+        'Degraded Data' as "SURVEYTYPE",
         0 as "ESTIMATE",
         0 as "CONFIDENCE",
         sum(e.population_estimate) as "GUESS_MIN",
-        sum(e.population_estimate) as "GUESS_MAX",
-        sum(ps.area) as "AREA"
+        sum(e.population_estimate) as "GUESS_MAX"
       FROM
-        estimate_factors_analyses_categorized e
-      JOIN population_submissions ps ON ps.id = e.population_submission_id
-      JOIN submissions s ON ps.submission_id = s.id
-      JOIN countries c ON s.country_id = c.id
-      JOIN regions r ON c.region_id = r.id
-      JOIN surveytypes st ON e.category = st.category
+        estimate_factors_analyses_categorized_for_add e
       WHERE 
         e.analysis_year = #{year}
         #{analysis_name}
@@ -237,15 +214,9 @@ module AltDppsHelper
         0 as "ESTIMATE",
         0 as "CONFIDENCE",
         sum(e.population_estimate) as "GUESS_MIN",
-        sum(e.population_estimate) as "GUESS_MAX",
-        sum(ps.area) as "AREA"
+        sum(e.population_estimate) as "GUESS_MAX"
       FROM
-        estimate_factors_analyses_categorized e
-      JOIN population_submissions ps ON ps.id = e.population_submission_id
-      JOIN submissions s ON ps.submission_id = s.id
-      JOIN countries c ON s.country_id = c.id
-      JOIN regions r ON c.region_id = r.id
-      JOIN surveytypes st ON e.category = st.category
+        estimate_factors_analyses_categorized_for_add e
       WHERE
         e.analysis_year = #{year}
         #{analysis_name}
@@ -266,7 +237,7 @@ module AltDppsHelper
         END "CATEGORY",
         CASE
           WHEN e.completion_year > #{year - 10} THEN surveytype
-          ELSE 'Data degraded'
+          ELSE 'Degraded Data'
         END "SURVEYTYPE",
         sum(e.actually_seen) as seen, 
         sum(e.population_estimate) as estimate,

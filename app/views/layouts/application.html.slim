@@ -26,7 +26,7 @@ html
               = image_tag 'elephant-database-logo.png', :alt=>'Elephant Database'
           .col-xs-6 style='text-align:right'
             a#logo-afesg href='/'
-              = image_tag 'logo-AfESGcolour.gif', :alt=>'African Elephant Specialist Group'
+              = image_tag 'afesg-logo.png', :alt=>'African Elephant Specialist Group'
     .container-fluid
       .row
         .col-xs-12
@@ -57,14 +57,12 @@ html
                     li = link_to 'Support', 'http://www.assembla.com/spaces/aaed/support/tickets'
                     li = link_to 'Register', new_user_registration_path
                     li = link_to 'Log In', new_user_session_path
-        - if(!flash[:notice].nil?)
-          .notice= flash[:notice]
-        - if(!flash[:alert].nil?)
-          .error= flash[:alert]
-        - if(!flash[:error].nil?)
-          .error= flash[:error]
-        - if(!flash[:success].nil?)
-          .success= flash[:success]
+      .row.alerts
+        - alerts = { notice: 'alert-info', alert: 'alert-danger', error: 'alert-danger', success: 'alert-success' }
+        - alerts.each do |alert, styles|
+          - unless flash[alert].nil?
+            .col-xs-12
+              div class=("alert #{styles}") = flash[alert]
     .container-fluid
       = yield
     .container-fluid
