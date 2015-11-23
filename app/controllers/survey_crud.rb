@@ -55,7 +55,9 @@ module SurveyCrud
   end
 
   def level_display
-    'layouts/survey_display'
+    if(level_class_name!="PopulationSubmissionAttachment")
+      'layouts/survey_display'
+    end
   end
 
   # this allows the use of the Rails convention of a specifically
@@ -139,7 +141,7 @@ module SurveyCrud
           redirect_to @level
         end
       end
-   else
+    else
       render :action => "new"
     end
   end
