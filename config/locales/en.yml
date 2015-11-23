@@ -301,6 +301,8 @@ en:
   population_submission_attachments:
     new:
       title: "New Attachment"
+    show:
+      title: "Attachment"
   population_submissions:
     index:
       title: "All Pending Population Estimates"
