@@ -142,7 +142,11 @@ module SurveyCrud
         end
       end
     else
-      render :action => "new"
+      if level_form
+        render template: level_form
+      else
+        render :action => "new"
+      end
     end
   end
 
@@ -164,7 +168,11 @@ module SurveyCrud
     if @level.update_attributes(params[level_base_name])
       redirect_to @level
     else
-      render :action => "edit"
+      if level_form
+        render template: level_form if level_form
+      else
+        render :action => "edit"
+      end
     end
   end
 
@@ -180,7 +188,7 @@ module SurveyCrud
         redirect_to @submission
       end
       return
-   end
+    end
 
     @level.destroy
     if @population_submission.nil?
