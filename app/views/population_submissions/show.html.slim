@@ -28,4 +28,5 @@
         $.getJSON("/population_submissions/#{@population_submission.id}/map", function(data) {
           var survey_map = L.geoJson(data, {onEachFeature: onEachFeature});
           survey_map.addTo(map);
+          map.fitBounds(survey_map.getBounds());
         });
