@@ -65,7 +65,7 @@ class SpreadsheetsController < ApplicationController
           end
         end
 
-        @sheets << { name: name, sheet: sheet, expected: data, actual: hash_tuples(execute(alt_dpps("r.name = '#{region.gsub('_',' ')}'", 2013, '2013_africa_final'))) }
+        @sheets << { name: name, sheet: sheet, expected: data, actual: hash_tuples(execute(alt_dpps("region = '#{region.gsub('_',' ')}'", 2013, '2013_africa_final'))) }
       end
     end
   end
