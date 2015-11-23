@@ -61,6 +61,7 @@ Aaed::Application.routes.draw do
   resources :population_submission_attachments
 
   get 'population_submission_attachments/download/:id' => 'population_submission_attachments#download'
+  get 'population_submissions/:id/map' => 'population_submissions#geojson_map'
 
   get 'data_request_forms/thanks' => 'data_request_forms#thanks'
 
