@@ -35,11 +35,7 @@ class PopulationSubmissionAttachmentsController < ApplicationController
   def import_geometries_from_shapefile(shapefile)
     population_submission = @attachment.population_submission
     RGeo::Shapefile::Reader.open(shapefile) do |file|
-      puts "File contains #{file.num_records} records."
       file.each do |record|
-        puts "Record number #{record.index}:"
-        puts "  Geometry: #{record.geometry.as_text}"
-        puts "  Attributes: #{record.attributes.inspect}"
         population_submission_geometry = population_submission.population_submission_geometries.create
         population_submission_geometry.geom = record.geometry
         population_submission_geometry.geom_attributes = record.attributes.to_json
