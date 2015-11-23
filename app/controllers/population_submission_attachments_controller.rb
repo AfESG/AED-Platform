@@ -34,12 +34,17 @@ class PopulationSubmissionAttachmentsController < ApplicationController
 
   def import_geometries_from_shapefile(shapefile)
     population_submission = @attachment.population_submission
-    RGeo::Shapefile::Reader.open(shapefile) do |file|
+    population_submission.population_submission_geometries.delete_all
+    RGeo::Shapefile::Reader.open(File.realpath(shapefile)) do |file|
       file.each do |record|
-        population_submission_geometry = population_submission.population_submission_geometries.create
-        population_submission_geometry.geom = record.geometry
-        population_submission_geometry.geom_attributes = record.attributes.to_json
-        population_submission_geometry.save!
+        begin
+          population_submission_geometry = population_submission.population_submission_geometries.create
+          population_submission_geometry.geom = record.geometry
+          population_submission_geometry.geom_attributes = record.attributes.to_json
+          population_submission_geometry.save!
+        rescue
+          logger.warn "Failed importing a record"
+        end
       end
     end
   end
