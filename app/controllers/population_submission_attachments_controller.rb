@@ -1,6 +1,6 @@
 class PopulationSubmissionAttachmentsController < ApplicationController
   include SurveyCrud
-
+  
   # define the specific operation needed to connect the parent of
   # a newly created item in the new method
   def connect_parent

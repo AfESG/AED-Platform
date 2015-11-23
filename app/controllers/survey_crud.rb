@@ -139,7 +139,7 @@ module SurveyCrud
           redirect_to @level
         end
       end
-   else
+    else
       render :action => "new"
     end
   end

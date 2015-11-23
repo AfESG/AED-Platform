@@ -37,7 +37,7 @@ gem 'rack-cache'
 
 gem 'paperclip'
 
-gem 'aws-sdk'
+gem 'aws-sdk-v1'
 
 gem 'paper_trail'
 

@@ -21,6 +21,12 @@ class PopulationSubmissionAttachment < ActiveRecord::Base
     :s3_headers => { :content_disposition => 'attachment' },
     :path => "/:id/:filename"
 
+  # WARNING: this defeats security checks to prevent
+  # content type spoofing. But we do want users to be able
+  # to upload different content types that the software does
+  # not know how to parse
+  do_not_validate_attachment_file_type :file
+
   def can_access_file(user)
     unless user.nil?
       return true if user.admin?
