@@ -42,7 +42,7 @@ class PopulationSubmissionAttachmentsController < ApplicationController
         puts "  Attributes: #{record.attributes.inspect}"
         population_submission_geometry = population_submission.population_submission_geometries.create
         population_submission_geometry.geom = record.geometry
-        population_submission_geometry.attributes = record.attributes.to_json
+        population_submission_geometry.geom_attributes = record.attributes.to_json
         population_submission_geometry.save!
       end
     end
