@@ -7,9 +7,10 @@
       =render :partial => 'submission_info', :locals => { :s => @submission }
   .col-sm-8
     .public_abstract= @population_submission.abstract
-    .public_citation
-      | Source:
-      = @population_submission.citation
+    - unless @population_submission.citation.blank?
+      .public_citation
+        | Source:
+        = @population_submission.citation
     - unless @population_submission.link.blank?
       .public_link= link_to @population_submission.link
     = map container_id: "leaflet_map", center: {latlng: [-12.04, 18.59], zoom: 4}
