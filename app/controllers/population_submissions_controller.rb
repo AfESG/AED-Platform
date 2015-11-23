@@ -1,3 +1,5 @@
+require 'rgeo/geo_json'
+
 class PopulationSubmissionsController < ApplicationController
 
   include SurveyCrud
@@ -68,6 +70,23 @@ class PopulationSubmissionsController < ApplicationController
 
   def sort_direction
     params[:direction] || "desc"
+  end
+
+  def geojson_map
+    @population_submission = PopulationSubmission.find(params[:id])
+    features = []
+    @population_submission.population_submission_geometries.each do |psg|
+      feature = RGeo::GeoJSON.encode(psg.geom)
+      if psg.geom_attributes and !psg.geom_attributes.blank?
+        feature['properties'] = JSON.parse(psg.geom_attributes)
+      end
+      features << feature
+    end
+    feature_collection = {
+      'type' => 'FeatureCollection',
+      'features' => features
+    }
+    render :json => feature_collection
   end
 
 end
