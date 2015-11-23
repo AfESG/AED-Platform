@@ -11,26 +11,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150821111744) do
+ActiveRecord::Schema.define(version: 20151123204038) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
 
-# Could not dump table "2013rangefinal" because of following StandardError
-#   Unknown type 'geometry(MultiPolygon,4326)' for column 'geom'
+  create_table "add_range", id: false, force: :cascade do |t|
+    t.string   "site_name",           limit: 255
+    t.text     "analysis_name"
+    t.integer  "analysis_year"
+    t.string   "region",              limit: 255
+    t.text     "category"
+    t.string   "reason_change",       limit: 255
+    t.integer  "population_estimate"
+    t.string   "country",             limit: 255
+    t.text     "input_zone_id"
+    t.geometry "survey_geometry",     limit: {:srid=>4326, :type=>"multi_polygon", :has_z=>true, :has_m=>true}
+  end
 
-# Could not dump table "add_range" because of following StandardError
-#   Unknown type 'geometry(MultiPolygonZM,4326)' for column 'survey_geometry'
-
-  create_table "analyses", id: false, force: :cascade do |t|
+  create_table "analyses", primary_key: "analysis_id", force: :cascade do |t|
     t.text    "analysis_name"
     t.integer "comparison_year"
     t.integer "analysis_year"
   end
-
-# Could not dump table "backup_range_geometries" because of following StandardError
-#   Unknown type 'geometry' for column 'geometry'
 
   create_table "changes", force: :cascade do |t|
     t.string   "analysis_name",    limit: 255
@@ -42,10 +46,36 @@ ActiveRecord::Schema.define(version: 20150821111744) do
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
     t.string   "country",          limit: 255
+    t.integer  "analysis_id"
   end
 
-# Could not dump table "continent" because of following StandardError
-#   Unknown type 'geometry(MultiPolygon,4326)' for column 'geom'
+  create_table "continent", primary_key: "gid", force: :cascade do |t|
+    t.string   "continent",  limit: 10
+    t.integer  "definite"
+    t.integer  "probable"
+    t.integer  "possible"
+    t.integer  "specul"
+    t.integer  "cntryarea"
+    t.integer  "rangearea"
+    t.integer  "knownrange"
+    t.integer  "possrange"
+    t.integer  "doubtrange"
+    t.integer  "pa_area"
+    t.integer  "surveyarea"
+    t.integer  "protrang"
+    t.integer  "survrang"
+    t.float    "rangeknown"
+    t.float    "rangeperc"
+    t.float    "paperc"
+    t.float    "surveyperc"
+    t.float    "protrangpe"
+    t.float    "survrangpe"
+    t.float    "probfracti"
+    t.float    "infqltyidx"
+    t.decimal  "shape_leng"
+    t.decimal  "shape_area"
+    t.geometry "geom",       limit: {:srid=>4326, :type=>"multi_polygon"}
+  end
 
   create_table "continents", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -54,19 +84,58 @@ ActiveRecord::Schema.define(version: 20150821111744) do
   end
 
   create_table "countries", force: :cascade do |t|
-    t.string   "iso_code",   limit: 255
-    t.string   "name",       limit: 255
+    t.string   "iso_code",    limit: 255
+    t.string   "name",        limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "region_id"
-    t.boolean "is_surveyed"
+    t.boolean  "is_surveyed"
   end
 
-# Could not dump table "country" because of following StandardError
-#   Unknown type 'geometry(MultiPolygon,4326)' for column 'geom'
+  create_table "country", primary_key: "gid", force: :cascade do |t|
+    t.string   "ccode",      limit: 2
+    t.string   "cntryname",  limit: 50
+    t.string   "fr_cntryna", limit: 35
+    t.integer  "rangestate", limit: 2
+    t.string   "regionid",   limit: 2
+    t.integer  "faocode",    limit: 2
+    t.string   "region",     limit: 20
+    t.integer  "definite"
+    t.integer  "probable"
+    t.integer  "possible"
+    t.integer  "specul"
+    t.integer  "cntryarea"
+    t.integer  "rangearea"
+    t.integer  "knownrange"
+    t.integer  "possrange"
+    t.integer  "doubtrange"
+    t.integer  "pa_area"
+    t.integer  "surveyarea"
+    t.integer  "protrang"
+    t.integer  "survrang"
+    t.float    "rangeknown"
+    t.float    "rangeperc"
+    t.float    "paperc"
+    t.float    "surveyperc"
+    t.float    "protrangpe"
+    t.float    "survrangpe"
+    t.float    "probfracti"
+    t.float    "infqltyidx"
+    t.integer  "citeshunti", limit: 2
+    t.string   "citesappen", limit: 2
+    t.integer  "listingyr",  limit: 2
+    t.string   "rainyseaso", limit: 12
+    t.decimal  "shape_leng"
+    t.decimal  "shape_area"
+    t.geometry "geom",       limit: {:srid=>4326, :type=>"multi_polygon"}
+  end
 
-# Could not dump table "country_range" because of following StandardError
-#   Unknown type 'geometry' for column 'range_geometry'
+  create_table "country_range", id: false, force: :cascade do |t|
+    t.string   "country",        limit: 50
+    t.decimal  "range",                                                precision: 10
+    t.string   "range_quality",  limit: 10
+    t.geometry "range_geometry", limit: {:srid=>0, :type=>"geometry"}
+  end
 
   create_table "country_range_metrics", id: false, force: :cascade do |t|
     t.text    "continent"
@@ -174,45 +243,59 @@ ActiveRecord::Schema.define(version: 20150821111744) do
     t.float   "speculative"
   end
 
-# Could not dump table "inputzone_2013_africa_final2" because of following StandardError
-#   Unknown type 'geometry(MultiPolygonZM,4326)' for column 'geom'
-
-# Could not dump table "inputzone_2013_africa_final3" because of following StandardError
-#   Unknown type 'geometry(MultiPolygonZM,4326)' for column 'geom'
-
-# Could not dump table "inputzone_2013_africa_final4b" because of following StandardError
-#   Unknown type 'geometry(MultiPolygonZM,4326)' for column 'geom'
-
-# Could not dump table "inputzone_2014analysis3" because of following StandardError
-#   Unknown type 'geometry(MultiPolygonZM,4326)' for column 'geom'
-
-# Could not dump table "inputzone_geometries2012updatefinal1" because of following StandardError
-#   Unknown type 'geometry(MultiPolygonZM,4326)' for column 'geom'
+  create_table "inputzone_2013_africa_final4b", primary_key: "gid", force: :cascade do |t|
+    t.string   "input_zone", limit: 50
+    t.integer  "id"
+    t.decimal  "shape_leng"
+    t.decimal  "shape_area"
+    t.float    "km2"
+    t.decimal  "selection",                                                                            precision: 10
+    t.string   "tracknum",   limit: 6
+    t.string   "estimate_t", limit: 254
+    t.decimal  "population",                                                                           precision: 10
+    t.string   "site_name",  limit: 254
+    t.string   "stratum_na", limit: 254
+    t.decimal  "stratum_ar",                                                                           precision: 10
+    t.decimal  "completion",                                                                           precision: 10
+    t.string   "analysis_n", limit: 254
+    t.decimal  "analysis_y",                                                                           precision: 10
+    t.decimal  "age",                                                                                  precision: 10
+    t.string   "replacemen", limit: 254
+    t.string   "reason_cha", limit: 254
+    t.string   "citation",   limit: 254
+    t.string   "short_cita", limit: 254
+    t.decimal  "populati_1",                                                                           precision: 10
+    t.decimal  "populati_2"
+    t.decimal  "populati_3"
+    t.decimal  "populati_4"
+    t.decimal  "populati_5",                                                                           precision: 10
+    t.decimal  "populati_6",                                                                           precision: 10
+    t.decimal  "quality_le",                                                                           precision: 10
+    t.decimal  "actually_s",                                                                           precision: 10
+    t.decimal  "lcl95"
+    t.string   "category",   limit: 254
+    t.string   "country",    limit: 254
+    t.string   "region",     limit: 254
+    t.string   "continent",  limit: 254
+    t.geometry "geom",       limit: {:srid=>4326, :type=>"multi_polygon", :has_z=>true, :has_m=>true}
+    t.integer  "survey_geo"
+  end
 
   create_table "mike_sites", force: :cascade do |t|
     t.integer  "country_id"
     t.string   "subregion",  limit: 255
     t.string   "site_code",  limit: 255
     t.text     "site_name"
-    t.integer  "area"
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+    t.boolean  "in2015list"
   end
 
-# Could not dump table "old_survey_geometries" because of following StandardError
-#   Unknown type 'geometry' for column 'geometry'
-
-# Could not dump table "peter_repopulated" because of following StandardError
-#   Unknown type 'geometry(MultiPolygonZM,4326)' for column 'geom'
-
-# Could not dump table "peter_step_2" because of following StandardError
-#   Unknown type 'geometry' for column 'the_geom'
-
-# Could not dump table "peter_step_3" because of following StandardError
-#   Unknown type 'geometry(MultiPolygonZM,4326)' for column 'geom'
-
-# Could not dump table "peter_step_3_old" because of following StandardError
-#   Unknown type 'geometry' for column 'geom'
+  create_table "mike_sites2015", primary_key: "site_code", force: :cascade do |t|
+    t.integer "area"
+    t.string  "subregion",    limit: 2
+    t.string  "country_code", limit: 2
+  end
 
   create_table "population_submission_attachments", force: :cascade do |t|
     t.datetime "created_at"
@@ -224,6 +307,12 @@ ActiveRecord::Schema.define(version: 20150821111744) do
     t.integer  "population_submission_id"
     t.text     "attachment_type"
     t.boolean  "restrict"
+  end
+
+  create_table "population_submission_geometries", force: :cascade do |t|
+    t.integer  "population_submission_id"
+    t.geometry "geom",                     limit: {:srid=>0, :type=>"geometry"}
+    t.text     "geom_attributes"
   end
 
   create_table "population_submissions", force: :cascade do |t|
@@ -248,10 +337,45 @@ ActiveRecord::Schema.define(version: 20150821111744) do
     t.string   "short_citation",    limit: 255
     t.float    "latitude"
     t.float    "longitude"
+    t.integer  "mike_site"
   end
 
-# Could not dump table "protected_area_geometries" because of following StandardError
-#   Unknown type 'geometry' for column 'geometry'
+  add_index "population_submissions", ["mike_site"], name: "fki_mike_site", using: :btree
+
+  create_table "production_versions", id: false, force: :cascade do |t|
+    t.integer  "id",                         default: "nextval('production_versions_id_seq'::regclass)", null: false
+    t.string   "item_type",      limit: 255,                                                             null: false
+    t.integer  "item_id",                                                                                null: false
+    t.string   "event",          limit: 255,                                                             null: false
+    t.string   "whodunnit",      limit: 255
+    t.text     "object"
+    t.datetime "created_at"
+    t.text     "object_changes"
+  end
+
+  create_table "protected_area_geometries", primary_key: "gid", force: :cascade do |t|
+    t.integer  "ptacode"
+    t.string   "ptaname",    limit: 50
+    t.string   "ccode",      limit: 3
+    t.integer  "year_est",   limit: 2
+    t.string   "iucncat",    limit: 4
+    t.integer  "iucncatara", limit: 2
+    t.string   "designate",  limit: 50
+    t.string   "abvdesig",   limit: 5
+    t.integer  "area_sqkm"
+    t.integer  "reported"
+    t.integer  "calculated"
+    t.string   "source",     limit: 50
+    t.integer  "refid",      limit: 2
+    t.integer  "inrange",    limit: 2
+    t.integer  "samesurvey", limit: 2
+    t.decimal  "shape_leng"
+    t.decimal  "shape_area"
+    t.integer  "selection",  limit: 2
+    t.geometry "geometry",   limit: {:srid=>0, :type=>"multi_polygon"}
+  end
+
+  add_index "protected_area_geometries", ["geometry"], name: "protarea_the_geom_gist", using: :gist
 
   create_table "range_discrepancies", id: false, force: :cascade do |t|
     t.integer "gid"
@@ -262,20 +386,43 @@ ActiveRecord::Schema.define(version: 20150821111744) do
     t.text    "centroid"
   end
 
-# Could not dump table "range_geometries" because of following StandardError
-#   Unknown type 'geometry(MultiPolygon,4326)' for column 'geometry'
+  create_table "range_geometries", id: false, force: :cascade do |t|
+    t.integer  "gid"
+    t.decimal  "range",                                                    precision: 10
+    t.string   "rangequali", limit: 10
+    t.geometry "geometry",   limit: {:srid=>4326, :type=>"multi_polygon"}
+  end
 
-# Could not dump table "rangegeometries2012ap" because of following StandardError
-#   Unknown type 'geometry(MultiPolygon,4326)' for column 'geom'
-
-# Could not dump table "rangegeometries2012ap2" because of following StandardError
-#   Unknown type 'geometry(MultiPolygon,4326)' for column 'geom'
-
-# Could not dump table "rangegeometries2012apfinal1" because of following StandardError
-#   Unknown type 'geometry(MultiPolygon,4326)' for column 'geom'
-
-# Could not dump table "region" because of following StandardError
-#   Unknown type 'geometry(MultiPolygon,4326)' for column 'geom'
+  create_table "region", primary_key: "gid", force: :cascade do |t|
+    t.string   "regionid",   limit: 254
+    t.string   "region",     limit: 20
+    t.string   "continent",  limit: 10
+    t.string   "fr_region",  limit: 20
+    t.integer  "definite"
+    t.integer  "probable"
+    t.integer  "possible"
+    t.integer  "specul"
+    t.integer  "cntryarea"
+    t.integer  "rangearea"
+    t.integer  "knownrange"
+    t.integer  "possrange"
+    t.integer  "doubtrange"
+    t.integer  "pa_area"
+    t.integer  "surveyarea"
+    t.integer  "protrang"
+    t.float    "rangeknown"
+    t.integer  "survrang"
+    t.float    "rangeperc"
+    t.float    "paperc"
+    t.float    "surveyperc"
+    t.float    "protrangpe"
+    t.float    "survrangpe"
+    t.float    "probfracti"
+    t.float    "infqltyidx"
+    t.decimal  "shape_leng"
+    t.decimal  "shape_area"
+    t.geometry "geom",       limit: {:srid=>4326, :type=>"multi_polygon"}
+  end
 
   create_table "regions", force: :cascade do |t|
     t.integer  "continent_id"
@@ -299,14 +446,17 @@ ActiveRecord::Schema.define(version: 20150821111744) do
     t.datetime "updated_at"
   end
 
-# Could not dump table "review_range" because of following StandardError
-#   Unknown type 'geometry(MultiPolygonZM,4326)' for column 'survey_geometry'
-
-  create_table "spatial_ref_sys", primary_key: "srid", force: :cascade do |t|
-    t.string  "auth_name", limit: 256
-    t.integer "auth_srid"
-    t.string  "srtext",    limit: 2048
-    t.string  "proj4text", limit: 2048
+  create_table "review_range", id: false, force: :cascade do |t|
+    t.string   "site_name",           limit: 255
+    t.text     "analysis_name"
+    t.integer  "analysis_year"
+    t.string   "region",              limit: 255
+    t.text     "category"
+    t.string   "reason_change",       limit: 255
+    t.integer  "population_estimate"
+    t.string   "country",             limit: 255
+    t.text     "input_zone_id"
+    t.geometry "survey_geometry",     limit: {:srid=>4326, :type=>"multi_polygon", :has_z=>true, :has_m=>true}
   end
 
   create_table "species", force: :cascade do |t|
@@ -323,25 +473,135 @@ ActiveRecord::Schema.define(version: 20150821111744) do
     t.datetime "updated_at"
   end
 
-# Could not dump table "st_est_loc_geo_tb" because of following StandardError
-#   Unknown type 'geometry' for column 'geometry'
+  create_table "st_est_loc_geo_tb", primary_key: "sid", force: :cascade do |t|
+    t.integer  "id"
+    t.text     "estimate_type"
+    t.text     "input_zone_id"
+    t.integer  "population_submission_id"
+    t.string   "site_name",                         limit: 255
+    t.string   "stratum_name",                      limit: 255
+    t.integer  "stratum_area"
+    t.integer  "completion_year"
+    t.string   "short_citation",                    limit: 255
+    t.integer  "population_estimate"
+    t.float    "population_variance"
+    t.float    "population_standard_error"
+    t.float    "population_confidence_interval"
+    t.integer  "population_lower_confidence_limit"
+    t.integer  "population_upper_confidence_limit"
+    t.integer  "quality_level"
+    t.integer  "actually_seen"
+    t.float    "lcl95"
+    t.text     "category"
+    t.string   "country",                           limit: 255
+    t.string   "region",                            limit: 255
+    t.string   "continent",                         limit: 255
+    t.geometry "geometry",                          limit: {:srid=>0, :type=>"geometry"}
+  end
 
-# Could not dump table "static_estimate_factors_with_geometry" because of following StandardError
-#   Unknown type 'geometry' for column 'geometry'
+  create_table "staging_users", id: false, force: :cascade do |t|
+    t.integer  "id",                                 default: "nextval('staging_users_id_seq'::regclass)", null: false
+    t.string   "email",                  limit: 255, default: "",                                          null: false
+    t.string   "encrypted_password",     limit: 128, default: "",                                          null: false
+    t.string   "reset_password_token",   limit: 255
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",                      default: 0
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip",     limit: 255
+    t.string   "last_sign_in_ip",        limit: 255
+    t.string   "confirmation_token",     limit: 255
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string   "name",                   limit: 255
+    t.string   "job_title",              limit: 255
+    t.string   "department",             limit: 255
+    t.string   "organization",           limit: 255
+    t.string   "phone",                  limit: 255
+    t.string   "fax",                    limit: 255
+    t.string   "address_1",              limit: 255
+    t.string   "address_2",              limit: 255
+    t.string   "address_3",              limit: 255
+    t.string   "city",                   limit: 255
+    t.string   "country",                limit: 255
+    t.boolean  "admin"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
-# Could not dump table "static_estimate_locator_with_geometry" because of following StandardError
-#   Unknown type 'geometry' for column 'geometry'
+  create_table "static_estimate_factors_with_geometry", primary_key: "gid", force: :cascade do |t|
+    t.integer  "id"
+    t.text     "estimate_type"
+    t.text     "input_zone_id"
+    t.integer  "population_submission_id"
+    t.string   "site_name",                         limit: 255
+    t.string   "stratum_name",                      limit: 255
+    t.integer  "stratum_area"
+    t.integer  "completion_year"
+    t.text     "citation"
+    t.string   "short_citation",                    limit: 255
+    t.integer  "population_estimate"
+    t.float    "population_variance"
+    t.float    "population_standard_error"
+    t.float    "population_confidence_interval"
+    t.float    "population_t"
+    t.integer  "population_lower_confidence_limit"
+    t.integer  "population_upper_confidence_limit"
+    t.integer  "quality_level"
+    t.integer  "actually_seen"
+    t.integer  "survey_geometry_id"
+    t.geometry "geometry",                          limit: {:srid=>0, :type=>"geometry"}
+  end
 
-# Could not dump table "strata_2007_geom_math" because of following StandardError
-#   Unknown type 'geometry' for column 'geometry'
-
-# Could not dump table "strata_geom_math" because of following StandardError
-#   Unknown type 'geometry' for column 'geometry'
-
-# Could not dump table "strata_new_geom_math" because of following StandardError
-#   Unknown type 'geometry' for column 'geometry'
+  create_table "static_estimate_locator_with_geometry", primary_key: "gid", force: :cascade do |t|
+    t.integer  "id"
+    t.geometry "geometry",                          limit: {:srid=>0, :type=>"geometry"}
+    t.text     "estimate_type"
+    t.text     "input_zone_id"
+    t.integer  "population_submission_id"
+    t.string   "site_name",                         limit: 255
+    t.string   "stratum_name",                      limit: 255
+    t.integer  "stratum_area"
+    t.integer  "completion_year"
+    t.text     "analysis_name"
+    t.integer  "analysis_year"
+    t.integer  "age"
+    t.string   "replacement_name",                  limit: 255
+    t.string   "reason_change"
+    t.text     "citation"
+    t.string   "short_citation",                    limit: 255
+    t.integer  "population_estimate"
+    t.float    "population_variance"
+    t.float    "population_standard_error"
+    t.float    "population_confidence_interval"
+    t.integer  "population_lower_confidence_limit"
+    t.integer  "population_upper_confidence_limit"
+    t.integer  "quality_level"
+    t.integer  "actually_seen"
+    t.float    "lcl95"
+    t.text     "category"
+    t.string   "country",                           limit: 255
+    t.string   "region",                            limit: 255
+    t.string   "continent",                         limit: 255
+  end
 
   create_table "submissions", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "phenotype",                 limit: 255
+    t.string   "phenotype_basis",           limit: 255
+    t.string   "data_type",                 limit: 255
+    t.string   "right_to_grant_permission", limit: 5
+    t.string   "permission_email",          limit: 255
+    t.string   "is_mike_site",              limit: 5
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "species_id"
+    t.integer  "country_id"
+    t.integer  "mike_site_id"
+  end
+
+  create_table "submissions_old", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "phenotype",                 limit: 255
     t.string   "phenotype_basis",           limit: 255
@@ -383,6 +643,7 @@ ActiveRecord::Schema.define(version: 20150821111744) do
     t.integer  "mike_site_id"
     t.boolean  "is_mike_site"
     t.integer  "survey_geometry_id"
+    t.string   "web_id"
   end
 
   create_table "survey_aerial_sample_counts", force: :cascade do |t|
@@ -422,6 +683,7 @@ ActiveRecord::Schema.define(version: 20150821111744) do
     t.integer  "mike_site_id"
     t.boolean  "is_mike_site"
     t.integer  "survey_geometry_id"
+    t.string   "web_id"
   end
 
   create_table "survey_aerial_total_counts", force: :cascade do |t|
@@ -497,6 +759,7 @@ ActiveRecord::Schema.define(version: 20150821111744) do
     t.integer  "mike_site_id"
     t.boolean  "is_mike_site"
     t.integer  "survey_geometry_id"
+    t.string   "web_id"
   end
 
   create_table "survey_dung_count_line_transects", force: :cascade do |t|
@@ -530,6 +793,7 @@ ActiveRecord::Schema.define(version: 20150821111744) do
     t.integer  "mike_site_id"
     t.boolean  "is_mike_site"
     t.integer  "survey_geometry_id"
+    t.string   "web_id"
   end
 
   create_table "survey_faecal_dnas", force: :cascade do |t|
@@ -540,11 +804,22 @@ ActiveRecord::Schema.define(version: 20150821111744) do
     t.datetime "updated_at"
   end
 
-# Could not dump table "survey_geometries" because of following StandardError
-#   Unknown type 'geometry' for column 'geometry'
+  create_table "survey_geometries", force: :cascade do |t|
+    t.geometry "geometry", limit: {:srid=>0, :type=>"geometry"}
+  end
 
-# Could not dump table "survey_geometry_locator_buffered" because of following StandardError
-#   Unknown type 'geometry' for column 'survey_geometry'
+  create_table "survey_geometry_locator_buffered", id: false, force: :cascade do |t|
+    t.string   "site_name",           limit: 255
+    t.text     "analysis_name"
+    t.integer  "analysis_year"
+    t.string   "region",              limit: 255
+    t.text     "category"
+    t.string   "reason_change",       limit: 255
+    t.integer  "population_estimate"
+    t.string   "country",             limit: 255
+    t.text     "input_zone_id"
+    t.geometry "survey_geometry",     limit: {:srid=>0, :type=>"geometry"}
+  end
 
   create_table "survey_ground_sample_count_strata", force: :cascade do |t|
     t.integer  "survey_ground_sample_count_id"
@@ -568,6 +843,7 @@ ActiveRecord::Schema.define(version: 20150821111744) do
     t.integer  "mike_site_id"
     t.boolean  "is_mike_site"
     t.integer  "survey_geometry_id"
+    t.string   "web_id"
   end
 
   create_table "survey_ground_sample_counts", force: :cascade do |t|
@@ -602,6 +878,7 @@ ActiveRecord::Schema.define(version: 20150821111744) do
     t.integer  "mike_site_id"
     t.boolean  "is_mike_site"
     t.integer  "survey_geometry_id"
+    t.string   "web_id"
   end
 
   create_table "survey_ground_total_counts", force: :cascade do |t|
@@ -625,6 +902,7 @@ ActiveRecord::Schema.define(version: 20150821111744) do
     t.integer  "mike_site_id"
     t.boolean  "is_mike_site"
     t.integer  "survey_geometry_id"
+    t.string   "web_id"
   end
 
   create_table "survey_others", force: :cascade do |t|
@@ -639,6 +917,7 @@ ActiveRecord::Schema.define(version: 20150821111744) do
     t.integer  "actually_seen"
     t.boolean  "informed"
     t.integer  "survey_geometry_id"
+    t.string   "web_id"
   end
 
   create_table "survey_range_intersection_metrics", id: false, force: :cascade do |t|
@@ -651,13 +930,76 @@ ActiveRecord::Schema.define(version: 20150821111744) do
     t.float   "area_sqkm"
   end
 
-# Could not dump table "survey_range_intersections" because of following StandardError
-#   Unknown type 'geometry' for column 'st_intersection'
+  create_table "survey_range_intersections", id: false, force: :cascade do |t|
+    t.text     "analysis_name"
+    t.integer  "analysis_year"
+    t.string   "region",          limit: 255
+    t.text     "category"
+    t.string   "country",         limit: 255
+    t.string   "range_quality",   limit: 10
+    t.geometry "st_intersection", limit: {:srid=>0, :type=>"geometry"}
+  end
 
   create_table "surveytypes", id: false, force: :cascade do |t|
     t.string  "category",      limit: 8
     t.string  "surveytype",    limit: 255
     t.integer "display_order"
+  end
+
+  create_table "tracking_afESGstaff", id: false, force: :cascade do |t|
+    t.integer "ID"
+    t.string  "s_name",    limit: 255
+    t.string  "s_surname", limit: 255
+    t.string  "email",     limit: 255
+  end
+
+  create_table "tracking_comments", id: false, force: :cascade do |t|
+    t.integer  "ID"
+    t.text     "c_text"
+    t.datetime "c_date"
+    t.string   "support",   limit: 255
+    t.integer  "report_fk"
+  end
+
+  create_table "tracking_methods", id: false, force: :cascade do |t|
+    t.integer "ID"
+    t.string  "label", limit: 255
+    t.string  "code",  limit: 2
+  end
+
+  create_table "tracking_organizations", id: false, force: :cascade do |t|
+    t.integer "ID"
+    t.string  "o_name", limit: 255
+    t.string  "status", limit: 255
+  end
+
+  create_table "tracking_providers", id: false, force: :cascade do |t|
+    t.integer "ID"
+    t.string  "p_surname",       limit: 255
+    t.string  "p_name",          limit: 255
+    t.string  "email",           limit: 255
+    t.string  "drwg_member",     limit: 1
+    t.integer "organization_fk"
+  end
+
+  create_table "tracking_reports", id: false, force: :cascade do |t|
+    t.integer  "ID"
+    t.datetime "requested_date"
+    t.datetime "received_date"
+    t.string   "site_name",      limit: 255
+    t.integer  "survey_year"
+    t.string   "short_citation", limit: 255
+    t.string   "link_storage",   limit: 255
+    t.string   "survey_label",   limit: 255
+    t.string   "survey_status",  limit: 255
+    t.string   "AED",            limit: 1
+    t.string   "AEL",            limit: 1
+    t.string   "grant_census",   limit: 1
+    t.string   "data_licensing", limit: 255
+    t.integer  "provider_fk"
+    t.string   "submitter_name", limit: 255
+    t.integer  "country_fk"
+    t.integer  "method_fk"
   end
 
   create_table "users", force: :cascade do |t|
@@ -717,4 +1059,46 @@ ActiveRecord::Schema.define(version: 20150821111744) do
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
   add_index "versions", ["transaction_id"], name: "index_versions_on_transaction_id", using: :btree
 
+  add_foreign_key "changes", "analyses", primary_key: "analysis_id", name: "fk_analysis"
+  add_foreign_key "countries", "regions", name: "fk_region"
+  add_foreign_key "population_submission_attachments", "population_submissions", name: "fk1_pop_submission"
+  add_foreign_key "population_submissions", "mike_sites", column: "mike_site", name: "fk_mike_site"
+  add_foreign_key "population_submissions", "submissions_old", column: "submission_id", name: "submission_fk"
+  add_foreign_key "species_range_state_countries", "species", name: "fk_species"
+  add_foreign_key "submissions", "mike_sites", name: "fk0_mike_site"
+  add_foreign_key "submissions", "species", name: "fk0_species"
+  add_foreign_key "submissions", "users", name: "fk0_user"
+  add_foreign_key "submissions_old", "mike_sites", name: "fk1_mike_site"
+  add_foreign_key "submissions_old", "species", name: "fk1_species"
+  add_foreign_key "submissions_old", "users", name: "fk1_user"
+  add_foreign_key "survey_aerial_sample_count_strata", "mike_sites", name: "fk_mike2"
+  add_foreign_key "survey_aerial_sample_count_strata", "survey_aerial_sample_counts", name: "fk_as"
+  add_foreign_key "survey_aerial_sample_count_strata", "survey_geometries", name: "fk6_geom"
+  add_foreign_key "survey_aerial_sample_counts", "population_submissions", name: "fk2_pop_submission"
+  add_foreign_key "survey_aerial_total_count_strata", "mike_sites", name: "fk_mike1"
+  add_foreign_key "survey_aerial_total_count_strata", "survey_aerial_total_counts", name: "fk_at"
+  add_foreign_key "survey_aerial_total_count_strata", "survey_geometries", name: "fk5_geom"
+  add_foreign_key "survey_aerial_total_counts", "population_submissions", name: "fk3_pop_submission"
+  add_foreign_key "survey_dung_count_line_transect_strata", "mike_sites", name: "fk_mike3"
+  add_foreign_key "survey_dung_count_line_transect_strata", "survey_dung_count_line_transects", name: "fk_dc"
+  add_foreign_key "survey_dung_count_line_transect_strata", "survey_geometries", name: "fk4_geom"
+  add_foreign_key "survey_dung_count_line_transects", "population_submissions", name: "fk4_pop_submission"
+  add_foreign_key "survey_faecal_dna_strata", "mike_sites", name: "fk_mike4"
+  add_foreign_key "survey_faecal_dna_strata", "survey_faecal_dnas", name: "fk_dna"
+  add_foreign_key "survey_faecal_dna_strata", "survey_geometries", name: "fk3_geom"
+  add_foreign_key "survey_faecal_dnas", "population_submissions", name: "fk5_pop_submission"
+  add_foreign_key "survey_ground_sample_count_strata", "mike_sites", name: "fk_mike6"
+  add_foreign_key "survey_ground_sample_count_strata", "survey_geometries", name: "fk2_geom"
+  add_foreign_key "survey_ground_sample_count_strata", "survey_ground_sample_counts", name: "fk_gs"
+  add_foreign_key "survey_ground_sample_counts", "population_submissions", name: "fk6_pop_submission"
+  add_foreign_key "survey_ground_sample_counts", "population_submissions", name: "fk7_pop_submission"
+  add_foreign_key "survey_ground_total_count_strata", "mike_sites", name: "fk_mike7"
+  add_foreign_key "survey_ground_total_count_strata", "survey_geometries", name: "fk1_geom"
+  add_foreign_key "survey_ground_total_count_strata", "survey_ground_total_counts", name: "fk_gt"
+  add_foreign_key "survey_individual_registrations", "mike_sites", name: "fk_mike8"
+  add_foreign_key "survey_individual_registrations", "population_submissions", name: "fk8_pop_submission"
+  add_foreign_key "survey_individual_registrations", "survey_geometries", name: "fk8_geom"
+  add_foreign_key "survey_others", "mike_sites", name: "fk_mike5"
+  add_foreign_key "survey_others", "population_submissions", name: "fk9_pop_submission"
+  add_foreign_key "survey_others", "survey_geometries", name: "fk9_geom"
 end

@@ -37,17 +37,19 @@ gem 'rack-cache'
 
 gem 'paperclip'
 
-gem 'fusion_tables', :git => 'git://github.com/rfc2616/fusion_tables.git'
-
-gem 'aws-sdk'
-
-gem 'nofxx-georuby'
+gem 'aws-sdk-v1'
 
 gem 'paper_trail'
 
 gem 'kaminari'
 
 gem 'country_select'
+
+gem 'rubyzip'
+
+gem 'rgeo-shapefile'
+
+gem 'rgeo-geojson'
 
 # gem 'sqlite3'
 
@@ -61,6 +63,9 @@ gem 'capistrano-unicorn'
 
 gem 'protected_attributes'
 gem 'roo'
+
+# Make ActiveRecord PostGIS-aware
+gem 'activerecord-postgis-adapter'
 
 # To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)
 # gem 'ruby-debug'
@@ -81,7 +86,6 @@ end
 
 group :development do
   gem "rails-erd"
-  gem "roo"
 end
 
 group :development, :test do

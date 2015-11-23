@@ -1,11 +1,4 @@
 GIT
-  remote: git://github.com/rfc2616/fusion_tables.git
-  revision: 96b7ddb61129060145ee61986f2219f6a67ae0cf
-  specs:
-    fusion_tables (0.3.1)
-      gdata_19 (>= 1.1.2)
-
-GIT
   remote: git://github.com/sferik/rails_admin.git
   revision: 354cf2a78cc77c871a7a714c3755fe1ed1d56190
   specs:
@@ -56,6 +49,9 @@ GEM
       activemodel (= 4.2.3)
       activesupport (= 4.2.3)
       arel (~> 6.0)
+    activerecord-postgis-adapter (3.1.0)
+      activerecord (>= 4.2.0)
+      rgeo-activerecord (~> 4.0)
     activesupport (4.2.3)
       i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
@@ -71,12 +67,9 @@ GEM
     autoprefixer-rails (5.2.1.1)
       execjs
       json
-    aws-sdk (2.1.14)
-      aws-sdk-resources (= 2.1.14)
-    aws-sdk-core (2.1.14)
-      jmespath (~> 1.0)
-    aws-sdk-resources (2.1.14)
-      aws-sdk-core (= 2.1.14)
+    aws-sdk-v1 (1.66.0)
+      json (~> 1.4)
+      nokogiri (>= 1.4.4)
     bcrypt (3.1.10)
     bootstrap-sass (3.3.5.1)
       autoprefixer-rails (>= 5.0.0.1)
@@ -110,6 +103,7 @@ GEM
       sort_alphabetical (~> 1.0)
     currencies (0.4.2)
     dalli (2.7.4)
+    dbf (3.0.1)
     devise (3.5.2)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -125,7 +119,6 @@ GEM
       actionpack (>= 3.2.13)
     formtastic-bootstrap (3.1.1)
       formtastic (>= 3.0)
-    gdata_19 (1.1.5)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     haml (4.0.7)
@@ -134,8 +127,6 @@ GEM
     hpricot (0.8.6)
     i18n (0.7.0)
     i18n_data (0.7.0)
-    jmespath (1.0.2)
-      multi_json (~> 1.0)
     jquery-rails (4.0.4)
       rails-dom-testing (~> 1.0)
       railties (>= 4.2.0)
@@ -157,7 +148,6 @@ GEM
     mimemagic (0.3.0)
     mini_portile (0.6.2)
     minitest (5.8.0)
-    multi_json (1.11.2)
     nested_form (0.3.2)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
@@ -166,7 +156,6 @@ GEM
     net-ssh (2.9.2)
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
-    nofxx-georuby (1.9.2)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
     orm_adapter (0.5.0)
@@ -226,6 +215,15 @@ GEM
     request_store (1.2.0)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
+    rgeo (0.4.0)
+    rgeo-activerecord (4.0.0)
+      activerecord (~> 4.2)
+      rgeo (~> 0.3)
+    rgeo-geojson (0.3.1)
+      rgeo (~> 0.3)
+    rgeo-shapefile (0.2.3)
+      dbf (>= 1.7.0)
+      rgeo (>= 0.3.3)
     roo (2.1.1)
       nokogiri (~> 1)
       rubyzip (~> 1.1, < 2.0.0)
@@ -278,8 +276,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord-postgis-adapter
   appygram-rails
-  aws-sdk
+  aws-sdk-v1
   bootstrap-sass
   capistrano
   capistrano-unicorn
@@ -289,14 +288,12 @@ DEPENDENCIES
   devise
   formtastic
   formtastic-bootstrap
-  fusion_tables!
   haml
   hpricot
   jquery-rails
   kaminari
   leaflet-rails
   maruku
-  nofxx-georuby
   paper_trail
   paperclip
   pg
@@ -305,8 +302,11 @@ DEPENDENCIES
   rails (~> 4.2)
   rails-erd
   rails_admin!
+  rgeo-geojson
+  rgeo-shapefile
   roo
   ruby_parser
+  rubyzip
   rvm-capistrano
   sass-rails
   slim
