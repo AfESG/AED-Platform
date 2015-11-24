@@ -73,9 +73,22 @@ class PopulationSubmissionsController < ApplicationController
   end
 
   def geojson_map
-    @population_submission = PopulationSubmission.find(params[:id])
+    @level = level_class.find(params[:id])
+
     features = []
-    @population_submission.population_submission_geometries.each do |psg|
+    @level.counts[0].strata.each do |stratum|
+      if stratum.survey_geometry
+        feature = RGeo::GeoJSON.encode(stratum.survey_geometry.geom)
+        feature['properties'] = {
+          'aed_stratum' => stratum.id,
+          'aed_name' => stratum.stratum_name,
+          'aed_area' => stratum.stratum_area,
+          'aed_estimate' => stratum.population_estimate
+        }
+        features << feature
+      end
+    end
+    @level.population_submission_geometries.each do |psg|
       feature = RGeo::GeoJSON.encode(psg.geom)
       if psg.geom_attributes and !psg.geom_attributes.blank?
         feature['properties'] = JSON.parse(psg.geom_attributes)

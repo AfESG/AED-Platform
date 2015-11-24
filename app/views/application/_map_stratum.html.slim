@@ -3,16 +3,11 @@ javascript:
   var survey_map = new L.geoJson();
   //addition of scale
   L.control.scale({position:'bottomleft', metric:true, imperial:false }).addTo(map);
-  function onEachFeature(feature, layer) {
-    var popupContent = "<table>"
-    for (var key in feature.properties) {
-      popupContent += "<tr><th>"+key+"</th><td>"+feature.properties[key]+"<td></tr>"
-    }
-    popupContent += "</table>"
-    layer.bindPopup(popupContent);
+  function style(feature) {
+    return {color: "#007700","weight": 1,"opacity": 1,"fillColor": "#77ff77","fillOpacity": 0.6};
   }
   $.getJSON("/survey_geometry/#{level.survey_geometry_id}/map", function(data) {
-    var survey_map = L.geoJson(data, {onEachFeature: onEachFeature});
+    var survey_map = L.geoJson(data, {style: style});
     survey_map.addTo(map);
     map.fitBounds(survey_map.getBounds());
   });
