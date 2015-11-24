@@ -50,5 +50,4 @@
     .show_stratum
       == best_label_for 'person_hours'
       = @level.person_hours
-    == map_stratum @level
-
+    = render :partial => "map_stratum", :locals => { :level => @level }

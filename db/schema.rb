@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151124041257) do
+ActiveRecord::Schema.define(version: 20151124062712) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -793,6 +793,7 @@ ActiveRecord::Schema.define(version: 20151124041257) do
 
   create_table "survey_geometries", force: :cascade do |t|
     t.geometry "geometry", limit: {:srid=>0, :type=>"geometry"}
+    t.geometry "geom",     limit: {:srid=>0, :type=>"geometry"}
   end
 
   create_table "survey_geometry_locator_buffered", id: false, force: :cascade do |t|

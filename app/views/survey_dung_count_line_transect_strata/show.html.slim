@@ -179,4 +179,4 @@
     .show_stratum
       == best_label_for 'dung_encounter_rate'
       = @level.dung_encounter_rate
-    == map_stratum @level
+    = render :partial => "map_stratum", :locals => { :level => @level }
