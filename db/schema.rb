@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151123204038) do
+ActiveRecord::Schema.define(version: 20151124041257) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -311,8 +311,10 @@ ActiveRecord::Schema.define(version: 20151123204038) do
 
   create_table "population_submission_geometries", force: :cascade do |t|
     t.integer  "population_submission_id"
-    t.geometry "geom",                     limit: {:srid=>0, :type=>"geometry"}
+    t.geometry "geom",                                limit: {:srid=>0, :type=>"geometry"}
     t.text     "geom_attributes"
+    t.integer  "population_submission_attachment_id"
+    t.integer  "stratum"
   end
 
   create_table "population_submissions", force: :cascade do |t|
@@ -594,21 +596,6 @@ ActiveRecord::Schema.define(version: 20151123204038) do
     t.string   "right_to_grant_permission", limit: 5
     t.string   "permission_email",          limit: 255
     t.string   "is_mike_site",              limit: 5
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "species_id"
-    t.integer  "country_id"
-    t.integer  "mike_site_id"
-  end
-
-  create_table "submissions_old", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "phenotype",                 limit: 255
-    t.string   "phenotype_basis",           limit: 255
-    t.string   "data_type",                 limit: 255
-    t.boolean  "right_to_grant_permission"
-    t.string   "permission_email",          limit: 255
-    t.boolean  "is_mike_site"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "species_id"
@@ -1063,14 +1050,11 @@ ActiveRecord::Schema.define(version: 20151123204038) do
   add_foreign_key "countries", "regions", name: "fk_region"
   add_foreign_key "population_submission_attachments", "population_submissions", name: "fk1_pop_submission"
   add_foreign_key "population_submissions", "mike_sites", column: "mike_site", name: "fk_mike_site"
-  add_foreign_key "population_submissions", "submissions_old", column: "submission_id", name: "submission_fk"
+  add_foreign_key "population_submissions", "submissions", name: "submission_fk"
   add_foreign_key "species_range_state_countries", "species", name: "fk_species"
   add_foreign_key "submissions", "mike_sites", name: "fk0_mike_site"
   add_foreign_key "submissions", "species", name: "fk0_species"
   add_foreign_key "submissions", "users", name: "fk0_user"
-  add_foreign_key "submissions_old", "mike_sites", name: "fk1_mike_site"
-  add_foreign_key "submissions_old", "species", name: "fk1_species"
-  add_foreign_key "submissions_old", "users", name: "fk1_user"
   add_foreign_key "survey_aerial_sample_count_strata", "mike_sites", name: "fk_mike2"
   add_foreign_key "survey_aerial_sample_count_strata", "survey_aerial_sample_counts", name: "fk_as"
   add_foreign_key "survey_aerial_sample_count_strata", "survey_geometries", name: "fk6_geom"
