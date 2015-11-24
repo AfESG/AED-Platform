@@ -89,6 +89,14 @@ module SurveyCrud
       find_parents @level
     end
     enable_named_class_variable
+    if params[:from_feature]
+      @from_feature = params[:from_feature]
+      population_submission_geometry = PopulationSubmissionGeometry.find(@from_feature)
+      from_properties = JSON.parse(population_submission_geometry.geom_attributes)
+      if from_properties and from_properties['name']
+        @level.stratum_name = from_properties['name']
+      end
+    end
     render template: level_form if level_form
   end
 
@@ -110,6 +118,8 @@ module SurveyCrud
   end
 
   def create
+    @from_feature = params[level_base_name]['from_feature']
+    params[level_base_name].delete 'from_feature'
     @level = level_class.new(params[level_base_name])
 
     # We have special knowledge of this association since it cannot
@@ -132,6 +142,15 @@ module SurveyCrud
     end
 
     if @level.save
+      if @from_feature
+        population_submission_geometry = PopulationSubmissionGeometry.find(@from_feature);
+        survey_geometry = SurveyGeometry.new
+        survey_geometry.geom = population_submission_geometry.geom
+        survey_geometry.save!
+        @level.survey_geometry = survey_geometry
+        @level.save!
+        population_submission_geometry.destroy
+      end
       if params['commit'] == 'This is my final stratum'
         redirect_to "/population_submissions/#{@population_submission.id}/submit"
       else

@@ -90,9 +90,11 @@ class PopulationSubmissionsController < ApplicationController
     end
     @level.population_submission_geometries.each do |psg|
       feature = RGeo::GeoJSON.encode(psg.geom)
+      feature['properties'] = {}
       if psg.geom_attributes and !psg.geom_attributes.blank?
         feature['properties'] = JSON.parse(psg.geom_attributes)
       end
+      feature['properties']['aed_psg_id'] = psg.id
       features << feature
     end
     feature_collection = {

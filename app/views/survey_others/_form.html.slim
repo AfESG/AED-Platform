@@ -7,6 +7,7 @@
       = render "shared/error_messages", :target => @survey_other
       = f.inputs do
         = f.input :population_submission_id, :as => :hidden, :input_html => { :value => @population_submission.id }
+        = f.input :from_feature, :as => :hidden, :input_html => { :value => @from_feature }
         = f.input :other_method_description
         = f.input :population_estimate_min
         = f.input :population_estimate_max

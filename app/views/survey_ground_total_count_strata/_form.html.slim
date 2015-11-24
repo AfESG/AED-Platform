@@ -7,6 +7,7 @@
       = render "shared/error_messages", :target => @survey_ground_total_count_stratum
       = f.inputs do
         = f.input :survey_ground_total_count_id, :as => :hidden, :input_html => { :value => @level.parent_count.id }
+        = f.input :from_feature, :as => :hidden, :input_html => { :value => @from_feature }
         = f.input :stratum_name
         = f.input :stratum_area
         = f.input :population_estimate
