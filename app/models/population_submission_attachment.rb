@@ -10,7 +10,9 @@ class PopulationSubmissionAttachment < ActiveRecord::Base
 
   belongs_to :population_submission
   has_attached_file :file
-  
+
+  has_many :population_submission_geometries, :dependent => :delete_all
+
   # WARNING: this defeats security checks to prevent
   # content type spoofing. But we do want users to be able
   # to upload different content types that the software does

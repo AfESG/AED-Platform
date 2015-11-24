@@ -34,11 +34,11 @@ class PopulationSubmissionAttachmentsController < ApplicationController
 
   def import_geometries_from_shapefile(shapefile)
     population_submission = @attachment.population_submission
-    population_submission.population_submission_geometries.delete_all
     RGeo::Shapefile::Reader.open(File.realpath(shapefile)) do |file|
       file.each do |record|
         begin
           population_submission_geometry = population_submission.population_submission_geometries.create
+          population_submission_geometry.population_submission_attachment_id = @attachment.id
           population_submission_geometry.geom = record.geometry
           population_submission_geometry.geom_attributes = record.attributes.to_json
           population_submission_geometry.save!
@@ -52,10 +52,11 @@ class PopulationSubmissionAttachmentsController < ApplicationController
   def create
     @attachment = level_class.new(params[level_base_name])
     if @attachment.save
-      puts @attachment.file.inspect
-      if @attachment.file.path.downcase.end_with?('.zip')
-        shapefile = unzip_file(@attachment.file.path, File.dirname(@attachment.file.path));
-        import_geometries_from_shapefile shapefile if shapefile
+      if @attachment.attachment_type == 'Survey Shapefile'
+        if @attachment.file.path.downcase.end_with?('.zip')
+          shapefile = unzip_file(@attachment.file.path, File.dirname(@attachment.file.path));
+          import_geometries_from_shapefile shapefile if shapefile
+        end
       end
       redirect_to @attachment
     else
