@@ -24,10 +24,20 @@
             popupContent += "<tr><th>"+key+"</th><td>"+feature.properties[key]+"<td></tr>"
           }
           popupContent += "</table>"
+          if(feature.properties.aed_stratum) {
+            popupContent += "<div><a href='/#{@level.counts[0].strata[0].class.name.pluralize.underscore}/"+feature.properties.aed_stratum+"' target='_top'>Go</a></div>"
+          }
           layer.bindPopup(popupContent);
         }
+        function style(feature) {
+          if(feature.geometry.properties.aed_stratum > 0) {
+            return {color: "#007700","weight": 1,"opacity": 1,"fillColor": "#77ff77","fillOpacity": 0.6};
+          } else {
+            return {color: "#770000","weight": 1,"opacity": 1,"fillColor": "#ff7777","fillOpacity": 0.6};
+          }
+        }
         $.getJSON("/population_submissions/#{@population_submission.id}/map", function(data) {
-          var survey_map = L.geoJson(data, {onEachFeature: onEachFeature});
+          var survey_map = L.geoJson(data, {style: style, onEachFeature: onEachFeature});
           survey_map.addTo(map);
           map.fitBounds(survey_map.getBounds());
         });
