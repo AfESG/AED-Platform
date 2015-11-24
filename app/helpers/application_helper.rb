@@ -138,12 +138,6 @@ module ApplicationHelper
   end
 
   def map_aggregate(level)
-    res = "<div id='the_geom' style='margin-top: 10px; width:350px; height:300px;'>"
-    res << <<-SCRIPT
-      <script>
-        map_initialize('the_geom',function(){
-          var bounds = new google.maps.LatLngBounds();
-    SCRIPT
     area_sqkm = 0
     estimate = 0
     level.strata.each do |stratum|
@@ -153,103 +147,9 @@ module ApplicationHelper
       unless stratum.stratum_area.nil?
         area_sqkm = area_sqkm + stratum.stratum_area
       end
-      begin
-        geom = ActiveRecord::Base.connection.execute "select ST_asGeoJSON(ST_setSRID(geometry,4326)) json from survey_geometries where id=#{stratum.survey_geometry_id}"
-        json = JSON.parse(geom.first['json'])
-        res << <<-SCRIPT
-            {
-              var coords=[
-        SCRIPT
-        json['coordinates'].first.first.each do |coord|
-          res << "          new google.maps.LatLng(#{coord[1]}, #{coord[0]}),\n"
-        end
-        res << <<-SCRIPT
-              ];
-              var stratum = new google.maps.Polygon({
-                paths: coords,
-                strokeColor: "#FF0000",
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: "#FF0000",
-                fillOpacity: 0.35
-              });
-              stratum.setMap(map);
-              var paths = stratum.getPaths();
-              var path;
-              for (var p = 0; p < paths.getLength(); p++) {
-                path = paths.getAt(p);
-                for (var i = 0; i < path.getLength(); i++) {
-                  bounds.extend(path.getAt(i));
-                }
-              }
-            }
-        SCRIPT
-      rescue
-        "Could not map this stratum due to an error."
-      end
     end
-    res << <<-SCRIPT
-        map.fitBounds(bounds);
-
-      });
-      </script>
-    </div>
-    SCRIPT
-
     "<h3>Aggregate area: #{area_sqkm} km<sup>2</sup></h3>" +
-      "<h3>Aggregate estimate: #{estimate} elephants</h3>" +
-      res
-  end
-
-  def map_stratum(level)
-    return unless level.respond_to? :survey_geometry_id
-    return unless level.survey_geometry_id
-    begin
-      res = "<div id='the_geom' style='margin-top: 10px; width:350px; height:300px;'>"
-      geom = ActiveRecord::Base.connection.execute "select ST_asGeoJSON(ST_setSRID(geometry,4326)) json from survey_geometries where id=#{@level.survey_geometry_id}"
-      json = JSON.parse(geom.first['json'])
-      res << <<-SCRIPT
-        <script>
-          map_initialize('the_geom',function(){
-      SCRIPT
-      json['coordinates'].each do |poly|
-        puts "POLY"
-        res << "        var coords=["
-        poly.first.each do |coord|
-          res << "          new google.maps.LatLng(#{coord[1]}, #{coord[0]}),\n"
-        end
-        res << <<-SCRIPT
-          ];
-          var stratum = new google.maps.Polygon({
-            paths: coords,
-            strokeColor: "#FF0000",
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: "#FF0000",
-            fillOpacity: 0.35
-          });
-          stratum.setMap(map);
-          var bounds = new google.maps.LatLngBounds();
-          var paths = stratum.getPaths();
-          var path;
-          for (var p = 0; p < paths.getLength(); p++) {
-            path = paths.getAt(p);
-            for (var i = 0; i < path.getLength(); i++) {
-              bounds.extend(path.getAt(i));
-            }
-          }
-        SCRIPT
-      end
-      res << <<-SCRIPT
-          map.fitBounds(bounds);
-
-        });
-        </script>
-      </div>
-      SCRIPT
-    rescue
-      "Could not map this stratum due to an error."
-    end
+      "<h3>Aggregate estimate: #{estimate} elephants</h3>"
   end
 
 end

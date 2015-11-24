@@ -44,5 +44,4 @@
     .show_stratum
       == best_label_for 'carcasses_very_old'
       = @level.carcasses_very_old
-    == map_stratum @level
-
+    = render :partial => "map_stratum", :locals => { :level => @level }

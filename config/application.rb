@@ -54,7 +54,7 @@ module Aaed
     # Settings for static assets
     config.static_cache_control = "public, max-age=3600"
 
-    # Mail settings 
+    # Mail settings
     config.action_mailer.default_url_options = { :host => "www.elephantdatabase.org" }
 
     my_date_formats = { :default => '%d/%m/%Y' }
@@ -62,5 +62,8 @@ module Aaed
     Date::DATE_FORMATS.merge!(my_date_formats)
 
     config.assets.initialize_on_precompile = false
+
+    # import future
+    config.active_record.raise_in_transactional_callbacks = true
   end
 end

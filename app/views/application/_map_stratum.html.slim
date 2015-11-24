@@ -1,0 +1,18 @@
+= map container_id: "leaflet_map", center: {latlng: [-12.04, 18.59], zoom: 4}
+javascript:
+  var survey_map = new L.geoJson();
+  //addition of scale
+  L.control.scale({position:'bottomleft', metric:true, imperial:false }).addTo(map);
+  function onEachFeature(feature, layer) {
+    var popupContent = "<table>"
+    for (var key in feature.properties) {
+      popupContent += "<tr><th>"+key+"</th><td>"+feature.properties[key]+"<td></tr>"
+    }
+    popupContent += "</table>"
+    layer.bindPopup(popupContent);
+  }
+  $.getJSON("/survey_geometry/#{level.survey_geometry_id}/map", function(data) {
+    var survey_map = L.geoJson(data, {onEachFeature: onEachFeature});
+    survey_map.addTo(map);
+    map.fitBounds(survey_map.getBounds());
+  });
