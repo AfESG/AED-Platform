@@ -1,6 +1,7 @@
 - authors = local_assigns[:authors]
 - text    = local_assigns[:full_text]
 - year    = local_assigns[:year]
+- errata  = local_assigns[:errata] || false
 - r       = year
 
 .report_cover
@@ -11,9 +12,11 @@
       h5 #{r} African Elephant Status Report
     .authors = authors
     .links
-      ' Explore the <a href="https://portals.iucn.org/library/efiles/documents/SSC-OP-#{full_text}.pdf" target="_blank">full text of the #{year} report</a> (PDF) and its
-      = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
-        ' errata
-      ' or
+      ' Explore the <a href="https://portals.iucn.org/library/efiles/documents/SSC-OP-#{full_text}.pdf" target="_blank">full 
+        text of the #{year} report</a> (PDF) and its
+      - if errata
+        = link_to "/report/#{@species.gsub(' ','_')}/#{r}" do
+          ' errata
+        ' or
       = link_to 'bibliography', '/report/references'
       | .
