@@ -363,7 +363,7 @@ class ReportController < ApplicationController
         speculative "SPECUL",
         ROUND(rm.range_area) "RANGEAREA",
         ROUND(rm.percent_regional_range) "RANGEPERC",
-        ROUND(rm.percent_range_assessed) "SURVRANGPERC", 
+        ROUND(rm.percent_range_assessed) "SURVRANGPERC",
         to_char(((definite+probable)/(definite+probable+possible+speculative))*(rm.range_assessed/range_area),'999999D99') "INFQLTYIDX",
         round(log(((definite+probable)/(definite+probable+possible+speculative))*(rm.range_assessed/range_area)+1/(rm.range_area/ca.continental_range))) "PFS"
       from
@@ -513,7 +513,7 @@ class ReportController < ApplicationController
     @filter = params[:filter]
     @preview_title = official_title(@filter) or @filter.humanize.upcase
 
-    @alt_summary_totals = execute alt_dpps("c.name = '#{sql_escape @country}'", @year, @filter)
+    @alt_summary_totals = execute alt_dpps("country = '#{sql_escape @country}'", @year, @filter)
     @alt_areas          = execute alt_dpps_area("country = '#{sql_escape @country}'", @year, @filter)
 
     @baseline_total = execute <<-SQL, @country
