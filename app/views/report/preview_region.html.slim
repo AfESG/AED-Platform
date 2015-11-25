@@ -46,7 +46,16 @@
 
     = render 'table_area_of_range_covered', totals: @area_of_range_covered_by_region, sums: @area_of_range_covered_sum_by_region
 
-    = render 'table_country_regional_data_quality', preview: true
+    div
+      ul.nav.nav-tabs role='tablist'
+        li.active = link_to 'DPPS Calculations', '#dpps-dq', 'aria-controls': 'dpps-dq', role: 'tab', 'data-toggle': 'tab'
+        li = link_to 'Alternate', '#altdpps-dq', 'aria-controls': 'altdpps-dq', role: 'tab', 'data-toggle': 'tab'
+
+      .tab-content
+        .tab-pane.active#dpps-dq role='tabpanel'
+          = render 'table_country_regional_data_quality', preview: true
+        .tab-pane#altdpps-dq role='tabpanel'
+          = render 'table_country_regional_data_quality_add', preview: true
 
     == footnote
 
