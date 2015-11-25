@@ -166,6 +166,7 @@ module AltDppsHelper
         #{analysis_name}
         AND e.category = 'D'
         AND #{scope}
+        AND e.site_name <> 'Rest of Gabon'
       GROUP BY "CATEGORY", "SURVEYTYPE"
 
       UNION
