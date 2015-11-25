@@ -2,6 +2,7 @@ class Change < ActiveRecord::Base
 
   attr_accessible(
     :change,
+    :analysis_name,
     :analysis_year,
     :country,
     :replacement_name,
