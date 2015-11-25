@@ -107,7 +107,7 @@
               - @la = row['LAT']
               - @n = @n + 1
               - @ra = row['RA'].to_f
-          - @pf = (Math.log10(((@dp+0.001)/(@dpps+0.001))+1/(@car/@ra))).round
+          - @pf = (Math.log10(((@dp+0.001)/(@dpps+0.001))+1/(@car/@ra))).round rescue '?'
           tr
             td
               a href="javascript:toggle_section('#{@rn.gsub(/[^\w\d]/,'')}')" style='text-decoration:none'  +
@@ -129,7 +129,7 @@
             td style="text-align:center" = @la
           - group.each do |row|
             tr data-section=("#{@rn.gsub(/[^\w\d]/,'')}") style=('height:18px; display:none')
-              td 
+              td
                 div style='margin-left:20px;'
                   a href="/population_submissions/#{row['population_submission_id']}" = row['stratum_name']
               td= row['ReasonForChange']
