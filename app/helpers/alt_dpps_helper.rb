@@ -28,7 +28,15 @@ module AltDppsHelper
     content_tag :td, number_with_delimiter(area.to_f.round), class: 'numeric'
   end
 
+  def numeric_cell value, opts={}
+    defaults = { class: 'numeric' }
+    defaults.merge!(opts[:attrs]) if opts[:attrs]
+    content_tag :td, number_with_delimiter(value.to_f.round(opts[:precision] || 0)), defaults
+  end
+
   def is_blank_cell? row, column
+    return false unless row['CATEGORY']
+
     @@blank_cells ||= {
       'A': ['CONFIDENCE', 'GUESS_MIN', 'GUESS_MAX'],
       'B': ['GUESS_MIN', 'GUESS_MAX'],
@@ -55,14 +63,14 @@ module AltDppsHelper
     end
   end
 
-  def add_and_display_cell row, column, totals, opts
+  def add_and_display_cell row, column, totals, opts={}
     totals[column] ||= 0
     round = opts[:round] || false
     value = row[column]
     if value.nil? || is_blank_cell?(row, column)
       unused_cell
     else
-      num = value.to_i
+      num = value.to_f.round(opts[:precision] || 0)
       totals[column] += num
       defaults = { class: 'numeric' }
       defaults.merge!(opts[:attrs]) if opts[:attrs]
@@ -120,136 +128,106 @@ module AltDppsHelper
     SQL
   end
 
-  def alt_dpps scope, year, filter=nil
-    analysis_name = filter.nil?? '' : "AND e.analysis_name = '#{filter}'"
+  def alt_dpps_region_stats scope, year, filter=nil
+    analysis_name = filter.nil?? '' : "AND x.analysis_name = '#{filter}'"
     <<-SQL
       SELECT
-        e.category as "CATEGORY",
-        surveytype as "SURVEYTYPE",
-        sum(e.population_estimate) as "ESTIMATE",
-        0 as "CONFIDENCE",
-        0 as "GUESS_MIN",
-        0 as "GUESS_MAX"
-      FROM
-        estimate_factors_analyses_categorized_for_add e
-      WHERE 
-        e.analysis_year = #{year}
-        #{analysis_name}
-        AND e.category = 'A'
-        AND #{scope}
-      GROUP BY "CATEGORY", "SURVEYTYPE"
-
-      UNION
-
-      SELECT
-        e.category as "CATEGORY",
-        surveytype as "SURVEYTYPE",
-        sum(e.population_estimate) as "ESTIMATE",
-        1.96*sqrt(sum(e.population_variance)) as "CONFIDENCE",
-        0 as "GUESS_MIN",
-        0 as "GUESS_MAX"
-      FROM
-        estimate_factors_analyses_categorized_for_add e
-      WHERE 
-        e.analysis_year = #{year}
-        #{analysis_name}
-        AND e.category = 'B'
-        AND #{scope}
-      GROUP BY "CATEGORY", "SURVEYTYPE"
-
-      UNION
-
-      SELECT
-        e.category as "CATEGORY",
-        surveytype as "SURVEYTYPE",
-        sum(e.actually_seen) as "ESTIMATE",
-        0 as "CONFIDENCE",
-        sum(e.population_estimate) - sum(e.actually_seen) as "GUESS_MIN",
-        sum(e.population_estimate) - sum(e.actually_seen) as "GUESS_MAX"
-      FROM
-        estimate_factors_analyses_categorized_for_add e
-      WHERE 
-        e.analysis_year = #{year}
-        #{analysis_name}
-        AND e.category = 'C'
-        AND #{scope}
-      GROUP BY "CATEGORY", "SURVEYTYPE"
-
-      UNION
-
-      SELECT
-        e.category as "CATEGORY",
-        surveytype as "SURVEYTYPE",
-        sum(e.actually_seen) as "ESTIMATE",
-        0 as "CONFIDENCE",
-        sum(e.population_lower_confidence_limit) - sum(e.actually_seen) as "GUESS_MIN",
-        sum(e.population_upper_confidence_limit) - sum(e.actually_seen) as "GUESS_MAX"
-      FROM
-        estimate_factors_analyses_categorized_for_add e
-      WHERE 
-        e.analysis_year = #{year}
-        #{analysis_name}
-        AND e.category = 'D'
-        AND #{scope}
-        AND e.site_name <> 'Rest of Gabon'
-      GROUP BY "CATEGORY", "SURVEYTYPE"
-
-      UNION
-
-      SELECT
-        e.category as "CATEGORY",
-        surveytype as "SURVEYTYPE",
-        sum(e.actually_seen) as "ESTIMATE",
-        0 as "CONFIDENCE",
-        sum(e.population_lower_confidence_limit) - sum(e.actually_seen) as "GUESS_MIN",
-        sum(e.population_upper_confidence_limit) - sum(e.actually_seen) as "GUESS_MAX"
-      FROM
-        estimate_factors_analyses_categorized_for_add e
-      WHERE 
-        e.analysis_year = #{year}
-        #{analysis_name}
-        AND e.completion_year > #{year - 10}
-        AND e.category = 'E'
-        AND #{scope}
-      GROUP BY "CATEGORY", "SURVEYTYPE"
-
-      UNION
-
-      SELECT
-        'F' as "CATEGORY",
-        'Degraded Data' as "SURVEYTYPE",
-        0 as "ESTIMATE",
-        0 as "CONFIDENCE",
-        sum(e.population_estimate) as "GUESS_MIN",
-        sum(e.population_estimate) as "GUESS_MAX"
-      FROM
-        estimate_factors_analyses_categorized_for_add e
-      WHERE 
-        e.analysis_year = #{year}
-        #{analysis_name}
-        AND e.completion_year <= #{year - 10}
-        AND e.category = 'E'
-        AND #{scope}
-      GROUP BY "CATEGORY", "SURVEYTYPE"
-
-      UNION
-
-      SELECT
-        'G' as "CATEGORY",
-        'Modeled Extrapolation' as "SURVEYTYPE",
-        0 as "ESTIMATE",
-        0 as "CONFIDENCE",
-        sum(e.population_estimate) as "GUESS_MIN",
-        sum(e.population_estimate) as "GUESS_MAX"
-      FROM
-        estimate_factors_analyses_categorized_for_add e
+        "ESTIMATE",
+        "CONFIDENCE",
+        "GUESS_MIN",
+        "GUESS_MAX",
+        "ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX") as "PF",
+        "ASSESSED_RANGE" / "RANGE_AREA" as "ARF",
+        ("ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX")) * ("ASSESSED_RANGE" / "RANGE_AREA") AS "IQI",
+        ("RANGE_AREA" / cont.range_area) AS "CRF",
+        log((1+("ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX")) * ("ASSESSED_RANGE" / "RANGE_AREA")) / ("RANGE_AREA" / cont.range_area)) AS "PFS",
+        "RANGE_AREA",
+        "RANGE_AREA" / rrt.range_area * 100 AS "PERCENT_OF_RANGE_COVERED",
+        "ASSESSED_RANGE" / "RANGE_AREA" * 100 as "PERCENT_OF_RANGE_ASSESSED"
+      FROM (
+        SELECT 
+          x.region,
+          sum(x."ESTIMATE") as "ESTIMATE",
+          1.96*sqrt(sum(x."POPULATION_VARIANCE")) as "CONFIDENCE",
+          sum(x."GUESS_MIN") as "GUESS_MIN",
+          sum(x."GUESS_MAX") as "GUESS_MAX",
+          sum(distinct "ASSESSED_RANGE") AS "ASSESSED_RANGE",
+          sum(distinct "RANGE_AREA") AS "RANGE_AREA"
+        FROM estimate_factors_analyses_categorized_totals_for_add x
+        JOIN country_range_totals crt ON crt.country = x.country AND crt.analysis_year = x.analysis_year
+        WHERE
+          x.analysis_year = 2013
+          AND x.analysis_name = '2013_africa_final'
+        GROUP BY x.region
+      ) p
+      JOIN regional_range_totals rrt ON rrt.region = p.region
+      JOIN continental_range_totals cont ON continent = 'Africa'
       WHERE
-        e.analysis_year = #{year}
-        #{analysis_name}
-        AND e.category = 'D'
-        AND e.site_name = 'Rest of Gabon'
-        AND #{scope}
+        p.#{scope}
+      ORDER BY p.region
+    SQL
+  end
 
+  def alt_dpps_country_stats scope, year, filter=nil
+    analysis_name = filter.nil?? '' : "AND x.analysis_name = '#{filter}'"
+    <<-SQL
+      SELECT
+        p.country,
+        "ESTIMATE",
+        "CONFIDENCE",
+        "GUESS_MIN",
+        "GUESS_MAX",
+        "ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX") as "PF",
+        "ASSESSED_RANGE" / "RANGE_AREA" as "ARF",
+        ("ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX")) * ("ASSESSED_RANGE" / "RANGE_AREA") AS "IQI",
+        ("RANGE_AREA" / cont.range_area) AS "CRF",
+        log((1+("ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX")) * ("ASSESSED_RANGE" / "RANGE_AREA")) / ("RANGE_AREA" / cont.range_area)) AS "PFS",
+        "ASSESSED_RANGE",
+        "RANGE_AREA",
+        "RANGE_AREA" / rrt.range_area * 100 AS "PERCENT_OF_RANGE_COVERED",
+        "ASSESSED_RANGE" / "RANGE_AREA" * 100 as "PERCENT_OF_RANGE_ASSESSED"
+      FROM (
+        SELECT 
+          x.country,
+          x.region,
+          sum(x."ESTIMATE") as "ESTIMATE",
+          1.96*sqrt(sum(x."POPULATION_VARIANCE")) as "CONFIDENCE",
+          sum(x."GUESS_MIN") as "GUESS_MIN",
+          sum(x."GUESS_MAX") as "GUESS_MAX",
+          "ASSESSED_RANGE",
+          "RANGE_AREA"
+        FROM estimate_factors_analyses_categorized_totals_for_add x
+        JOIN country_range_totals crt ON crt.country = x.country AND crt.analysis_year = x.analysis_year
+        WHERE
+          x.analysis_year = #{year}
+          #{analysis_name}
+        GROUP BY x.country, x.region, "RANGE_AREA", "ASSESSED_RANGE"
+      ) p
+      JOIN regional_range_totals rrt ON rrt.region = p.region
+      JOIN continental_range_totals cont ON continent = 'Africa'
+      WHERE
+        p.#{scope}
+      ORDER BY country
+    SQL
+  end
+
+  def alt_dpps scope, year, filter=nil
+    analysis_name = filter.nil?? '' : "AND s.analysis_name = '#{filter}'"
+    <<-SQL
+      SELECT
+      "CATEGORY",
+      "SURVEYTYPE",
+      sum("ESTIMATE") AS "ESTIMATE",
+      1.96*sqrt(sum("POPULATION_VARIANCE")) AS "CONFIDENCE",
+      sum("GUESS_MIN") AS "GUESS_MIN",
+      sum("GUESS_MAX") AS "GUESS_MAX"
+      FROM
+        estimate_factors_analyses_categorized_totals_for_add s
+      WHERE
+        s.analysis_year = #{year}
+        #{analysis_name}
+        AND #{scope}
+      GROUP BY "CATEGORY", "SURVEYTYPE"
       ORDER BY "CATEGORY"
     SQL
   end
