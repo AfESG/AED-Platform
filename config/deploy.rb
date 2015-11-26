@@ -39,8 +39,18 @@ if target == 'DEV'
   default_environment['UNICORN_PORT'] = '3000'
   default_environment['POSTGRESQL_DATABASE'] = 'aed_development'
   default_environment['HOSTNAME'] = 'dev.elephantdatabase.org'
-  default_environment['authenticate_all_requests'] = 'practicum'
+  default_environment['authenticate_all_requests'] = 'theta'
   set :deploy_to, '/u/dev'
+end
+
+if target == 'DEV2'
+  puts "Deploying to dev2"
+
+  default_environment['UNICORN_PORT'] = '3001'
+  default_environment['POSTGRESQL_DATABASE'] = 'aed_development2'
+  default_environment['HOSTNAME'] = 'dev2.elephantdatabase.org'
+  default_environment['authenticate_all_requests'] = 'phi'
+  set :deploy_to, '/u/dev2'
 end
 
 set :rvm_ruby_string, 'ruby-2.2.3@aed'
