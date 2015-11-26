@@ -70,7 +70,32 @@ module AltDppsHelper
     end
   end
 
-  def alt_dpps_area scope, year, filter=nil
+  def alt_dpps_country_area scope, year, filter=nil
+    analysis_name = filter.nil?? '' : "AND analysis_name = '#{filter}'"
+    <<-SQL
+      SELECT 
+        a.category,
+        a."AREA",
+        a."AREA" / ct."RANGE_AREA" * 100 as "CATEGORY_RANGE_ASSESSED",
+        ct."RANGE_AREA" as range_area,
+        ct."CATEGORY_PERCENT_RANGE_ASSESSED" as percent_range_assessed
+      FROM (
+        SELECT
+          category, region, country, sum(area_sqkm) as "AREA"
+        FROM
+          survey_range_intersection_metrics sm
+        WHERE
+          analysis_year = #{@year}
+          #{analysis_name}
+          AND #{scope}
+        GROUP BY category, region, country
+      ) a
+      JOIN country_range_totals ct ON ct.country = a.country AND analysis_year = #{@year}
+      ORDER BY category
+    SQL
+  end
+
+  def alt_dpps_region_area scope, year, filter=nil
     analysis_name = filter.nil?? '' : "AND analysis_name = '#{filter}'"
     <<-SQL
       SELECT 
