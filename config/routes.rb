@@ -68,7 +68,7 @@ Aaed::Application.routes.draw do
 
   resources :data_request_forms
 
-  resources :spreadsheets, only: [:index, :create, :show]
+  resources :spreadsheets, only: [:index, :create, :show, :destroy]
 
   get 'about' => 'about#index'
   get 'about/darp' => 'about#darp'

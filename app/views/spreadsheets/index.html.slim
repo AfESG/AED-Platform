@@ -19,8 +19,12 @@
           tr
             th Name
             th Upload Date
+            th
         tbody
           - @sheets.each do |sheet|
             tr
               td = link_to sheet[:name], spreadsheet_path(sheet[:name])
-              td = sheet[:created_at]
+              td = sheet[:updated_at] || sheet[:created_at]
+              td align='right'
+                = link_to spreadsheet_path(sheet[:name]), method: :delete, 'data-confirm': 'Are you sure you want to delete this spreadsheet?' do
+                  i.glyphicon.glyphicon-remove style='margin:0px 5px;'

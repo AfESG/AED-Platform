@@ -1,5 +1,13 @@
 .row
   .col-xs-12
+    = link_to spreadsheets_path do
+      button.btn.btn-link
+        i.glyphicon.glyphicon-chevron-left
+        '
+        | Back to Spreadsheets
+
+.row
+  .col-xs-12
     h1 Spreadsheet Verification Results
 
     - @sheets.each do |result|
