@@ -60,8 +60,7 @@
     tr
       td = 'Total'
       - data_columns.each do |column|
-        = round_area_cell number_with_delimiter(round ? rounded(table_totals[column].to_i) : table_totals[column].to_i)
+        td.numeric = number_with_delimiter(round ? rounded(table_totals[column].to_i) : table_totals[column].to_i)
       td.numeric 100
       = round_area_sqkm_cell area_candidate['range_area']
-
 
