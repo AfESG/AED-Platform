@@ -21,16 +21,8 @@
 
     == narrative
 
-    div style='margin-top: 20px'
-      ul.nav.nav-tabs role='tablist'
-        li.active = link_to 'DPPS Calculations', '#dpps', 'aria-controls': 'dpps', role: 'tab', 'data-toggle': 'tab'
-        li = link_to 'Alternate, No Rounding', '#altdpps', 'aria-controls': 'altdpps', role: 'tab', 'data-toggle': 'tab'
-
-      .tab-content
-        .tab-pane.active#dpps role='tabpanel'
-          = render 'table_preview_summary_totals', level: @country, totals: @summary_totals_by_country, baselines: @baseline_total
-        .tab-pane#altdpps role='tabpanel'
-          = render 'table_alt_dpps', level: @country, totals: @alt_summary_totals
+    = render 'tabs', tabs: [ { title: 'DPPS Calculations', template: 'table_preview_summary_totals', args: { level: @country, totals: @summary_totals_by_country, baselines: @baseline_total } },
+      { admin: true, title: 'Alternate, No Rounding', template: 'table_alt_dpps', args: { level: @country, totals: @alt_summary_totals } } ]
 
     - if current_user and current_user.admin?
       = render 'table_causes_of_change', totals: @causes_of_change_by_country_u, sums: @causes_of_change_sums_by_country_u

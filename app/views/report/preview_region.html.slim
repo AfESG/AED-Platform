@@ -20,19 +20,9 @@
 
     == narrative
 
-    div style='margin-top: 20px'
-      ul.nav.nav-tabs role='tablist'
-        li.active = link_to 'DPPS Calculations', '#dpps', 'aria-controls': 'dpps', role: 'tab', 'data-toggle': 'tab'
-        li = link_to 'Alternate, No Rounding', '#altdpps', 'aria-controls': 'altdpps', role: 'tab', 'data-toggle': 'tab'
-        li = link_to 'Alternate, Rounded', '#altdppsrounded', 'aria-controls': 'altdppsrounded', role: 'tab', 'data-toggle': 'tab'
-
-      .tab-content
-        .tab-pane.active#dpps role='tabpanel'
-          = render 'table_preview_summary_totals', level: @region, totals: @summary_totals_by_region, baselines: @baseline_total
-        .tab-pane#altdpps role='tabpanel'
-          = render 'table_alt_dpps', level: @region, totals: @alt_summary_totals
-        .tab-pane#altdppsrounded role='tabpanel'
-          = render 'table_alt_dpps', level: @region, totals: @alt_summary_totals, rounded: true
+    = render 'tabs', id: 'summary', tabs: [ { title: 'DPPS Calculations', template: 'table_preview_summary_totals', args: { level: @region, totals: @summary_totals_by_region, baselines: @baseline_total } },
+      { admin: true, title: 'Alternate, No Rounding', template: 'table_alt_dpps', args: { level: @region, totals: @alt_summary_totals } },
+      { admin: true, title: 'Alternate, Rounded', template: 'table_alt_dpps', args: { level: @region, totals: @alt_summary_totals, rounded: true } } ]
 
     - if current_user and current_user.admin?
       = render 'table_causes_of_change', totals: @causes_of_change_by_region_u, sums: @causes_of_change_sums_by_region_u
@@ -46,16 +36,8 @@
 
     = render 'table_area_of_range_covered', totals: @area_of_range_covered_by_region, sums: @area_of_range_covered_sum_by_region
 
-    div
-      ul.nav.nav-tabs role='tablist'
-        li.active = link_to 'DPPS Calculations', '#dpps-dq', 'aria-controls': 'dpps-dq', role: 'tab', 'data-toggle': 'tab'
-        li = link_to 'Alternate', '#altdpps-dq', 'aria-controls': 'altdpps-dq', role: 'tab', 'data-toggle': 'tab'
-
-      .tab-content
-        .tab-pane.active#dpps-dq role='tabpanel'
-          = render 'table_country_regional_data_quality', preview: true
-        .tab-pane#altdpps-dq role='tabpanel'
-          = render 'table_country_regional_data_quality_add', preview: true
+    = render 'tabs', id: 'data-quality', tabs: [ { title: 'DPPS Calculations', template: 'table_country_regional_data_quality', args: { preview: true } },
+      { admin: true, title: 'Alternate', template: 'table_country_regional_data_quality_add', args: { preview: true } } ]
 
     == footnote
 
