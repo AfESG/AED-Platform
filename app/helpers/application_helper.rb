@@ -61,7 +61,11 @@ module ApplicationHelper
   end
 
   def guess_new_stratum_path(c)
-    eval "new_#{c.count_base_name}_#{c.count_base_name}_stratum_path(c)"
+    if c.has_strata?
+      eval "new_#{c.count_base_name}_#{c.count_base_name}_stratum_path(c)"
+    else
+      eval "new_#{c.count_base_name}_path(c)"
+    end
   end
 
   def guess_edit_stratum_path(b)
