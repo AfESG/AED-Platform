@@ -100,7 +100,7 @@ module SurveyCrud
     render template: level_form if level_form
   end
 
-  def edit
+  def edit(level_form = nil)
     set_title
     @level = level_class.find(params[:id])
     find_parents @level
