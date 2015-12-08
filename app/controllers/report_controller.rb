@@ -165,7 +165,7 @@ class ReportController < ApplicationController
     @preview_title = official_title(@filter) or @filter.humanize.upcase
 
     @alt_summary_totals = execute alt_dpps("1=1", @year, @filter)
-    @alt_areas          = execute alt_dpps_area("1=1", @year, @filter)
+    @alt_areas          = execute alt_dpps_region_area("1=1", @year, @filter)
 
     @summary_totals_by_continent = execute totalizer("1=1",@filter,@year)
     @baseline_total = execute <<-SQL, @continent
@@ -342,7 +342,9 @@ class ReportController < ApplicationController
     @preview_title = official_title(@filter) or @filter.humanize.upcase
 
     @alt_summary_totals = execute alt_dpps("region = '#{@region}'", @year, @filter)
-    @alt_areas          = execute alt_dpps_area("region = '#{@region}'", @year, @filter)
+    @alt_areas          = execute alt_dpps_region_area("region = '#{@region}'", @year, @filter)
+    @alt_countries      = execute alt_dpps_country_stats("region = '#{@region}'", @year, @filter)
+    @alt_country_sums   = execute alt_dpps_region_stats("region = '#{@region}'", @year, @filter)
 
     @summary_totals_by_region = execute totalizer("region='#{@region}'",@filter,@year)
     @baseline_total = execute <<-SQL, @region
@@ -514,7 +516,7 @@ class ReportController < ApplicationController
     @preview_title = official_title(@filter) or @filter.humanize.upcase
 
     @alt_summary_totals = execute alt_dpps("country = '#{sql_escape @country}'", @year, @filter)
-    @alt_areas          = execute alt_dpps_area("country = '#{sql_escape @country}'", @year, @filter)
+    @alt_areas          = execute alt_dpps_country_area("country = '#{sql_escape @country}'", @year, @filter)
 
     @baseline_total = execute <<-SQL, @country
       select sum(definite) definite, sum(probable) probable, sum(possible) possible,
