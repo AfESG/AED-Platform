@@ -12,9 +12,9 @@ class PopulationSubmissionAttachmentsController < ApplicationController
 
   def download
     head(:not_found) and return if (attachment = PopulationSubmissionAttachment.find_by_id(params[:id])).nil?
-    path = attachment.file.path
+    path = attachment.file.path.to_s.gsub(/^.*?public/,'')
     # uri = attachment.file.s3_object.url_for(:read, :secure => false, :expires_in => 10.seconds, :response_content_disposition => 'attachment' )
-    redirect_to path.to_s
+    redirect_to path
   end
 
   def unzip_file (file, destination)
