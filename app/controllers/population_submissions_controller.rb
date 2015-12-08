@@ -51,7 +51,7 @@ class PopulationSubmissionsController < ApplicationController
   end
 
   def submit
-    edit
+    edit 'population_submissions/submit'
   end
 
   helper_method :sort_column, :sort_direction
