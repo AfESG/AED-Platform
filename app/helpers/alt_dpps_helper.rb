@@ -128,6 +128,31 @@ module AltDppsHelper
     SQL
   end
 
+  def alt_dpps_continent_area scope, year, filter=nil
+    analysis_name = filter.nil?? '' : "AND analysis_name = '#{filter}'"
+    <<-SQL
+      SELECT 
+        a.category,
+        a."AREA",
+        a."AREA" / rt.range_area * 100 as "CATEGORY_RANGE_ASSESSED",
+        rt.range_area,
+        rt.percent_range_assessed
+      FROM (
+        SELECT
+          category, sum(area_sqkm) as "AREA"
+        FROM
+          survey_range_intersection_metrics sm
+        WHERE
+          analysis_year = #{@year}
+          #{analysis_name}
+          AND #{scope}
+        GROUP BY category
+      ) a
+      JOIN continental_range_totals rt ON rt.continent = 'Africa'
+      ORDER BY category
+    SQL
+  end
+
   def alt_dpps_region_stats scope, year, filter=nil
     analysis_name = filter.nil?? '' : "AND x.analysis_name = '#{filter}'"
     <<-SQL

@@ -19,7 +19,8 @@
 
     == narrative
 
-    = render 'table_preview_summary_totals', level: @continent, totals: @summary_totals_by_continent, baselines: @baseline_total
+    = render 'tabs', id: 'summary', tabs: [ { title: 'DPPS Calculations', template: 'table_preview_summary_totals', args: { level: @continent, totals: @summary_totals_by_continent, baselines: @baseline_total } },
+      { admin: true, title: 'Alternate, No Rounding', template: 'table_alt_dpps', args: { level: @continent, totals: @alt_summary_totals } } ]
 
     - if current_user and current_user.admin?
       = render 'table_causes_of_change', totals: @causes_of_change_by_continent_u, sums: @causes_of_change_sums_by_continent_u
