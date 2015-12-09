@@ -57,6 +57,7 @@
       - 4.times.each do |i|
         = unused_cell
       = round_area_cell 100 - (table_totals['CATEGORY_RANGE_ASSESSED'] || 0)  
+      = round_area_sqkm_cell(area_candidate['range_area'].to_f - (@alt_areas.inject(0) { |sum, tuple| sum+= tuple['AREA'].to_f }))
     tr
       td = 'Total'
       - data_columns.each do |column|
