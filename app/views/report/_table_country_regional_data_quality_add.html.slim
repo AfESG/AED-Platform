@@ -3,13 +3,23 @@
 - if !@alt_countries.nil? && @alt_countries.num_tuples > 0
   h2 Country and Regional Totals and Data Quality
   - totals = {}
-  table.table style='font-size:16px' 
+  table.table style='font-size:16px'
+    tr
+      th
+      th.text-center colspan='2' Estimates from Surveys
+      th.text-center colspan='2' Guesses
+      th.text-center colspan='3' Range
+      th &nbsp;
+      th &nbsp;
     tr
       th Country
-      th.numeric Estimate
-      th.numeric Range Area (km²)
-      th.numeric % of Regional Range
-      th.numeric % of Range Assessed
+      th.numeric Estimate/Number Seen
+      th.numeric &plusmn; 95% CL
+      th.numeric From
+      th.numeric To
+      th.numeric Area (km²)
+      th.numeric % Regional
+      th.numeric % Assessed
       th.numeric IQI<sup>1</sup>
       th.numeric PFS<sup>2</sup>
     - @alt_countries.each do |row|
@@ -20,14 +30,14 @@
               a href=("#{@region.gsub(' ','_')}/#{u row['country'].gsub(' ','_')}") = row['country']
             - else
               a href=("#{@region.gsub(' ','_')}/#{u row['country'].gsub(' ','_')}") = row['country'] 
-          - ['ESTIMATE','RANGE_AREA','PERCENT_OF_RANGE_COVERED','PERCENT_OF_RANGE_ASSESSED'].each do |key|
+          - ['ESTIMATE','CONFIDENCE','GUESS_MIN','GUESS_MAX','RANGE_AREA','PERCENT_OF_RANGE_COVERED','PERCENT_OF_RANGE_ASSESSED'].each do |key|
             = add_and_display_cell row, key, totals, round: false
           = add_and_display_cell row, 'IQI', totals, precision: 2
           = add_and_display_cell row, 'PFS', totals
     - @alt_country_sums.each do |row|
       tr.totals style=('height: 24px; font-weight: bold') 
         td Totals
-        - ['ESTIMATE','RANGE_AREA','PERCENT_OF_RANGE_COVERED','PERCENT_OF_RANGE_ASSESSED'].each do |key|
+        - ['ESTIMATE','CONFIDENCE','GUESS_MIN','GUESS_MAX','RANGE_AREA','PERCENT_OF_RANGE_COVERED','PERCENT_OF_RANGE_ASSESSED'].each do |key|
           = numeric_cell row[key]
         = numeric_cell row['IQI'], precision: 2
         = numeric_cell row['PFS']
