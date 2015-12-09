@@ -34,7 +34,8 @@
 
     = render 'table_area_of_range_covered', totals: @area_of_range_covered_by_continent, sums: @area_of_range_covered_sum_by_continent
 
-    = render 'table_continental_regional_data_quality', preview: true
+    = render 'tabs', id: 'data-quality', tabs: [ { title: 'DPPS Calculations', template: 'table_continental_regional_data_quality', args: { preview: true } },
+      { admin: true, title: 'Alternate', template: 'table_continental_regional_data_quality_add', args: { preview: true } } ]
 
     == footnote
 
