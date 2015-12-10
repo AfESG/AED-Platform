@@ -29,7 +29,7 @@ if target == 'STAGING'
   default_environment['UNICORN_PORT'] = '4000'
   default_environment['POSTGRESQL_DATABASE'] = 'aed_staging'
   default_environment['HOSTNAME'] = 'staging.elephantdatabase.org'
-  default_environment['authenticate_all_requests'] = 'practicum'
+  default_environment['authenticate_all_requests'] = 'cop17'
   set :deploy_to, '/u/staging'
 end
 
