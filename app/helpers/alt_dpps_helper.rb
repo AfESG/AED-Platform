@@ -91,7 +91,7 @@ module AltDppsHelper
         SELECT
           category, region, country, sum(area_sqkm) as "AREA"
         FROM
-          survey_range_intersection_metrics sm
+          survey_range_intersection_metrics_add sm
         WHERE
           analysis_year = #{@year}
           #{analysis_name}
@@ -116,7 +116,7 @@ module AltDppsHelper
         SELECT
           category, region, sum(area_sqkm) as "AREA"
         FROM
-          survey_range_intersection_metrics sm
+          survey_range_intersection_metrics_add sm
         WHERE
           analysis_year = #{@year}
           #{analysis_name}
@@ -141,7 +141,7 @@ module AltDppsHelper
         SELECT
           category, sum(area_sqkm) as "AREA"
         FROM
-          survey_range_intersection_metrics sm
+          survey_range_intersection_metrics_add sm
         WHERE
           analysis_year = #{@year}
           #{analysis_name}
