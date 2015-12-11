@@ -165,7 +165,9 @@ class ReportController < ApplicationController
     @preview_title = official_title(@filter) or @filter.humanize.upcase
 
     @alt_summary_totals = execute alt_dpps("1=1", @year, @filter)
-    @alt_areas          = execute alt_dpps_region_area("1=1", @year, @filter)
+    @alt_areas          = execute alt_dpps_continent_area("1=1", @year, @filter)
+    @alt_regions        = execute alt_dpps_continental_stats("1=1", @year, @filter)
+    @alt_regions_sums   = execute alt_dpps_continental_stats_sums("1=1", @year, @filter)
 
     @summary_totals_by_continent = execute totalizer("1=1",@filter,@year)
     @baseline_total = execute <<-SQL, @continent

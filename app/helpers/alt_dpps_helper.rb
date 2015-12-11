@@ -91,7 +91,7 @@ module AltDppsHelper
         SELECT
           category, region, country, sum(area_sqkm) as "AREA"
         FROM
-          survey_range_intersection_metrics sm
+          survey_range_intersection_metrics_add sm
         WHERE
           analysis_year = #{@year}
           #{analysis_name}
@@ -116,7 +116,7 @@ module AltDppsHelper
         SELECT
           category, region, sum(area_sqkm) as "AREA"
         FROM
-          survey_range_intersection_metrics sm
+          survey_range_intersection_metrics_add sm
         WHERE
           analysis_year = #{@year}
           #{analysis_name}
@@ -124,6 +124,31 @@ module AltDppsHelper
         GROUP BY category, region
       ) a
       JOIN regional_range_totals rt ON rt.region = a.region
+      ORDER BY category
+    SQL
+  end
+
+  def alt_dpps_continent_area scope, year, filter=nil
+    analysis_name = filter.nil?? '' : "AND analysis_name = '#{filter}'"
+    <<-SQL
+      SELECT 
+        a.category,
+        a."AREA",
+        a."AREA" / rt.range_area * 100 as "CATEGORY_RANGE_ASSESSED",
+        rt.range_area,
+        rt.percent_range_assessed
+      FROM (
+        SELECT
+          category, sum(area_sqkm) as "AREA"
+        FROM
+          survey_range_intersection_metrics_add sm
+        WHERE
+          analysis_year = #{@year}
+          #{analysis_name}
+          AND #{scope}
+        GROUP BY category
+      ) a
+      JOIN continental_range_totals rt ON rt.continent = 'Africa'
       ORDER BY category
     SQL
   end
@@ -208,6 +233,80 @@ module AltDppsHelper
       WHERE
         p.#{scope}
       ORDER BY country
+    SQL
+  end
+
+  def alt_dpps_continental_stats scope, year, filter=nil
+    analysis_name = filter.nil?? '' : "AND x.analysis_name = '#{filter}'"
+    <<-SQL
+      SELECT
+        p.region,
+        "ESTIMATE",
+        "CONFIDENCE",
+        "GUESS_MIN",
+        "GUESS_MAX",
+        "ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX") as "PF",
+        "ASSESSED_RANGE" / "RANGE_AREA" as "ARF",
+        ("ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX")) * ("ASSESSED_RANGE" / "RANGE_AREA") AS "IQI",
+        ("RANGE_AREA" / cont.range_area) AS "CRF",
+        log((1+("ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX")) * ("ASSESSED_RANGE" / "RANGE_AREA")) / ("RANGE_AREA" / cont.range_area)) AS "PFS",
+        "ASSESSED_RANGE",
+        "RANGE_AREA",
+        "RANGE_AREA" / cont.range_area * 100 AS "PERCENT_OF_RANGE_COVERED",
+        "ASSESSED_RANGE" / "RANGE_AREA" * 100 as "PERCENT_OF_RANGE_ASSESSED"
+      FROM (
+        SELECT
+          x.region,
+          sum(x."ESTIMATE") as "ESTIMATE",
+          1.96*sqrt(sum(x."POPULATION_VARIANCE")) AS "CONFIDENCE",
+          sum(x."GUESS_MIN") as "GUESS_MIN",
+          sum(x."GUESS_MAX") as "GUESS_MAX",
+          range_assessed as "ASSESSED_RANGE",
+          range_area as "RANGE_AREA"
+        FROM estimate_factors_analyses_categorized_totals_for_add x
+        JOIN regional_range_totals rt ON rt.region = x.region
+        WHERE
+          x.analysis_year = #{year}
+          #{analysis_name}
+        GROUP BY x.region, "RANGE_AREA", "ASSESSED_RANGE"
+      ) p
+      JOIN continental_range_totals cont ON continent = 'Africa'
+      ORDER BY region
+    SQL
+  end
+
+  def alt_dpps_continental_stats_sums scope, year, filter=nil
+    analysis_name = filter.nil?? '' : "AND x.analysis_name = '#{filter}'"
+    <<-SQL
+      SELECT
+        "ESTIMATE",
+        "CONFIDENCE",
+        "GUESS_MIN",
+        "GUESS_MAX",
+        "ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX") as "PF",
+        "ASSESSED_RANGE" / "RANGE_AREA" as "ARF",
+        ("ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX")) * ("ASSESSED_RANGE" / "RANGE_AREA") AS "IQI",
+        ("RANGE_AREA" / cont.range_area) AS "CRF",
+        log((1+("ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX")) * ("ASSESSED_RANGE" / "RANGE_AREA")) / ("RANGE_AREA" / cont.range_area)) AS "PFS",
+        "ASSESSED_RANGE",
+        "RANGE_AREA",
+        "RANGE_AREA" / cont.range_area * 100 AS "PERCENT_OF_RANGE_COVERED",
+        "ASSESSED_RANGE" / "RANGE_AREA" * 100 as "PERCENT_OF_RANGE_ASSESSED"
+      FROM (
+        SELECT
+          sum(x."ESTIMATE") as "ESTIMATE",
+          1.96*sqrt(sum(x."POPULATION_VARIANCE")) AS "CONFIDENCE",
+          sum(x."GUESS_MIN") as "GUESS_MIN",
+          sum(x."GUESS_MAX") as "GUESS_MAX",
+          sum(distinct range_assessed) as "ASSESSED_RANGE",
+          sum(distinct range_area) as "RANGE_AREA"
+        FROM estimate_factors_analyses_categorized_totals_for_add x
+        JOIN regional_range_totals rt ON rt.region = x.region
+        WHERE
+          x.analysis_year = #{year}
+          #{analysis_name}
+      ) p
+      JOIN continental_range_totals cont ON continent = 'Africa'
     SQL
   end
 

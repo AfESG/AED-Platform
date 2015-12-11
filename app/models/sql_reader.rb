@@ -9,7 +9,13 @@ class SqlReader
       break if stopped
 
       line = current.rstrip
+
+      if line.start_with? '##', '--'
+        next
+      end
+
       sql << line
+      sql << ' ' unless line.blank?
       if line.end_with?(';')
         found = true
         begin

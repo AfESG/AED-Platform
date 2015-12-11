@@ -1,7 +1,7 @@
 - preview = local_assigns[:preview] || false
 
-- if !@alt_countries.nil? && @alt_countries.num_tuples > 0
-  h2 Country and Regional Totals and Data Quality
+- if !@alt_regions.nil? && @alt_regions.num_tuples > 0
+  h2 Continental and Regional Totals and Data Quality
   - totals = {}
   table.table style='font-size:16px'
     tr
@@ -12,7 +12,7 @@
       th &nbsp;
       th &nbsp;
     tr
-      th Country
+      th Region
       th.numeric Estimate/Number Seen
       th.numeric &plusmn; 95% CL
       th.numeric From
@@ -22,22 +22,23 @@
       th.numeric % Assessed
       th.numeric IQI<sup>1</sup>
       th.numeric PFS<sup>2</sup>
-    - @alt_countries.each do |row|
+    - @alt_regions.each do |row|
       - unless row['RANGE_AREA'].nil?
         tr style=('height: 24px;')
           td
             - if preview
-              a href=("#{@region.gsub(' ','_')}/#{u row['country'].gsub(' ','_')}") = row['country']
+              a href=("/preview_report/#{@filter}/#{@species.gsub(' ','_')}/#{@year}/#{@continent}/#{row['region'].gsub(' ','_')}") = row['region']
             - else
-              a href=("#{@region.gsub(' ','_')}/#{u row['country'].gsub(' ','_')}") = row['country'] 
+              a href=("/report/#{@species.gsub(' ','_')}/#{@year}/#{@continent}/#{row['region'].gsub(' ','_')}") = row['region']
           - ['ESTIMATE','CONFIDENCE','GUESS_MIN','GUESS_MAX','RANGE_AREA','PERCENT_OF_RANGE_COVERED','PERCENT_OF_RANGE_ASSESSED'].each do |key|
             = add_and_display_cell row, key, totals, round: false
           = add_and_display_cell row, 'IQI', totals, precision: 2
           = add_and_display_cell row, 'PFS', totals
-    - @alt_country_sums.each do |row|
+    - @alt_regions_sums.each do |row|
       tr.totals style=('height: 24px; font-weight: bold') 
         td Totals
         - ['ESTIMATE','CONFIDENCE','GUESS_MIN','GUESS_MAX','RANGE_AREA','PERCENT_OF_RANGE_COVERED','PERCENT_OF_RANGE_ASSESSED'].each do |key|
           = numeric_cell row[key]
         = numeric_cell row['IQI'], precision: 2
-        = numeric_cell row['PFS']
+        td
+        /= numeric_cell row['PFS']

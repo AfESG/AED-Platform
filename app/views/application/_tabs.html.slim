@@ -1,0 +1,20 @@
+- id = "tab-section-#{local_assigns[:id] || 0}"
+- tabs = local_assigns[:tabs] || []
+
+- tabs = tabs.reject { |tab| tab[:admin] && (current_user.nil? || !current_user.admin?) }
+
+- if tabs.any?
+  - if tabs.count == 1
+    - tab = tabs.first
+    - args = tab[:args] || {}
+    = render tab[:template], args
+  - else
+    div style='margin-top:20px'
+      ul.nav.nav-tabs role='tablist'
+        - tabs.each_with_index do |tab, index|
+          li class=(index == 0 ? 'active' : nil)
+            = link_to tab[:title], "##{id}-page-#{index}", 'aria-controls': "#{id}-page-#{index}", role: 'tab', 'data-toggle': 'tab'
+      .tab-content
+        - tabs.each_with_index do |tab, index|
+          .tab-pane id=("#{id}-page-#{index}") class=(index == 0 ? 'active' : nil) role='tabpanel'
+            = render tab[:template], (tab[:args] || {})
