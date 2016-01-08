@@ -4,11 +4,6 @@ class Analysis < ActiveRecord::Base
 
   has_many :input_zones, class_name: 'Change'
 
-  attr_accessible(
-    :analysis,
-    :analysis_name,
-    :analysis_year,
-    :comparison_year
-  )
+  attr_protected :created_at, :updated_at
 
 end

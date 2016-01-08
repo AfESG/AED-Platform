@@ -48,7 +48,7 @@ class AnalysesController < ApplicationController
     respond_to do |format|
       if @analysis.save
         format.html { redirect_to @analysis, notice: 'Analysis was successfully created.' }
-        format.json { render json: @analysis, status: :created, location: @Analysis }
+        format.json { render json: @analysis, status: :created, location: @analysis }
       else
         format.html { render action: "new" }
         format.json { render json: @analysis.errors, status: :unprocessable_entity }
@@ -62,7 +62,7 @@ class AnalysesController < ApplicationController
     @analysis = Analysis.find(params[:id])
 
     respond_to do |format|
-      if @analysis.update_attributes(params[:Analysis])
+      if @analysis.update_attributes(params[:analysis])
         format.html { redirect_to @analysis, notice: 'Analysis was successfully updated.' }
         format.json { head :no_content }
       else
