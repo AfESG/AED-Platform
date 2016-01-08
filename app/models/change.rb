@@ -2,6 +2,8 @@ class Change < ActiveRecord::Base
 
   has_paper_trail
 
+  belongs_to :analysis
+
   attr_accessible(
     :change,
     :analysis_name,
