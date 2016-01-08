@@ -1,0 +1,22 @@
+.row
+  .col-xs-12
+    h1= t('.title')
+    p= link_to t('.new'), new_analysis_path
+
+    table.table
+      thead
+        tr
+          th= Analysis.human_attribute_name :analysis_name
+          th= Analysis.human_attribute_name :analysis_year
+          th= Analysis.human_attribute_name :comparison_year
+          th colspan=3 = t 'actions'
+      
+      tbody
+        - for analysis in @analyses
+          tr  class=cycle(:odd, :even)  
+            td= analysis.analysis_name
+            td= analysis.analysis_year
+            td= analysis.comparison_year
+            td.action= link_to t('show'), analysis
+            td.action= link_to t('edit'), edit_analysis_path(analysis)
+            td.action= link_to t('destroy'), analysis, :confirm => t('are_you_sure'), :method => :delete

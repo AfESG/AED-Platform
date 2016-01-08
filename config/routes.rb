@@ -1,11 +1,14 @@
 Aaed::Application.routes.draw do
 
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
-  resources :changes
-
-  resources :report_narratives
 
   devise_for :users
+
+  resources :changes
+
+  resources :analyses
+
+  resources :report_narratives
 
   resources :users
 

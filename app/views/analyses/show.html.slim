@@ -1,0 +1,15 @@
+.row
+  .col-xs-12
+    h1= t '.title'
+    p
+      = link_to t('back'), analyses_path
+      = link_to t('edit'), edit_analysis_path(@analysis)
+      = link_to t('.new'), new_analysis_path
+
+    dl
+      dt= Analysis.human_attribute_name :analysis_name
+      dd= @analysis.analysis_name
+      dt= Analysis.human_attribute_name :analysis_year
+      dd= @analysis.analysis_year
+      dt= Analysis.human_attribute_name :comparison_year
+      dd= @analysis.comparison_year

@@ -20,7 +20,8 @@ class SqlReader
         found = true
         begin
           yield sql
-        rescue
+        rescue Exception => e
+          puts e.inspect
           puts "Failed on query: #{sql}"
           stopped = true
         end

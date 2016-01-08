@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151124083100) do
+ActiveRecord::Schema.define(version: 20160108092640) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,10 +30,12 @@ ActiveRecord::Schema.define(version: 20151124083100) do
     t.geometry "survey_geometry",     limit: {:srid=>4326, :type=>"multi_polygon", :has_z=>true, :has_m=>true}
   end
 
-  create_table "analyses", primary_key: "analysis_id", force: :cascade do |t|
-    t.text    "analysis_name"
-    t.integer "comparison_year"
-    t.integer "analysis_year"
+  create_table "analyses", force: :cascade do |t|
+    t.string   "analysis_name"
+    t.integer  "comparison_year"
+    t.integer  "analysis_year"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "changes", force: :cascade do |t|
@@ -47,6 +49,7 @@ ActiveRecord::Schema.define(version: 20151124083100) do
     t.datetime "updated_at",                   null: false
     t.string   "country",          limit: 255
     t.integer  "analysis_id"
+    t.string   "status"
   end
 
   create_table "continent", primary_key: "gid", force: :cascade do |t|
@@ -169,7 +172,7 @@ ActiveRecord::Schema.define(version: 20151124083100) do
   end
 
   create_table "dpps_sums_continent_category", id: false, force: :cascade do |t|
-    t.text    "analysis_name"
+    t.string  "analysis_name"
     t.integer "analysis_year"
     t.string  "continent",     limit: 255
     t.text    "category"
@@ -180,7 +183,7 @@ ActiveRecord::Schema.define(version: 20151124083100) do
   end
 
   create_table "dpps_sums_continent_category_reason", id: false, force: :cascade do |t|
-    t.text    "analysis_name"
+    t.string  "analysis_name"
     t.integer "analysis_year"
     t.string  "continent",     limit: 255
     t.text    "category"
@@ -192,7 +195,7 @@ ActiveRecord::Schema.define(version: 20151124083100) do
   end
 
   create_table "dpps_sums_country_category", id: false, force: :cascade do |t|
-    t.text    "analysis_name"
+    t.string  "analysis_name"
     t.integer "analysis_year"
     t.string  "continent",     limit: 255
     t.string  "region",        limit: 255
@@ -205,7 +208,7 @@ ActiveRecord::Schema.define(version: 20151124083100) do
   end
 
   create_table "dpps_sums_country_category_reason", id: false, force: :cascade do |t|
-    t.text    "analysis_name"
+    t.string  "analysis_name"
     t.integer "analysis_year"
     t.string  "continent",     limit: 255
     t.string  "region",        limit: 255
@@ -219,7 +222,7 @@ ActiveRecord::Schema.define(version: 20151124083100) do
   end
 
   create_table "dpps_sums_region_category", id: false, force: :cascade do |t|
-    t.text    "analysis_name"
+    t.string  "analysis_name"
     t.integer "analysis_year"
     t.string  "continent",     limit: 255
     t.string  "region",        limit: 255
@@ -231,7 +234,7 @@ ActiveRecord::Schema.define(version: 20151124083100) do
   end
 
   create_table "dpps_sums_region_category_reason", id: false, force: :cascade do |t|
-    t.text    "analysis_name"
+    t.string  "analysis_name"
     t.integer "analysis_year"
     t.string  "continent",     limit: 255
     t.string  "region",        limit: 255
@@ -291,12 +294,6 @@ ActiveRecord::Schema.define(version: 20151124083100) do
     t.boolean  "in2015list"
   end
 
-  create_table "mike_sites2015", primary_key: "site_code", force: :cascade do |t|
-    t.integer "area"
-    t.string  "subregion",    limit: 2
-    t.string  "country_code", limit: 2
-  end
-
   create_table "population_submission_attachments", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -339,10 +336,7 @@ ActiveRecord::Schema.define(version: 20151124083100) do
     t.string   "short_citation",    limit: 255
     t.float    "latitude"
     t.float    "longitude"
-    t.integer  "mike_site"
   end
-
-  add_index "population_submissions", ["mike_site"], name: "fki_mike_site", using: :btree
 
   create_table "production_versions", id: false, force: :cascade do |t|
     t.integer  "id",                         default: "nextval('production_versions_id_seq'::regclass)", null: false
@@ -593,9 +587,9 @@ ActiveRecord::Schema.define(version: 20151124083100) do
     t.string   "phenotype",                 limit: 255
     t.string   "phenotype_basis",           limit: 255
     t.string   "data_type",                 limit: 255
-    t.string   "right_to_grant_permission", limit: 5
+    t.boolean  "right_to_grant_permission"
     t.string   "permission_email",          limit: 255
-    t.string   "is_mike_site",              limit: 5
+    t.boolean  "is_mike_site"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "species_id"
@@ -809,6 +803,19 @@ ActiveRecord::Schema.define(version: 20151124083100) do
     t.geometry "survey_geometry",     limit: {:srid=>0, :type=>"geometry"}
   end
 
+  create_table "survey_geometry_locator_buffered_add", id: false, force: :cascade do |t|
+    t.string   "site_name",           limit: 255
+    t.text     "analysis_name"
+    t.integer  "analysis_year"
+    t.string   "region",              limit: 255
+    t.text     "category"
+    t.string   "reason_change",       limit: 255
+    t.integer  "population_estimate"
+    t.string   "country",             limit: 255
+    t.text     "input_zone_id"
+    t.geometry "survey_geometry",     limit: {:srid=>0, :type=>"geometry"}
+  end
+
   create_table "survey_ground_sample_count_strata", force: :cascade do |t|
     t.integer  "survey_ground_sample_count_id"
     t.string   "stratum_name",                               limit: 255
@@ -918,7 +925,27 @@ ActiveRecord::Schema.define(version: 20151124083100) do
     t.float   "area_sqkm"
   end
 
+  create_table "survey_range_intersection_metrics_add", id: false, force: :cascade do |t|
+    t.text    "analysis_name"
+    t.integer "analysis_year"
+    t.string  "region",        limit: 255
+    t.string  "range_quality", limit: 10
+    t.text    "category"
+    t.string  "country",       limit: 255
+    t.float   "area_sqkm"
+  end
+
   create_table "survey_range_intersections", id: false, force: :cascade do |t|
+    t.text     "analysis_name"
+    t.integer  "analysis_year"
+    t.string   "region",          limit: 255
+    t.text     "category"
+    t.string   "country",         limit: 255
+    t.string   "range_quality",   limit: 10
+    t.geometry "st_intersection", limit: {:srid=>0, :type=>"geometry"}
+  end
+
+  create_table "survey_range_intersections_add", id: false, force: :cascade do |t|
     t.text     "analysis_name"
     t.integer  "analysis_year"
     t.string   "region",          limit: 255
@@ -932,62 +959,6 @@ ActiveRecord::Schema.define(version: 20151124083100) do
     t.string  "category",      limit: 8
     t.string  "surveytype",    limit: 255
     t.integer "display_order"
-  end
-
-  create_table "tracking_afESGstaff", id: false, force: :cascade do |t|
-    t.integer "ID"
-    t.string  "s_name",    limit: 255
-    t.string  "s_surname", limit: 255
-    t.string  "email",     limit: 255
-  end
-
-  create_table "tracking_comments", id: false, force: :cascade do |t|
-    t.integer  "ID"
-    t.text     "c_text"
-    t.datetime "c_date"
-    t.string   "support",   limit: 255
-    t.integer  "report_fk"
-  end
-
-  create_table "tracking_methods", id: false, force: :cascade do |t|
-    t.integer "ID"
-    t.string  "label", limit: 255
-    t.string  "code",  limit: 2
-  end
-
-  create_table "tracking_organizations", id: false, force: :cascade do |t|
-    t.integer "ID"
-    t.string  "o_name", limit: 255
-    t.string  "status", limit: 255
-  end
-
-  create_table "tracking_providers", id: false, force: :cascade do |t|
-    t.integer "ID"
-    t.string  "p_surname",       limit: 255
-    t.string  "p_name",          limit: 255
-    t.string  "email",           limit: 255
-    t.string  "drwg_member",     limit: 1
-    t.integer "organization_fk"
-  end
-
-  create_table "tracking_reports", id: false, force: :cascade do |t|
-    t.integer  "ID"
-    t.datetime "requested_date"
-    t.datetime "received_date"
-    t.string   "site_name",      limit: 255
-    t.integer  "survey_year"
-    t.string   "short_citation", limit: 255
-    t.string   "link_storage",   limit: 255
-    t.string   "survey_label",   limit: 255
-    t.string   "survey_status",  limit: 255
-    t.string   "AED",            limit: 1
-    t.string   "AEL",            limit: 1
-    t.string   "grant_census",   limit: 1
-    t.string   "data_licensing", limit: 255
-    t.integer  "provider_fk"
-    t.string   "submitter_name", limit: 255
-    t.integer  "country_fk"
-    t.integer  "method_fk"
   end
 
   create_table "users", force: :cascade do |t|
@@ -1047,20 +1018,18 @@ ActiveRecord::Schema.define(version: 20151124083100) do
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
   add_index "versions", ["transaction_id"], name: "index_versions_on_transaction_id", using: :btree
 
-  add_foreign_key "changes", "analyses", primary_key: "analysis_id", name: "fk_analysis"
-  add_foreign_key "countries", "regions", name: "fk_region"
+  add_foreign_key "changes", "analyses", name: "fk_analysis"
   add_foreign_key "population_submission_attachments", "population_submissions", name: "fk1_pop_submission"
-  add_foreign_key "population_submissions", "mike_sites", column: "mike_site", name: "fk_mike_site"
   add_foreign_key "population_submissions", "submissions", name: "submission_fk"
   add_foreign_key "species_range_state_countries", "species", name: "fk_species"
-  add_foreign_key "submissions", "mike_sites", name: "fk0_mike_site"
-  add_foreign_key "submissions", "species", name: "fk0_species"
-  add_foreign_key "submissions", "users", name: "fk0_user"
-  add_foreign_key "survey_aerial_sample_count_strata", "mike_sites", name: "fk_mike2"
+  add_foreign_key "submissions", "mike_sites", name: "fk1_mike_site"
+  add_foreign_key "submissions", "species", name: "fk1_species"
+  add_foreign_key "submissions", "users", name: "fk1_user"
+  add_foreign_key "survey_aerial_sample_count_strata", "mike_sites", name: "fk_mike1"
   add_foreign_key "survey_aerial_sample_count_strata", "survey_aerial_sample_counts", name: "fk_as"
   add_foreign_key "survey_aerial_sample_count_strata", "survey_geometries", name: "fk6_geom"
   add_foreign_key "survey_aerial_sample_counts", "population_submissions", name: "fk2_pop_submission"
-  add_foreign_key "survey_aerial_total_count_strata", "mike_sites", name: "fk_mike1"
+  add_foreign_key "survey_aerial_total_count_strata", "mike_sites", name: "fk_mike2"
   add_foreign_key "survey_aerial_total_count_strata", "survey_aerial_total_counts", name: "fk_at"
   add_foreign_key "survey_aerial_total_count_strata", "survey_geometries", name: "fk5_geom"
   add_foreign_key "survey_aerial_total_counts", "population_submissions", name: "fk3_pop_submission"
@@ -1077,7 +1046,7 @@ ActiveRecord::Schema.define(version: 20151124083100) do
   add_foreign_key "survey_ground_sample_count_strata", "survey_ground_sample_counts", name: "fk_gs"
   add_foreign_key "survey_ground_sample_counts", "population_submissions", name: "fk6_pop_submission"
   add_foreign_key "survey_ground_sample_counts", "population_submissions", name: "fk7_pop_submission"
-  add_foreign_key "survey_ground_total_count_strata", "mike_sites", name: "fk_mike7"
+  add_foreign_key "survey_ground_total_count_strata", "mike_sites", name: "fk_mike5"
   add_foreign_key "survey_ground_total_count_strata", "survey_geometries", name: "fk1_geom"
   add_foreign_key "survey_ground_total_count_strata", "survey_ground_total_counts", name: "fk_gt"
   add_foreign_key "survey_individual_registrations", "mike_sites", name: "fk_mike8"
