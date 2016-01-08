@@ -38,16 +38,6 @@ ActiveRecord::Schema.define(version: 20160108064142) do
     t.datetime "updated_at"
   end
 
-  create_table "bar", id: false, force: :cascade do |t|
-    t.text    "analysis_name"
-    t.integer "analysis_year"
-    t.string  "region",        limit: 255
-    t.string  "range_quality", limit: 10
-    t.text    "category"
-    t.string  "country",       limit: 255
-    t.float   "area_sqkm"
-  end
-
   create_table "changes", force: :cascade do |t|
     t.string   "analysis_name",    limit: 255
     t.integer  "analysis_year"
@@ -253,16 +243,6 @@ ActiveRecord::Schema.define(version: 20160108064142) do
     t.float   "probable"
     t.float   "possible"
     t.float   "speculative"
-  end
-
-  create_table "foo", id: false, force: :cascade do |t|
-    t.text    "analysis_name"
-    t.integer "analysis_year"
-    t.string  "region",        limit: 255
-    t.string  "range_quality", limit: 10
-    t.text    "category"
-    t.string  "country",       limit: 255
-    t.float   "area_sqkm"
   end
 
   create_table "inputzone_2013_africa_final4b", primary_key: "gid", force: :cascade do |t|
@@ -932,16 +912,6 @@ ActiveRecord::Schema.define(version: 20160108064142) do
     t.boolean  "informed"
     t.integer  "survey_geometry_id"
     t.string   "web_id"
-  end
-
-  create_table "survey_range_equator_countries", id: false, force: :cascade do |t|
-    t.text    "analysis_name"
-    t.integer "analysis_year"
-    t.string  "region",        limit: 255
-    t.string  "range_quality", limit: 10
-    t.text    "category"
-    t.string  "country",       limit: 255
-    t.float   "area_sqkm"
   end
 
   create_table "survey_range_intersection_metrics", id: false, force: :cascade do |t|
