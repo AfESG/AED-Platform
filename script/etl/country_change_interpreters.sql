@@ -143,7 +143,6 @@ order by
 ;
 
 --- Statify the pooled base query; it's too slow to run in realtime
-drop view if exists dpps_sums_country_category cascade;
 drop table if exists dpps_sums_country_category cascade;
 create table dpps_sums_country_category as select * from i_dpps_sums_country_category;
 
@@ -288,11 +287,10 @@ order by
 ;
 
 --- Statify the reason base query; it's too slow to run in realtime
-drop view if exists dpps_sums_country_category_reason cascade;
 drop table if exists dpps_sums_country_category_reason cascade;
 create table dpps_sums_country_category_reason as select * from i_dpps_sums_country_category_reason;
 
-drop view fractional_causes_of_change_by_country;
+drop view if exists fractional_causes_of_change_by_country;
 create view fractional_causes_of_change_by_country as
 select
   g.analysis_name,
@@ -309,7 +307,7 @@ join aed2007."CausesOfChange" on
 group by g.analysis_name, g.analysis_year, g.country, display_order, "CauseofChange"
 order by g.analysis_name, g.analysis_year, g.country, display_order, "CauseofChange";
 
-drop view causes_of_change_by_country;
+drop view if exists causes_of_change_by_country;
 create view causes_of_change_by_country as
 select
   analysis_name,
@@ -322,7 +320,7 @@ select
   round(specul) specul
 from fractional_causes_of_change_by_country;
 
-drop view causes_of_change_sums_by_country;
+drop view if exists causes_of_change_sums_by_country;
 create view causes_of_change_sums_by_country as
 select
   analysis_name,
@@ -353,7 +351,7 @@ join actual_diff_country a
   and a.country= c.country
 ;
 
-drop view causes_of_change_by_country_scaled;
+drop view if exists causes_of_change_by_country_scaled;
 create view causes_of_change_by_country_scaled as
 select
   c.analysis_name,

@@ -132,7 +132,6 @@ order by
 ;
 
 --- Statify the pooled base query; it's too slow to run in realtime
-drop view if exists dpps_sums_region_category cascade;
 drop table if exists dpps_sums_region_category cascade;
 create table dpps_sums_region_category as select * from i_dpps_sums_region_category;
 
@@ -266,11 +265,10 @@ order by
 ;
 
 --- Statify the reason base query; it's too slow to run in realtime
-drop view if exists dpps_sums_region_category_reason cascade;
 drop table if exists dpps_sums_region_category_reason cascade;
 create table dpps_sums_region_category_reason as select * from i_dpps_sums_region_category_reason;
 
-drop view fractional_causes_of_change_by_region;
+drop view if exists fractional_causes_of_change_by_region;
 create view fractional_causes_of_change_by_region as
 select
   g.analysis_name,
@@ -287,7 +285,7 @@ join aed2007."CausesOfChange" on
 group by g.analysis_name, g.analysis_year, g.region, display_order, "CauseofChange"
 order by g.analysis_name, g.analysis_year, g.region, display_order, "CauseofChange";
 
-drop view causes_of_change_by_region;
+drop view if exists causes_of_change_by_region;
 create view causes_of_change_by_region as
 select
   analysis_name,
@@ -300,7 +298,7 @@ select
   round(specul) specul
 from fractional_causes_of_change_by_region;
 
-drop view causes_of_change_sums_by_region;
+drop view if exists causes_of_change_sums_by_region;
 create view causes_of_change_sums_by_region as
 select
   analysis_name,
@@ -331,7 +329,7 @@ join actual_diff_region a
   and a.region = c.region
 ;
 
-drop view causes_of_change_by_region_scaled;
+drop view if exists causes_of_change_by_region_scaled;
 create view causes_of_change_by_region_scaled as
 select
   c.analysis_name,

@@ -397,11 +397,11 @@ select
   END lcl95,
   CASE
 
-    --- old surveys always 'E' ---
+    /* old surveys always 'E' */
 
     WHEN age>=10 THEN 'E'
 
-    --- dung counts ---
+    /*  dung counts */
 
     WHEN estimate_type='DC' THEN
       CASE
@@ -413,26 +413,26 @@ select
     WHEN estimate_type='GD' AND analysis_year>2007 THEN 'A'
     WHEN estimate_type='GD' AND analysis_year<=2007 THEN 'C'
 
-    --- totals ---
+    /* totals */
 
     WHEN (estimate_type='AT' or estimate_type='GT') THEN 'A'
 
-    --- samples--
+    /* samples */
 
     WHEN (estimate_type='AS' or estimate_type='GS') THEN
       CASE WHEN population_variance IS NOT NULL THEN 'B' ELSE 'D' END
 
-    --- individual registrations ---
+    /* individual registrations */
 
     WHEN estimate_type='IR' THEN
       CASE WHEN quality_level = 1 THEN 'A' ELSE 'D' END
 
-    --- others ---
+    /*  others */
 
     WHEN estimate_type='O' THEN
       CASE WHEN quality_level = 1 THEN 'D' ELSE 'E' END
 
-    --- a meaningless value 'F' for anything that fell through --
+    /* a meaningless value 'F' for anything that fell through */
 
     ELSE 'F'
 
