@@ -1,15 +1,8 @@
-###
-### clean geometries
-###
+update range_geometries set geometry=ST_MakeValid(geometry) where not ST_IsValid(geometry);
 
-update country set geom=ST_Multi(ST_CollectionExtract(ST_MakeValid(geom), 3));
-update range_geometries set geometry=ST_Multi(ST_CollectionExtract(ST_MakeValid(geometry), 3));
-update survey_geometries set geometry=ST_Multi(ST_CollectionExtract(ST_MakeValid(geometry), 3));
-update survey_geometries set geom=geometry;
-
-###
-### static geo queries
-###
+--
+-- static geo queries
+--
 
 drop table if exists country_range;
 create table country_range as select c.cntryname country, g.range, g.rangequali range_quality, ST_MakeValid(ST_Multi(ST_CollectionExtract(ST_Intersection(geometry,geom),3))) range_geometry from range_geometries g, country c where ST_Intersects(geometry,geom);
@@ -18,9 +11,9 @@ create index si_country_range on country_range using gist (range_geometry);
 drop table if exists country_range_metrics cascade;
 create table country_range_metrics as select 'Africa'::text continent, region, country, range, range_quality, SUM(ST_Area(range_geometry::geography,true))/1000000 area_sqkm from country_range join country on cntryname=country where range=1 group by region, country, range, range_quality order by region, country, range, range_quality;
 
-###
-### derived metrics
-###
+--
+-- derived metrics
+--
 
 drop view if exists regional_range_metrics;
 create or replace view regional_range_metrics as select continent, region, range, range_quality, SUM(area_sqkm) area_sqkm from country_range_metrics group by continent, region, range, range_quality;
@@ -31,9 +24,9 @@ create or replace view continental_range_metrics as select continent, range, ran
 drop view if exists survey_geometry_locator;
 create or replace view survey_geometry_locator as select distinct site_name, analysis_name, analysis_year, region, category, reason_change, population_estimate, country, input_zone_id, geom as survey_geometry from estimate_locator, import_geometries where input_zone=input_zone_id and geom is not null;
 
-###
-### survey range intersections: static, expensive
-###
+--
+-- survey range intersections: static, expensive
+--
 
 drop table if exists survey_range_intersections;
 create table survey_range_intersections as select analysis_name, analysis_year, region, category, l.country, range_quality, ST_Intersection(ST_MakeValid(ST_Force2D(survey_geometry)),ST_MakeValid(ST_Force2D(range_geometry))) from survey_geometry_locator l join country_range c on ST_Intersects(survey_geometry,range_geometry) where range=1;
@@ -41,9 +34,9 @@ create table survey_range_intersections as select analysis_name, analysis_year, 
 drop table if exists survey_range_intersection_metrics cascade;
 create table survey_range_intersection_metrics as select analysis_name, analysis_year, region, range_quality, category, country, ST_Area(st_intersection::geography,true)/1000000 area_sqkm from survey_range_intersections;
 
-###
-### range study queries
-###
+--
+-- range study queries
+--
 
 drop table if exists review_range;
 create table review_range as select s.* from survey_geometry_locator s where analysis_name='2013_africa_final' and analysis_year='2013' and ((reason_change='NP' and population_estimate=0) or (reason_change='RS' and population_estimate=0) or (reason_change='NG' and population_estimate=0) or (reason_change='DA') or (reason_change='DD'));
@@ -51,9 +44,9 @@ create table review_range as select s.* from survey_geometry_locator s where ana
 drop table if exists add_range;
 create table add_range as select s.* from survey_geometry_locator s where analysis_name='2013_africa_final' and analysis_year='2013' and ((reason_change='NP' and population_estimate>0) or (reason_change='NG' and population_estimate>0) or (reason_change='NG' and population_estimate>0));
 
-###
-### Area of range tables
-###
+--
+-- Area of range tables
+--
 
 drop view if exists area_of_range_extant cascade;
 create or replace view area_of_range_extant as
@@ -224,9 +217,9 @@ select
   sum(total) total
 from area_of_range_covered_totals;
 
-###
-### Regional and continental range tables
-###
+--
+-- Regional and continental range tables
+--
 
 drop view if exists regional_range_table;
 create or replace view regional_range_table as
