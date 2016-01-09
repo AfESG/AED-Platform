@@ -2,4 +2,17 @@
   .col-xs-12
     h1= t '.title'
     p= link_to t('back'), analyses_path
-    = render 'form'
+    = semantic_form_for @analysis do |f|
+      ' Copy baseline from:
+      select name='copy_from'
+        option value=''
+          ' None - leave blank
+        - Analysis.order(:analysis_name).each do |source|
+          option value=source.analysis_name
+            = source.analysis_name
+      = f.inputs do
+        = f.input :analysis_name
+        = f.input :analysis_year
+        = f.input :comparison_year
+      = f.actions do
+        = f.submit

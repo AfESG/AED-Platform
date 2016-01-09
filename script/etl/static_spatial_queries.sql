@@ -1,51 +1,21 @@
-alter table inputzone_2013_africa_final4b add column survey_geo integer;
-update inputzone_2013_africa_final4b set survey_geo=0;
-
-delete from survey_geometries;
-insert into survey_geometries (id,geometry) select distinct survey_geo::integer, geom from inputzone_2013_africa_final4b;
-select setval('survey_geometry_id_seq',0) from survey_geometries;
-insert into survey_geometries select nextval('survey_geometry_id_seq'), geom from (select distinct geom from inputzone_2013_africa_final4b where survey_geo::integer = 0 and geom is not null) s;
-update inputzone_2013_africa_final4b set survey_geo=survey_geometries.id from survey_geometries where ST_Text(geom) = ST_Text(geometry) and survey_geo::integer =0;
-
-create or replace view import_geometries as select unnest(regexp_split_to_array(input_zone::text, ','::text)) as input_zone, survey_geo::integer, geom from inputzone_2013_africa_final4b;
-update survey_ground_total_count_strata s set survey_geometry_id=survey_geo from (select substr(input_zone,3)::integer id, survey_geo from import_geometries where input_zone like 'GT%' and survey_geo is not null) i where s.id=i.id;
-update survey_dung_count_line_transect_strata s set survey_geometry_id=survey_geo from (select substr(input_zone,3)::integer id, survey_geo from import_geometries where input_zone like 'DC%' and survey_geo is not null) i where s.id=i.id;
-update survey_aerial_total_count_strata s set survey_geometry_id=survey_geo from (select substr(input_zone,3)::integer id, survey_geo from import_geometries where input_zone like 'AT%' and survey_geo is not null) i where s.id=i.id;
-update survey_aerial_sample_count_strata s set survey_geometry_id=survey_geo from (select substr(input_zone,3)::integer id, survey_geo from import_geometries where input_zone like 'AS%' and survey_geo is not null) i where s.id=i.id;
-update survey_ground_sample_count_strata s set survey_geometry_id=survey_geo from (select substr(input_zone,3)::integer id, survey_geo from import_geometries where input_zone like 'GS%' and survey_geo is not null) i where s.id=i.id;
-update survey_faecal_dna_strata s set survey_geometry_id=survey_geo from (select substr(input_zone,3)::integer id, survey_geo from import_geometries where input_zone like 'GD%' and survey_geo is not null) i where s.id=i.id;
-update survey_individual_registrations s set survey_geometry_id=survey_geo from (select substr(input_zone,3)::integer id, survey_geo from import_geometries where input_zone like 'IR%' and survey_geo is not null) i where s.id=i.id;
-update survey_others s set survey_geometry_id=survey_geo from (select substr(input_zone,2)::integer id, survey_geo from import_geometries where input_zone like 'O%' and survey_geo is not null) i where s.id=i.id;
-
 ###
-### now unused tables (replaced by views)
+### clean geometries
 ###
 
-drop table continental_oversimplified_range;
-drop table regional_simplified_range;
-drop table continental_simplified_range;
-drop table country_simplified_range;
-drop table regional_range_metrics;
-drop table continental_range_metrics;
-drop table survey_geometry_locator;
-drop table area_of_range_extant;
-drop table area_of_range_covered;
-drop table area_of_range_covered_subtotals;
-drop table area_of_range_covered_unassessed;
-drop table area_of_range_covered_totals;
-drop table regional_range_table;
-drop table regional_range_totals;
-drop table continental_range_table;
-drop table continental_range_totals;
+update country set geom=ST_Multi(ST_CollectionExtract(ST_MakeValid(geom), 3));
+update range_geometries set geometry=ST_Multi(ST_CollectionExtract(ST_MakeValid(geometry), 3));
+update survey_geometries set geometry=ST_Multi(ST_CollectionExtract(ST_MakeValid(geometry), 3));
+update survey_geometries set geom=geometry;
 
 ###
 ### static geo queries
 ###
 
-drop table country_range;
-create table country_range as select c.cntryname country, g.range, g.rangequali range_quality, ST_Buffer(ST_SetSRID(ST_Intersection(ST_SetSRID(geometry,4326),ST_SetSRID(geom,4326)),4326),0.0) range_geometry from range_geometries g, country c where ST_Intersects(ST_SetSRID(geometry,4326),ST_SetSRID(geom,4326));
+drop table if exists country_range;
+create table country_range as select c.cntryname country, g.range, g.rangequali range_quality, ST_MakeValid(ST_Multi(ST_CollectionExtract(ST_Intersection(geometry,geom),3))) range_geometry from range_geometries g, country c where ST_Intersects(geometry,geom);
+create index si_country_range on country_range using gist (range_geometry);
 
-drop table country_range_metrics cascade;
+drop table if exists country_range_metrics cascade;
 create table country_range_metrics as select 'Africa'::text continent, region, country, range, range_quality, SUM(ST_Area(range_geometry::geography,true))/1000000 area_sqkm from country_range join country on cntryname=country where range=1 group by region, country, range, range_quality order by region, country, range, range_quality;
 
 ###
@@ -65,23 +35,20 @@ create or replace view survey_geometry_locator as select distinct site_name, ana
 ### survey range intersections: static, expensive
 ###
 
-drop table survey_geometry_locator_buffered;
-create table survey_geometry_locator_buffered as select site_name, analysis_name, analysis_year, region, category, reason_change, population_estimate, country, input_zone_id, ST_Buffer(survey_geometry,0.000000001) survey_geometry from survey_geometry_locator;
+drop table if exists survey_range_intersections;
+create table survey_range_intersections as select analysis_name, analysis_year, region, category, l.country, range_quality, ST_Intersection(ST_MakeValid(ST_Force2D(survey_geometry)),ST_MakeValid(ST_Force2D(range_geometry))) from survey_geometry_locator l join country_range c on ST_Intersects(survey_geometry,range_geometry) where range=1;
 
-drop table survey_range_intersections;
-create table survey_range_intersections as select analysis_name, analysis_year, region, category, l.country, range_quality, ST_Intersection(survey_geometry,range_geometry) from survey_geometry_locator_buffered l join country_range c on ST_Intersects(survey_geometry,range_geometry) where range=1;
-
-drop table survey_range_intersection_metrics cascade;
+drop table if exists survey_range_intersection_metrics cascade;
 create table survey_range_intersection_metrics as select analysis_name, analysis_year, region, range_quality, category, country, ST_Area(st_intersection::geography,true)/1000000 area_sqkm from survey_range_intersections;
 
 ###
 ### range study queries
 ###
 
-drop table review_range;
+drop table if exists review_range;
 create table review_range as select s.* from survey_geometry_locator s where analysis_name='2013_africa_final' and analysis_year='2013' and ((reason_change='NP' and population_estimate=0) or (reason_change='RS' and population_estimate=0) or (reason_change='NG' and population_estimate=0) or (reason_change='DA') or (reason_change='DD'));
 
-drop table add_range;
+drop table if exists add_range;
 create table add_range as select s.* from survey_geometry_locator s where analysis_name='2013_africa_final' and analysis_year='2013' and ((reason_change='NP' and population_estimate>0) or (reason_change='NG' and population_estimate>0) or (reason_change='NG' and population_estimate>0));
 
 ###
@@ -324,5 +291,3 @@ from
 continental_range_table
 group by continent
 order by continent;
-
-
