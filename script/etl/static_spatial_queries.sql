@@ -1,5 +1,4 @@
 update range_geometries set geometry=ST_MakeValid(geometry) where not ST_IsValid(geometry);
-update survey_geometries set geom=geometry;
 
 --
 -- static geo queries
