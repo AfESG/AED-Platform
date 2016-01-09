@@ -43,10 +43,28 @@ class AnalysesController < ApplicationController
   # POST /analyses
   # POST /analyses.json
   def create
-    @analysis = Analysis.new(params[:Analysis])
+    @analysis = Analysis.new(params[:analysis])
 
     respond_to do |format|
       if @analysis.save
+        source = params[:copy_from]
+        p params
+        if source != ''
+          copied_changes = []
+          Change.where(analysis_name: source).each do |source_change|
+            copied_changes << {
+              analysis_name: @analysis.analysis_name,
+              analysis_year: source_change.analysis_year,
+              replacement_name: source_change.replacement_name,
+              replaced_strata: source_change.replaced_strata,
+              new_strata: source_change.new_strata,
+              country: source_change.country,
+              analysis: @analysis,
+              status: 'Needs review'
+            }
+          end
+          Change.create copied_changes
+        end
         format.html { redirect_to @analysis, notice: 'Analysis was successfully created.' }
         format.json { render json: @analysis, status: :created, location: @analysis }
       else

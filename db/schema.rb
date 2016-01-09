@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160108092640) do
+ActiveRecord::Schema.define(version: 20160109011529) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 20160108092640) do
 
   create_table "add_range", id: false, force: :cascade do |t|
     t.string   "site_name",           limit: 255
-    t.text     "analysis_name"
+    t.string   "analysis_name"
     t.integer  "analysis_year"
     t.string   "region",              limit: 255
     t.text     "category"
@@ -133,12 +133,16 @@ ActiveRecord::Schema.define(version: 20160108092640) do
     t.geometry "geom",       limit: {:srid=>4326, :type=>"multi_polygon"}
   end
 
+  add_index "country", ["geom"], name: "si_country_geom", using: :gist
+
   create_table "country_range", id: false, force: :cascade do |t|
     t.string   "country",        limit: 50
     t.decimal  "range",                                                precision: 10
     t.string   "range_quality",  limit: 10
     t.geometry "range_geometry", limit: {:srid=>0, :type=>"geometry"}
   end
+
+  add_index "country_range", ["range_geometry"], name: "si_country_range", using: :gist
 
   create_table "country_range_metrics", id: false, force: :cascade do |t|
     t.text    "continent"
@@ -389,6 +393,8 @@ ActiveRecord::Schema.define(version: 20160108092640) do
     t.geometry "geometry",   limit: {:srid=>4326, :type=>"multi_polygon"}
   end
 
+  add_index "range_geometries", ["geometry"], name: "si_range_geometry", using: :gist
+
   create_table "region", primary_key: "gid", force: :cascade do |t|
     t.string   "regionid",   limit: 254
     t.string   "region",     limit: 20
@@ -444,7 +450,7 @@ ActiveRecord::Schema.define(version: 20160108092640) do
 
   create_table "review_range", id: false, force: :cascade do |t|
     t.string   "site_name",           limit: 255
-    t.text     "analysis_name"
+    t.string   "analysis_name"
     t.integer  "analysis_year"
     t.string   "region",              limit: 255
     t.text     "category"
@@ -790,6 +796,9 @@ ActiveRecord::Schema.define(version: 20160108092640) do
     t.geometry "geom",     limit: {:srid=>0, :type=>"geometry"}
   end
 
+  add_index "survey_geometries", ["geom"], name: "si_survey_geom", using: :gist
+  add_index "survey_geometries", ["geometry"], name: "si_survey_geometry", using: :gist
+
   create_table "survey_geometry_locator_buffered", id: false, force: :cascade do |t|
     t.string   "site_name",           limit: 255
     t.text     "analysis_name"
@@ -805,7 +814,7 @@ ActiveRecord::Schema.define(version: 20160108092640) do
 
   create_table "survey_geometry_locator_buffered_add", id: false, force: :cascade do |t|
     t.string   "site_name",           limit: 255
-    t.text     "analysis_name"
+    t.string   "analysis_name"
     t.integer  "analysis_year"
     t.string   "region",              limit: 255
     t.text     "category"
@@ -915,8 +924,18 @@ ActiveRecord::Schema.define(version: 20160108092640) do
     t.string   "web_id"
   end
 
+  create_table "survey_range_equator_countries", id: false, force: :cascade do |t|
+    t.string  "analysis_name"
+    t.integer "analysis_year"
+    t.string  "region",        limit: 255
+    t.string  "range_quality", limit: 10
+    t.text    "category"
+    t.string  "country",       limit: 255
+    t.float   "area_sqkm"
+  end
+
   create_table "survey_range_intersection_metrics", id: false, force: :cascade do |t|
-    t.text    "analysis_name"
+    t.string  "analysis_name"
     t.integer "analysis_year"
     t.string  "region",        limit: 255
     t.string  "range_quality", limit: 10
@@ -926,7 +945,7 @@ ActiveRecord::Schema.define(version: 20160108092640) do
   end
 
   create_table "survey_range_intersection_metrics_add", id: false, force: :cascade do |t|
-    t.text    "analysis_name"
+    t.string  "analysis_name"
     t.integer "analysis_year"
     t.string  "region",        limit: 255
     t.string  "range_quality", limit: 10
@@ -936,7 +955,7 @@ ActiveRecord::Schema.define(version: 20160108092640) do
   end
 
   create_table "survey_range_intersections", id: false, force: :cascade do |t|
-    t.text     "analysis_name"
+    t.string   "analysis_name"
     t.integer  "analysis_year"
     t.string   "region",          limit: 255
     t.text     "category"
@@ -946,7 +965,7 @@ ActiveRecord::Schema.define(version: 20160108092640) do
   end
 
   create_table "survey_range_intersections_add", id: false, force: :cascade do |t|
-    t.text     "analysis_name"
+    t.string   "analysis_name"
     t.integer  "analysis_year"
     t.string   "region",          limit: 255
     t.text     "category"
