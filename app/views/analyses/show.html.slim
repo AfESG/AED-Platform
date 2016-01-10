@@ -7,11 +7,6 @@
     h1
       ' Replacements for
       = @analysis.analysis_name
-      |  (
-      = @analysis.comparison_year
-      '  to
-      = @analysis.analysis_year
-      ' )
   .col-xs-3 style='text-align: right'
     = link_to edit_analysis_path(@analysis), class: 'btn btn-sm btn-default'
       span.glyphicon.glyphicon-edit
