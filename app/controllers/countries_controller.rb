@@ -15,7 +15,8 @@ class CountriesController < ApplicationController
                 'uri' => "/#{stratum.class.name.pluralize.underscore}/#{stratum.id}",
                 'aed_name' => stratum.stratum_name,
                 'aed_area' => stratum.stratum_area,
-                'aed_estimate' => stratum.population_estimate
+                'aed_estimate' => stratum.population_estimate,
+                'aed_year' => population_submission.completion_year
               }
               features << feature
             end

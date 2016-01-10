@@ -15,6 +15,10 @@
 .RM_country_name {
   font-weight: bold;
 }
-.RM_clickable, {
+.RM_clickable {
   cursor: pointer;
+}
+.RM_comments textarea {
+  width: 100%;
+  height: 5em;
 }

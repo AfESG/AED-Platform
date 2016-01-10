@@ -36,20 +36,21 @@
               b Status
           .RM_country id="country_#{country.iso_code}"
             - Change.where(analysis_name: @analysis.analysis_name).where(country: country.iso_code).order(:replacement_name).each do |change|
-              .row.RM_change
-                .col-xs-3.replacement_name = change.replacement_name
-                .col-xs-3.replaced_strata
-                  == describe_change_strata(change.replaced_strata,@analysis.comparison_year)
-                .col-xs-3.new_strata
-                  == describe_change_strata(change.new_strata,@analysis.analysis_year)
-                .col-xs-1.reason_change
-                  .RM_rc_selector.RM_clickable
-                    = change.reason_change
-                .col-xs-2.status
-                  .RM_status_selector.RM_clickable
-                    = change.status
-              .row.RM_comments
-                = change.comments
+              .RM_change
+                .row
+                  .col-xs-3.replacement_name = change.replacement_name
+                  .col-xs-3.replaced_strata
+                    == describe_change_strata(change.replaced_strata,@analysis.comparison_year)
+                  .col-xs-3.new_strata
+                    == describe_change_strata(change.new_strata,@analysis.analysis_year)
+                  .col-xs-1.reason_change
+                    .RM_rc_selector.RM_clickable
+                      = change.reason_change
+                  .col-xs-2.status
+                    .RM_status_selector.RM_clickable
+                      = change.status
+                .row.RM_comments
+                  = change.comments
             .row.new
               .col-xs-12
                 .btn.btn-sm.btn-default
