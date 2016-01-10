@@ -13,78 +13,9 @@
         span.glyphicon.glyphicon-edit
         '  Edit name and years
 
-  = map container_id: "leaflet_map", center: {latlng: [-12.04, 18.59], zoom: 4}
-  javascript:
-    var survey_map = new L.geoJson();
-    // addition of scale
-    L.control.scale({position:'bottomleft', metric:true, imperial:false }).addTo(map);
-    function style(feature) {
-      return {color: "#007700","weight": 1,"opacity": 1,"fillColor": "#77ff77","fillOpacity": 0.6};
-    }
-    function onEachFeature(feature, layer) {
-      var popupContent = "<table>"
-      for (var key in feature.properties) {
-        if(key != 'uri'){
-          popupContent += "<tr><th>"+key+"</th><td>"+feature.properties[key]+"<td></tr>"
-        }
-      }
-      popupContent += "</table>"
-      if(feature.properties.aed_stratum) {
-        popupContent += "<div><a href='"+feature.properties.uri+"' target='_blank'>Open in new tab</a></div>"
-      }
-      layer.bindPopup(popupContent);
-    }
-    function style(feature) {
-      if(feature.geometry.properties.aed_stratum > 0) {
-        return {color: "#007700","weight": 1,"opacity": 1,"fillColor": "#77ff77","fillOpacity": 0.6};
-      } else {
-        return {color: "#770000","weight": 1,"opacity": 1,"fillColor": "#ff7777","fillOpacity": 0.6};
-      }
-    }
-    var country = undefined;
-    function map_country(iso_code) {
-      $('.country').hide()
-      $("#country_"+iso_code).show()
-      $.getJSON("/country/"+iso_code+"/map", function(data) {
-         if(country){
-           map.removeLayer(country);
-         }
-         country = L.geoJson(data, {style: style, onEachFeature: onEachFeature});
-         country.addTo(map);
-         map.fitBounds(country.getBounds());
-      });
-    }
-    function highlight_strata(strata) {
-      alert(strata)
-    }
-    function rc_selector(element) {
-      element.parentNode.innerHTML = '<select onchange="rc_selected(this)"><option>-</option><option>DA</option><option>DT</option><option>NG</option><option>NP</option><option>RS</option></select>'
-    }
-    function rc_selected(element) {
-      element.parentNode.innerHTML = element.value
-    }
-    function status_selector(element) {
-      element.parentNode.innerHTML = '<select onchange="status_selected(this)"><option>Needs review</option><option>In review</option><option>Reviewed</option></select><textarea>Comments</textarea>'
-    }
-    function status_selected(element) {
-      element.parentNode.innerHTML = element.value
-    }
-    function highlight_strata(strata) {
-      alert(strata)
-    }
-  css:
-    #leaflet_map {
-      height: 250px;
-    }
-    .tables {
-      height: 250px;
-      overflow: scroll;
-    }
-    .country {
-      display: none;
-    }
-
-  .tables
+  = map container_id: "RM_map", center: {latlng: [-12.04, 18.59], zoom: 4}
+      
+  .RM_tables
     - Region.order(:name).each do |region|
       .region data-regionid=region.id
         .row.region_indicator style='background: #dddddd'
@@ -93,7 +24,7 @@
         - region.countries.order(:name).each do |country|
           .row.country_indicator style='background: #eeeeee'
             .col-xs-3
-              b onclick="map_country('#{country.iso_code}')" style='cursor:pointer'
+              .RM_country_name.RM_clickable data-isocode='#{country.iso_code}'
                 =country.name
             .col-xs-3
               b= @analysis.comparison_year
@@ -103,22 +34,23 @@
               b Reason
             .col-xs-1
               b Status
-          .country id="country_#{country.iso_code}"
+          .RM_country id="country_#{country.iso_code}"
             - Change.where(analysis_name: @analysis.analysis_name).where(country: country.iso_code).order(:replacement_name).each do |change|
-              .row.change
-                .col-xs-3.replacement_name = change.replacement_name
-                .col-xs-3.replaced_strata
-                  div style='cursor:pointer' onclick='highlight_strata("#{change.replaced_strata}")'
+              .RM_change
+                .row
+                  .col-xs-3.replacement_name = change.replacement_name
+                  .col-xs-3.replaced_strata
                     == describe_change_strata(change.replaced_strata,@analysis.comparison_year)
-                .col-xs-3.new_strata
-                  div style='cursor:pointer' onclick='highlight_strata("#{change.new_strata}")'
+                  .col-xs-3.new_strata
                     == describe_change_strata(change.new_strata,@analysis.analysis_year)
-                .col-xs-1.reason_change
-                  div style='cursor:pointer' onclick='rc_selector(this)'
-                    = change.reason_change
-                .col-xs-2.status
-                  div style='cursor:pointer' onclick='status_selector(this)'
-                    = change.status
+                  .col-xs-1.reason_change
+                    .RM_rc_selector.RM_clickable
+                      = change.reason_change
+                  .col-xs-2.status
+                    .RM_status_selector.RM_clickable
+                      = change.status
+                .row.RM_comments
+                  = change.comments
             .row.new
               .col-xs-12
                 .btn.btn-sm.btn-default

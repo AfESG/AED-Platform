@@ -4,16 +4,32 @@ class CountriesController < ApplicationController
     features = []
     @country.submissions.each do |submission|
       submission.population_submissions.each do |population_submission|
-        next unless population_submission.counts[0]
-        population_submission.counts[0].strata.each do |stratum|
-          if stratum.survey_geometry
-            feature = RGeo::GeoJSON.encode(stratum.survey_geometry.geom)
+        count = population_submission.counts[0]
+        next unless count
+        if count.has_strata?
+          count.strata.each do |stratum|
+            if stratum.survey_geometry
+              feature = RGeo::GeoJSON.encode(stratum.survey_geometry.geom)
+              feature['properties'] = {
+                'aed_stratum' => "#{population_submission.survey_type}#{stratum.id}",
+                'uri' => "/#{stratum.class.name.pluralize.underscore}/#{stratum.id}",
+                'aed_name' => stratum.stratum_name,
+                'aed_area' => stratum.stratum_area,
+                'aed_estimate' => stratum.population_estimate,
+                'aed_year' => population_submission.completion_year
+              }
+              features << feature
+            end
+          end
+        else
+          if count.survey_geometry
+            feature = RGeo::GeoJSON.encode(count.survey_geometry.geom)
             feature['properties'] = {
-              'aed_stratum' => "#{population_submission.survey_type}#{stratum.id}",
-              'uri' => "/#{stratum.class.name.pluralize.underscore}/#{stratum.id}",
-              'aed_name' => stratum.stratum_name,
-              'aed_area' => stratum.stratum_area,
-              'aed_estimate' => stratum.population_estimate
+              'aed_stratum' => "#{population_submission.survey_type}#{count.id}",
+              'uri' => "/#{count.class.name.pluralize.underscore}/#{count.id}",
+              'aed_name' => population_submission.site_name,
+              'aed_area' => population_submission.area,
+              'aed_estimate' => (count.population_estimate rescue count.population_estimate_min)
             }
             features << feature
           end

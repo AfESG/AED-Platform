@@ -13,7 +13,8 @@ class Change < ActiveRecord::Base
     :replaced_strata,
     :new_strata,
     :reason_change,
-    :status
+    :status,
+    :comments
   )
 
 end
