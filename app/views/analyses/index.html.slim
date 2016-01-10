@@ -11,10 +11,12 @@
           th
       
       tbody
-        - for analysis in @analyses
+        - Analysis.order('analysis_year desc').each do |analysis|
           tr
             td
-              div= analysis.analysis_name
+              div
+                = link_to analysis
+                  = analysis.analysis_name
               div style='font-size: x-small; padding-left: 10px; padding-top: 5px'
                 div
                   ' Input zones: #{Change.where(analysis_name:analysis.analysis_name).count}
@@ -29,7 +31,7 @@
 
             td= analysis.analysis_year
             td= analysis.comparison_year
-            td
+            td style='text-align: right'
               = link_to analysis, class: 'btn btn-sm btn-default'
                 span.glyphicon.glyphicon-pencil
                 '  Manage Replacements 

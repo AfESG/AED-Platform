@@ -59,6 +59,7 @@ class AnalysesController < ApplicationController
               replaced_strata: source_change.replaced_strata,
               new_strata: source_change.new_strata,
               country: source_change.country,
+              reason_change: source_change.reason_change,
               analysis: @analysis,
               status: 'Needs review'
             }

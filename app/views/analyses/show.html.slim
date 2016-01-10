@@ -1,15 +1,49 @@
 .row
-  .col-xs-12
-    h1= t '.title'
-    p
-      = link_to t('back'), analyses_path
-      = link_to t('edit'), edit_analysis_path(@analysis)
-      = link_to t('.new'), new_analysis_path
+  .col-xs-3
+    = link_to analyses_path, class: 'btn btn-sm btn-default'
+      span.glyphicon.glyphicon-list
+      '  All analyses
+  .col-xs-6
+    h1
+      ' Replacements for
+      = @analysis.analysis_name
+      |  (
+      = @analysis.comparison_year
+      '  to
+      = @analysis.analysis_year
+      ' )
+  .col-xs-3 style='text-align: right'
+    = link_to edit_analysis_path(@analysis), class: 'btn btn-sm btn-default'
+      span.glyphicon.glyphicon-edit
+      '  Edit name and years
 
-    dl
-      dt= Analysis.human_attribute_name :analysis_name
-      dd= @analysis.analysis_name
-      dt= Analysis.human_attribute_name :analysis_year
-      dd= @analysis.analysis_year
-      dt= Analysis.human_attribute_name :comparison_year
-      dd= @analysis.comparison_year
+- Region.order(:name).each do |region|
+  .region data-regionid=region.id
+    .row.region_indicator style='background: #dddddd'
+      .col-xs-12
+        b= region.name
+    - region.countries.order(:name).each do |country|
+      .country data-countryid=country.id
+        .row.country_indicator style='background: #eeeeee'
+          .col-xs-3
+            b= country.name
+          .col-xs-3
+            b= @analysis.comparison_year
+          .col-xs-3
+            b= @analysis.analysis_year
+          .col-xs-1
+            b Reason
+          .col-xs-1
+            b Status
+        - Change.where(analysis_name: @analysis.analysis_name).where(country: country.iso_code).order(:replacement_name).each do |change|
+          .row.change
+            .col-xs-3.replacement_name = change.replacement_name
+            .col-xs-3.replaced_strata= change.replaced_strata.gsub(',',', ')
+            .col-xs-3.new_strata= change.new_strata.gsub(',',', ')
+            .col-xs-1.reason_change= change.reason_change
+            .col-xs-2.status= change.status
+        .row.new
+          .col-xs-12
+            .btn.btn-sm.btn-default
+              span.glyphicon.glyphicon-plus
+              '  Add Input Zone
