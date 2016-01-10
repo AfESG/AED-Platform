@@ -1,7 +1,6 @@
 .row
   .col-xs-12
-    h1= t('.title')
-    p= link_to t('.new'), new_analysis_path
+    h1 Replacement Manager
 
     table.table
       thead
@@ -9,14 +8,42 @@
           th= Analysis.human_attribute_name :analysis_name
           th= Analysis.human_attribute_name :analysis_year
           th= Analysis.human_attribute_name :comparison_year
-          th colspan=3 = t 'actions'
+          th
       
       tbody
-        - for analysis in @analyses
-          tr  class=cycle(:odd, :even)  
-            td= analysis.analysis_name
+        - Analysis.order('analysis_year desc').each do |analysis|
+          tr
+            td
+              div
+                = link_to analysis
+                  = analysis.analysis_name
+              div style='font-size: x-small; padding-left: 10px; padding-top: 5px'
+                div
+                  ' Input zones: #{Change.where(analysis_name:analysis.analysis_name).count}
+                - r = Change.where(analysis_name:analysis.analysis_name).where(status:'Needs review').count
+                - if r and r>0
+                  div
+                    ' Zones needing review: #{r}
+                - last_change = Change.where(analysis_name:analysis.analysis_name).order('updated_at DESC').first
+                - if last_change
+                  div
+                    ' Last update: #{time_ago_in_words(last_change.updated_at)} ago
+
             td= analysis.analysis_year
             td= analysis.comparison_year
-            td.action= link_to t('show'), analysis
-            td.action= link_to t('edit'), edit_analysis_path(analysis)
-            td.action= link_to t('destroy'), analysis, :confirm => t('are_you_sure'), :method => :delete
+            td style='text-align: right'
+              = link_to analysis, class: 'btn btn-sm btn-default'
+                span.glyphicon.glyphicon-pencil
+                '  Manage Replacements 
+              '  
+              = link_to "/preview_report/#{analysis.analysis_name}/Loxodonta_africana/#{analysis.analysis_year}/Africa", class: 'btn btn-sm btn-default'
+                span.glyphicon.glyphicon-list-alt
+                '  View Report
+            / deletion currently disabled, because danger.
+            / td.action= link_to t('destroy'), analysis, :confirm => t('are_you_sure'), :method => :delete
+
+    = link_to new_analysis_path, class: 'btn btn-sm btn-default'
+      span.glyphicon.glyphicon-plus-sign
+      '  Start New Analysis
+      
+    p 

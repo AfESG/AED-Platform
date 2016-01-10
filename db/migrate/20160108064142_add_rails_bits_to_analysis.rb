@@ -17,6 +17,7 @@ class AddRailsBitsToAnalysis < ActiveRecord::Migration
     run_file 'regional_change_interpreters.sql'
     run_file 'continental_change_interpreters.sql'
     run_file 'estimate_factors_analyses_categorized_for_add.3.sql'
+    run_file 'country_range_support.sql'
   end
 
   def down
@@ -31,7 +32,6 @@ class AddRailsBitsToAnalysis < ActiveRecord::Migration
     run_file 'regional_change_interpreters.sql'
     run_file 'continental_change_interpreters.sql'
     run_file 'estimate_factors_analyses_categorized_for_add.3.sql'
-    run_file 'country_range_support.sql'
   end
 
   def run_file file

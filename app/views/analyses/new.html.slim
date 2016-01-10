@@ -1,7 +1,6 @@
 .row
   .col-xs-12
-    h1= t '.title'
-    p= link_to t('back'), analyses_path
+    h1 Start New Analysis
     = semantic_form_for @analysis do |f|
       ' Copy baseline from:
       select name='copy_from'
@@ -10,9 +9,15 @@
         - Analysis.order(:analysis_name).each do |source|
           option value=source.analysis_name
             = source.analysis_name
+            
+      div style='margin-top: 10px'
+        ' Analysis name must be a token suitable for use in the URL.
+        ' Please use lowercase and don't include spaces.
+                
       = f.inputs do
         = f.input :analysis_name
         = f.input :analysis_year
         = f.input :comparison_year
       = f.actions do
-        = f.submit
+        = f.submit class:'btn btn-primary '
+p

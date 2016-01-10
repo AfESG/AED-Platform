@@ -66,6 +66,7 @@ Aaed::Application.routes.draw do
   get 'population_submission_attachments/download/:id' => 'population_submission_attachments#download'
   get 'population_submissions/:id/map' => 'population_submissions#geojson_map'
   get 'survey_geometry/:id/map' => 'survey_geometries#geojson_map'
+  get 'country/:iso_code/map' => 'countries#geojson_map'
 
   get 'data_request_forms/thanks' => 'data_request_forms#thanks'
 
