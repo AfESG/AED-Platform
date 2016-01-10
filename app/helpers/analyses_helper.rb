@@ -1,5 +1,25 @@
 module AnalysesHelper
 
+  def link_estimate(e)
+    out="<a target='_blank' href='"
+    mappings={
+      'AS' => '/survey_aerial_sample_count_strata/',
+      'AT' => '/survey_aerial_total_count_strata/',
+      'DC' => '/survey_dung_count_line_transect_strata/',
+      'GD' => '/survey_faecal_dna_strata/',
+      'GS' => '/survey_ground_sample_count_strata/',
+      'GT' => '/survey_ground_total_count_strata/',
+      'IR' => '/survey_individual_registrations/',
+      'O' => '/survey_others/'
+    }
+    u = "#{e}"
+    mappings.each do |code,uri|
+      u.gsub! code, uri
+    end
+    out << u
+    out << "'>#{e}</a>"
+  end
+
   def describe_change_strata(strata, year)
     return '-' if strata=='-' or strata==''
     out = ''
@@ -9,7 +29,7 @@ module AnalysesHelper
         out << "<div class='RM_stratum RM_clickable' data-stratum='#{input_zone_id}' data-year='#{year}'>"
         out << "<div>#{estimate['completion_year']} #{estimate['stratum_name']}</div>"
         out << "<div style='font-size: x-small'>#{estimate['short_citation']}</div>"
-        out << "<div style='font-size: x-small'>#{estimate['estimate_type']} / cat #{estimate['category']}: est. #{estimate['population_estimate']}, #{estimate['stratum_area']} km²</div>"
+        out << "<div style='font-size: x-small'>#{link_estimate(estimate['input_zone_id'])} / cat #{estimate['category']}: est. #{estimate['population_estimate']}, #{estimate['stratum_area']} km²</div>"
         out << "</div>"
       else
         out << input_zone_id+'@'+year.to_s+"?"

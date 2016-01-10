@@ -13,22 +13,20 @@ onEachFeature = (feature, layer) ->
   popupContent += "<div><a href='" + feature.properties.uri + "' target='_blank'>Open in new tab</a></div>"  if feature.properties.aed_stratum
   layer.bindPopup popupContent
 
-country = `undefined`
+country_layer = `undefined`
 
 map_country = (iso_code) ->
-  $(".country").hide()
+  $(".RM_country").hide()
   $("#country_" + iso_code).show()
   $.getJSON "/country/" + iso_code + "/map", (data) ->
-    map.removeLayer country  if country
-    country = L.geoJson(data,
+    if country_layer
+      map.removeLayer country_layer
+    country_layer = L.geoJson(data,
       style: style
       onEachFeature: onEachFeature
     )
-    country.addTo map
-    map.fitBounds country.getBounds()
-
-highlight_strata = (strata) ->
-  alert strata
+    country_layer.addTo map
+    map.fitBounds country_layer.getBounds()
 
 rc_selector = (element) ->
   element.parent().html "<select onchange=\"rc_selected(this)\"><option>-</option><option>DA</option><option>DT</option><option>NG</option><option>NP</option><option>RS</option></select>"
@@ -43,7 +41,15 @@ status_selected = (element) ->
   element.parent().html element.value
 
 highlight_stratum = (stratum) ->
-  alert stratum
+  country_layer.eachLayer (l)->
+    if l.feature.geometry.properties.aed_stratum == stratum
+      console.log 'found, setting feature style'
+      l.setStyle
+        color: "#777700"
+      map.fitBounds l.getBounds()
+    else
+      l.setStyle
+        color: "#007700"
 
 hook_editing_events = ->
   $(".RM_country_name").each ->
