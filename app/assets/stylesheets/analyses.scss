@@ -1,3 +1,20 @@
 // Place all the styles related to the analyses controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+#RM_map {
+  height: 250px;
+}
+.RM_tables {
+  height: 250px;
+  overflow: scroll;
+}
+.RM_country {
+  display: none;
+}
+.RM_country_name {
+  font-weight: bold;
+}
+.RM_clickable, {
+  cursor: pointer;
+}
