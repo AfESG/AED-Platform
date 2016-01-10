@@ -109,10 +109,10 @@
                 .col-xs-3.replacement_name = change.replacement_name
                 .col-xs-3.replaced_strata
                   div style='cursor:pointer' onclick='highlight_strata("#{change.replaced_strata}")'
-                    = change.replaced_strata.gsub(',',', ')
+                    == describe_change_strata(change.replaced_strata,@analysis.comparison_year)
                 .col-xs-3.new_strata
                   div style='cursor:pointer' onclick='highlight_strata("#{change.new_strata}")'
-                    = change.new_strata.gsub(',',', ')
+                    == describe_change_strata(change.new_strata,@analysis.analysis_year)
                 .col-xs-1.reason_change
                   div style='cursor:pointer' onclick='rc_selector(this)'
                     = change.reason_change

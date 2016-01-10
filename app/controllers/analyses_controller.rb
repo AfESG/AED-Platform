@@ -13,10 +13,27 @@ class AnalysesController < ApplicationController
     end
   end
 
+  def execute(*array)
+    sql = ActiveRecord::Base.send(:sanitize_sql_array, array)
+    return ActiveRecord::Base.connection.execute(sql)
+  end
+
   # GET /analyses/1
   # GET /analyses/1.json
   def show
     @analysis = Analysis.find(params[:id])
+
+    # Get all the relevant rows from the view stack
+    estimates = execute <<-SQL
+      select * from estimate_factors_analyses_categorized
+        where analysis_name='#{@analysis.analysis_name}';
+    SQL
+
+    # Turn them into a map for handy fetching
+    @estimates = {}
+    estimates.each do |estimate|
+      @estimates[estimate['input_zone_id']+'@'+estimate['analysis_year']] = estimate
+    end
 
     respond_to do |format|
       format.html # show.html.erb
