@@ -21,6 +21,26 @@
     function style(feature) {
       return {color: "#007700","weight": 1,"opacity": 1,"fillColor": "#77ff77","fillOpacity": 0.6};
     }
+    function onEachFeature(feature, layer) {
+      var popupContent = "<table>"
+      for (var key in feature.properties) {
+        if(key != 'uri'){
+          popupContent += "<tr><th>"+key+"</th><td>"+feature.properties[key]+"<td></tr>"
+        }
+      }
+      popupContent += "</table>"
+      if(feature.properties.aed_stratum) {
+        popupContent += "<div><a href='"+feature.properties.uri+"' target='_blank'>Open in new tab</a></div>"
+      }
+      layer.bindPopup(popupContent);
+    }
+    function style(feature) {
+      if(feature.geometry.properties.aed_stratum > 0) {
+        return {color: "#007700","weight": 1,"opacity": 1,"fillColor": "#77ff77","fillOpacity": 0.6};
+      } else {
+        return {color: "#770000","weight": 1,"opacity": 1,"fillColor": "#ff7777","fillOpacity": 0.6};
+      }
+    }
     var country = undefined;
     function map_country(iso_code) {
       $('.country').hide()
@@ -29,10 +49,28 @@
          if(country){
            map.removeLayer(country);
          }
-         country = L.geoJson(data, {style: style});
+         country = L.geoJson(data, {style: style, onEachFeature: onEachFeature});
          country.addTo(map);
          map.fitBounds(country.getBounds());
       });
+    }
+    function highlight_strata(strata) {
+      alert(strata)
+    }
+    function rc_selector(element) {
+      element.parentNode.innerHTML = '<select onchange="rc_selected(this)"><option>-</option><option>DA</option><option>DT</option><option>NG</option><option>NP</option><option>RS</option></select>'
+    }
+    function rc_selected(element) {
+      element.parentNode.innerHTML = element.value
+    }
+    function status_selector(element) {
+      element.parentNode.innerHTML = '<select onchange="status_selected(this)"><option>Needs review</option><option>In review</option><option>Reviewed</option></select><textarea>Comments</textarea>'
+    }
+    function status_selected(element) {
+      element.parentNode.innerHTML = element.value
+    }
+    function highlight_strata(strata) {
+      alert(strata)
     }
   css:
     #leaflet_map {
@@ -55,7 +93,7 @@
         - region.countries.order(:name).each do |country|
           .row.country_indicator style='background: #eeeeee'
             .col-xs-3
-              b onclick="map_country('#{country.iso_code}')"
+              b onclick="map_country('#{country.iso_code}')" style='cursor:pointer'
                 =country.name
             .col-xs-3
               b= @analysis.comparison_year
@@ -69,10 +107,18 @@
             - Change.where(analysis_name: @analysis.analysis_name).where(country: country.iso_code).order(:replacement_name).each do |change|
               .row.change
                 .col-xs-3.replacement_name = change.replacement_name
-                .col-xs-3.replaced_strata= change.replaced_strata.gsub(',',', ')
-                .col-xs-3.new_strata= change.new_strata.gsub(',',', ')
-                .col-xs-1.reason_change= change.reason_change
-                .col-xs-2.status= change.status
+                .col-xs-3.replaced_strata
+                  div style='cursor:pointer' onclick='highlight_strata("#{change.replaced_strata}")'
+                    = change.replaced_strata.gsub(',',', ')
+                .col-xs-3.new_strata
+                  div style='cursor:pointer' onclick='highlight_strata("#{change.new_strata}")'
+                    = change.new_strata.gsub(',',', ')
+                .col-xs-1.reason_change
+                  div style='cursor:pointer' onclick='rc_selector(this)'
+                    = change.reason_change
+                .col-xs-2.status
+                  div style='cursor:pointer' onclick='status_selector(this)'
+                    = change.status
             .row.new
               .col-xs-12
                 .btn.btn-sm.btn-default

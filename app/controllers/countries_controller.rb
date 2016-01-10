@@ -9,7 +9,8 @@ class CountriesController < ApplicationController
           if stratum.survey_geometry
             feature = RGeo::GeoJSON.encode(stratum.survey_geometry.geom)
             feature['properties'] = {
-              'aed_stratum' => stratum.id,
+              'aed_stratum' => "#{population_submission.survey_type}#{stratum.id}",
+              'uri' => "/#{stratum.class.name.pluralize.underscore}/#{stratum.id}",
               'aed_name' => stratum.stratum_name,
               'aed_area' => stratum.stratum_area,
               'aed_estimate' => stratum.population_estimate
