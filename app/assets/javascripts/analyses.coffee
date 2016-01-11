@@ -12,7 +12,6 @@ style = (feature) ->
 
 onEachFeature = (feature, layer) ->
   popupContent = "<table>"
-  console.log feature.properties
   for key of feature.properties
     popupContent += "<tr><th>" + key + "</th><td>" + feature.properties[key] + "<td></tr>"  unless key is "uri"
   popupContent += "</table>"
@@ -140,7 +139,37 @@ status_changed = (element) ->
       status: status_val
       comments: comments_val
 
-highlight_stratum = (stratum) ->
+remove_stratum = (element) ->
+  stratum_element = $(element).closest(".RM_stratum")
+  input_zone_id = stratum_element.data('stratum')
+  strata_element = stratum_element.closest(".RM_strata")
+  key = 'new_strata'
+  value = strata_element.data "newstrata"
+  unless value
+    key = 'replaced_strata'
+    value = strata_element.data "replacedstrata"
+  values = value.split(/,\s*/)
+  new_values = []
+  for v in values
+    new_values.push v if v isnt input_zone_id
+  value = new_values.join ','
+  props = {}
+  props[key] = value
+  change_element = strata_element.closest(".RM_change")
+  change_id = change_element.data 'changeid'
+  stratum_element.remove()
+  patch_change change_id, props
+
+highlight_stratum = (element) ->
+  stratum_element = $(element)
+  $('.RM_stratum').css { backgroundColor: '' }
+  $('.RM_remove_stratum').remove()
+  stratum_element.css { backgroundColor: '#ffff77' }
+  stratum_element.append( '<div class="RM_remove_stratum btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove"></span> Remove</div>')
+  stratum_element.find('.RM_remove_stratum').on 'click', ->
+    remove_stratum this
+  stratum = stratum_element.data('stratum')
+  year = stratum_element.data('year')
   country_layer.eachLayer (l)->
     if l.feature.geometry.properties.aed_stratum == stratum
       l.setStyle
@@ -165,7 +194,6 @@ add_new_change = (element) ->
         status: 'Needs review'
         country: iso_code
     success: (data) ->
-      console.log data
       country_element.find('.RM_changes').each ->
         $(this).append($('.RM_template_change').html())
         change = $(this).find('.RM_change').last()
@@ -188,7 +216,7 @@ hook_change_editing_events = (element) ->
   change.find(".RM_replacement_name").on 'click', ->
     name_activate this
   change.find(".RM_stratum").on 'click', ->
-    highlight_stratum $(this).data('stratum'), $(this).data('year')
+    highlight_stratum this
 
 hook_editing_events = ->
   $(".RM_country_indicator").on 'click', ->
