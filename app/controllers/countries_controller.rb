@@ -2,21 +2,22 @@ class CountriesController < ApplicationController
   def geojson_map
     @country = Country.where(iso_code: params[:iso_code]).first
     features = []
-    @country.submissions.each do |submission|
-      submission.population_submissions.order(:completion_year).each do |population_submission|
+    @country.submissions.includes(:population_submissions).each do |submission|
+      submission.population_submissions.each do |population_submission|
         count = population_submission.counts[0]
         next unless count
         if count.has_strata?
-          count.strata.each do |stratum|
+          count.strata.includes(:survey_geometry).each do |stratum|
             if stratum.survey_geometry
               feature = RGeo::GeoJSON.encode(stratum.survey_geometry.geom)
               feature['properties'] = {
                 'aed_stratum' => "#{population_submission.survey_type}#{stratum.id}",
                 'uri' => "/#{stratum.class.name.pluralize.underscore}/#{stratum.id}",
                 'aed_name' => stratum.stratum_name,
+                'aed_year' => population_submission.completion_year,
+                'aed_citation' => population_submission.short_citation,
                 'aed_area' => stratum.stratum_area,
-                'aed_estimate' => stratum.population_estimate,
-                'aed_year' => population_submission.completion_year
+                'aed_estimate' => stratum.population_estimate
               }
               features << feature
             end
@@ -37,6 +38,7 @@ class CountriesController < ApplicationController
         end
       end
     end
+    features.sort_by! { |h| h['properties']['aed_year'] }
     feature_collection = {
       'type' => 'FeatureCollection',
       'features' => features

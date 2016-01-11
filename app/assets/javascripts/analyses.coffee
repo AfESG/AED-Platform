@@ -1,3 +1,11 @@
+ACTIVE_STRATA_CELL = null
+COUNTRY_LAYER = null
+
+strip_for = (map_props) ->
+  html = "<div>#{map_props.aed_year} #{map_props.aed_name}</div>"
+  html += "<div style='font-size: x-small'>#{map_props.aed_citation}</div>"
+  html += "<div style='font-size: x-small'><a href='#{map_props.uri}' target='_blank'>#{map_props.aed_stratum}</a> est. #{map_props.aed_estimate}, #{map_props.aed_area} km²</div>"
+
 style = (feature) ->
   color="#77ff77"
   if RM_used_estimates[feature.geometry.properties['aed_stratum']]
@@ -11,14 +19,9 @@ style = (feature) ->
   }
 
 onEachFeature = (feature, layer) ->
-  popupContent = "<table>"
-  for key of feature.properties
-    popupContent += "<tr><th>" + key + "</th><td>" + feature.properties[key] + "<td></tr>"  unless key is "uri"
-  popupContent += "</table>"
-  popupContent += "<div><a href='" + feature.properties.uri + "' target='_blank'>Open in new tab</a></div>"  if feature.properties.aed_stratum
+  popupContent = strip_for feature.properties
+  popupContent += "<div style='margin-top: 5px;'><a href='javascript:add_stratum(\""+feature.properties.aed_stratum+"\")'>Add this stratum</a></div>"  if feature.properties.aed_stratum
   layer.bindPopup popupContent
-
-country_layer = `undefined`
 
 map_country = (element) ->
   country_element = $(element).closest('.RM_country')
@@ -26,16 +29,16 @@ map_country = (element) ->
   $(".RM_changes, .RM_other_header, .RM_new_change").hide()
   country_element.find(".RM_changes, .RM_other_header, .RM_new_change").show()
   $.getJSON "/country/" + iso_code + "/map", (data) ->
-    if country_layer
-      map.removeLayer country_layer
-    country_layer = L.geoJson(data,
+    if COUNTRY_LAYER
+      map.removeLayer COUNTRY_LAYER
+    COUNTRY_LAYER = L.geoJson(data,
       style: style
       onEachFeature: onEachFeature
     )
-    country_layer.addTo map
-    map.fitBounds country_layer.getBounds()
+    COUNTRY_LAYER.addTo map
+    map.fitBounds COUNTRY_LAYER.getBounds()
 
-patch_change = (change_id, params) ->
+patch_change = (change_id, params, and_then) ->
   $.ajax({
     type: "PATCH"
     url: "/changes/#{change_id}.json"
@@ -45,6 +48,8 @@ patch_change = (change_id, params) ->
     error: (data) ->
       console.log data
       alert "Error saving status and comments."
+    success: (data) ->
+      and_then() if and_then
   })
 
 rc_activate = (element) ->
@@ -82,6 +87,8 @@ name_activate = (element) ->
         name_changed(this)
       $(this).on 'keyup', (event) ->
         if event.which == 13
+          name_changed(this)
+      $(this).on 'blur', (event) ->
           name_changed(this)
       $(this).focus()
 
@@ -155,22 +162,58 @@ remove_stratum = (element) ->
   value = new_values.join ','
   props = {}
   props[key] = value
+  if key == 'new_strata'
+    strata_element.data "newstrata", value
+  else
+    strata_element.data "replacedstrata", value
   change_element = strata_element.closest(".RM_change")
   change_id = change_element.data 'changeid'
   stratum_element.remove()
   patch_change change_id, props
 
+# Bind to window to facilitate calling from Leaflet popup
+window.add_stratum = add_stratum = (stratum_id) ->
+  unless ACTIVE_STRATA_CELL
+    alert "Please select a new or replaced strata cell first."
+  strata_element = $(ACTIVE_STRATA_CELL)
+  key = 'new_strata'
+  value = strata_element.data "newstrata"
+  unless value
+    key = 'replaced_strata'
+    value = strata_element.data "replacedstrata"
+  values = value.split(/,\s*/)
+  values.push stratum_id
+  value = values.join ','
+  props = {}
+  props[key] = value
+  if key == 'new_strata'
+    strata_element.data "newstrata", value
+  else
+    strata_element.data "replacedstrata", value
+  change_element = strata_element.closest(".RM_change")
+  change_id = change_element.data 'changeid'
+  patch_change change_id, props, ->
+    COUNTRY_LAYER.eachLayer (l)->
+      if l.feature.geometry.properties.aed_stratum == stratum_id
+        map_props = l.feature.geometry.properties
+        html = "<div class='RM_stratum' data-stratum='#{map_props.aed_stratum}' data-year='#{map_props.aed_year}'>"
+        html += strip_for map_props
+        html += "</div>"
+        strata_element.append html
+        strata_element.find(".RM_stratum").on 'click', ->
+          highlight_stratum this
+
 highlight_stratum = (element) ->
   stratum_element = $(element)
   $('.RM_stratum').css { backgroundColor: '' }
-  $('.RM_remove_stratum').remove()
+  $('.RM_remove_stratum_container').remove()
   stratum_element.css { backgroundColor: '#ffff77' }
-  stratum_element.append( '<div class="RM_remove_stratum btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove"></span> Remove</div>')
+  stratum_element.append( '<div class="RM_remove_stratum_container"><div class="RM_remove_stratum pull-right btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove"></span> Remove</div>&#160;</div>')
   stratum_element.find('.RM_remove_stratum').on 'click', ->
     remove_stratum this
   stratum = stratum_element.data('stratum')
   year = stratum_element.data('year')
-  country_layer.eachLayer (l)->
+  COUNTRY_LAYER.eachLayer (l)->
     if l.feature.geometry.properties.aed_stratum == stratum
       l.setStyle
         fillColor: "#ffff77"
@@ -204,6 +247,14 @@ add_new_change = (element) ->
       alert "Error adding input zone."
   })
 
+activate_adding_strata = (element) ->
+  ACTIVE_STRATA_CELL = element
+  $(".RM_strata").css {
+    border: 'none';
+  }
+  $(element).css {
+    border: '3px solid #cccccc'
+  }
 
 hook_change_editing_events = (element) ->
   change = $(element)
@@ -217,6 +268,8 @@ hook_change_editing_events = (element) ->
     name_activate this
   change.find(".RM_stratum").on 'click', ->
     highlight_stratum this
+  change.find(".RM_strata").on 'click', ->
+    activate_adding_strata this
 
 hook_editing_events = ->
   $(".RM_country_indicator").on 'click', ->
