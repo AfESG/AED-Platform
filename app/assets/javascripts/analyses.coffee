@@ -32,16 +32,6 @@ map_country = (element) ->
     country_layer.addTo map
     map.fitBounds country_layer.getBounds()
 
-rc_activate = (element) ->
-  $(element).closest('.RM_change').find('.RM_rc_selector').each ->
-    $(this).off 'click'
-    val = $(this).html()
-    $(this).html  "<select><option>-</option><option>DA</option><option>DT</option><option>NG</option><option>NP</option><option>RS</option></select>"
-    $(this).find('select').each ->
-      $(this).val(val)
-      $(this).on 'change', ->
-        rc_changed(this)
-
 patch_change = (change_id, params) ->
   $.ajax({
     type: "PATCH"
@@ -54,19 +44,57 @@ patch_change = (change_id, params) ->
       alert "Error saving status and comments."
   })
 
+rc_activate = (element) ->
+  $(element).closest('.RM_change').find('.RM_rc_selector').each ->
+    $(this).off 'click'
+    val = $(this).html()
+    $(this).html  "<select><option>-</option><option>DA</option><option>DT</option><option>NG</option><option>NP</option><option>RS</option></select>"
+    $(this).find('select').each ->
+      $(this).val(val)
+      $(this).on 'change', ->
+        rc_changed(this)
+
 rc_changed = (element) ->
   $(element).closest('.RM_change').each ->
     change_id = $(this).data 'changeid'
-    rc_val = ''
+    val = ''
     $(this).find('.RM_rc_selector').each ->
       $(this).find('select').each ->
-        rc_val = $(this).val()
+        val = $(this).val()
         $(this).parent().each ->
-          $(this).html rc_val
+          $(this).html val
           $(this).on 'click', ->
             rc_activate this
     patch_change change_id,
-      reason_change: rc_val
+      reason_change: val
+
+name_activate = (element) ->
+  $(element).closest('.RM_change').find('.RM_replacement_name').each ->
+    $(this).off 'click'
+    val = $(this).html()
+    $(this).html "<input type='text'>"
+    $(this).find('input').each ->
+      $(this).val(val)
+      $(this).on 'change', ->
+        name_changed(this)
+      $(this).on 'keyup', (event) ->
+        if event.which == 13
+          name_changed(this)
+      $(this).focus()
+
+name_changed = (element) ->
+  $(element).closest('.RM_change').each ->
+    change_id = $(this).data 'changeid'
+    val = ''
+    $(this).find('.RM_replacement_name').each ->
+      $(this).find('input').each ->
+        val = $(this).val()
+        $(this).parent().each ->
+          $(this).html val
+          $(this).on 'click', ->
+            name_activate this
+    patch_change change_id,
+      replacement_name: val
 
 status_activate = (element) ->
   $(element).closest('.RM_change').find('.RM_status_selector').each ->
@@ -131,6 +159,9 @@ hook_editing_events = ->
   $(".RM_comments").each ->
     $(this).on 'click', ->
       status_activate this
+  $(".RM_replacement_name").each ->
+    $(this).on 'click', ->
+      name_activate this
   $(".RM_stratum").each ->
     $(this).on 'click', ->
       highlight_stratum $(this).data('stratum'), $(this).data('year')

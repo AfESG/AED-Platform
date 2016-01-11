@@ -25,8 +25,7 @@
           .RM_country data-isocode='#{country.iso_code}'
             .row.RM_country_indicator.RM_clickable
               .col-xs-2
-                .RM_country_name
-                  =country.name
+                .RM_country_name= country.name
               .col-xs-3
                 .RM_other_header= @analysis.comparison_year
               .col-xs-3
@@ -39,10 +38,14 @@
               - Change.where(analysis_name: @analysis.analysis_name).where(country: country.iso_code).order(:replacement_name).each do |change|
                 .RM_change data-changeid = change.id
                   .row
-                    .col-xs-2.replacement_name = change.replacement_name
-                    .col-xs-3.replaced_strata
+                    .col-xs-2.RM_replacement_name.RM_clickable
+                      - if change.replacement_name.blank?
+                        ' (not set)
+                      - else
+                        = change.replacement_name
+                    .col-xs-3.RM_replaced_strata
                       == describe_change_strata(change.replaced_strata,@analysis.comparison_year)
-                    .col-xs-3.new_strata
+                    .col-xs-3.RM_new_strata
                       == describe_change_strata(change.new_strata,@analysis.analysis_year)
                     .col-xs-1.reason_change
                       .RM_rc_selector.RM_clickable
