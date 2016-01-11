@@ -1,9 +1,9 @@
 style = (feature) ->
-  color = "#007700"
-  if RM_used_estimates[feature.properties['aed_stratum']]
-    color = '#770000'
+  color="#77ff77"
+  if RM_used_estimates[feature.geometry.properties['aed_stratum']]
+    color="#ff7777"
   return {
-    color: color
+    color: "#007700"
     weight: 1
     opacity: 1
     fillColor: color
@@ -12,6 +12,7 @@ style = (feature) ->
 
 onEachFeature = (feature, layer) ->
   popupContent = "<table>"
+  console.log feature.properties
   for key of feature.properties
     popupContent += "<tr><th>" + key + "</th><td>" + feature.properties[key] + "<td></tr>"  unless key is "uri"
   popupContent += "</table>"
@@ -143,11 +144,10 @@ highlight_stratum = (stratum) ->
   country_layer.eachLayer (l)->
     if l.feature.geometry.properties.aed_stratum == stratum
       l.setStyle
-        fillColor: "#cccc00"
+        fillColor: "#ffff77"
       map.fitBounds l.getBounds()
     else
-      l.setStyle
-        fillColor: "#007700"
+      l.setStyle style(l.feature)
 
 add_new_change = (element) ->
   country_element = $(element).closest('.RM_country')

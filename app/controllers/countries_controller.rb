@@ -29,6 +29,7 @@ class CountriesController < ApplicationController
               'uri' => "/#{count.class.name.pluralize.underscore}/#{count.id}",
               'aed_name' => population_submission.site_name,
               'aed_area' => population_submission.area,
+              'aed_year' => population_submission.completion_year,
               'aed_estimate' => (count.population_estimate rescue count.population_estimate_min)
             }
             features << feature
