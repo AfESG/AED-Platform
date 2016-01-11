@@ -21,7 +21,7 @@ module AnalysesHelper
   end
 
   def describe_change_strata(strata, year)
-    return '-' if strata=='-' or strata==''
+    return '-' if strata==nil or strata=='-' or strata==''
     out = ''
     strata.split(/,\s*/).each do |input_zone_id|
       estimate = @estimates[input_zone_id+'@'+year.to_s]

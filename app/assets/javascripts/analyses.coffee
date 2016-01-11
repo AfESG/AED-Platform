@@ -18,10 +18,8 @@ country_layer = `undefined`
 map_country = (element) ->
   country_element = $(element).closest('.RM_country')
   iso_code = country_element.data('isocode')
-  $(".RM_changes").hide()
-  $(".RM_other_header").hide()
-  country_element.find(".RM_other_header").show()
-  country_element.find(".RM_changes").show()
+  $(".RM_changes, .RM_other_header, .RM_new_change").hide()
+  country_element.find(".RM_changes, .RM_other_header, .RM_new_change").show()
   $.getJSON "/country/" + iso_code + "/map", (data) ->
     if country_layer
       map.removeLayer country_layer
@@ -146,25 +144,54 @@ highlight_stratum = (stratum) ->
       l.setStyle
         fillColor: "#007700"
 
+add_new_change = (element) ->
+  country_element = $(element).closest('.RM_country')
+  iso_code = country_element.data('isocode')
+  analysis_name = $('.RM_context').data('analysisname')
+  analysis_year = $('.RM_context').data('analysisyear')
+  $.ajax({
+    type: "POST"
+    url: "/changes.json"
+    data:
+      change:
+        analysis_name: analysis_name
+        analysis_year: analysis_year
+        reason_change: '-'
+        status: 'Needs review'
+        country: iso_code
+    success: (data) ->
+      console.log data
+      country_element.find('.RM_changes').each ->
+        $(this).append($('.RM_template_change').html())
+        change = $(this).find('.RM_change').last()
+        $(change).data "changeid", data.id
+        hook_change_editing_events change
+    error: (data) ->
+      console.log data
+      alert "Error adding input zone."
+  })
+
+
+hook_change_editing_events = (element) ->
+  change = $(element)
+  change.find(".RM_rc_selector").on 'click', ->
+    rc_activate this
+  change.find(".RM_status_selector").on 'click', ->
+    status_activate this
+  change.find(".RM_comments").on 'click', ->
+    status_activate this
+  change.find(".RM_replacement_name").on 'click', ->
+    name_activate this
+  change.find(".RM_stratum").on 'click', ->
+    highlight_stratum $(this).data('stratum'), $(this).data('year')
+
 hook_editing_events = ->
-  $(".RM_country_indicator").each ->
-    $(this).on 'click', ->
-      map_country this
-  $(".RM_rc_selector").each ->
-    $(this).on 'click', ->
-      rc_activate this
-  $(".RM_status_selector").each ->
-    $(this).on 'click', ->
-      status_activate this
-  $(".RM_comments").each ->
-    $(this).on 'click', ->
-      status_activate this
-  $(".RM_replacement_name").each ->
-    $(this).on 'click', ->
-      name_activate this
-  $(".RM_stratum").each ->
-    $(this).on 'click', ->
-      highlight_stratum $(this).data('stratum'), $(this).data('year')
+  $(".RM_country_indicator").on 'click', ->
+    map_country this
+  $(".RM_change").each ->
+    hook_change_editing_events this
+  $(".RM_new_change_button").on 'click', ->
+    add_new_change this
 
 initialize_map = ->
   survey_map = new L.geoJson()

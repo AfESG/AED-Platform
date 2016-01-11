@@ -5,7 +5,7 @@
         span.glyphicon.glyphicon-list
         '  All analyses
     .col-xs-6
-      h1
+      h1.RM_context data-analysisname=@analysis.analysis_name data-analysisyear=@analysis.analysis_year
         ' Replacements for
         = @analysis.analysis_name
     .col-xs-3 style='text-align: right'
@@ -55,8 +55,23 @@
                         = change.status
                       .RM_comments
                         = change.comments
-              .row.RM_new_change
-                .col-xs-12 style='padding-top: 5px; padding-bottom: 5px;'
-                  .btn.btn-sm.btn-default
-                    span.glyphicon.glyphicon-plus
-                    '  Add Input Zone
+            .row.RM_new_change
+              .col-xs-12 style='padding-top: 5px; padding-bottom: 5px;'
+                .btn.btn-sm.btn-default.RM_new_change_button
+                  span.glyphicon.glyphicon-plus
+                  '  Add Input Zone
+
+.RM_template_change
+  .RM_change data-changeid = 'new'
+    .row
+      .col-xs-2.RM_replacement_name.RM_clickable
+        ' (not set)
+      .col-xs-3.RM_replaced_strata
+      .col-xs-3.RM_new_strata
+      .col-xs-1.reason_change
+        .RM_rc_selector.RM_clickable
+          | -
+      .col-xs-3.status.RM_clickable
+        .RM_status_selector
+          | Needs Review
+        .RM_comments

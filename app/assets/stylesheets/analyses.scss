@@ -15,7 +15,10 @@
 .RM_other_header {
   font-weight: bold;
 }
-.RM_changes {
+.RM_changes,
+.RM_new_change,
+.RM_template_change,
+.RM_other_header {
   display: none;
 }
 .RM_country_indicator {
@@ -33,7 +36,4 @@
 }
 .RM_comments {
   font-style: italic;
-}
-.RM_other_header {
-  display: none;
 }
