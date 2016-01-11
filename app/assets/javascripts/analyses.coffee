@@ -16,7 +16,7 @@ onEachFeature = (feature, layer) ->
 country_layer = `undefined`
 
 map_country = (element) ->
-  country_element = element.closest('.RM_country')
+  country_element = $(element).closest('.RM_country')
   iso_code = country_element.data('isocode')
   $(".RM_changes").hide()
   $(".RM_other_header").hide()
@@ -32,33 +32,63 @@ map_country = (element) ->
     country_layer.addTo map
     map.fitBounds country_layer.getBounds()
 
-rc_selector = (element) ->
-  element.parent().html "<select onchange=\"RM_rc_selected(this)\"><option>-</option><option>DA</option><option>DT</option><option>NG</option><option>NP</option><option>RS</option></select>"
+rc_activate = (element) ->
+  $(element).closest('.RM_change').find('.RM_rc_selector').each ->
+    $(this).off 'click'
+    val = $(this).html()
+    $(this).html  "<select><option>-</option><option>DA</option><option>DT</option><option>NG</option><option>NP</option><option>RS</option></select>"
+    $(this).find('select').each ->
+      $(this).val(val)
+      $(this).on 'change', ->
+        rc_changed(this)
 
-window.RM_rc_selected = rc_selected = (element) ->
-  $(element).parent().html element.value
+patch_change = (change_id, params) ->
+  $.ajax({
+    type: "PATCH"
+    url: "/changes/#{change_id}.json"
+    data:
+      change:
+        params
+    error: (data) ->
+      console.log data
+      alert "Error saving status and comments."
+  })
+
+rc_changed = (element) ->
+  $(element).closest('.RM_change').each ->
+    change_id = $(this).data 'changeid'
+    rc_val = ''
+    $(this).find('.RM_rc_selector').each ->
+      $(this).find('select').each ->
+        rc_val = $(this).val()
+        $(this).parent().each ->
+          $(this).html rc_val
+          $(this).on 'click', ->
+            rc_activate this
+    patch_change change_id,
+      reason_change: rc_val
 
 status_activate = (element) ->
-  element.closest('.RM_change').find('.RM_status_selector').each ->
+  $(element).closest('.RM_change').find('.RM_status_selector').each ->
     val = $(this).html()
     $(this).off 'click'
     $(this).html "<select><option>Needs review</option><option>In review</option><option>Reviewed</option></select>"
     $(this).find('select').each ->
       $(this).val(val)
       $(this).on 'change', ->
-        status_changed($(this))
-  element.closest('.RM_change').find('.RM_comments').each ->
+        status_changed(this)
+  $(element).closest('.RM_change').find('.RM_comments').each ->
     $(this).off 'click'
     $(this).html "<textarea>#{$(this).html()}</textarea>"
     $(this).find('textarea').each ->
       $(this).on 'keyup', (event) ->
         if event.which == 13
-          status_changed($(this))
+          status_changed(this)
       $(this).on 'change', (event) ->
-        status_changed($(this))
+        status_changed(this)
 
 status_changed = (element) ->
-  element.closest('.RM_change').each ->
+  $(element).closest('.RM_change').each ->
     change_id = $(this).data 'changeid'
     status_val = ''
     comments_val = ''
@@ -67,30 +97,16 @@ status_changed = (element) ->
       $(this).parent().each ->
         $(this).html comments_val
         $(this).on 'click', ->
-          status_activate $(this)
+          status_activate this
     $(this).find('select').each ->
       status_val = $(this).val()
       $(this).parent().each ->
         $(this).html status_val
         $(this).on 'click', ->
-          status_activate $(this)
-    $.ajax({
-      type: "PATCH"
-      url: "/changes/#{change_id}.json"
-      data:
-        change:
-          status: status_val
-          comments: comments_val
-      error: (data) ->
-        console.log data
-        alert "Error saving status and comments."
-    })
-
-window.RM_comment_changed = comment_changed = (element) ->
-  country = $(element).parent().parent()
-  $(element).parent().html element.value
-  country.find('.RM_status_selector').each ->
-    $(this).parent().html $(this).value
+          status_activate this
+    patch_change change_id,
+      status: status_val
+      comments: comments_val
 
 highlight_stratum = (stratum) ->
   country_layer.eachLayer (l)->
@@ -105,16 +121,16 @@ highlight_stratum = (stratum) ->
 hook_editing_events = ->
   $(".RM_country_indicator").each ->
     $(this).on 'click', ->
-      map_country $(this)
+      map_country this
   $(".RM_rc_selector").each ->
     $(this).on 'click', ->
-      rc_selector $(this)
+      rc_activate this
   $(".RM_status_selector").each ->
     $(this).on 'click', ->
-      status_activate $(this)
+      status_activate this
   $(".RM_comments").each ->
     $(this).on 'click', ->
-      status_activate $(this)
+      status_activate this
   $(".RM_stratum").each ->
     $(this).on 'click', ->
       highlight_stratum $(this).data('stratum'), $(this).data('year')
