@@ -31,8 +31,10 @@ class AnalysesController < ApplicationController
 
     # Turn them into a map for handy fetching
     @estimates = {}
+    @used_estimates = {}
     estimates.each do |estimate|
       @estimates[estimate['input_zone_id']+'@'+estimate['analysis_year']] = estimate
+      @used_estimates[estimate['input_zone_id']] = true
     end
 
     respond_to do |format|

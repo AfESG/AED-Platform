@@ -3,7 +3,7 @@ class CountriesController < ApplicationController
     @country = Country.where(iso_code: params[:iso_code]).first
     features = []
     @country.submissions.each do |submission|
-      submission.population_submissions.each do |population_submission|
+      submission.population_submissions.order(:completion_year).each do |population_submission|
         count = population_submission.counts[0]
         next unless count
         if count.has_strata?
@@ -29,6 +29,7 @@ class CountriesController < ApplicationController
               'uri' => "/#{count.class.name.pluralize.underscore}/#{count.id}",
               'aed_name' => population_submission.site_name,
               'aed_area' => population_submission.area,
+              'aed_year' => population_submission.completion_year,
               'aed_estimate' => (count.population_estimate rescue count.population_estimate_min)
             }
             features << feature
