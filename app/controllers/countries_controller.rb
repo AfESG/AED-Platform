@@ -3,7 +3,7 @@ class CountriesController < ApplicationController
     @country = Country.where(iso_code: params[:iso_code]).first
     features = []
     @country.submissions.each do |submission|
-      submission.population_submissions.each do |population_submission|
+      submission.population_submissions.order(:completion_year).each do |population_submission|
         count = population_submission.counts[0]
         next unless count
         if count.has_strata?

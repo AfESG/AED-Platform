@@ -1,9 +1,14 @@
 style = (feature) ->
-  color: "#007700"
-  weight: 1
-  opacity: 1
-  fillColor: "#77ff77"
-  fillOpacity: 0.4
+  color = "#007700"
+  if RM_used_estimates[feature.properties['aed_stratum']]
+    color = '#770000'
+  return {
+    color: color
+    weight: 1
+    opacity: 1
+    fillColor: color
+    fillOpacity: 0.4
+  }
 
 onEachFeature = (feature, layer) ->
   popupContent = "<table>"
