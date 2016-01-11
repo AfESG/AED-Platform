@@ -2,12 +2,12 @@ class CountriesController < ApplicationController
   def geojson_map
     @country = Country.where(iso_code: params[:iso_code]).first
     features = []
-    @country.submissions.each do |submission|
+    @country.submissions.includes(:population_submissions).each do |submission|
       submission.population_submissions.each do |population_submission|
         count = population_submission.counts[0]
         next unless count
         if count.has_strata?
-          count.strata.each do |stratum|
+          count.strata.includes(:survey_geometry).each do |stratum|
             if stratum.survey_geometry
               feature = RGeo::GeoJSON.encode(stratum.survey_geometry.geom)
               feature['properties'] = {
