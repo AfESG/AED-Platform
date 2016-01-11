@@ -15,9 +15,13 @@ onEachFeature = (feature, layer) ->
 
 country_layer = `undefined`
 
-map_country = (iso_code) ->
-  $(".RM_country").hide()
-  $("#country_" + iso_code).show()
+map_country = (element) ->
+  country_element = element.closest('.RM_country')
+  iso_code = country_element.data('isocode')
+  $(".RM_changes").hide()
+  $(".RM_other_header").hide()
+  country_element.find(".RM_other_header").show()
+  country_element.find(".RM_changes").show()
   $.getJSON "/country/" + iso_code + "/map", (data) ->
     if country_layer
       map.removeLayer country_layer
@@ -45,7 +49,7 @@ status_activate = (element) ->
         status_changed($(this))
   element.closest('.RM_change').find('.RM_comments').each ->
     $(this).off 'click'
-    $(this).html "<textarea onchange=\"RM_status_changed($(this))\">#{$(this).html()}</textarea>"
+    $(this).html "<textarea>#{$(this).html()}</textarea>"
     $(this).find('textarea').each ->
       $(this).on 'keyup', (event) ->
         if event.which == 13
@@ -55,18 +59,32 @@ status_activate = (element) ->
 
 status_changed = (element) ->
   element.closest('.RM_change').each ->
+    change_id = $(this).data 'changeid'
+    status_val = ''
+    comments_val = ''
     $(this).find('textarea').each ->
-      val =  $(this).val()
+      comments_val =  $(this).val()
       $(this).parent().each ->
-        $(this).html val
+        $(this).html comments_val
         $(this).on 'click', ->
           status_activate $(this)
     $(this).find('select').each ->
-      val = $(this).val()
+      status_val = $(this).val()
       $(this).parent().each ->
-        $(this).html val
+        $(this).html status_val
         $(this).on 'click', ->
           status_activate $(this)
+    $.ajax({
+      type: "PATCH"
+      url: "/changes/#{change_id}.json"
+      data:
+        change:
+          status: status_val
+          comments: comments_val
+      error: (data) ->
+        console.log data
+        alert "Error saving status and comments."
+    })
 
 window.RM_comment_changed = comment_changed = (element) ->
   country = $(element).parent().parent()
@@ -85,9 +103,9 @@ highlight_stratum = (stratum) ->
         fillColor: "#007700"
 
 hook_editing_events = ->
-  $(".RM_country_name").each ->
+  $(".RM_country_indicator").each ->
     $(this).on 'click', ->
-      map_country $(this).data('isocode')
+      map_country $(this)
   $(".RM_rc_selector").each ->
     $(this).on 'click', ->
       rc_selector $(this)
