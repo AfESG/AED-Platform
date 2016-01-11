@@ -122,6 +122,7 @@ module ApplicationHelper
   end
 
   def linked_ids_for(comma_separated_list)
+    return '' unless comma_separated_list
     units = comma_separated_list.split(/,/)
     links = []
     units.each do |unit|

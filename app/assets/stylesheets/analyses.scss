@@ -9,8 +9,17 @@
   height: 250px;
   overflow: scroll;
 }
-.RM_country {
+.RM_tables .row {
+  border-top: 1px solid #ccc;
+}
+.RM_other_header {
+  font-weight: bold;
+}
+.RM_changes {
   display: none;
+}
+.RM_country_indicator {
+  background-color: #eeeeee;
 }
 .RM_country_name {
   font-weight: bold;
@@ -21,4 +30,10 @@
 .RM_comments textarea {
   width: 100%;
   height: 5em;
+}
+.RM_comments {
+  font-style: italic;
+}
+.RM_other_header {
+  display: none;
 }
