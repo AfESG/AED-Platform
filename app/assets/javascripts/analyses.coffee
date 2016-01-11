@@ -165,7 +165,7 @@ highlight_stratum = (element) ->
   $('.RM_stratum').css { backgroundColor: '' }
   $('.RM_remove_stratum').remove()
   stratum_element.css { backgroundColor: '#ffff77' }
-  stratum_element.append( '<div class="RM_remove_stratum btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove"></span> Remove</div>')
+  stratum_element.append( '<div class="RM_remove_stratum pull-right btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove"></span> Remove</div>&#160;')
   stratum_element.find('.RM_remove_stratum').on 'click', ->
     remove_stratum this
   stratum = stratum_element.data('stratum')
