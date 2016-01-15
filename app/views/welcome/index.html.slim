@@ -1,7 +1,7 @@
 .row
   .col-xs-12
     h1 African Elephant Range (2012)
-.row style='margin-bottom: 10px;'
+/ .row style='margin-bottom: 10px;'
   .col-xs-4
     = link_to population_submissions_path do
       - ns = new_surveys
@@ -21,6 +21,7 @@ coffee:
     - @has_surveys = true
     - @img_i = @img_i+1
     .ticker_tick
+    / .ticker_tick
       = image_tag "orange_marker#{@img_i}.png"
       = link_to url_for(population_submission) do
         = population_submission.site_name
@@ -64,14 +65,14 @@ coffee:
           setTimeout "tick(" + i + ")", 7000
 
       setTimeout "tick(-1)", 1000  if at_end
-    jQuery(document).ready ($) ->
+    $ ->
       window.load_google_maps ->
         zoom = 4;
         center = new google.maps.LatLng(-4.43, 11.54);
         ft_initialize_below_protareax('ftcanvas', '133dT3pqdvGT-BmrZWW3ub5Q2Zr4qAWyWhkB7RZk', 'geometry', 'ROWID', '/popup/2007/', zoom, center, ->);
         i = 0
-        while i <= ticker_max
-          markMap "/assets/orange_marker" + i + ".png", "/population_submissions/" + ticker_ids[i], ticker_lats[i], ticker_longs[i]
-          i++
+        # while i <= ticker_max
+        #   markMap "/assets/orange_marker" + i + ".png", "/population_submissions/" + ticker_ids[i], ticker_lats[i], ticker_longs[i]
+        #   i++
     last_h = ""
     tick -1
