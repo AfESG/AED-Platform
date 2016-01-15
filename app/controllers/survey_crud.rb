@@ -82,6 +82,10 @@ module SurveyCrud
   end
 
   def new
+    if user_signed_in? and !current_user.admin?
+      render template: 'submissions/how_to_submit'
+      return
+    end
     set_title
     @level = level_class.new
     if respond_to? 'connect_parent'
