@@ -108,7 +108,7 @@
               - @la = row['LAT']
               - @n = @n + 1
               - @ra = row['RA'].to_f
-          - @pf = (Math.log10(((@dp+0.001)/(@dpps+0.001))+1/(@car/@ra))).round rescue '?'
+          - @pf = (Math.log10((((@dp+0.001)/(@dpps+0.001))+1)/(@car/@ra))).round rescue '?'
           tr
             td
               a href="javascript:toggle_section('#{@rn.gsub(/[^\w\d]/,'')}')" style='text-decoration:none'  +

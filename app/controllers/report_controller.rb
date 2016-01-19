@@ -369,7 +369,7 @@ class ReportController < ApplicationController
         ROUND(rm.percent_regional_range) "RANGEPERC",
         ROUND(rm.percent_range_assessed) "SURVRANGPERC",
         to_char(((definite+probable)/(definite+probable+possible+speculative))*(rm.range_assessed/range_area),'999999D99') "INFQLTYIDX",
-        round(log(((definite+probable)/(definite+probable+possible+speculative))*(rm.range_assessed/range_area)+1/(rm.range_area/ca.continental_range))) "PFS"
+        round(log((((definite+probable)/(definite+probable+possible+speculative))*(rm.range_assessed/range_area)+1)/(rm.range_area/ca.continental_range))) "PFS"
       from
         (select distinct continental_range from continental_range_table) ca,
         dpps_sums_country d
@@ -388,7 +388,7 @@ class ReportController < ApplicationController
         ROUND(rm.percent_regional_range) "RANGEPERC",
         ROUND(rm.percent_range_assessed) "SURVRANGPERC",
         to_char(((definite+probable)/(definite+probable+possible+speculative))*(rm.range_assessed/range_area),'999999D99') "INFQLTYIDX",
-        round(log(((definite+probable)/(definite+probable+possible+speculative))*(rm.range_assessed/range_area)+1/(rm.range_area/ca.continental_range))) "PFS"
+        round(log((((definite+probable)/(definite+probable+possible+speculative))*(rm.range_assessed/range_area)+1)/(rm.range_area/ca.continental_range))) "PFS"
        from
         (select distinct continental_range from continental_range_table) ca,
         dpps_sums_region d
@@ -556,7 +556,7 @@ class ReportController < ApplicationController
           ''
         END "CL95",
         e.short_citation "REFERENCE",
-        round(log(((definite+probable+0.001)/(definite+probable+possible+speculative+0.001))+1/(a.area_sqkm/rm.range_area))) "PFS",
+        round(log((((definite+probable+0.001)/(definite+probable+possible+speculative+0.001))+1)/(a.area_sqkm/rm.range_area))) "PFS",
         definite+probable "DP",
         definite+probable+possible+speculative "DPPS",
         rm.range_area "RA",
