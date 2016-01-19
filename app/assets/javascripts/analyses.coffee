@@ -160,6 +160,8 @@ remove_stratum = (element) ->
   for v in values
     new_values.push v if v isnt input_zone_id
   value = new_values.join ','
+  if value == ''
+    value = '-'
   props = {}
   props[key] = value
   if key == 'new_strata'
@@ -169,6 +171,8 @@ remove_stratum = (element) ->
   change_element = strata_element.closest(".RM_change")
   change_id = change_element.data 'changeid'
   stratum_element.remove()
+  if strata_element.html() == ''
+    strata_element.html('-')
   patch_change change_id, props
 
 # Bind to window to facilitate calling from Leaflet popup
@@ -181,7 +185,9 @@ window.add_stratum = add_stratum = (stratum_id) ->
   unless value
     key = 'replaced_strata'
     value = strata_element.data "replacedstrata"
-  values = value.split(/,\s*/)
+  values = []
+  if value != '-'
+    values = value.split(/,\s*/)
   values.push stratum_id
   value = values.join ','
   props = {}
@@ -199,6 +205,8 @@ window.add_stratum = add_stratum = (stratum_id) ->
         html = "<div class='RM_stratum' data-stratum='#{map_props.aed_stratum}' data-year='#{map_props.aed_year}'>"
         html += strip_for map_props
         html += "</div>"
+        if strata_element.html() == '-'
+          strata_element.html('')
         strata_element.append html
         strata_element.find(".RM_stratum").on 'click', ->
           highlight_stratum this

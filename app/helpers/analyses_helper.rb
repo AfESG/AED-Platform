@@ -38,4 +38,9 @@ module AnalysesHelper
     out
   end
 
+  def dashify(strata)
+    return '-' if strata == nil or strata.blank?
+    strata
+  end
+
 end
