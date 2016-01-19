@@ -44,10 +44,10 @@
                       - else
                         = change.replacement_name
                     .col-xs-3.RM_clickable
-                      .RM_strata.RM_replaced_strata data-replacedstrata=change.replaced_strata
+                      .RM_strata.RM_replaced_strata data-replacedstrata=dashify(change.replaced_strata)
                         == describe_change_strata(change.replaced_strata,@analysis.comparison_year)
                     .col-xs-3.RM_clickable
-                      .RM_strata.RM_new_strata data-newstrata=change.new_strata
+                      .RM_strata.RM_new_strata data-newstrata=dashify(change.new_strata)
                         == describe_change_strata(change.new_strata,@analysis.analysis_year)
                     .col-xs-1.reason_change
                       .RM_rc_selector.RM_clickable
