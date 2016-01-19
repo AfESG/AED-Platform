@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160110191217) do
+ActiveRecord::Schema.define(version: 20160119002041) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -287,6 +287,78 @@ ActiveRecord::Schema.define(version: 20160110191217) do
     t.string   "continent",  limit: 254
     t.geometry "geom",       limit: {:srid=>4326, :type=>"multi_polygon", :has_z=>true, :has_m=>true}
     t.integer  "survey_geo"
+  end
+
+  create_table "julian_2007", primary_key: "gid", force: :cascade do |t|
+    t.string   "name",       limit: 254
+    t.string   "descriptio", limit: 254
+    t.date     "timestamp"
+    t.date     "begin"
+    t.date     "end"
+    t.string   "altitudemo", limit: 254
+    t.decimal  "tessellate",                                               precision: 10
+    t.decimal  "extrude",                                                  precision: 10
+    t.decimal  "visibility",                                               precision: 10
+    t.decimal  "draworder",                                                precision: 10
+    t.string   "icon",       limit: 254
+    t.string   "inpcode",    limit: 254
+    t.string   "ccode",      limit: 254
+    t.string   "cntryname",  limit: 254
+    t.string   "surveyzone", limit: 254
+    t.string   "cyear",      limit: 254
+    t.string   "cseason",    limit: 254
+    t.string   "method",     limit: 254
+    t.string   "tcrate",     limit: 254
+    t.string   "effsampint", limit: 254
+    t.string   "sampint",    limit: 254
+    t.string   "pilenum",    limit: 254
+    t.string   "drmsite",    limit: 254
+    t.string   "ddcl95p",    limit: 254
+    t.string   "estimate",   limit: 254
+    t.string   "actualseen", limit: 254
+    t.string   "uprange",    limit: 254
+    t.string   "stderror",   limit: 254
+    t.string   "variance",   limit: 254
+    t.string   "cl95",       limit: 254
+    t.string   "cl95p",      limit: 254
+    t.string   "ucl95asym",  limit: 254
+    t.string   "lcl95asym",  limit: 254
+    t.string   "carcass12",  limit: 254
+    t.string   "carcass3",   limit: 254
+    t.string   "carcasst",   limit: 254
+    t.string   "reference",  limit: 254
+    t.string   "refid",      limit: 254
+    t.string   "call_numbe", limit: 254
+    t.string   "quality",    limit: 254
+    t.string   "category",   limit: 254
+    t.string   "surveytype", limit: 254
+    t.string   "pfs",        limit: 254
+    t.string   "definite",   limit: 254
+    t.string   "probable",   limit: 254
+    t.string   "possible",   limit: 254
+    t.string   "specul",     limit: 254
+    t.string   "density",    limit: 254
+    t.string   "cratio12",   limit: 254
+    t.string   "cratiot",    limit: 254
+    t.string   "selection",  limit: 254
+    t.string   "datein",     limit: 254
+    t.string   "dateout",    limit: 254
+    t.string   "designate",  limit: 254
+    t.string   "abvdesigna", limit: 254
+    t.string   "area_sqkm",  limit: 254
+    t.string   "reported",   limit: 254
+    t.string   "derived",    limit: 254
+    t.string   "calculated", limit: 254
+    t.string   "scaledenom", limit: 254
+    t.string   "report",     limit: 254
+    t.string   "df",         limit: 254
+    t.string   "nsample",    limit: 254
+    t.string   "t025",       limit: 254
+    t.string   "lon",        limit: 254
+    t.string   "lat",        limit: 254
+    t.string   "shape_leng", limit: 254
+    t.string   "shape_area", limit: 254
+    t.geometry "geom",       limit: {:srid=>4326, :type=>"multi_polygon"}
   end
 
   create_table "mike_sites", force: :cascade do |t|
@@ -803,19 +875,6 @@ ActiveRecord::Schema.define(version: 20160110191217) do
   create_table "survey_geometry_locator_buffered", id: false, force: :cascade do |t|
     t.string   "site_name",           limit: 255
     t.text     "analysis_name"
-    t.integer  "analysis_year"
-    t.string   "region",              limit: 255
-    t.text     "category"
-    t.string   "reason_change",       limit: 255
-    t.integer  "population_estimate"
-    t.string   "country",             limit: 255
-    t.text     "input_zone_id"
-    t.geometry "survey_geometry",     limit: {:srid=>0, :type=>"geometry"}
-  end
-
-  create_table "survey_geometry_locator_buffered_add", id: false, force: :cascade do |t|
-    t.string   "site_name",           limit: 255
-    t.string   "analysis_name"
     t.integer  "analysis_year"
     t.string   "region",              limit: 255
     t.text     "category"
