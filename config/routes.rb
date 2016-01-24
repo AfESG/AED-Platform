@@ -4,8 +4,6 @@ Aaed::Application.routes.draw do
 
   devise_for :users
 
-  resources :changes
-
   resources :analyses
 
   resources :report_narratives
