@@ -57,6 +57,7 @@ if target == 'DEV2'
   set :deploy_to, '/u/dev2'
 end
 
+set :deploy_via, :remote_cache
 set :rvm_ruby_string, 'ruby-2.2.3@aed'
 set :rvm_type, :user
 
@@ -73,6 +74,11 @@ require 'capistrano-unicorn'
 
 # if you want to clean up old releases on each deploy uncomment this:
 # after "deploy:restart", "deploy:cleanup"
+
+set :keep_releases, 1
+after "deploy:update", "deploy:cleanup"
+after "assets:precompile", "assets:clean_expired"
+after 'deploy:restart', 'unicorn:restart'
 
 # if you're still using the script/reaper helper you will need
 # these http://github.com/rails/irs_process_scripts
