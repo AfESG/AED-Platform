@@ -22,146 +22,148 @@
     == narrative
 
     = render 'tabs', tabs: [ { title: 'DPPS Calculations', template: 'table_preview_summary_totals', args: { level: @country, totals: @summary_totals_by_country, baselines: @baseline_total } },
-      { admin: true, title: 'Alternate, No Rounding', template: 'table_alt_dpps', args: { level: @country, totals: @alt_summary_totals } } ]
+      { admin: true, title: 'Alternate, No Rounding', template: 'table_alt_dpps', args: { level: @country, totals: @alt_summary_totals } },
+      { admin: true, title: 'Map', template: 'map', args: { country: @country, map_uri: @map_uri } } ]
 
-    - if current_user and current_user.admin?
-      = render 'table_causes_of_change', totals: @causes_of_change_by_country_u, sums: @causes_of_change_sums_by_country_u
-      = render 'table_causes_of_change', totals: @causes_of_change_by_country, sums: @causes_of_change_sums_by_country,
-        hideable: true,
-        title: 'Interpretation of Changes in Estimates from Previous Report (2007 scaling)'
+    .below_tabs
+      - if current_user and current_user.admin?
+        = render 'table_causes_of_change', totals: @causes_of_change_by_country_u, sums: @causes_of_change_sums_by_country_u
+        = render 'table_causes_of_change', totals: @causes_of_change_by_country, sums: @causes_of_change_sums_by_country,
+          hideable: true,
+          title: 'Interpretation of Changes in Estimates from Previous Report (2007 scaling)'
 
-      .toggle style=('margin-top:-20px; margin-bottom: 10px; text-align: right')
-        a onclick='toggle_hideables()'  toggle scaling
+        .toggle style=('margin-top:-20px; margin-bottom: 10px; text-align: right')
+          a onclick='toggle_hideables()'  toggle scaling
 
-    = render 'table_area_of_range_covered', totals: @area_of_range_covered_by_country, sums: @area_of_range_covered_sum_by_country
+      = render 'table_area_of_range_covered', totals: @area_of_range_covered_by_country, sums: @area_of_range_covered_sum_by_country
 
-    - if @elephant_estimates_by_country.num_tuples > 0
-      h2
-        = @country
-        |: Elephant Estimates
-      table.table
-        tr
-          th style="border:none"
-            th style="border:none"  Cause of
-          th colspan=3 style="text-align:center"
-            | Survey Details
-            sup 2
-          th colspan=2 style="text-align:center"  Number of Elephants
-          th style="border:none"
-          th style="border:none"
-          th.numeric style=("border:none; padding-right:10px")  Area
-          th colspan=2 style="text-align:center"  Map Location
-        tr
-          th Input Zone
-          th
-            | Change
-            sup 1
-          th Type
-          th Reliab.
-          th Year
-          th.numeric Estimate
-          th.numeric 95% C.L.
-          th style="padding-left:10px"  Source
-          th
-            | PFS
-            sup 3
-          th.numeric style="padding-right:10px"  (km²)
-          th style='text-align:center'  Lon.
-          th style='text-align:center'  Lat.
-        - @elephant_estimate_groups.each do |group|
-          - @rn = @cc = @ty = @yr = @re = ''
-          - @ar = @n = @pv = @es = @cl = @car = @dp = @dpps = @ra = 0
-          - if group.size > 1
-            - group.each do |row|
-              - @rn = row['replacement_name']
-              - @cc = row['ReasonForChange']
-              - @ca = row['CATEGORY']
-              - @ty = row['method_and_quality'].gsub(/[\d]/,'')
-              - @yr = row['CYEAR']
-              - @re = row['REFERENCE']
-              - @dp = @dp + row['DP'].to_f
-              - @dpps = @dpps + row['DPPS'].to_f
-              - @car = @car + row['CALC_SQKM'].to_f
-              - @ar = @ar + row['AREA_SQKM'].to_i
-              - @pv = @pv + row['population_variance'].to_f
-              - @es = @es + row['ESTIMATE'].to_i
-              - @lo = row['LON']
-              - @la = row['LAT']
-              - @ra = row['RA'].to_f
-              - @n = @n + 1
-          - else
-            - group.each do |row|
-              - @rn = row['replacement_name']
-              - @cc = row['ReasonForChange']
-              - @ca = row['CATEGORY']
-              - @ty = row['method_and_quality'].gsub(/[\d]/,'')
-              - @yr = row['CYEAR']
-              - @re = row['REFERENCE']
-              - @dp = row['DP'].to_f
-              - @dpps = row['DPPS'].to_f
-              - @car = row['CALC_SQKM'].to_f
-              - @ar = row['AREA_SQKM']
-              - @pv = 0
-              - @cl = row['CL95']
-              - @es = row['ESTIMATE']
-              - @lo = row['LON']
-              - @la = row['LAT']
-              - @n = @n + 1
-              - @ra = row['RA'].to_f
-          - @pf = (Math.log10((((@dp+0.001)/(@dpps+0.001))+1)/(@car/@ra))).round rescue '?'
+      - if @elephant_estimates_by_country.num_tuples > 0
+        h2
+          = @country
+          |: Elephant Estimates
+        table.table
           tr
-            td
-              a href="javascript:toggle_section('#{@rn.gsub(/[^\w\d]/,'')}')" style='text-decoration:none'  +
-              '
-              = @rn
-            td= @cc
-            td= @ty
-            td style="text-align:center" = @ca
-            td= @yr
-            td style="text-align:right" = number_with_delimiter @es
-            -if @pv>0
-              td style="text-align:right" = number_with_delimiter ((Math.sqrt(@pv))*1.96).round
+            th style="border:none"
+              th style="border:none"  Cause of
+            th colspan=3 style="text-align:center"
+              | Survey Details
+              sup 2
+            th colspan=2 style="text-align:center"  Number of Elephants
+            th style="border:none"
+            th style="border:none"
+            th.numeric style=("border:none; padding-right:10px")  Area
+            th colspan=2 style="text-align:center"  Map Location
+          tr
+            th Input Zone
+            th
+              | Change
+              sup 1
+            th Type
+            th Reliab.
+            th Year
+            th.numeric Estimate
+            th.numeric 95% C.L.
+            th style="padding-left:10px"  Source
+            th
+              | PFS
+              sup 3
+            th.numeric style="padding-right:10px"  (km²)
+            th style='text-align:center'  Lon.
+            th style='text-align:center'  Lat.
+          - @elephant_estimate_groups.each do |group|
+            - @rn = @cc = @ty = @yr = @re = ''
+            - @ar = @n = @pv = @es = @cl = @car = @dp = @dpps = @ra = 0
+            - if group.size > 1
+              - group.each do |row|
+                - @rn = row['replacement_name']
+                - @cc = row['ReasonForChange']
+                - @ca = row['CATEGORY']
+                - @ty = row['method_and_quality'].gsub(/[\d]/,'')
+                - @yr = row['CYEAR']
+                - @re = row['REFERENCE']
+                - @dp = @dp + row['DP'].to_f
+                - @dpps = @dpps + row['DPPS'].to_f
+                - @car = @car + row['CALC_SQKM'].to_f
+                - @ar = @ar + row['AREA_SQKM'].to_i
+                - @pv = @pv + row['population_variance'].to_f
+                - @es = @es + row['ESTIMATE'].to_i
+                - @lo = row['LON']
+                - @la = row['LAT']
+                - @ra = row['RA'].to_f
+                - @n = @n + 1
             - else
-              td style="text-align:right" = @cl.to_s.gsub(/[^\d]/, "")!="0" ? number_with_delimiter(@cl) : ""
-            td style="padding-left:10px" = @re
-            td style="text-align:center" = @pf
-            td style="text-align:right" = @ar.to_s!="0" ? number_with_delimiter(@ar) : ""
-            td style="text-align:center" = @lo
-            td style="text-align:center" = @la
-          - group.each do |row|
-            tr data-section=("#{@rn.gsub(/[^\w\d]/,'')}") style=('height:18px; display:none')
+              - group.each do |row|
+                - @rn = row['replacement_name']
+                - @cc = row['ReasonForChange']
+                - @ca = row['CATEGORY']
+                - @ty = row['method_and_quality'].gsub(/[\d]/,'')
+                - @yr = row['CYEAR']
+                - @re = row['REFERENCE']
+                - @dp = row['DP'].to_f
+                - @dpps = row['DPPS'].to_f
+                - @car = row['CALC_SQKM'].to_f
+                - @ar = row['AREA_SQKM']
+                - @pv = 0
+                - @cl = row['CL95']
+                - @es = row['ESTIMATE']
+                - @lo = row['LON']
+                - @la = row['LAT']
+                - @n = @n + 1
+                - @ra = row['RA'].to_f
+            - @pf = (Math.log10((((@dp+0.001)/(@dpps+0.001))+1)/(@car/@ra))).round rescue '?'
+            tr
               td
-                div style='margin-left:20px;'
-                  a href="/population_submissions/#{row['population_submission_id']}" = row['stratum_name']
-              td= row['ReasonForChange']
-              td= row['method_and_quality'].gsub(/[\d]/,'')
-              td style="text-align:center" = row['CATEGORY']
-              td= row['CYEAR']
-              td.numeric= number_with_delimiter row['ESTIMATE']
-              td.numeric= row['CL95'].to_s.gsub(/[^\d]/, '')!="0" ? (number_with_delimiter row['CL95']) : ""
-              td style="padding-left:10px" = row['REFERENCE']
-              td style='text-align:center' = row['PFS']
-              td.numeric style="padding-right:10px" = number_with_delimiter row['AREA_SQKM']
-              td style='text-align:center' = row['LON']
-              td style='text-align:center' = row['LAT']
+                a href="javascript:toggle_section('#{@rn.gsub(/[^\w\d]/,'')}')" style='text-decoration:none'  +
+                '
+                = @rn
+              td= @cc
+              td= @ty
+              td style="text-align:center" = @ca
+              td= @yr
+              td style="text-align:right" = number_with_delimiter @es
+              -if @pv>0
+                td style="text-align:right" = number_with_delimiter ((Math.sqrt(@pv))*1.96).round
+              - else
+                td style="text-align:right" = @cl.to_s.gsub(/[^\d]/, "")!="0" ? number_with_delimiter(@cl) : ""
+              td style="padding-left:10px" = @re
+              td style="text-align:center" = @pf
+              td style="text-align:right" = @ar.to_s!="0" ? number_with_delimiter(@ar) : ""
+              td style="text-align:center" = @lo
+              td style="text-align:center" = @la
+            - group.each do |row|
+              tr data-section=("#{@rn.gsub(/[^\w\d]/,'')}") style=('height:18px; display:none')
+                td
+                  div style='margin-left:20px;'
+                    a href="/population_submissions/#{row['population_submission_id']}" = row['stratum_name']
+                td= row['ReasonForChange']
+                td= row['method_and_quality'].gsub(/[\d]/,'')
+                td style="text-align:center" = row['CATEGORY']
+                td= row['CYEAR']
+                td.numeric= number_with_delimiter row['ESTIMATE']
+                td.numeric= row['CL95'].to_s.gsub(/[^\d]/, '')!="0" ? (number_with_delimiter row['CL95']) : ""
+                td style="padding-left:10px" = row['REFERENCE']
+                td style='text-align:center' = row['PFS']
+                td.numeric style="padding-right:10px" = number_with_delimiter row['AREA_SQKM']
+                td style='text-align:center' = row['LON']
+                td style='text-align:center' = row['LAT']
 
-    == footnote
+      == footnote
 
-    p
-      | * Range of informed guess
-    p
-      sup 1
-      == t 'footnotes.causes_of_change'
-    p
-      sup 2
-      == t 'footnotes.survey_types'
-    p
-      sup 3
-      == t 'footnotes.pfs'
-    p
-      == t 'footnotes.derived_warning'
+      p
+        | * Range of informed guess
+      p
+        sup 1
+        == t 'footnotes.causes_of_change'
+      p
+        sup 2
+        == t 'footnotes.survey_types'
+      p
+        sup 3
+        == t 'footnotes.pfs'
+      p
+        == t 'footnotes.derived_warning'
 
-    javascript:
-      function toggle_section(key){
-        jQuery('*[data-section="'+key+'"]').toggle(300)
-      }
+javascript:
+  function toggle_section(key){
+    jQuery('*[data-section="'+key+'"]').toggle(300)
+  }
