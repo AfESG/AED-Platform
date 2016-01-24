@@ -49,12 +49,10 @@ html
                   - if user_signed_in?
                     - if current_user.admin?
                       li = link_to 'Superuser', '/superuser'
-                    li = link_to 'Support', 'http://www.assembla.com/spaces/aaed/support/tickets'
                     li = link_to 'My Submissions', '/my_population_submissions'
                     li = link_to 'My Account', edit_user_registration_path
                     li = link_to 'Sign Out', destroy_user_session_path, method: :delete
                   - else
-                    li = link_to 'Support', 'http://www.assembla.com/spaces/aaed/support/tickets'
                     li = link_to 'Register', new_user_registration_path
                     li = link_to 'Log In', new_user_session_path
       .row.alerts
