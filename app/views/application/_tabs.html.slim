@@ -17,4 +17,4 @@
       .tab-content
         - tabs.each_with_index do |tab, index|
           .tab-pane id=("#{id}-page-#{index}") class=(index == 0 ? 'active' : nil) role='tabpanel'
-            = render tab[:template], (tab[:args] || {})
+            = render tab[:template], (tab[:args] || {}).merge({target:"##{id}-page-#{index}"})

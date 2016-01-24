@@ -514,6 +514,7 @@ class ReportController < ApplicationController
     @continent = params[:continent]
     @region = params[:region].gsub('_',' ')
     @country = params[:country].gsub('_',' ')
+    @map_uri = Country.where(name: params[:country]).first().iso_code + "/" + params[:filter] + "/" + params[:year]
     @filter = params[:filter]
     @preview_title = official_title(@filter) or @filter.humanize.upcase
 
