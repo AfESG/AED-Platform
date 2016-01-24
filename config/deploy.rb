@@ -20,6 +20,7 @@ if target == 'WWW'
   default_environment['UNICORN_PORT'] = '5000'
   default_environment['POSTGRESQL_DATABASE'] = 'aed_production'
   default_environment['HOSTNAME'] = 'www.elephantdatabase.org'
+  default_environment['APP_PATH'] = '/u/production'
   set :deploy_to, '/u/production'
 end
 
@@ -30,6 +31,7 @@ if target == 'STAGING'
   default_environment['POSTGRESQL_DATABASE'] = 'aed_staging'
   default_environment['HOSTNAME'] = 'staging.elephantdatabase.org'
   default_environment['authenticate_all_requests'] = 'cop17'
+  default_environment['APP_PATH'] = '/u/staging'
   set :deploy_to, '/u/staging'
 end
 
@@ -40,6 +42,7 @@ if target == 'DEV'
   default_environment['POSTGRESQL_DATABASE'] = 'aed_development'
   default_environment['HOSTNAME'] = 'dev.elephantdatabase.org'
   default_environment['authenticate_all_requests'] = 'theta'
+  default_environment['APP_PATH'] = '/u/dev'
   set :deploy_to, '/u/dev'
 end
 
@@ -50,6 +53,7 @@ if target == 'DEV2'
   default_environment['POSTGRESQL_DATABASE'] = 'aed_development2'
   default_environment['HOSTNAME'] = 'dev2.elephantdatabase.org'
   default_environment['authenticate_all_requests'] = 'phi'
+  default_environment['APP_PATH'] = '/u/dev2'
   set :deploy_to, '/u/dev2'
 end
 
