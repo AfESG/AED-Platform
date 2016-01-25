@@ -1,0 +1,21 @@
+.row
+  .col-xs-12
+    h1= t '.title'
+    p
+      = link_to t('back'), changes_path
+      = link_to t('edit'), edit_change_path(@change)
+      = link_to t('.new'), new_change_path
+
+    dl
+      dt= Change.human_attribute_name :analysis_name
+      dd= @change.analysis_name
+      dt= Change.human_attribute_name :analysis_year
+      dd= @change.analysis_year
+      dt= Change.human_attribute_name :replacement_name
+      dd= @change.replacement_name
+      dt= Change.human_attribute_name :replaced_strata
+      dd= @change.replaced_strata
+      dt= Change.human_attribute_name :new_strata
+      dd= @change.new_strata
+      dt= Change.human_attribute_name :reason_change
+      dd= @change.reason_change
