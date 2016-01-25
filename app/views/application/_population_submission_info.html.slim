@@ -46,10 +46,10 @@
           = render :partial => 'population_submission_attachment', :locals => {:a => a}
     - if edit_allowed
       .add_actions
-        = link_to new_population_submission_population_submission_attachment_path(p) do
+        div= link_to new_population_submission_population_submission_attachment_path(p) do
           .glyphicon.glyphicon-file
           |  Attach a file (survey report, relevant geometries, etc.)
-        = link_to population_submission_linked_citations_path(p) do
+        div= link_to population_submission_linked_citations_path(p) do
           .glyphicon.glyphicon-bookmark
           |  Manage linked citations
     .submit_actions
