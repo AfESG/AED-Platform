@@ -16,6 +16,7 @@
         = f.input :completion_month, :as => :select, :collection => {"January" => 1, "February" => 2, "March" => 3, "April" => 4, "May" => 5, "June" => 6, "July" => 7, "August" => 8, "September" => 9, "October" => 10, "November" => 11, "December" => 12}
         = f.input :season, :as => :select, :collection => ["Wet", "Dry", "Both", "Unknown"]
         = f.input :survey_type, :as => :select, :collection => {"Aerial total count (AT)" => 'AT', "Aerial sample count (AS)" => 'AS', "Ground total count (GT)" => 'GT', "Ground sample count (GS)" => 'GS', "Dung count (DC)" => 'DC', "Faecal DNA survey (GD)" => 'GD', "Individual registration (IR)" => 'IR', "Other" => 'O'}
+        = f.input :comments
       = f.actions
 
 javascript:
