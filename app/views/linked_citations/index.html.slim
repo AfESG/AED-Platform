@@ -1,0 +1,36 @@
+.row
+  .col-xs-12
+    h1 Linked Citations
+.row
+  .col-sm-4
+    .restated_survey_info
+      =render :partial => 'submission_info', :locals => { :s => @submission }
+  .col-sm-8
+    p= link_to 'Add Linked Citation', new_population_submission_linked_citation_path(@population_submission)
+    - if @linked_citations.count > 0
+      table style='width: 100%'
+        tr
+          th
+            ' Short citation
+          th
+            ' Long citation
+          th
+            ' URI
+          th
+            ' Description
+          th
+        -@linked_citations.each do |linked_citation|
+          tr
+            td
+              = linked_citation.short_citation
+            td
+              = linked_citation.long_citation
+            td
+              = link_to linked_citation.uri do
+                = linked_citation.uri
+            td
+              = linked_citation.description
+            td.action
+              = link_to edit_population_submission_linked_citation_path(@population_submission, linked_citation) do
+                .glyphicon.glyphicon-pencil
+              = link_to image_tag("delete.png"), linked_citation, data: {:confirm => "Delete? Are you sure?"}, :method => :delete

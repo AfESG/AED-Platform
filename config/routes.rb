@@ -26,7 +26,10 @@ Aaed::Application.routes.draw do
     resources :survey_individual_registrations
     resources :survey_others
     resources :population_submission_attachments
+    resources :linked_citations
   end
+
+  resources :linked_citations
 
   resources :survey_aerial_sample_counts do
     resources :survey_aerial_sample_count_strata
