@@ -173,7 +173,14 @@ remove_stratum = (element) ->
   stratum_element.remove()
   if strata_element.html() == ''
     strata_element.html('-')
-  patch_change change_id, props
+  patch_change change_id, props, ->
+    COUNTRY_LAYER.eachLayer (l)->
+      if l.feature.geometry.properties.aed_stratum == input_zone_id
+        l.setStyle
+          fillColor: "#77ff77"
+        map.fitBounds l.getBounds()
+      else
+        l.setStyle style(l.feature)
 
 # Bind to window to facilitate calling from Leaflet popup
 window.add_stratum = add_stratum = (stratum_id) ->
