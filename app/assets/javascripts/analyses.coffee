@@ -147,6 +147,7 @@ status_changed = (element) ->
       comments: comments_val
 
 remove_stratum = (element) ->
+  map.closePopup()
   stratum_element = $(element).closest(".RM_stratum")
   input_zone_id = stratum_element.data('stratum')
   strata_element = stratum_element.closest(".RM_strata")
@@ -186,6 +187,7 @@ remove_stratum = (element) ->
 window.add_stratum = add_stratum = (stratum_id) ->
   unless ACTIVE_STRATA_CELL
     alert "Please select a new or replaced strata cell first."
+  map.closePopup()
   strata_element = $(ACTIVE_STRATA_CELL)
   key = 'new_strata'
   value = strata_element.data "newstrata"
