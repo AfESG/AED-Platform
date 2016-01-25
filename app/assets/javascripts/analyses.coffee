@@ -6,6 +6,12 @@ strip_for = (map_props) ->
   html += "<div style='font-size: x-small'>#{map_props.aed_citation}</div>"
   html += "<div style='font-size: x-small'><a href='#{map_props.uri}' target='_blank'>#{map_props.aed_stratum}</a> est. #{map_props.aed_estimate}, #{map_props.aed_area} km²</div>"
 
+add_link_for = (map_props) ->
+  if map_props.aed_stratum
+    "<div style='margin-top: 5px;'><a href='javascript:add_stratum(\""+map_props.aed_stratum+"\")'>Add this stratum</a></div>"
+  else
+    ""
+
 style = (feature) ->
   color="#77ff77"
   if RM_used_estimates[feature.geometry.properties['aed_stratum']]
@@ -19,8 +25,10 @@ style = (feature) ->
   }
 
 onEachFeature = (feature, layer) ->
-  popupContent = strip_for feature.properties
-  popupContent += "<div style='margin-top: 5px;'><a href='javascript:add_stratum(\""+feature.properties.aed_stratum+"\")'>Add this stratum</a></div>"  if feature.properties.aed_stratum
+  map_props = feature.properties
+  popupContent = strip_for(map_props)
+  unless RM_used_estimates[map_props['aed_stratum']]
+    popupContent += add_link_for(map_props)
   layer.bindPopup popupContent
 
 map_country = (element) ->
@@ -177,6 +185,10 @@ remove_stratum = (element) ->
   patch_change change_id, props, ->
     COUNTRY_LAYER.eachLayer (l)->
       if l.feature.geometry.properties.aed_stratum == input_zone_id
+        # Make feature green and selectable
+        map_props = l.feature.geometry.properties
+        console.log l
+        l.bindPopup(strip_for(map_props) + add_link_for(map_props))
         l.setStyle
           fillColor: "#77ff77"
         map.fitBounds l.getBounds()
@@ -212,8 +224,13 @@ window.add_stratum = add_stratum = (stratum_id) ->
       if l.feature.geometry.properties.aed_stratum == stratum_id
         map_props = l.feature.geometry.properties
         html = "<div class='RM_stratum' data-stratum='#{map_props.aed_stratum}' data-year='#{map_props.aed_year}'>"
-        html += strip_for map_props
+        html += strip_for(map_props)
         html += "</div>"
+        # Make feature red and not selectable
+        console.log l
+        l.bindPopup(strip_for(map_props))
+        l.setStyle
+          fillColor: "#ff7777"
         if strata_element.html() == '-'
           strata_element.html('')
         strata_element.append html
