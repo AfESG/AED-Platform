@@ -3,7 +3,7 @@
     = f.input :population_submission_id, :as => :hidden, :input_html => { :value => params[:population_submission_id] }
     = f.input :short_citation
     = f.input :long_citation
-    = f.input :uri
+    = f.input :url, label: 'URL'
     = f.input :description
   = f.actions do
     = f.submit

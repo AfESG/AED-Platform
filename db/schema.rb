@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160125063910) do
+ActiveRecord::Schema.define(version: 20160125090447) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -364,7 +364,7 @@ ActiveRecord::Schema.define(version: 20160125063910) do
   create_table "linked_citations", force: :cascade do |t|
     t.string   "long_citation"
     t.string   "short_citation"
-    t.string   "uri"
+    t.string   "url"
     t.text     "description"
     t.integer  "population_submission_id"
     t.datetime "created_at",               null: false
@@ -423,6 +423,7 @@ ActiveRecord::Schema.define(version: 20160125063910) do
     t.string   "short_citation",    limit: 255
     t.float    "latitude"
     t.float    "longitude"
+    t.text     "comments"
   end
 
   create_table "production_versions", id: false, force: :cascade do |t|
