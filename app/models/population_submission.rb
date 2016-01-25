@@ -54,6 +54,8 @@ class PopulationSubmission < ActiveRecord::Base
   has_many :population_submission_attachments
   has_many :population_submission_geometries
 
+  has_many :linked_citations
+
   @@mappings =
     {
       'AS' => 'survey_aerial_sample_count',
