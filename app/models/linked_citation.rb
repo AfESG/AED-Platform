@@ -6,7 +6,7 @@ class LinkedCitation < ActiveRecord::Base
     :linked_citation,
     :short_citation,
     :long_citation,
-    :uri,
+    :url,
     :description
   )
 
