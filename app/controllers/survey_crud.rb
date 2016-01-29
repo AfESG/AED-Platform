@@ -192,6 +192,7 @@ module SurveyCrud
       return
     end
 
+    params[level_base_name].delete 'from_feature'
     if @level.update_attributes(params[level_base_name])
       redirect_to @level
     else
