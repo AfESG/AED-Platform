@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160131211655) do
+ActiveRecord::Schema.define(version: 20160201001116) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -290,74 +290,64 @@ ActiveRecord::Schema.define(version: 20160131211655) do
   end
 
   create_table "julian_2007", primary_key: "gid", force: :cascade do |t|
-    t.string   "name",       limit: 254
-    t.string   "descriptio", limit: 254
-    t.date     "timestamp"
-    t.date     "begin"
-    t.date     "end"
-    t.string   "altitudemo", limit: 254
-    t.decimal  "tessellate",                                               precision: 10
-    t.decimal  "extrude",                                                  precision: 10
-    t.decimal  "visibility",                                               precision: 10
-    t.decimal  "draworder",                                                precision: 10
-    t.string   "icon",       limit: 254
-    t.string   "inpcode",    limit: 254
-    t.string   "ccode",      limit: 254
-    t.string   "cntryname",  limit: 254
-    t.string   "surveyzone", limit: 254
-    t.string   "cyear",      limit: 254
-    t.string   "cseason",    limit: 254
-    t.string   "method",     limit: 254
-    t.string   "tcrate",     limit: 254
-    t.string   "effsampint", limit: 254
-    t.string   "sampint",    limit: 254
-    t.string   "pilenum",    limit: 254
-    t.string   "drmsite",    limit: 254
-    t.string   "ddcl95p",    limit: 254
-    t.string   "estimate",   limit: 254
-    t.string   "actualseen", limit: 254
-    t.string   "uprange",    limit: 254
-    t.string   "stderror",   limit: 254
-    t.string   "variance",   limit: 254
-    t.string   "cl95",       limit: 254
-    t.string   "cl95p",      limit: 254
-    t.string   "ucl95asym",  limit: 254
-    t.string   "lcl95asym",  limit: 254
-    t.string   "carcass12",  limit: 254
-    t.string   "carcass3",   limit: 254
-    t.string   "carcasst",   limit: 254
-    t.string   "reference",  limit: 254
-    t.string   "refid",      limit: 254
-    t.string   "call_numbe", limit: 254
-    t.string   "quality",    limit: 254
-    t.string   "category",   limit: 254
-    t.string   "surveytype", limit: 254
-    t.string   "pfs",        limit: 254
-    t.string   "definite",   limit: 254
-    t.string   "probable",   limit: 254
-    t.string   "possible",   limit: 254
-    t.string   "specul",     limit: 254
-    t.string   "density",    limit: 254
-    t.string   "cratio12",   limit: 254
-    t.string   "cratiot",    limit: 254
-    t.string   "selection",  limit: 254
-    t.string   "datein",     limit: 254
-    t.string   "dateout",    limit: 254
-    t.string   "designate",  limit: 254
-    t.string   "abvdesigna", limit: 254
-    t.string   "area_sqkm",  limit: 254
-    t.string   "reported",   limit: 254
-    t.string   "derived",    limit: 254
-    t.string   "calculated", limit: 254
-    t.string   "scaledenom", limit: 254
-    t.string   "report",     limit: 254
-    t.string   "df",         limit: 254
-    t.string   "nsample",    limit: 254
-    t.string   "t025",       limit: 254
-    t.string   "lon",        limit: 254
-    t.string   "lat",        limit: 254
-    t.string   "shape_leng", limit: 254
-    t.string   "shape_area", limit: 254
+    t.string   "inpcode",    limit: 6
+    t.string   "ccode",      limit: 2
+    t.string   "cntryname",  limit: 30
+    t.string   "surveyzone", limit: 80
+    t.integer  "cyear",      limit: 2
+    t.string   "cseason",    limit: 10
+    t.string   "method",     limit: 2
+    t.integer  "tcrate",     limit: 2
+    t.float    "effsampint"
+    t.float    "sampint"
+    t.integer  "pilenum",    limit: 2
+    t.integer  "drmsite",    limit: 2
+    t.float    "ddcl95p"
+    t.integer  "estimate"
+    t.integer  "actualseen"
+    t.integer  "uprange",    limit: 2
+    t.float    "stderror"
+    t.float    "variance"
+    t.float    "cl95"
+    t.float    "cl95p"
+    t.float    "ucl95asym"
+    t.float    "lcl95asym"
+    t.integer  "carcass12"
+    t.integer  "carcass3"
+    t.integer  "carcasst"
+    t.string   "reference",  limit: 100
+    t.integer  "refid"
+    t.string   "call_numbe", limit: 30
+    t.integer  "quality",    limit: 2
+    t.string   "category",   limit: 1
+    t.string   "surveytype", limit: 80
+    t.integer  "pfs"
+    t.integer  "definite"
+    t.integer  "probable"
+    t.integer  "possible"
+    t.integer  "specul"
+    t.float    "density"
+    t.float    "cratio12"
+    t.float    "cratiot"
+    t.integer  "selection",  limit: 2
+    t.date     "datein"
+    t.date     "dateout"
+    t.string   "comments",   limit: 254
+    t.string   "designate",  limit: 50
+    t.string   "abvdesigna", limit: 10
+    t.integer  "area_sqkm"
+    t.integer  "reported"
+    t.integer  "derived"
+    t.integer  "calculated"
+    t.integer  "scaledenom"
+    t.integer  "report",     limit: 2
+    t.integer  "df",         limit: 2
+    t.integer  "nsample",    limit: 2
+    t.decimal  "t025"
+    t.decimal  "lon"
+    t.decimal  "lat"
+    t.decimal  "shape_leng"
+    t.decimal  "shape_area"
     t.geometry "geom",       limit: {:srid=>4326, :type=>"multi_polygon"}
   end
 
