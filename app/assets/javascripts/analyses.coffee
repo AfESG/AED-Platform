@@ -247,13 +247,17 @@ highlight_stratum = (element) ->
     remove_stratum this
   stratum = stratum_element.data('stratum')
   year = stratum_element.data('year')
+  feature_found = false
   COUNTRY_LAYER.eachLayer (l)->
     if l.feature.geometry.properties.aed_stratum == stratum
       l.setStyle
         fillColor: "#ffff77"
       map.fitBounds l.getBounds()
+      feature_found = true
     else
       l.setStyle style(l.feature)
+  unless feature_found
+    alert "Corresponding feature not found on map"
 
 add_new_change = (element) ->
   country_element = $(element).closest('.RM_country')
