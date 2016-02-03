@@ -10,16 +10,18 @@ class CountriesController < ApplicationController
           count.strata.includes(:survey_geometry).each do |stratum|
             if stratum.survey_geometry
               feature = RGeo::GeoJSON.encode(stratum.survey_geometry.geom)
-              feature['properties'] = {
-                'aed_stratum' => "#{population_submission.survey_type}#{stratum.id}",
-                'uri' => "/#{stratum.class.name.pluralize.underscore}/#{stratum.id}",
-                'aed_name' => stratum.stratum_name,
-                'aed_year' => population_submission.completion_year,
-                'aed_citation' => population_submission.short_citation,
-                'aed_area' => stratum.stratum_area,
-                'aed_estimate' => stratum.population_estimate
-              }
-              features << feature
+              if feature
+                feature['properties'] = {
+                  'aed_stratum' => "#{population_submission.survey_type}#{stratum.id}",
+                  'uri' => "/#{stratum.class.name.pluralize.underscore}/#{stratum.id}",
+                  'aed_name' => stratum.stratum_name,
+                  'aed_year' => population_submission.completion_year,
+                  'aed_citation' => population_submission.short_citation,
+                  'aed_area' => stratum.stratum_area,
+                  'aed_estimate' => stratum.population_estimate
+                }
+                features << feature
+              end
             end
           end
         else
