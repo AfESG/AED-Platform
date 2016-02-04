@@ -5,8 +5,8 @@ class LinkedCitationsController < ApplicationController
   # GET /linked_citations
   # GET /linked_citations.json
   def index
-    @linked_citations = LinkedCitation.order(:short_citation,:long_citation)
     @population_submission = PopulationSubmission.find(params[:population_submission_id])
+    @linked_citations = @population_submission.linked_citations.order(:short_citation,:long_citation)
     @submission = @population_submission.submission
     respond_to do |format|
       format.html # index.html.erb
