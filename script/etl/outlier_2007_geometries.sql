@@ -1,0 +1,13 @@
+update julian_2007 set ccode='SS' where ccode='SD';
+update survey_dung_count_line_transect_strata set survey_geometry_id=16724 where id=1386;
+update survey_dung_count_line_transect_strata set survey_geometry_id=16691 where id=1139;
+update survey_dung_count_line_transect_strata set survey_geometry_id=16717 where id=1114;
+update survey_aerial_total_count_strata set survey_geometry_id=16725 where id=1003;
+update survey_others set survey_geometry_id=16257 where id=2078;
+update survey_others set survey_geometry_id=16255 where id=1953;
+update survey_others set survey_geometry_id=16713 where id=1178;
+update survey_aerial_sample_count_strata set survey_geometry_id=16545 where id=3067;
+update survey_aerial_sample_count_strata set survey_geometry_id=16537 where id=3068;
+update survey_aerial_sample_count_strata set survey_geometry_id=16559 where id=3069;
+update survey_aerial_sample_count_strata set survey_geometry_id=16539 where id=3072;
+update survey_aerial_sample_count_strata set survey_geometry_id=16577 where id=3073;
