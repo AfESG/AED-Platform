@@ -3,7 +3,7 @@
     .edit_link
       = link_to guess_edit_stratum_path(b) do
         .glyphicon.glyphicon-pencil
-      = link_to image_tag("delete.png"), b, :confirm => t('are_you_sure_delete_stratum'), :method => :delete
+      = link_to image_tag("delete.png"), b, , data: { confirm: 'Are you sure?' }, method: :delete
   .count_stratum_header
     .count_stratum_estimate= b.population_estimate
     =link_to guess_show_stratum_path(b) do
@@ -16,4 +16,3 @@
         - if b.stratum_area > 0
           = b.stratum_area
           | km²
-

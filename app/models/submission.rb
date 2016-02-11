@@ -13,7 +13,7 @@ class Submission < ActiveRecord::Base
   belongs_to :country
   belongs_to :species
 
-  has_many :population_submissions
+  has_many :population_submissions, dependent: :destroy
 
   has_many :survey_aerial_sample_counts, :through => :population_submissions
   has_many :survey_aerial_total_counts, :through => :population_submissions

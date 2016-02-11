@@ -8,7 +8,7 @@
       .edit_link
         = link_to edit_population_submission_path(p) do
           .glyphicon.glyphicon-pencil
-        = link_to image_tag("delete.png"), p, :confirm => t('are_you_sure'), :method => :delete
+        = link_to image_tag("delete.png"), p, data: { confirm: 'Are you sure?' }, method: :delete
     .population_submission_header
       .population_submission_site_name
         = link_to population_submission_path(p) do
