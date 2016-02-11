@@ -121,6 +121,8 @@ Aaed::Application.routes.draw do
 
   get 'submission_search' => 'submission_search#index'
 
+  get 'history/:item_type/:id' => 'versions#history'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

@@ -1,4 +1,5 @@
 ACTIVE_STRATA_CELL = null
+ACTIVE_STATUS_CELL = null
 COUNTRY_LAYER = null
 
 strip_for = (map_props) ->
@@ -137,7 +138,12 @@ name_changed = (element) ->
       replacement_name: val
 
 status_activate = (element) ->
-  $(element).closest('.RM_change').find('.RM_status_selector').each ->
+  if ACTIVE_STATUS_CELL
+    status_deactivate(ACTIVE_STATUS_CELL)
+  ACTIVE_STATUS_CELL = element
+  change = $(element).closest('.RM_change').first()
+  window.reveal_history('Change',change.data('changeid'))
+  change.find('.RM_status_selector').each ->
     val = $(this).html()
     $(this).off 'click'
     completed_available = ''
@@ -148,7 +154,7 @@ status_activate = (element) ->
       $(this).val(val)
       $(this).on 'change', ->
         status_changed(this)
-  $(element).closest('.RM_change').find('.RM_comments').each ->
+  change.find('.RM_comments').each ->
     $(this).off 'click'
     $(this).html "<textarea>#{$(this).html()}</textarea>"
     $(this).find('textarea').each ->
@@ -158,7 +164,8 @@ status_activate = (element) ->
       $(this).on 'change', (event) ->
         status_changed(this)
 
-status_changed = (element) ->
+status_deactivate = (element) ->
+  ACTIVE_STATUS_CELL = null
   $(element).closest('.RM_change').each ->
     change_id = $(this).data 'changeid'
     status_val = ''
@@ -175,6 +182,26 @@ status_changed = (element) ->
         $(this).html status_val
         $(this).on 'click', ->
           status_activate this
+
+status_changed = (element) ->
+  ACTIVE_STATUS_CELL = null
+  $(element).closest('.RM_change').each ->
+    change_id = $(this).data 'changeid'
+    status_val = ''
+    comments_val = ''
+    $(this).find('textarea').each ->
+      comments_val =  $(this).val()
+      $(this).parent().each ->
+        $(this).html comments_val
+        $(this).on 'click', ->
+          status_activate this
+    $(this).find('select').each ->
+      status_val = $(this).val()
+      $(this).parent().each ->
+        $(this).html status_val
+        $(this).on 'click', ->
+          status_activate this
+    window.hide_history_window()
     patch_change change_id,
       status: status_val
       comments: comments_val

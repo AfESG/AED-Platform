@@ -1,3 +1,54 @@
 // Place all the styles related to the versions controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.history_window {
+  position: absolute;
+  z-index: 32000;
+  height: 100%;
+  width: 20%;
+  right: 0;
+  top: 0;
+  background: #fff;
+  opacity: 0.9;
+  box-shadow: 0 0 10px #333;
+  overflow: scroll;
+}
+.history_window_x {
+  position: absolute;
+  z-index: 32001;
+  height: 20px;
+  width: 20px;
+  right: 5px;
+  top: 5px;
+  background: #fff;
+  cursor: pointer;
+}
+.history_window_contents {
+  padding: 10px;
+  padding-top: 0px;
+}
+.history_whodunnit {
+  margin-top: 10px;
+  font-size: x-small;
+  font-weight: bold;
+}
+.history_ago {
+  font-size: x-small;
+}
+.history_changeset {
+  font-size: x-small;
+}
+.history_comments {
+  border: 1px solid #770;
+  border-radius: 5px;
+  padding: 5px;
+  background: #ffc;
+}
+.history_resolved {
+  border: 1px solid #070;
+  border-radius: 5px;
+  padding: 5px;
+  background: #cfc;
+  font-weight: bold;
+}
