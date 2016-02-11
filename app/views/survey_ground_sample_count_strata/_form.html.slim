@@ -26,4 +26,5 @@
         -if current_user.admin?
           = f.input :is_mike_site, :as => :radio
           = f.input :mike_site
+        = f.input :comments
       = render 'strata_actions', f: f
