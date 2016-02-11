@@ -118,7 +118,10 @@ status_activate = (element) ->
   $(element).closest('.RM_change').find('.RM_status_selector').each ->
     val = $(this).html()
     $(this).off 'click'
-    $(this).html "<select><option>Needs review</option><option>In review</option><option>Reviewed</option></select>"
+    completed_available = ''
+    if val == 'Reviewed' or val == 'Completed'
+      completed_available = "<option>Completed</option>"
+    $(this).html "<select><option>Needs review</option><option>In review</option><option>Reviewed</option>#{completed_available}</select>"
     $(this).find('select').each ->
       $(this).val(val)
       $(this).on 'change', ->
