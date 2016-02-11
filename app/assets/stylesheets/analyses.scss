@@ -5,9 +5,15 @@
 #RM_map {
   height: 250px;
 }
+.RM_FS_map #RM_map {
+  height: 100%;
+}
 .RM_tables {
   height: 250px;
   overflow: scroll;
+}
+.RM_FS_tables .RM_tables {
+  height: 100%;
 }
 .RM_tables .row {
   border-top: 1px solid #ccc;
