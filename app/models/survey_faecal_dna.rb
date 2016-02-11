@@ -8,7 +8,7 @@ class SurveyFaecalDna < ActiveRecord::Base
 
   belongs_to :population_submission
 
-  has_many :survey_faecal_dna_strata
+  has_many :survey_faecal_dna_strata, dependent: :destroy
 
   validates_with StratumLevelValidator
 end
