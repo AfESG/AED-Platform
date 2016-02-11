@@ -60,29 +60,51 @@ patch_change = (change_id, params, and_then) ->
       and_then() if and_then
   })
 
+no_replacement = (element) ->
+  new_strata = $(element).closest('.RM_change').find('.RM_new_strata').first()
+  n = new_strata.data("newstrata")
+  if n == "" or n == "-"
+    return true
+  return false
+
+copy_replaced_to_new = (change) ->
+  new_strata = change.find('.RM_new_strata').first()
+  replaced_strata = change.find('.RM_replaced_strata').first()
+  new_strata.html(replaced_strata.html())
+  rsid = replaced_strata.data("replacedstrata")
+  new_strata.data("newstrata",rsid)
+  hook_change_editing_events(change)
+
 rc_activate = (element) ->
   $(element).closest('.RM_change').find('.RM_rc_selector').each ->
     $(this).off 'click'
     val = $(this).html()
-    $(this).html  "<select><option>-</option><option>DA</option><option>DT</option><option>NG</option><option>NP</option><option>RS</option></select>"
+    nc_option = ""
+    if val=="NC" or no_replacement(element)
+      nc_option="<option>NC</option>"
+    $(this).html  "<select><option>-</option><option>DA</option><option>DT</option><option>NG</option><option>NP</option><option>RS</option>#{nc_option}</select>"
     $(this).find('select').each ->
       $(this).val(val)
       $(this).on 'change', ->
         rc_changed(this)
 
 rc_changed = (element) ->
-  $(element).closest('.RM_change').each ->
-    change_id = $(this).data 'changeid'
-    val = ''
-    $(this).find('.RM_rc_selector').each ->
-      $(this).find('select').each ->
-        val = $(this).val()
-        $(this).parent().each ->
-          $(this).html val
-          $(this).on 'click', ->
-            rc_activate this
-    patch_change change_id,
-      reason_change: val
+  change = $(element).closest('.RM_change').first()
+  change_id = change.data 'changeid'
+  val = ''
+  change.find('.RM_rc_selector').each ->
+    $(this).find('select').each ->
+      val = $(this).val()
+      $(this).parent().each ->
+        $(this).html val
+        $(this).on 'click', ->
+          rc_activate this
+  params =
+    reason_change: val
+  patch_change change_id, params, ->
+    console.log(val)
+    if val == 'NC'
+      copy_replaced_to_new(change)
 
 name_activate = (element) ->
   $(element).closest('.RM_change').find('.RM_replacement_name').each ->
@@ -118,7 +140,10 @@ status_activate = (element) ->
   $(element).closest('.RM_change').find('.RM_status_selector').each ->
     val = $(this).html()
     $(this).off 'click'
-    $(this).html "<select><option>Needs review</option><option>In review</option><option>Reviewed</option></select>"
+    completed_available = ''
+    if val == 'Reviewed' or val == 'Completed'
+      completed_available = "<option>Completed</option>"
+    $(this).html "<select><option>Needs review</option><option>In review</option><option>Reviewed</option>#{completed_available}</select>"
     $(this).find('select').each ->
       $(this).val(val)
       $(this).on 'change', ->
