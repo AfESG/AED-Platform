@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160208033619) do
+ActiveRecord::Schema.define(version: 20160211021325) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -705,6 +705,7 @@ ActiveRecord::Schema.define(version: 20160208033619) do
     t.boolean  "is_mike_site"
     t.integer  "survey_geometry_id"
     t.string   "web_id"
+    t.text     "comments"
   end
 
   create_table "survey_aerial_sample_counts", force: :cascade do |t|
@@ -745,6 +746,7 @@ ActiveRecord::Schema.define(version: 20160208033619) do
     t.boolean  "is_mike_site"
     t.integer  "survey_geometry_id"
     t.string   "web_id"
+    t.text     "comments"
   end
 
   create_table "survey_aerial_total_counts", force: :cascade do |t|
@@ -821,6 +823,7 @@ ActiveRecord::Schema.define(version: 20160208033619) do
     t.boolean  "is_mike_site"
     t.integer  "survey_geometry_id"
     t.string   "web_id"
+    t.text     "comments"
   end
 
   create_table "survey_dung_count_line_transects", force: :cascade do |t|
@@ -855,6 +858,7 @@ ActiveRecord::Schema.define(version: 20160208033619) do
     t.boolean  "is_mike_site"
     t.integer  "survey_geometry_id"
     t.string   "web_id"
+    t.text     "comments"
   end
 
   create_table "survey_faecal_dnas", force: :cascade do |t|
@@ -909,6 +913,7 @@ ActiveRecord::Schema.define(version: 20160208033619) do
     t.boolean  "is_mike_site"
     t.integer  "survey_geometry_id"
     t.string   "web_id"
+    t.text     "comments"
   end
 
   create_table "survey_ground_sample_counts", force: :cascade do |t|
@@ -944,6 +949,7 @@ ActiveRecord::Schema.define(version: 20160208033619) do
     t.boolean  "is_mike_site"
     t.integer  "survey_geometry_id"
     t.string   "web_id"
+    t.text     "comments"
   end
 
   create_table "survey_ground_total_counts", force: :cascade do |t|
