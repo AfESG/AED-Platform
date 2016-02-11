@@ -63,6 +63,10 @@ class ChangesController < ApplicationController
 
     respond_to do |format|
       if @change.update_attributes(params[:change])
+        if @change.reason_change == 'NC' and (@change.new_strata != @change.replaced_strata)
+          @change.new_strata = @change.replaced_strata
+          @change.save!
+        end
         format.html { redirect_to @change, notice: 'Change was successfully updated.' }
         format.json { head :no_content }
       else
