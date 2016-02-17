@@ -39,9 +39,7 @@ class AnalysesController < ApplicationController
 
     respond_to do |format|
       format.html {
-        if params[:fullscreen]
-          render template: 'analyses/fullscreen', layout: 'fullscreen'
-        end
+        render layout: 'fullscreen'
       }
       format.json { render json: @analysis }
     end

@@ -1,86 +1,74 @@
-.container-fluid
-  .row
-    .col-xs-3
-      = link_to analyses_path, class: 'btn btn-sm btn-default'
-        span.glyphicon.glyphicon-list
-        '  All analyses
-    .col-xs-6
-      h1.RM_context data-analysisname=@analysis.analysis_name data-analysisyear=@analysis.analysis_year
-        ' Replacements for
-        = @analysis.analysis_name
-    .col-xs-3 style='text-align: right'
-      = link_to edit_analysis_path(@analysis), class: 'btn btn-sm btn-default'
-        span.glyphicon.glyphicon-edit
-        '  Edit name and years
-
+.RM_FS_map style='position:absolute; right: 0px; width: 45%; top: 0px; height: 100%'
   = map container_id: "RM_map", center: {latlng: [-12.04, 18.59], zoom: 4}
-      
-  .RM_tables
-    - Region.order(:name).each do |region|
-      .region data-regionid=region.id
-        .row.region_indicator style='background: #dddddd'
-          .col-xs-12
-            b= region.name
-        - region.countries.order(:name).each do |country|
-          .RM_country data-isocode='#{country.iso_code}'
-            .row.RM_country_indicator.RM_clickable
-              .col-xs-2
-                .RM_country_name= country.name
-              .col-xs-3
-                .RM_other_header= @analysis.comparison_year
-              .col-xs-3
-                .RM_other_header= @analysis.analysis_year
-              .col-xs-1
-                .RM_other_header Reason
-              .col-xs-3
-                .RM_other_header Status and comments
-            .RM_changes
-              - Change.where(analysis_name: @analysis.analysis_name).where(country: country.iso_code).order(:replacement_name).each do |change|
-                .RM_change data-changeid = change.id
-                  .row
-                    .col-xs-2.RM_replacement_name.RM_clickable
-                      - if change.replacement_name.blank?
-                        ' (not set)
-                      - else
-                        = change.replacement_name
-                    .col-xs-3.RM_clickable
-                      .RM_strata.RM_replaced_strata data-replacedstrata=dashify(change.replaced_strata)
-                        == describe_change_strata(change.replaced_strata,@analysis.comparison_year)
-                    .col-xs-3.RM_clickable
-                      .RM_strata.RM_new_strata data-newstrata=dashify(change.new_strata)
-                        == describe_change_strata(change.new_strata,@analysis.analysis_year)
-                    .col-xs-1.reason_change
-                      .RM_rc_selector.RM_clickable
-                        = change.reason_change
-                    .col-xs-3.status.RM_clickable
-                      .RM_status_selector
-                        = change.status
-                      .RM_comments
-                        = change.comments
-            .row.RM_new_change
-              .col-xs-12 style='padding-top: 5px; padding-bottom: 5px;'
-                .btn.btn-sm.btn-default.RM_new_change_button
-                  span.glyphicon.glyphicon-plus
-                  '  Add Input Zone
 
-.RM_template_change
-  .RM_change data-changeid = 'new'
-    .row
-      .col-xs-2.RM_replacement_name.RM_clickable
-        ' (not set)
-      .col-xs-3.RM_clickable
-        .RM_strata.RM_replaced_strata data-replacedstrata=''
-          | -
-      .col-xs-3.RM_clickable
-        .RM_strata.RM_new_strata data-newstrata=''
-          | -
-      .col-xs-1.reason_change
-        .RM_rc_selector.RM_clickable
-          | -
-      .col-xs-3.status.RM_clickable
-        .RM_status_selector
-          | Needs review
-        .RM_comments
+.RM_FS_tables style='position:absolute; left: 0px; width: 55%; top: 0px; height: 100%; box-shadow: 0px 0px 10px #333;'
+  div style='height: 100%; overflow: scroll'
+    .RM_tables 
+      - Region.order(:name).each do |region|
+        .region data-regionid=region.id
+          .row.region_indicator style='background: #dddddd'
+            .col-xs-12
+              b= region.name
+          - region.countries.order(:name).each do |country|
+            .RM_country data-isocode='#{country.iso_code}'
+              .row.RM_country_indicator.RM_clickable
+                .col-xs-2
+                  .RM_country_name= country.name
+                .col-xs-3
+                  .RM_other_header= @analysis.comparison_year
+                .col-xs-3
+                  .RM_other_header= @analysis.analysis_year
+                .col-xs-1
+                  .RM_other_header Reason
+                .col-xs-3
+                  .RM_other_header Status and comments
+              .RM_changes
+                - Change.where(analysis_name: @analysis.analysis_name).where(country: country.iso_code).order(:replacement_name).each do |change|
+                  .RM_change data-changeid = change.id
+                    .row
+                      .col-xs-2.RM_replacement_name.RM_clickable
+                        - if change.replacement_name.blank?
+                          ' (not set)
+                        - else
+                          = change.replacement_name
+                      .col-xs-3.RM_clickable
+                        .RM_strata.RM_replaced_strata data-replacedstrata=dashify(change.replaced_strata)
+                          == describe_change_strata(change.replaced_strata,@analysis.comparison_year)
+                      .col-xs-3.RM_clickable
+                        .RM_strata.RM_new_strata data-newstrata=dashify(change.new_strata)
+                          == describe_change_strata(change.new_strata,@analysis.analysis_year)
+                      .col-xs-1.reason_change
+                        .RM_rc_selector.RM_clickable
+                          = change.reason_change
+                      .col-xs-3.status.RM_clickable
+                        .RM_status_selector
+                          = change.status
+                        .RM_comments
+                          = change.comments
+              .row.RM_new_change
+                .col-xs-12 style='padding-top: 5px; padding-bottom: 5px;'
+                  .btn.btn-sm.btn-default.RM_new_change_button
+                    span.glyphicon.glyphicon-plus
+                    '  Add Input Zone
 
+  .RM_template_change
+    .RM_change data-changeid = 'new'
+      .row
+        .col-xs-2.RM_replacement_name.RM_clickable
+          ' (not set)
+        .col-xs-3.RM_clickable
+          .RM_strata.RM_replaced_strata data-replacedstrata=''
+            | -
+        .col-xs-3.RM_clickable
+          .RM_strata.RM_new_strata data-newstrata=''
+            | -
+        .col-xs-1.reason_change
+          .RM_rc_selector.RM_clickable
+            | -
+        .col-xs-3.status.RM_clickable
+          .RM_status_selector
+            | Needs review
+          .RM_comments
+          
 javascript:
   RM_used_estimates = #{@used_estimates.to_json.html_safe}
