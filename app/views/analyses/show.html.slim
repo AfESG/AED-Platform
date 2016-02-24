@@ -42,7 +42,10 @@
                           = change.reason_change
                       .col-xs-3.status.RM_clickable
                         .RM_status_selector
-                          = change.status
+                          - if change.status and !change.status.blank?
+                            = change.status
+                          - else
+                            ' Needs review
                         .RM_comments
                           = change.comments
               .row.RM_new_change

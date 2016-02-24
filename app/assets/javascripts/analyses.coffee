@@ -1,6 +1,18 @@
 ACTIVE_STRATA_CELL = null
-ACTIVE_STATUS_CELL = null
 COUNTRY_LAYER = null
+
+COMMIT_ACTIVE_CELL = null
+
+prepare_commit_function = (f) ->
+  console.log("Prepare commit function #{f}")
+  COMMIT_ACTIVE_CELL = f
+
+commit_active_cell = ->
+  if COMMIT_ACTIVE_CELL
+    f = COMMIT_ACTIVE_CELL
+    COMMIT_ACTIVE_CELL = null
+    console.log("Execute commit function #{f}")
+    f()
 
 strip_for = (map_props) ->
   html = "<div>#{map_props.aed_year} #{map_props.aed_name}</div>"
@@ -77,6 +89,7 @@ copy_replaced_to_new = (change) ->
   hook_change_editing_events(change)
 
 rc_activate = (element) ->
+  commit_active_cell()
   $(element).closest('.RM_change').find('.RM_rc_selector').each ->
     $(this).off 'click'
     val = $(this).html()
@@ -87,7 +100,9 @@ rc_activate = (element) ->
     $(this).find('select').each ->
       $(this).val(val)
       $(this).on 'change', ->
-        rc_changed(this)
+        commit_active_cell()
+      prepare_commit_function ->
+        rc_changed(element)
 
 rc_changed = (element) ->
   change = $(element).closest('.RM_change').first()
@@ -108,6 +123,7 @@ rc_changed = (element) ->
       copy_replaced_to_new(change)
 
 name_activate = (element) ->
+  commit_active_cell()
   $(element).closest('.RM_change').find('.RM_replacement_name').each ->
     $(this).off 'click'
     val = $(this).html()
@@ -115,12 +131,14 @@ name_activate = (element) ->
     $(this).find('input').each ->
       $(this).val(val)
       $(this).on 'change', ->
-        name_changed(this)
+        commit_active_cell()
       $(this).on 'keyup', (event) ->
         if event.which == 13
-          name_changed(this)
+          commit_active_cell()
       $(this).on 'blur', (event) ->
-          name_changed(this)
+        commit_active_cell()
+      prepare_commit_function ->
+        name_changed(element)
       $(this).focus()
 
 name_changed = (element) ->
@@ -138,9 +156,7 @@ name_changed = (element) ->
       replacement_name: val
 
 status_activate = (element) ->
-  if ACTIVE_STATUS_CELL
-    status_deactivate(ACTIVE_STATUS_CELL)
-  ACTIVE_STATUS_CELL = element
+  commit_active_cell()
   change = $(element).closest('.RM_change').first()
   window.reveal_history('Change',change.data('changeid'))
   change.find('.RM_status_selector').each ->
@@ -153,38 +169,20 @@ status_activate = (element) ->
     $(this).find('select').each ->
       $(this).val(val)
       $(this).on 'change', ->
-        status_changed(this)
+        commit_active_cell()
   change.find('.RM_comments').each ->
     $(this).off 'click'
     $(this).html "<textarea>#{$(this).html()}</textarea>"
     $(this).find('textarea').each ->
       $(this).on 'keyup', (event) ->
         if event.which == 13
-          status_changed(this)
+          commit_active_cell()
       $(this).on 'change', (event) ->
-        status_changed(this)
-
-status_deactivate = (element) ->
-  ACTIVE_STATUS_CELL = null
-  $(element).closest('.RM_change').each ->
-    change_id = $(this).data 'changeid'
-    status_val = ''
-    comments_val = ''
-    $(this).find('textarea').each ->
-      comments_val =  $(this).val()
-      $(this).parent().each ->
-        $(this).html comments_val
-        $(this).on 'click', ->
-          status_activate this
-    $(this).find('select').each ->
-      status_val = $(this).val()
-      $(this).parent().each ->
-        $(this).html status_val
-        $(this).on 'click', ->
-          status_activate this
+        commit_active_cell()
+  prepare_commit_function ->
+    status_changed(element)
 
 status_changed = (element) ->
-  ACTIVE_STATUS_CELL = null
   $(element).closest('.RM_change').each ->
     change_id = $(this).data 'changeid'
     status_val = ''
@@ -290,6 +288,7 @@ window.add_stratum = add_stratum = (stratum_id) ->
           highlight_stratum this
 
 highlight_stratum = (element) ->
+  commit_active_cell()
   stratum_element = $(element)
   $('.RM_stratum').css { backgroundColor: '' }
   $('.RM_remove_stratum_container').remove()
@@ -338,6 +337,7 @@ add_new_change = (element) ->
   })
 
 activate_adding_strata = (element) ->
+  commit_active_cell()
   ACTIVE_STRATA_CELL = element
   $(".RM_strata").css {
     border: 'none';

@@ -60,7 +60,7 @@ class ChangesController < ApplicationController
   # PUT /changes/1.json
   def update
     @change = Change.find(params[:id])
-    if params[:change] and params[:change][:comments].blank?
+    if params[:change] and params[:change][:comments] != nil and params[:change][:comments].blank?
       params[:change][:comments] = nil
     end
 
