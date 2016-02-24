@@ -16,8 +16,13 @@ populate_history_window = (data) ->
       whodunnit_when = my_whodunnit_when
     $.each item.changeset, (index,change) ->
       if index == 'comments'
-        if change[1].replace(/\n/,'').replace(/^\s+|\s+$/g,'') == ''
-          $('.history_window_contents').append("<div class='history_resolved'>Resolved</div>")
+        $.each [0,1], (i) ->
+          if change[i] == null
+            change[i] = ''
+          change[i] = change[i].replace(/\n/,'').replace(/^\s+|\s+$/g,'')
+        if change[1] == ''
+          if change[0] != ''
+            $('.history_window_contents').append("<div class='history_resolved'>Resolved</div>")
         else
           $('.history_window_contents').append("<div class='history_comments'>#{change[1]}</div>")
       else
