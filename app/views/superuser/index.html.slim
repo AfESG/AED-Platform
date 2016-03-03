@@ -1,23 +1,21 @@
 .row
-  .col-xs-12
-    - if current_user.admin?
+  - if current_user.admin?
+    .col-xs-12
       h1 Administrative resources
-      h3
-        = link_to 'Submissions Manager', '/submissions'
-      h3
-        = link_to 'Replacement Manager', '/analyses'
-      div style='margin-top:60px'
-      h3
-        = link_to 'Users', '/users'
-      h3
-        = link_to 'Data Requests', '/data_request_forms'
-      h3
-        = link_to 'Narratives and Footnotes', '/report_narratives'
-      /h3
-        = link_to '2013 Africa reports', '/preview_report/2013_africa_final/Loxodonta_africana/2013/Africa'
-      /h3
-        = link_to 'ADD Spreadsheet Verification', spreadsheets_path
-      /h3
-        = link_to 'Recalculate change interpreters (takes up to 1 minute after clicking)', '/recalc'
-    - else
+    .col-sm-6
+      .well
+        h3
+          = link_to 'Submissions Manager', '/submissions'
+        h3
+          = link_to 'Replacement Manager', '/analyses'
+    .col-sm-6
+      .well
+        h3
+          = link_to 'Users', '/users'
+        h3
+          = link_to 'Data Requests', '/data_request_forms'
+        h3
+          = link_to 'Narratives and Footnotes', '/report_narratives'
+  - else
+    .col-xs-12
       | This account is not authorized to access this page.
