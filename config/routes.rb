@@ -109,10 +109,6 @@ Aaed::Application.routes.draw do
 
   get 'species/:species_id/range_states' => 'species#range_states'
 
-  get 'maps/asian_range' => 'welcome#asian_range'
-  get 'maps/range' => 'welcome#range'
-  get 'maps/zones' => 'welcome#zones'
-  get 'maps' => 'welcome#maps'
   get 'mike_report' => 'welcome#mike_report'
   get 'reliability' => 'welcome#reliability'
 
