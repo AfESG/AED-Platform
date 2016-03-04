@@ -28,10 +28,9 @@ class Submission < ActiveRecord::Base
 
   def range_states
     if species.nil?
-      {}
-    else
-      species.range_states
+      species = Species.find(1)
     end
+    species.range_states
   end
 
   class SubmissionValidator < ActiveModel::Validator
