@@ -21,7 +21,6 @@ class ReportController < ApplicationController
   end
 
   def species
-    @species = params[:species].gsub('_',' ')
     @past_reports = [
       { year: '2007', full_text: '033', authors: 'J.J. Blanc, R.F.W. Barnes, G.C. Craig, H.T. Dublin, C.R. Thouless, I. Douglas-Hamilton, and J.A. Hart', errata: true },
       { year: '2002', full_text: '029', authors: 'J.J. Blanc, C.R. Thouless, J.A. Hart, H.T. Dublin, I. Douglas-Hamilton, G.C. Craig and R.F.W. Barnes', errata: true },
@@ -31,7 +30,6 @@ class ReportController < ApplicationController
   end
 
   def year
-    @species = params[:species].gsub('_',' ')
     @year = params[:year]
   end
 
@@ -149,7 +147,6 @@ class ReportController < ApplicationController
 
   def preview_corrections
     return unless allowed_preview?
-    @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
     @filter = params[:filter]
@@ -158,7 +155,6 @@ class ReportController < ApplicationController
 
   def preview_continent
     return unless allowed_preview?
-    @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
     @filter = params[:filter]
@@ -263,7 +259,6 @@ class ReportController < ApplicationController
   end
 
   def continent
-    @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     db = "aed#{@year}"
     @continent = params[:continent]
@@ -340,7 +335,6 @@ class ReportController < ApplicationController
 
   def preview_region
     return unless allowed_preview?
-    @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
     @region = params[:region].gsub('_',' ')
@@ -440,7 +434,6 @@ class ReportController < ApplicationController
   end
 
   def region
-    @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
     @region = params[:region].gsub('_',' ')
@@ -518,7 +511,6 @@ class ReportController < ApplicationController
 
   def preview_country
     return unless allowed_preview?
-    @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
     @region = params[:region].gsub('_',' ')
@@ -681,7 +673,6 @@ class ReportController < ApplicationController
 
   def preview_site
     return unless allowed_preview?
-    @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
     @site = params[:site].gsub('_',' ')
@@ -780,7 +771,6 @@ class ReportController < ApplicationController
   end
 
   def country
-    @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
     @region = params[:region].gsub('_',' ')
@@ -862,7 +852,6 @@ class ReportController < ApplicationController
   end
 
   def survey
-    @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
     @region = params[:region].gsub('_',' ')

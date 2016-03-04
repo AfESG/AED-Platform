@@ -21,9 +21,9 @@
         tr style=('height: 24px;') 
           td
             - if preview
-              a href=("/preview_report/#{@filter}/#{@species.gsub(' ','_')}/#{@year}/#{@continent}/#{row['REGION'].gsub(' ','_')}") = row['REGION']
+              a href=("/preview_report/#{@filter}/#{@year}/#{@continent}/#{row['REGION'].gsub(' ','_')}") = row['REGION']
             - else
-              a href=("/report/#{@species.gsub(' ','_')}/#{@year}/#{@continent}/#{row['REGION'].gsub(' ','_')}") = row['REGION'] 
+              a href=("/report/#{@year}/#{@continent}/#{row['REGION'].gsub(' ','_')}") = row['REGION'] 
           - ['DEFINITE','PROBABLE','POSSIBLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX','PFS'].each do |key|
             td.numeric= number_with_delimiter row[key]
     - @regions_sum.each do |row|
