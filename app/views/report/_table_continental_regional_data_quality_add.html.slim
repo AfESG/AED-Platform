@@ -27,9 +27,9 @@
         tr style=('height: 24px;')
           td
             - if preview
-              a href=("/preview_report/#{@filter}/#{@species.gsub(' ','_')}/#{@year}/#{@continent}/#{row['region'].gsub(' ','_')}") = row['region']
+              a href=("/preview_report/#{@filter}/#{@year}/#{@continent}/#{row['region'].gsub(' ','_')}") = row['region']
             - else
-              a href=("/report/#{@species.gsub(' ','_')}/#{@year}/#{@continent}/#{row['region'].gsub(' ','_')}") = row['region']
+              a href=("/report/#{@year}/#{@continent}/#{row['region'].gsub(' ','_')}") = row['region']
           - ['ESTIMATE','CONFIDENCE','GUESS_MIN','GUESS_MAX','RANGE_AREA','PERCENT_OF_RANGE_COVERED','PERCENT_OF_RANGE_ASSESSED'].each do |key|
             = add_and_display_cell row, key, totals, round: false
           = add_and_display_cell row, 'IQI', totals, precision: 2

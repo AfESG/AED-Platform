@@ -150,7 +150,7 @@ module SurveyCrud
     end
 
     if @level.save
-      if @from_feature
+      if @from_feature and !@from_feature.blank?
         population_submission_geometry = PopulationSubmissionGeometry.find(@from_feature);
         survey_geometry = SurveyGeometry.new
         survey_geometry.geom = population_submission_geometry.geom

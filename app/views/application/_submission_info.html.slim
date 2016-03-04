@@ -16,14 +16,11 @@
         .submission_country= s.country.name
       - if s.is_mike_site?
         .submission_mike_site MIKE site
-      - unless s.species.nil?
-        .submission_species= s.species.scientific_name
-        .submission_common_name= s.species.common_name
-        - unless s.phenotype == "" or s.phenotype == "Unknown"
-          .submission_phenotype
-            | Phenotype: #{s.phenotype}
-            - unless s.phenotype_basis == ""
-              '  (based on #{s.phenotype_basis.downcase})
+      - unless s.phenotype.nil? or s.phenotype == "" or s.phenotype == "Unknown"
+        .submission_phenotype
+          | Phenotype: #{s.phenotype}
+          - unless s.phenotype_basis == ""
+            '  (based on #{s.phenotype_basis.downcase})
     .submission_parameters
       - unless s.user.nil?
         .submission_user

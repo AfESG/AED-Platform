@@ -21,7 +21,6 @@ class ReportController < ApplicationController
   end
 
   def species
-    @species = params[:species].gsub('_',' ')
     @past_reports = [
       { year: '2007', full_text: '033', authors: 'J.J. Blanc, R.F.W. Barnes, G.C. Craig, H.T. Dublin, C.R. Thouless, I. Douglas-Hamilton, and J.A. Hart', errata: true },
       { year: '2002', full_text: '029', authors: 'J.J. Blanc, C.R. Thouless, J.A. Hart, H.T. Dublin, I. Douglas-Hamilton, G.C. Craig and R.F.W. Barnes', errata: true },
@@ -31,7 +30,6 @@ class ReportController < ApplicationController
   end
 
   def year
-    @species = params[:species].gsub('_',' ')
     @year = params[:year]
   end
 
@@ -149,7 +147,6 @@ class ReportController < ApplicationController
 
   def preview_corrections
     return unless allowed_preview?
-    @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
     @filter = params[:filter]
@@ -158,7 +155,6 @@ class ReportController < ApplicationController
 
   def preview_continent
     return unless allowed_preview?
-    @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
     @filter = params[:filter]
@@ -170,6 +166,10 @@ class ReportController < ApplicationController
     @alt_regions_sums   = execute alt_dpps_continental_stats_sums("1=1", @year, @filter)
 
     @summary_totals_by_continent = execute totalizer("1=1",@filter,@year)
+    if @summary_totals_by_continent.num_tuples < 1
+      raise ActionController::RoutingError.new('Not Found')
+    end
+
     @baseline_total = execute <<-SQL, @continent
       select sum(definite) definite, sum(probable) probable, sum(possible) possible,
         sum(speculative) speculative
@@ -259,7 +259,6 @@ class ReportController < ApplicationController
   end
 
   def continent
-    @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     db = "aed#{@year}"
     @continent = params[:continent]
@@ -336,7 +335,6 @@ class ReportController < ApplicationController
 
   def preview_region
     return unless allowed_preview?
-    @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
     @region = params[:region].gsub('_',' ')
@@ -349,6 +347,11 @@ class ReportController < ApplicationController
     @alt_country_sums   = execute alt_dpps_region_stats("region = '#{@region}'", @year, @filter)
 
     @summary_totals_by_region = execute totalizer("region='#{@region}'",@filter,@year)
+
+    if @summary_totals_by_region.num_tuples < 1
+      raise ActionController::RoutingError.new('Not Found')
+    end
+
     @baseline_total = execute <<-SQL, @region
       select sum(definite) definite, sum(probable) probable, sum(possible) possible,
         sum(speculative) speculative
@@ -431,7 +434,6 @@ class ReportController < ApplicationController
   end
 
   def region
-    @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
     @region = params[:region].gsub('_',' ')
@@ -509,7 +511,6 @@ class ReportController < ApplicationController
 
   def preview_country
     return unless allowed_preview?
-    @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
     @region = params[:region].gsub('_',' ')
@@ -529,6 +530,11 @@ class ReportController < ApplicationController
     SQL
 
     @summary_totals_by_country = execute totalizer("country='#{sql_escape @country}'",@filter,@year)
+
+    if @summary_totals_by_country.num_tuples < 1
+      raise ActionController::RoutingError.new('Not Found')
+    end
+
     @elephant_estimates_by_country = execute <<-SQL, @country
       select
         e.replacement_name,
@@ -667,7 +673,6 @@ class ReportController < ApplicationController
 
   def preview_site
     return unless allowed_preview?
-    @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
     @site = params[:site].gsub('_',' ')
@@ -766,7 +771,6 @@ class ReportController < ApplicationController
   end
 
   def country
-    @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
     @region = params[:region].gsub('_',' ')
@@ -848,7 +852,6 @@ class ReportController < ApplicationController
   end
 
   def survey
-    @species = params[:species].gsub('_',' ')
     @year = params[:year].to_i
     @continent = params[:continent]
     @region = params[:region].gsub('_',' ')
