@@ -12,11 +12,13 @@
       h5 #{r} African Elephant Status Report
     .authors = authors
     .links
-      ' Explore the <a href="https://portals.iucn.org/library/efiles/documents/SSC-OP-#{full_text}.pdf" target="_blank">full 
-        text of the #{year} report</a> (PDF) and its
+      | Explore the <a href="https://portals.iucn.org/library/efiles/documents/SSC-OP-#{full_text}.pdf" target="_blank">full 
+        text of the #{year} report</a> (PDF)
       - if errata
+        '  and its
         = link_to "/report/#{r}" do
-          ' errata
-        ' or
-      = link_to 'bibliography', '/report/references'
+          |  errata
+        - if r=='2007'
+          '  or
+          = link_to 'bibliography', '/report/references'
       | .
