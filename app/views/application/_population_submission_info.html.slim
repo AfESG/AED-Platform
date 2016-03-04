@@ -19,8 +19,9 @@
         = p.completion_year
     .population_submission_parameters
       .population_submission_licensing
-        ==p.data_licensing_link
-        -unless p.embargo_date.nil?
+        - if p.embargo_date.nil?
+          ==p.data_licensing_link
+        - else
           | Embargoed until #{p.embargo_date}
       .population_submission_area
         = p.area
