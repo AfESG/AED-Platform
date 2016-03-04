@@ -2,12 +2,21 @@ class SubmissionsController < ApplicationController
 
   include SurveyCrud
 
-  before_filter :authenticate_user!, :except => [:index, :show]
+  before_filter :authenticate_user!, :except => [:index, :show, :add]
 
   # define the path to short-circuit to on creation of a new item
   # in the create method
   def new_child_path
     eval "new_submission_population_submission_path(@level)"
+  end
+
+  def add
+    if current_user and current_user.admin?
+      redirect_to '/submissions/new'
+    else
+      render template: 'submissions/how_to_submit'
+      return      
+    end
   end
 
   def index
