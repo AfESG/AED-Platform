@@ -531,7 +531,7 @@ class ReportController < ApplicationController
 
     @summary_totals_by_country = execute totalizer("country='#{sql_escape @country}'",@filter,@year)
 
-    if summary_totals_by_country.num_tuples < 1
+    if @summary_totals_by_country.num_tuples < 1
       raise ActionController::RoutingError.new('Not Found')
     end
 
