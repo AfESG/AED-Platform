@@ -1,7 +1,6 @@
 class FindController < ApplicationController
 
   def historical
-    @species = 'Loxodonta_africana'
     @continent = 'Africa'
     @year = params[:year]
     @objectid = params[:objectid]
@@ -35,7 +34,6 @@ class FindController < ApplicationController
   end
 
   def popup
-    @species = 'Loxodonta_africana'
     @continent = 'Africa'
     @year = params[:year]
     @objectid = params[:objectid]

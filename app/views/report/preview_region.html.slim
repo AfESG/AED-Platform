@@ -11,12 +11,12 @@
     p
     ' All Years for #{@region}:
 
-    a href=("/preview_report/2013_africa/#{@species.gsub(' ','_')}/2013/#{@continent}/#{@region.gsub(' ','_')}")  2013
+    a href=("/preview_report/2013_africa/2013/#{@continent}/#{@region.gsub(' ','_')}")  2013
 
     - @past_years.each do |year|
       '
       ' &mdash;
-      = link_to year, "/report/#{@species.gsub(' ','_')}/#{year}/#{@continent}/#{@region.gsub(' ','_')}"
+      = link_to year, "/report/#{year}/#{@continent}/#{@region.gsub(' ','_')}"
 
     == narrative
 
