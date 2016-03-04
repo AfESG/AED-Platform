@@ -170,6 +170,10 @@ class ReportController < ApplicationController
     @alt_regions_sums   = execute alt_dpps_continental_stats_sums("1=1", @year, @filter)
 
     @summary_totals_by_continent = execute totalizer("1=1",@filter,@year)
+    if @summary_totals_by_continent.num_tuples < 1
+      raise ActionController::RoutingError.new('Not Found')
+    end
+
     @baseline_total = execute <<-SQL, @continent
       select sum(definite) definite, sum(probable) probable, sum(possible) possible,
         sum(speculative) speculative
@@ -349,6 +353,11 @@ class ReportController < ApplicationController
     @alt_country_sums   = execute alt_dpps_region_stats("region = '#{@region}'", @year, @filter)
 
     @summary_totals_by_region = execute totalizer("region='#{@region}'",@filter,@year)
+
+    if @summary_totals_by_region.num_tuples < 1
+      raise ActionController::RoutingError.new('Not Found')
+    end
+
     @baseline_total = execute <<-SQL, @region
       select sum(definite) definite, sum(probable) probable, sum(possible) possible,
         sum(speculative) speculative
@@ -529,6 +538,11 @@ class ReportController < ApplicationController
     SQL
 
     @summary_totals_by_country = execute totalizer("country='#{sql_escape @country}'",@filter,@year)
+
+    if summary_totals_by_country.num_tuples < 1
+      raise ActionController::RoutingError.new('Not Found')
+    end
+
     @elephant_estimates_by_country = execute <<-SQL, @country
       select
         e.replacement_name,
