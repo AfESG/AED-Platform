@@ -5,7 +5,6 @@ class Submission < ActiveRecord::Base
   # except user_id which will be set in the controller
   attr_protected :created_at, :updated_at, :user_id
 
-  validates_presence_of :species
   validates_presence_of :country
   validates_presence_of :data_type
 
