@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   before_filter :configure_permitted_parameters, if: :devise_controller?
 
   def allowed_preview?
+    p params
     if params[:filter] == '2013_africa_final' and params[:year] == '2013'
       return true
     end

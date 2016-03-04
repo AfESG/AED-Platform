@@ -12,6 +12,7 @@ Aaed::Application.routes.draw do
 
   resources :users
 
+  get 'add-data' => 'submissions#add'
   resources :submissions do
     resources :population_submissions
   end
