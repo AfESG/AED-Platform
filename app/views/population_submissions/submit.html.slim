@@ -34,6 +34,12 @@
           = f.input :submitted
         - if current_user.admin?
           = f.input :short_citation
-        = f.input :comments
+        .population_submission_comments
+          = f.input :comments
           / f.input :released
       = f.actions
+
+javascript:
+  $('.population_submission_comments textarea').on('focus',function(){
+    window.reveal_history('PopulationSubmission',#{@population_submission.id})
+  });

@@ -3,7 +3,7 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 .history_window {
-  position: absolute;
+  position: fixed;
   z-index: 32000;
   height: 100%;
   width: 20%;
@@ -15,7 +15,7 @@
   overflow: scroll;
 }
 .history_window_x {
-  position: absolute;
+  position: fixed;
   z-index: 32001;
   height: 20px;
   width: 20px;
