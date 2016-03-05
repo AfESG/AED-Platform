@@ -827,6 +827,7 @@ ActiveRecord::Schema.define(version: 20160305025639) do
     t.integer  "survey_geometry_id"
     t.string   "web_id"
     t.text     "comments"
+    t.string   "internal_name"
   end
 
   create_table "survey_dung_count_line_transects", force: :cascade do |t|

@@ -6,6 +6,9 @@
       = link_to image_tag("delete.png"), b, data: { confirm: 'Are you sure?' }, method: :delete
   .count_stratum_header
     .count_stratum_estimate= b.population_estimate
+    - if b.internal_name and !b.internal_name.blank?
+      .count_internal_name
+        = b.internal_name
     =link_to guess_show_stratum_path(b) do
       - if b.stratum_name == ''
         .count_stratum_name Stratum ## b.id 

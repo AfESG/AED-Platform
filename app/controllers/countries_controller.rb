@@ -15,6 +15,7 @@ class CountriesController < ApplicationController
                   'aed_stratum' => "#{population_submission.survey_type}#{stratum.id}",
                   'uri' => "/#{stratum.class.name.pluralize.underscore}/#{stratum.id}",
                   'aed_name' => stratum.stratum_name,
+                  'aed_internal_name' => stratum.internal_name || '',
                   'aed_year' => population_submission.completion_year,
                   'aed_citation' => population_submission.short_citation,
                   'aed_area' => stratum.stratum_area,

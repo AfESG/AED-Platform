@@ -12,6 +12,9 @@
       - else
         .count_stratum_name= @level.stratum_name
     .show_stratum
+      ' Internal name:
+      = @level.internal_name
+    .show_stratum
       == best_label_for 'stratum_area'
       = @level.stratum_area
     .show_stratum
