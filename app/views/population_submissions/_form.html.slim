@@ -11,6 +11,7 @@
         = f.input :embargo_date, :required => true, :as => :date
         = f.input :site_name
         = f.input :designate
+        = f.input :internal_name
         = f.input :area
         = f.input :completion_year, :as => :select, :collection => Time.now.year.downto(1980)
         = f.input :completion_month, :as => :select, :collection => {"January" => 1, "February" => 2, "March" => 3, "April" => 4, "May" => 5, "June" => 6, "July" => 7, "August" => 8, "September" => 9, "October" => 10, "November" => 11, "December" => 12}

@@ -10,6 +10,9 @@
           .glyphicon.glyphicon-pencil
         = link_to image_tag("delete.png"), p, data: { confirm: 'Are you sure?' }, method: :delete
     .population_submission_header
+      - if p.internal_name and !p.internal_name.blank?
+        .population_submission_internal_name
+          = p.internal_name
       .population_submission_site_name
         = link_to population_submission_path(p) do
           = p.site_name
