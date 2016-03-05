@@ -26,10 +26,7 @@ class Submission < ActiveRecord::Base
   belongs_to :country
 
   def range_states
-    if species.nil?
-      species = Species.find(1)
-    end
-    species.range_states
+    Species.find(1).range_states
   end
 
   class SubmissionValidator < ActiveModel::Validator
