@@ -14,9 +14,13 @@ commit_active_cell = ->
     console.log("Execute commit function #{f}")
     f()
 
+ifdef = (s) ->
+  return s if s
+  ''
+
 strip_for = (map_props) ->
-  html = "<div>#{map_props.aed_year} #{map_props.aed_name} #{map_props.aed_internal_name}</div>"
-  html += "<div style='font-size: x-small'>#{map_props.aed_citation}</div>"
+  html = "<div>#{map_props.aed_year} #{ifdef(map_props.aed_name)} #{ifdef(map_props.aed_internal_name)}</div>"
+  html += "<div style='font-size: x-small'>#{ifdef(map_props.aed_citation)}</div>"
   html += "<div style='font-size: x-small'><a href='#{map_props.uri}' target='_blank'>#{map_props.aed_stratum}</a> est. #{map_props.aed_estimate}, #{map_props.aed_area} km²</div>"
 
 add_link_for = (map_props) ->
