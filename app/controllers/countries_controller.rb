@@ -28,16 +28,18 @@ class CountriesController < ApplicationController
         else
           if count.survey_geometry
             feature = RGeo::GeoJSON.encode(count.survey_geometry.geom)
-            feature['properties'] = {
-              'aed_stratum' => "#{population_submission.survey_type}#{count.id}",
-              'uri' => "/#{count.class.name.pluralize.underscore}/#{count.id}",
-              'aed_name' => population_submission.site_name,
-              'aed_area' => population_submission.area,
-              'aed_year' => population_submission.completion_year,
-              'aed_citation' => population_submission.short_citation,
-              'aed_estimate' => (count.population_estimate rescue count.population_estimate_min)
-            }
-            features << feature
+            if feature
+              feature['properties'] = {
+                'aed_stratum' => "#{population_submission.survey_type}#{count.id}",
+                'uri' => "/#{count.class.name.pluralize.underscore}/#{count.id}",
+                'aed_name' => population_submission.site_name,
+                'aed_area' => population_submission.area,
+                'aed_year' => population_submission.completion_year,
+                'aed_citation' => population_submission.short_citation,
+                'aed_estimate' => (count.population_estimate rescue count.population_estimate_min)
+              }
+              features << feature
+            end
           end
         end
       end

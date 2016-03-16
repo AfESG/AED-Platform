@@ -79,6 +79,9 @@
         .RM_status_selector
           | Needs review
         .RM_comments
-          
+
+.RM_FS_loading
+  =image_tag 'loading.png', class:'RM_loading'
+
 javascript:
   RM_used_estimates = #{@used_estimates.to_json.html_safe}

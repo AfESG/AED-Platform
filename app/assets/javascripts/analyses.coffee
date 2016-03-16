@@ -51,9 +51,10 @@ onEachFeature = (feature, layer) ->
 map_country = (element) ->
   country_element = $(element).closest('.RM_country')
   iso_code = country_element.data('isocode')
-  $(".RM_changes, .RM_other_header, .RM_new_change").hide()
-  country_element.find(".RM_changes, .RM_other_header, .RM_new_change").show()
+  $(".RM_FS_loading").show()
   $.getJSON "/country/" + iso_code + "/map", (data) ->
+    $(".RM_changes, .RM_other_header, .RM_new_change").hide()
+    country_element.find(".RM_changes, .RM_other_header, .RM_new_change").show()
     if COUNTRY_LAYER
       map.removeLayer COUNTRY_LAYER
     COUNTRY_LAYER = L.geoJson(data,
@@ -62,6 +63,7 @@ map_country = (element) ->
     )
     COUNTRY_LAYER.addTo map
     map.fitBounds COUNTRY_LAYER.getBounds()
+    $(".RM_FS_loading").hide()
 
 patch_change = (change_id, params, and_then) ->
   $.ajax({
