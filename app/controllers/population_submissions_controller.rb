@@ -76,14 +76,29 @@ class PopulationSubmissionsController < ApplicationController
     @level = level_class.find(params[:id])
 
     features = []
-    @level.counts[0].strata.each do |stratum|
-      if stratum.survey_geometry
-        feature = RGeo::GeoJSON.encode(stratum.survey_geometry.geom)
+    if @level.counts[0].has_strata?
+      @level.counts[0].strata.each do |stratum|
+        if stratum.survey_geometry
+          feature = RGeo::GeoJSON.encode(stratum.survey_geometry.geom)
+          feature['properties'] = {
+            'aed_stratum' => stratum.id,
+            'aed_name' => stratum.stratum_name,
+            'aed_area' => stratum.stratum_area,
+            'aed_estimate' => stratum.population_estimate
+          }
+          features << feature
+        end
+      end
+    else
+      if @level.counts[0].survey_geometry
+        c = @level.counts[0]
+        feature = RGeo::GeoJSON.encode(c.survey_geometry.geom)
         feature['properties'] = {
-          'aed_stratum' => stratum.id,
-          'aed_name' => stratum.stratum_name,
-          'aed_area' => stratum.stratum_area,
-          'aed_estimate' => stratum.population_estimate
+          'single_stratum' => true,
+          'aed_stratum' => c.id,
+          'aed_name' => c.population_submission.site_name + ' ' + c.population_submission.designate,
+          'aed_area' => c.population_submission.area,
+          'aed_estimate' => (c.respond_to?(:population_estimate) && c.population_estimate) || c.population_estimate_min
         }
         features << feature
       end
@@ -95,6 +110,9 @@ class PopulationSubmissionsController < ApplicationController
         feature['properties'] = JSON.parse(psg.geom_attributes)
       end
       feature['properties']['aed_psg_id'] = psg.id
+      if !@level.counts[0].has_strata?
+        feature['properties']['single_stratum'] = true
+      end
       features << feature
     end
     feature_collection = {

@@ -24,10 +24,18 @@
             popupContent += "<tr><th>"+key+"</th><td>"+feature.properties[key]+"<td></tr>"
           }
           popupContent += "</table>"
-          if(feature.properties.aed_stratum) {
-            popupContent += "<div><a href='/#{@level.counts[0].strata[0].class.name.pluralize.underscore}/"+feature.properties.aed_stratum+"' target='_top'>Go</a></div>"
+          if(feature.properties.single_stratum) {
+            if(feature.properties.aed_stratum) {
+              popupContent += "<div><a href='/#{@level.counts[0].class.name.pluralize.underscore}/"+feature.properties.aed_stratum+"' target='_top'>Go</a></div>"
+            } else {
+              popupContent += "<div><a href='#{guess_edit_count_path(@level.counts[0])}?from_feature="+feature.properties.aed_psg_id+"' target='_top'>Link this geometry</a></div>"
+            }
           } else {
-            popupContent += "<div><a href='#{guess_new_stratum_path(@level.counts[0])}?from_feature="+feature.properties.aed_psg_id+"' target='_top'>Enter data for this stratum</a></div>"
+            if(feature.properties.aed_stratum) {
+              popupContent += "<div><a href='/#{@level.counts[0].strata[0].class.name.pluralize.underscore}/"+feature.properties.aed_stratum+"' target='_top'>Go</a></div>"
+            } else {
+              popupContent += "<div><a href='#{guess_new_stratum_path(@level.counts[0])}?from_feature="+feature.properties.aed_psg_id+"' target='_top'>Enter data for this stratum</a></div>"
+            }
           }
           layer.bindPopup(popupContent);
         }
