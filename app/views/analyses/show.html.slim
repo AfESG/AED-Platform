@@ -2,6 +2,14 @@
   = map container_id: "RM_map", center: {latlng: [-12.04, 18.59], zoom: 4}
 
 .RM_FS_tables style='position:absolute; left: 0px; width: 55%; top: 0px; height: 100%; box-shadow: 0px 0px 10px #333;'
+  .container_fluid
+    .row
+      .col-xs-6
+        b
+          ' Replacements for
+          = @analysis.analysis_name
+      .col-xs-6 style='text-align: right'
+        a href='/analyses' Back to analysis list
   div style='height: 100%; overflow: scroll'
     .RM_tables 
       - Region.order(:name).each do |region|
