@@ -34,6 +34,7 @@ class CountriesController < ApplicationController
               'aed_name' => population_submission.site_name,
               'aed_area' => population_submission.area,
               'aed_year' => population_submission.completion_year,
+              'aed_citation' => population_submission.short_citation,
               'aed_estimate' => (count.population_estimate rescue count.population_estimate_min)
             }
             features << feature
