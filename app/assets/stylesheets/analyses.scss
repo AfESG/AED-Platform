@@ -2,17 +2,29 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-#RM_map {
-  height: 250px;
-}
-.RM_FS_map #RM_map {
+.RM_FS_map {
+  position: absolute;
+  right: 0px;
+  width: 45%;
+  top: 0px;
   height: 100%;
 }
-.RM_tables {
-  height: 250px;
+
+.RM_FS_tables {
+  position:absolute;
+  left: 0px;
+  width: 55%;
+  top: 0px;
+  height: 100%;
+  box-shadow: 0px 0px 10px #333;
   overflow: scroll;
 }
-.RM_FS_tables .RM_tables {
+
+.RM_FS_tables::-webkit-scrollbar {
+  display: none;
+}
+
+#RM_map {
   height: 100%;
 }
 .RM_tables .row {
