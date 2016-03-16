@@ -62,8 +62,13 @@ map_country = (element) ->
       onEachFeature: onEachFeature
     )
     COUNTRY_LAYER.addTo map
-    map.fitBounds COUNTRY_LAYER.getBounds()
-    $(".RM_FS_loading").hide()
+    try
+      map.fitBounds COUNTRY_LAYER.getBounds()
+      $(".RM_FS_loading").hide()
+    catch
+      $(".RM_FS_loading").hide()
+      $(".RM_changes, .RM_other_header, .RM_new_change").hide()
+      alert "No survey data found for country code #{iso_code}"
 
 patch_change = (change_id, params, and_then) ->
   $.ajax({
