@@ -1,8 +1,15 @@
-.RM_FS_map style='position:absolute; right: 0px; width: 45%; top: 0px; height: 100%'
+.RM_FS_map
   = map container_id: "RM_map", center: {latlng: [-12.04, 18.59], zoom: 4}
 
-.RM_FS_tables style='position:absolute; left: 0px; width: 55%; top: 0px; height: 100%; box-shadow: 0px 0px 10px #333;'
-  div style='height: 100%; overflow: scroll'
+.RM_FS_tables
+  .container_fluid
+    .row
+      .col-xs-6
+        b
+          ' Replacements for
+          = @analysis.analysis_name
+      .col-xs-6 style='text-align: right'
+        a href='/analyses' Back to analysis list
     .RM_tables 
       - Region.order(:name).each do |region|
         .region data-regionid=region.id
@@ -54,24 +61,27 @@
                     span.glyphicon.glyphicon-plus
                     '  Add Input Zone
 
-  .RM_template_change
-    .RM_change data-changeid = 'new'
-      .row
-        .col-xs-2.RM_replacement_name.RM_clickable
-          ' (not set)
-        .col-xs-3.RM_clickable
-          .RM_strata.RM_replaced_strata data-replacedstrata=''
-            | -
-        .col-xs-3.RM_clickable
-          .RM_strata.RM_new_strata data-newstrata=''
-            | -
-        .col-xs-1.reason_change
-          .RM_rc_selector.RM_clickable
-            | -
-        .col-xs-3.status.RM_clickable
-          .RM_status_selector
-            | Needs review
-          .RM_comments
-          
+.RM_template_change
+  .RM_change data-changeid = 'new'
+    .row
+      .col-xs-2.RM_replacement_name.RM_clickable
+        ' (not set)
+      .col-xs-3.RM_clickable
+        .RM_strata.RM_replaced_strata data-replacedstrata=''
+          | -
+      .col-xs-3.RM_clickable
+        .RM_strata.RM_new_strata data-newstrata=''
+          | -
+      .col-xs-1.reason_change
+        .RM_rc_selector.RM_clickable
+          | -
+      .col-xs-3.status.RM_clickable
+        .RM_status_selector
+          | Needs review
+        .RM_comments
+
+.RM_FS_loading
+  =image_tag 'loading.png', class:'RM_loading'
+
 javascript:
   RM_used_estimates = #{@used_estimates.to_json.html_safe}

@@ -14,9 +14,13 @@ commit_active_cell = ->
     console.log("Execute commit function #{f}")
     f()
 
+ifdef = (s) ->
+  return s if s
+  ''
+
 strip_for = (map_props) ->
-  html = "<div>#{map_props.aed_year} #{map_props.aed_name} #{map_props.aed_internal_name}</div>"
-  html += "<div style='font-size: x-small'>#{map_props.aed_citation}</div>"
+  html = "<div>#{map_props.aed_year} #{ifdef(map_props.aed_name)} #{ifdef(map_props.aed_internal_name)}</div>"
+  html += "<div style='font-size: x-small'>#{ifdef(map_props.aed_citation)}</div>"
   html += "<div style='font-size: x-small'><a href='#{map_props.uri}' target='_blank'>#{map_props.aed_stratum}</a> est. #{map_props.aed_estimate}, #{map_props.aed_area} km²</div>"
 
 add_link_for = (map_props) ->
@@ -47,9 +51,10 @@ onEachFeature = (feature, layer) ->
 map_country = (element) ->
   country_element = $(element).closest('.RM_country')
   iso_code = country_element.data('isocode')
-  $(".RM_changes, .RM_other_header, .RM_new_change").hide()
-  country_element.find(".RM_changes, .RM_other_header, .RM_new_change").show()
+  $(".RM_FS_loading").show()
   $.getJSON "/country/" + iso_code + "/map", (data) ->
+    $(".RM_changes, .RM_other_header, .RM_new_change").hide()
+    country_element.find(".RM_changes, .RM_other_header, .RM_new_change").show()
     if COUNTRY_LAYER
       map.removeLayer COUNTRY_LAYER
     COUNTRY_LAYER = L.geoJson(data,
@@ -58,6 +63,7 @@ map_country = (element) ->
     )
     COUNTRY_LAYER.addTo map
     map.fitBounds COUNTRY_LAYER.getBounds()
+    $(".RM_FS_loading").hide()
 
 patch_change = (change_id, params, and_then) ->
   $.ajax({
