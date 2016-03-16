@@ -109,6 +109,23 @@ module SurveyCrud
     @level = level_class.find(params[:id])
     find_parents @level
     enable_named_class_variable
+    if params[:from_feature]
+      @from_feature = params[:from_feature]
+      if @from_feature and !@from_feature.blank?
+        population_submission_geometry = PopulationSubmissionGeometry.find(@from_feature);
+        survey_geometry = SurveyGeometry.new
+        survey_geometry.geom = population_submission_geometry.geom
+        if @population_submission
+          survey_geometry.attribution = @population_submission.short_citation
+        end
+        survey_geometry.save!
+        @level.survey_geometry = survey_geometry
+        @level.save!
+        population_submission_geometry.destroy
+        redirect_to @level
+        return
+      end
+    end
 
     puts "----------------------------------------------"
     puts "edit_allowed = #{edit_allowed}"
