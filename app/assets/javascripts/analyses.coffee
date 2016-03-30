@@ -268,7 +268,7 @@ window.add_stratum = add_stratum = (stratum_id) ->
     key = 'replaced_strata'
     value = strata_element.data "replacedstrata"
   values = []
-  if value != '-'
+  if value and (value != '-')
     values = value.split(/,\s*/)
   values.push stratum_id
   value = values.join ','
