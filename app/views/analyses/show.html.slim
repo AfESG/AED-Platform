@@ -82,6 +82,7 @@
 
 .RM_FS_loading
   =image_tag 'loading.png', class:'RM_loading'
+.RM_context data-analysisname=@analysis.analysis_name data-analysisyear=@analysis.analysis_year
 
 javascript:
   RM_used_estimates = #{@used_estimates.to_json.html_safe}
