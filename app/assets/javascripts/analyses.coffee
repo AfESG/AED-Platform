@@ -107,7 +107,7 @@ rc_activate = (element) ->
     nc_option = ""
     if val=="NC" or no_replacement(element)
       nc_option="<option>NC</option>"
-    $(this).html  "<select><option>-</option><option>DA</option><option>DT</option><option>NG</option><option>NP</option><option>RS</option>#{nc_option}</select>"
+    $(this).html  "<select><option>-</option><option>DA</option><option>DT</option><option>NG</option><option>NP</option><option>PL</option><option>RS</option>#{nc_option}</select>"
     $(this).find('select').each ->
       $(this).val(val)
       $(this).on 'change', ->
