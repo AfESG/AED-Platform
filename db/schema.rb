@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160305025639) do
+ActiveRecord::Schema.define(version: 20160330091819) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,31 @@ ActiveRecord::Schema.define(version: 20160305025639) do
     t.integer  "analysis_year"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "backup_analyses", id: false, force: :cascade do |t|
+    t.string   "analysis_name"
+    t.integer  "comparison_year"
+    t.integer  "analysis_year"
+    t.integer  "id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "backup_changes", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.string   "analysis_name",    limit: 255
+    t.integer  "analysis_year"
+    t.string   "replacement_name", limit: 255
+    t.string   "replaced_strata",  limit: 255
+    t.string   "new_strata",       limit: 255
+    t.string   "reason_change",    limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "country",          limit: 255
+    t.integer  "analysis_id"
+    t.string   "status"
+    t.text     "comments"
   end
 
   create_table "changes", force: :cascade do |t|

@@ -124,4 +124,34 @@ class AnalysesController < ApplicationController
     end
   end
 
+  def execute(*array)
+    sql = ActiveRecord::Base.send(:sanitize_sql_array, array)
+    return ActiveRecord::Base.connection.execute(sql)
+  end
+
+  def export
+    @export = execute <<-SQL, params[:analysis], params[:year]
+      SELECT
+        row_number() over () as id,
+        *
+      FROM input_zone_export
+      WHERE
+      analysis_name=? and analysis_year=?
+    SQL
+    features = []
+    @export.each do |row|
+      feature = RGeo::GeoJSON.encode(SurveyGeometry.find(row['sgid']).geom)
+      if feature
+         feature['properties'] = row.select { |key, value| !key.match(/sgid.*/) }
+      end
+      features << feature
+    end
+    feature_collection = {
+      'type' => 'FeatureCollection',
+      'features' => features
+    }
+    fn = 'export-analysis-' + params[:analysis] + '-' + params[:year] + '.geojson'
+    send_data feature_collection.to_json, filename: fn, type: :json
+  end
+
 end

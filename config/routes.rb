@@ -7,6 +7,7 @@ Aaed::Application.routes.draw do
   resources :changes
 
   resources :analyses
+  get 'input_zone_export/:analysis/:year' => 'analyses#export'
 
   resources :report_narratives
 

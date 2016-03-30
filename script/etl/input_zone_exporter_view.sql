@@ -1,4 +1,5 @@
-CREATE OR REPLACE VIEW input_zone_export AS
+DROP VIEW IF EXISTS input_zone_export;
+CREATE VIEW input_zone_export AS
  SELECT
     l.analysis_name,
     l.analysis_year,
@@ -25,8 +26,8 @@ CREATE OR REPLACE VIEW input_zone_export AS
     l.quality_level as quality,
     l.actually_seen as seen,
     l.stratum_area as area_rep,
-    ST_Area(g.geometry::geography,true)/1000000 as area_calc,
-    g.geometry
+    ST_Area(g.geom::geography,true)/1000000 as area_calc,
+    g.id as sgid
    FROM estimate_locator l
      JOIN estimate_factors f ON l.input_zone_id = f.input_zone_id
      JOIN survey_geometries g ON f.survey_geometry_id = g.id
