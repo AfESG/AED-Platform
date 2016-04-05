@@ -3,6 +3,11 @@ class ApplicationController < ActionController::Base
   before_filter :authenticate
   before_filter :configure_permitted_parameters, if: :devise_controller?
 
+  class NotAuthorizedException < Exception
+  end
+
+  rescue_from NotAuthorizedException, with: :render_not_authorized
+
   def allowed_preview?
     p params
     if params[:filter] == '2013_africa_final' and params[:year] == '2013'
@@ -17,9 +22,10 @@ class ApplicationController < ActionController::Base
 
   def maybe_authenticate_user!
     if allowed_preview?
-      return true
+      authenticate_user!
+    else
+      not_allowed!
     end
-    authenticate_user!
   end
 
   def authenticate_superuser!
@@ -46,9 +52,17 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def not_allowed! msg=nil
+    raise NotAuthorizedException.new msg
+  end
+
   protect_from_forgery
 
   protected
+
+  def render_not_authorized
+    render :layout => false, :file => "#{Rails.root}/public/401.html", :status => 401
+  end
 
   def authenticate
     if !ENV['authenticate_all_requests'].nil?
