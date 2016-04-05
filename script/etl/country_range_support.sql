@@ -49,7 +49,7 @@ DROP VIEW IF EXISTS estimate_locator_areas CASCADE;
 CREATE VIEW estimate_locator_areas AS SELECT estimate_locator_with_geometry.input_zone_id,
     estimate_locator_with_geometry.analysis_name,
     estimate_locator_with_geometry.analysis_year,
-    sum(st_area(estimate_locator_with_geometry.geometry::geography, true)) / 1000000::double precision AS area_sqkm
+    sum(st_area(estimate_locator_with_geometry.geom::geography, true)) / 1000000::double precision AS area_sqkm
    FROM estimate_locator_with_geometry
   GROUP BY estimate_locator_with_geometry.input_zone_id, estimate_locator_with_geometry.analysis_name, estimate_locator_with_geometry.analysis_year
   ORDER BY estimate_locator_with_geometry.input_zone_id, estimate_locator_with_geometry.analysis_name, estimate_locator_with_geometry.analysis_year;
