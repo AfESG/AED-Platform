@@ -105,15 +105,22 @@ create table survey_range_intersections as
   where range=1;
 
 create view survey_range_intersections_add as
-  select * from survey_range_intersections;
+  select analysis_name, analysis_year, region, category, l.country, range_quality,
+    ST_Intersection(ST_MakeValid(ST_Force2D(ST_SetSRID(geom,4326))),ST_MakeValid(ST_Force2D(ST_SetSRID(range_geometry,4326))))
+  from estimate_locator_with_geometry_add l
+  join country_range c on ST_Intersects(ST_SetSRID(geom,4326),ST_SetSRID(range_geometry,4326))
+  where range=1;
 
-delete from survey_range_intersection_metrics;
-insert into survey_range_intersection_metrics
+drop table if exists survey_range_intersection_metrics;
+drop view if exists survey_range_intersection_metrics;
+create table survey_range_intersection_metrics as
+select analysis_name, analysis_year, region, range_quality, category, country,
+    ST_Area(st_intersection::geography,true)/1000000 area_sqkm
+  from survey_range_intersections;
+
+drop table if exists survey_range_intersection_metrics_add;
+drop view if exists survey_range_intersection_metrics_add;
+create table survey_range_intersection_metrics_add as
 select analysis_name, analysis_year, region, range_quality, category, country,
     ST_Area(st_intersection::geography,true)/1000000 area_sqkm
   from survey_range_intersections_add;
-
-drop table if exists survey_range_intersection_metrics_add;
-
-create view survey_range_intersection_metrics_add as
-  select * from survey_range_intersection_metrics;
