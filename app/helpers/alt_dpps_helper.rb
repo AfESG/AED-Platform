@@ -52,14 +52,18 @@ module AltDppsHelper
   end
 
   def add_and_display_area_cell row, column, totals, opts={}
-    totals[column] ||= 0
-    value = row[column] || 0
-    if value.nil?
-      unused_cell
-    else
-      num = value.to_f
-      totals[column] += num
-      round_area_cell num, opts
+    begin
+      totals[column] ||= 0
+      value = row[column] || 0
+      if value.nil?
+        unused_cell
+      else
+        num = value.to_f
+        totals[column] += num
+        round_area_cell num, opts
+      end
+    rescue
+      '!ERR!'
     end
   end
 
@@ -81,7 +85,7 @@ module AltDppsHelper
   def alt_dpps_country_area scope, year, filter=nil
     analysis_name = filter.nil?? '' : "AND analysis_name = '#{filter}'"
     <<-SQL
-      SELECT 
+      SELECT
         a.category,
         a."AREA",
         a."AREA" / ct."RANGE_AREA" * 100 as "CATEGORY_RANGE_ASSESSED",
@@ -106,7 +110,7 @@ module AltDppsHelper
   def alt_dpps_region_area scope, year, filter=nil
     analysis_name = filter.nil?? '' : "AND analysis_name = '#{filter}'"
     <<-SQL
-      SELECT 
+      SELECT
         a.category,
         a."AREA",
         a."AREA" / rt.range_area * 100 as "CATEGORY_RANGE_ASSESSED",
@@ -131,7 +135,7 @@ module AltDppsHelper
   def alt_dpps_continent_area scope, year, filter=nil
     analysis_name = filter.nil?? '' : "AND analysis_name = '#{filter}'"
     <<-SQL
-      SELECT 
+      SELECT
         a.category,
         a."AREA",
         a."AREA" / rt.range_area * 100 as "CATEGORY_RANGE_ASSESSED",
@@ -170,7 +174,7 @@ module AltDppsHelper
         "RANGE_AREA" / rrt.range_area * 100 AS "PERCENT_OF_RANGE_COVERED",
         "ASSESSED_RANGE" / "RANGE_AREA" * 100 as "PERCENT_OF_RANGE_ASSESSED"
       FROM (
-        SELECT 
+        SELECT
           x.region,
           sum(x."ESTIMATE") as "ESTIMATE",
           1.96*sqrt(sum(x."POPULATION_VARIANCE")) as "CONFIDENCE",
@@ -212,7 +216,7 @@ module AltDppsHelper
         "RANGE_AREA" / rrt.range_area * 100 AS "PERCENT_OF_RANGE_COVERED",
         "ASSESSED_RANGE" / "RANGE_AREA" * 100 as "PERCENT_OF_RANGE_ASSESSED"
       FROM (
-        SELECT 
+        SELECT
           x.country,
           x.region,
           sum(x."ESTIMATE") as "ESTIMATE",
@@ -333,7 +337,7 @@ module AltDppsHelper
 
   def old_alt_dpps scope, year
     <<-SQL
-      SELECT 
+      SELECT
         CASE
           WHEN e.completion_year > #{year - 10} THEN e.category
           ELSE 'F'
@@ -342,7 +346,7 @@ module AltDppsHelper
           WHEN e.completion_year > #{year - 10} THEN surveytype
           ELSE 'Degraded Data'
         END "SURVEYTYPE",
-        sum(e.actually_seen) as seen, 
+        sum(e.actually_seen) as seen,
         sum(e.population_estimate) as estimate,
         sum(e.population_lower_confidence_limit) as min,
         sum(e.population_upper_confidence_limit) as max,
@@ -356,8 +360,8 @@ module AltDppsHelper
       JOIN countries c ON s.country_id = c.id
       JOIN regions r ON c.region_id = r.id
       JOIN surveytypes st ON e.category = st.category
-      WHERE 
-        e.analysis_year = #{year} 
+      WHERE
+        e.analysis_year = #{year}
         AND #{scope}
       GROUP BY "CATEGORY", "SURVEYTYPE"
       ORDER BY "CATEGORY"
