@@ -64,6 +64,9 @@ gem 'capistrano-unicorn'
 gem 'protected_attributes'
 gem 'roo'
 
+# For shapefile writing support
+gem 'georuby'
+
 # Make ActiveRecord PostGIS-aware
 gem 'activerecord-postgis-adapter'
 

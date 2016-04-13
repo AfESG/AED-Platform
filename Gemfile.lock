@@ -119,6 +119,7 @@ GEM
       actionpack (>= 3.2.13)
     formtastic-bootstrap (3.1.1)
       formtastic (>= 3.0)
+    georuby (2.5.2)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     haml (4.0.7)
@@ -288,6 +289,7 @@ DEPENDENCIES
   devise
   formtastic
   formtastic-bootstrap
+  georuby
   haml
   hpricot
   jquery-rails

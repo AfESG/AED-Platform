@@ -11,3 +11,7 @@ javascript:
     survey_map.addTo(map);
     map.fitBounds(survey_map.getBounds());
   });
+
+- if current_user and current_user.admin?
+  = link_to "/survey_geometry/#{level.survey_geometry_id}/download", target: '_blank'
+    ' Download shapefile
