@@ -1,55 +1,14 @@
 class CountriesController < ApplicationController
+  def index
+    render json: { countries: Country.all }
+  end
+
   def geojson_map
-    @country = Country.where(iso_code: params[:iso_code]).first
-    features = []
-    @country.submissions.includes(:population_submissions).each do |submission|
-      submission.population_submissions.each do |population_submission|
-        count = population_submission.counts[0]
-        next unless count
-        if count.has_strata?
-          count.strata.includes(:survey_geometry).each do |stratum|
-            if stratum.survey_geometry
-              feature = RGeo::GeoJSON.encode(stratum.survey_geometry.geom)
-              if feature
-                feature['properties'] = {
-                  'aed_stratum' => "#{population_submission.survey_type}#{stratum.id}",
-                  'uri' => "/#{stratum.class.name.pluralize.underscore}/#{stratum.id}",
-                  'aed_name' => stratum.stratum_name,
-                  'aed_internal_name' => stratum.internal_name || '',
-                  'aed_year' => population_submission.completion_year,
-                  'aed_citation' => population_submission.short_citation,
-                  'aed_area' => stratum.stratum_area,
-                  'aed_estimate' => stratum.population_estimate
-                }
-                features << feature
-              end
-            end
-          end
-        else
-          if count.survey_geometry
-            feature = RGeo::GeoJSON.encode(count.survey_geometry.geom)
-            if feature
-              feature['properties'] = {
-                'aed_stratum' => "#{population_submission.survey_type}#{count.id}",
-                'uri' => "/#{count.class.name.pluralize.underscore}/#{count.id}",
-                'aed_name' => population_submission.site_name,
-                'aed_area' => population_submission.area,
-                'aed_year' => population_submission.completion_year,
-                'aed_citation' => population_submission.short_citation,
-                'aed_estimate' => (count.population_estimate rescue count.population_estimate_min)
-              }
-              features << feature
-            end
-          end
-        end
-      end
-    end
-    features.sort_by! { |h| h['properties']['aed_year'] }
-    feature_collection = {
-      'type' => 'FeatureCollection',
-      'features' => features
+    @country = Country.find_by_iso_code(params[:iso_code])
+    render json: {
+      type: 'FeatureCollection',
+      features: @country.features
     }
-    render :json => feature_collection
   end
 
   def geojson_map_public
