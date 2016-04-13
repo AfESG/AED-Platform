@@ -191,7 +191,7 @@ en:
         Data Request Form
   submissions:
     index:
-      title: "Active Submissions"
+      title: "Submissions Manager"
       new: "Contribute New Submission"
     show:
       title: "Data Submission"
