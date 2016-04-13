@@ -1,5 +1,9 @@
 Aaed::Application.routes.draw do
 
+  get 'continents/index'
+
+  get 'continents/geojson_map'
+
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
   devise_for :users
@@ -71,8 +75,19 @@ Aaed::Application.routes.draw do
   get 'population_submission_attachments/download/:id' => 'population_submission_attachments#download'
   get 'population_submissions/:id/map' => 'population_submissions#geojson_map'
   get 'survey_geometry/:id/map' => 'survey_geometries#geojson_map'
+
+  # country endpoints
+  get 'countries' => 'countries#index'
   get 'country/:iso_code/map' => 'countries#geojson_map'
   get 'country/survey_map/:iso_code/:analysis/:year' => 'countries#geojson_map_public'
+
+  # region endpoints
+  get 'regions' => 'regions#index'
+  get 'region/:id/map' => 'regions#geojson_map'
+
+  # continent endpoints
+  get 'continents' => 'continents#index'
+  get 'continent/:id/map' => 'continents#geojson_map'
 
   get 'data_request_forms/thanks' => 'data_request_forms#thanks'
 
