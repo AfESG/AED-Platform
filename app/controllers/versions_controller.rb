@@ -19,7 +19,7 @@ class VersionsController < ApplicationController
       result << {
         whodunnit: users[version.whodunnit.to_i],
         created_at: version.created_at,
-        ago: "#{time_ago_in_words(version.created_at)} ago",
+        ago: "#{version.created_at.strftime("%F %T")}",
         changeset: changeset
       }
     end
