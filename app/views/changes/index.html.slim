@@ -1,6 +1,6 @@
 .row
   .col-xs-12
-    h1= t('.title')
+    h1 Input Zones
     p= link_to t('.new'), new_change_path
 
     table.table
@@ -9,7 +9,8 @@
           th= Change.human_attribute_name :analysis_name
           th= Change.human_attribute_name :analysis_year
           th= Change.human_attribute_name :country
-          th= Change.human_attribute_name :replacement_name
+          th= Change.human_attribute_name :population
+          th= Change.human_attribute_name :input_zone
           th= Change.human_attribute_name :replaced_strata
           th= Change.human_attribute_name :new_strata
           th= Change.human_attribute_name :reason_change
@@ -21,6 +22,7 @@
             td= change.analysis_name
             td= change.analysis_year
             td= change.country
+            td= change.population
             td= change.replacement_name
             td= linked_ids_for change.replaced_strata
             td= linked_ids_for change.new_strata

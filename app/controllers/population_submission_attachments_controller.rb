@@ -34,6 +34,7 @@ class PopulationSubmissionAttachmentsController < ApplicationController
 
   def import_geometries_from_shapefile(shapefile)
     population_submission = @attachment.population_submission
+    puts "Shapefile is #{shapefile}"
     RGeo::Shapefile::Reader.open(File.realpath(shapefile)) do |file|
       file.each do |record|
         begin

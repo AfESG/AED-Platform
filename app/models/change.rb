@@ -9,6 +9,7 @@ class Change < ActiveRecord::Base
     :analysis_name,
     :analysis_year,
     :country,
+    :population,
     :replacement_name,
     :replaced_strata,
     :new_strata,
