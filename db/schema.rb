@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160330091819) do
+ActiveRecord::Schema.define(version: 20160415022317) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -76,6 +76,7 @@ ActiveRecord::Schema.define(version: 20160330091819) do
     t.integer  "analysis_id"
     t.string   "status"
     t.text     "comments"
+    t.string   "population"
   end
 
   create_table "continent", primary_key: "gid", force: :cascade do |t|
@@ -274,44 +275,6 @@ ActiveRecord::Schema.define(version: 20160330091819) do
     t.float   "probable"
     t.float   "possible"
     t.float   "speculative"
-  end
-
-  create_table "inputzone_2013_africa_final4b", primary_key: "gid", force: :cascade do |t|
-    t.string   "input_zone", limit: 50
-    t.integer  "id"
-    t.decimal  "shape_leng"
-    t.decimal  "shape_area"
-    t.float    "km2"
-    t.decimal  "selection",                                                                            precision: 10
-    t.string   "tracknum",   limit: 6
-    t.string   "estimate_t", limit: 254
-    t.decimal  "population",                                                                           precision: 10
-    t.string   "site_name",  limit: 254
-    t.string   "stratum_na", limit: 254
-    t.decimal  "stratum_ar",                                                                           precision: 10
-    t.decimal  "completion",                                                                           precision: 10
-    t.string   "analysis_n", limit: 254
-    t.decimal  "analysis_y",                                                                           precision: 10
-    t.decimal  "age",                                                                                  precision: 10
-    t.string   "replacemen", limit: 254
-    t.string   "reason_cha", limit: 254
-    t.string   "citation",   limit: 254
-    t.string   "short_cita", limit: 254
-    t.decimal  "populati_1",                                                                           precision: 10
-    t.decimal  "populati_2"
-    t.decimal  "populati_3"
-    t.decimal  "populati_4"
-    t.decimal  "populati_5",                                                                           precision: 10
-    t.decimal  "populati_6",                                                                           precision: 10
-    t.decimal  "quality_le",                                                                           precision: 10
-    t.decimal  "actually_s",                                                                           precision: 10
-    t.decimal  "lcl95"
-    t.string   "category",   limit: 254
-    t.string   "country",    limit: 254
-    t.string   "region",     limit: 254
-    t.string   "continent",  limit: 254
-    t.geometry "geom",       limit: {:srid=>4326, :type=>"multi_polygon", :has_z=>true, :has_m=>true}
-    t.integer  "survey_geo"
   end
 
   create_table "julian_2007", primary_key: "gid", force: :cascade do |t|
@@ -900,13 +863,11 @@ ActiveRecord::Schema.define(version: 20160330091819) do
   end
 
   create_table "survey_geometries", force: :cascade do |t|
-    t.geometry "geometry",    limit: {:srid=>0, :type=>"geometry"}
     t.geometry "geom",        limit: {:srid=>0, :type=>"geometry"}
     t.string   "attribution"
   end
 
   add_index "survey_geometries", ["geom"], name: "si_survey_geom", using: :gist
-  add_index "survey_geometries", ["geometry"], name: "si_survey_geometry", using: :gist
 
   create_table "survey_geometry_locator_buffered", id: false, force: :cascade do |t|
     t.string   "site_name",           limit: 255
@@ -1055,16 +1016,6 @@ ActiveRecord::Schema.define(version: 20160330091819) do
   end
 
   create_table "survey_range_intersections", id: false, force: :cascade do |t|
-    t.string   "analysis_name"
-    t.integer  "analysis_year"
-    t.string   "region",          limit: 255
-    t.text     "category"
-    t.string   "country",         limit: 255
-    t.string   "range_quality",   limit: 10
-    t.geometry "st_intersection", limit: {:srid=>0, :type=>"geometry"}
-  end
-
-  create_table "survey_range_intersections_add", id: false, force: :cascade do |t|
     t.string   "analysis_name"
     t.integer  "analysis_year"
     t.string   "region",          limit: 255

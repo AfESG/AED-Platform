@@ -5,7 +5,7 @@ class ChangesController < ApplicationController
   # GET /changes
   # GET /changes.json
   def index
-    @changes = Change.order(:analysis_name,:analysis_year,:country,:replacement_name)
+    @changes = Change.order(:analysis_name,:analysis_year,:country,:population,:replacement_name)
 
     respond_to do |format|
       format.html # index.html.erb
