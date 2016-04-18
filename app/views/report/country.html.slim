@@ -68,7 +68,7 @@
             td.numeric= number_with_delimiter row['ESTIMATE']
             td.numeric= number_with_delimiter row['CL95']
             td style="padding-left:10px" = row['REFERENCE']
-            td style='text-align:center' = row['PFS']
+            td style='text-align:center' = round_pfs row['PFS']
             td.numeric style="padding-right:10px" = number_with_delimiter row['AREA_SQKM']
             td style='text-align:center' = row['LON']
             td style='text-align:center' = row['LAT']

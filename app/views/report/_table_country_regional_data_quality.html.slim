@@ -22,10 +22,12 @@
               a href=("#{@region.gsub(' ','_')}/#{u row['CNTRYNAME'].gsub(' ','_')}") = row['CNTRYNAME']
             - else
               a href=("#{@region.gsub(' ','_')}/#{u row['CNTRYNAME'].gsub(' ','_')}") = row['CNTRYNAME'] 
-          - ['DEFINITE','PROBABLE','POSSIBLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX','PFS'].each do |key|
+          - ['DEFINITE','PROBABLE','POSSIBLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX'].each do |key|
             td.numeric= number_with_delimiter row[key]
+          td.numeric = number_with_delimiter(round_pfs row['PFS'])
     - @countries_sum.each do |row|
       tr.totals style=('height: 24px; font-weight: bold') 
         td Totals
-        - ['DEFINITE','PROBABLE','POSSIBLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX','PFS'].each do |key|
+        - ['DEFINITE','PROBABLE','POSSIBLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX'].each do |key|
           td.numeric= number_with_delimiter row[key]
+        td.numeric = number_with_delimiter(round_pfs row['PFS'])

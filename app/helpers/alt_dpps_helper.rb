@@ -14,6 +14,17 @@ module AltDppsHelper
     end
   end
 
+  def round_pfs value
+    case value
+    when < 1
+      return 1
+    when > 5
+      return 5
+    else
+      return value
+    end
+  end
+
   def round_area area
     area.to_f.round(1)
   end
@@ -59,6 +70,7 @@ module AltDppsHelper
         unused_cell
       else
         num = value.to_f
+        num = round_pfs(num) if opts[:pfs]
         totals[column] += num
         round_area_cell num, opts
       end
