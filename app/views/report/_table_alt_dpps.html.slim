@@ -53,15 +53,25 @@
           = add_and_display_area_cell area_total[row['CATEGORY']], 'CATEGORY_RANGE_ASSESSED', table_totals, attrs: { rowspan: merged_categories.include?(keys[index+1] || nil) ? merged_keys.count + 1 : 1 }
         = (round_area_sqkm_cell(area_total[row['CATEGORY']]['AREA']) || 0) unless merged_categories.include?(row['CATEGORY']) rescue '!ERR!'
 
-    tr
-      td Unassessed Range
-      - 4.times.each do |i|
-        = unused_cell
-      = round_area_cell 100 - (table_totals['CATEGORY_RANGE_ASSESSED'] || 0)  
-      = round_area_sqkm_cell(area_candidate['range_area'].to_f - (@alt_areas.inject(0) { |sum, tuple| sum+= tuple['AREA'].to_f }))
-    tr
-      td = 'Total'
+    tr.bold
+      td Total Numbers
       - data_columns.each do |column|
         td.numeric = number_with_delimiter(round ? rounded(table_totals[column].to_i) : table_totals[column].to_i)
+      td &nbsp;
+      td &nbsp;
+
+    tr
+      td align='right' colspan='5' Assessed Range
+      = round_area_cell table_totals['CATEGORY_RANGE_ASSESSED'] || 0
+      = round_area_sqkm_cell (@alt_areas.inject(0) { |sum, tuple| sum+= tuple['AREA'].to_f })
+
+    tr
+      td align='right' colspan='5' Unassessed Range
+      = round_area_cell 100 - (table_totals['CATEGORY_RANGE_ASSESSED'] || 0)
+      = round_area_sqkm_cell(area_candidate['range_area'].to_f - (@alt_areas.inject(0) { |sum, tuple| sum+= tuple['AREA'].to_f }))
+
+    tr.bold
+      td align='right' colspan='5'
+        strong Total Range
       td.numeric 100
       = round_area_sqkm_cell area_candidate['range_area']
