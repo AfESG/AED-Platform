@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160415022317) do
+ActiveRecord::Schema.define(version: 20160419101317) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -762,14 +762,14 @@ ActiveRecord::Schema.define(version: 20160415022317) do
     t.integer  "population_asymmetric_upper_confidence_interval"
     t.integer  "population_asymmetric_lower_confidence_interval"
     t.integer  "transects_covered"
-    t.integer  "transects_covered_total_length"
+    t.float    "transects_covered_total_length"
     t.float    "strip_width"
     t.integer  "observations"
     t.string   "observations_distance_method",                      limit: 255
     t.integer  "actually_seen"
     t.integer  "dung_piles"
     t.string   "dung_decay_rate_measurement_method",                limit: 255
-    t.integer  "dung_decay_rate_estimate_used"
+    t.float    "dung_decay_rate_estimate_used"
     t.string   "dung_decay_rate_measurement_site",                  limit: 255
     t.integer  "dung_decay_rate_measurement_year"
     t.string   "dung_decay_rate_reference",                         limit: 255
@@ -780,7 +780,7 @@ ActiveRecord::Schema.define(version: 20160415022317) do
     t.float    "dung_decay_rate_confidence_interval"
     t.boolean  "dung_decay_rate_no_precision_estimate_available"
     t.boolean  "defecation_rate_measured_on_site"
-    t.integer  "defecation_rate_estimate_used"
+    t.float    "defecation_rate_estimate_used"
     t.string   "defecation_rate_measurement_site",                  limit: 255
     t.string   "defecation_rate_reference",                         limit: 255
     t.float    "defecation_rate_variance"
@@ -796,7 +796,7 @@ ActiveRecord::Schema.define(version: 20160415022317) do
     t.integer  "dung_density_degrees_of_freedom"
     t.float    "dung_density_confidence_interval"
     t.boolean  "dung_density_no_precision_estimate_available"
-    t.integer  "dung_encounter_rate"
+    t.float    "dung_encounter_rate"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.float    "individual_transect_length"
