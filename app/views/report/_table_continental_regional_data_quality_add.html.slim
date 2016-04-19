@@ -33,7 +33,7 @@
           - ['ESTIMATE','CONFIDENCE','GUESS_MIN','GUESS_MAX','RANGE_AREA','PERCENT_OF_RANGE_COVERED','PERCENT_OF_RANGE_ASSESSED'].each do |key|
             = add_and_display_cell row, key, totals, round: false
           = add_and_display_cell row, 'IQI', totals, precision: 2
-          = add_and_display_cell row, 'PFS', totals
+          = add_and_display_cell row, 'PFS', totals, pfs: true
     - @alt_regions_sums.each do |row|
       tr.totals style=('height: 24px; font-weight: bold') 
         td Totals
@@ -41,4 +41,4 @@
           = numeric_cell row[key]
         = numeric_cell row['IQI'], precision: 2
         td
-        /= numeric_cell row['PFS']
+        /= numeric_cell round_pfs(row['PFS'])

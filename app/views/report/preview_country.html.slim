@@ -126,7 +126,7 @@
               - else
                 td style="text-align:right" = @cl.to_s.gsub(/[^\d]/, "")!="0" ? number_with_delimiter(@cl) : ""
               td style="padding-left:10px" = @re
-              td style="text-align:center" = @pf
+              td style="text-align:center" = round_pfs @pf
               td style="text-align:right" = @ar.to_s!="0" ? number_with_delimiter(@ar) : ""
               td style="text-align:center" = @lo
               td style="text-align:center" = @la
@@ -142,7 +142,7 @@
                 td.numeric= number_with_delimiter row['ESTIMATE']
                 td.numeric= row['CL95'].to_s.gsub(/[^\d]/, '')!="0" ? (number_with_delimiter row['CL95']) : ""
                 td style="padding-left:10px" = row['REFERENCE']
-                td style='text-align:center' = row['PFS']
+                td style='text-align:center' = round_pfs row['PFS']
                 td.numeric style="padding-right:10px" = number_with_delimiter row['AREA_SQKM']
                 td style='text-align:center' = row['LON']
                 td style='text-align:center' = row['LAT']
