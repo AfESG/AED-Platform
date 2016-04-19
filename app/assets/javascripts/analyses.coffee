@@ -180,6 +180,7 @@ status_activate = (element) ->
     $(this).html "<select><option>Needs review</option><option>In review</option><option>Reviewed</option>#{completed_available}</select>"
     $(this).find('select').each ->
       $(this).val(val)
+      $(this).data('initial_index', $(this).prop("selectedIndex"))
       $(this).on 'change', ->
         commit_active_cell()
   change.find('.RM_comments').each ->
@@ -207,6 +208,13 @@ status_changed = (element) ->
           status_activate this
     $(this).find('select').each ->
       status_val = $(this).val()
+      current_index = $(this).prop('selectedIndex')
+      initial_index = $(this).data('initial_index')
+      console.log("Status val was #{initial_index} and will be #{current_index}")
+      if (current_index < initial_index)
+        unless confirm("Are you sure you want to go backwards to status \"#{status_val}?\"")
+          $(this).find('option').eq(initial_index).prop('selected',true)
+          status_val = $(this).val()
       $(this).parent().each ->
         $(this).html status_val
         $(this).on 'click', ->
