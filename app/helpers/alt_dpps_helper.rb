@@ -16,9 +16,9 @@ module AltDppsHelper
 
   def round_pfs value
     case value
-    when < 1
+    when value < 1
       return 1
-    when > 5
+    when value > 5
       return 5
     else
       return value
