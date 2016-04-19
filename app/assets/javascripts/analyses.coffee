@@ -82,6 +82,7 @@ patch_change = (change_id, params, and_then) ->
       alert "Error saving status and comments."
     success: (data) ->
       and_then() if and_then
+      mark_removal_eligible_changes()
   })
 
 no_replacement = (element) ->
@@ -321,6 +322,33 @@ highlight_stratum = (element) ->
   unless feature_found
     alert "Corresponding feature not found on map"
 
+mark_removal_eligible_changes = () ->
+  $('.RM_change').each ->
+    found = false
+    $(this).find('.RM_stratum').each ->
+      found = true
+    unless found
+      $(this).find('.RM_remove_change').remove()
+      $(this).find('.RM_replacement_name').parent().append('<div class="RM_remove_change_wrapper"><div class="RM_remove_change pull-right btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove"></span> Remove</div>&#160;</div>')
+      hook_change_editing_events $(this)
+
+remove_change = (element) ->
+  change = $(element).closest('.RM_change')
+  changeid = change.data('changeid')
+  $.ajax({
+    type: "DELETE"
+    url: "/changes/#{changeid}"
+    dataType: 'json'
+    data:
+      change:
+        id: changeid
+    success: (data) ->
+      change.remove()
+    error: (data) ->
+      console.log data
+      alert "Error removing input zone."
+  })
+
 add_new_change = (element) ->
   country_element = $(element).closest('.RM_country')
   iso_code = country_element.data('isocode')
@@ -371,6 +399,8 @@ hook_change_editing_events = (element) ->
     highlight_stratum this
   change.find(".RM_strata").on 'click', ->
     activate_adding_strata this
+  change.find(".RM_remove_change").on 'click', ->
+    remove_change this
 
 hook_editing_events = ->
   $(".RM_country_indicator").on 'click', ->
@@ -393,3 +423,4 @@ $ ->
   $("#RM_map").each ->
     initialize_map()
     hook_editing_events()
+    mark_removal_eligible_changes()
