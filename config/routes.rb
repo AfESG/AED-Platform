@@ -90,9 +90,10 @@ Aaed::Application.routes.draw do
   get 'continents' => 'continents#index'
   get 'continent/:id/map' => 'continents#geojson_map'
 
-  get 'data_request_forms/thanks' => 'data_request_forms#thanks'
+  get 'data_request_forms/new' => 'data_request_forms#hold'
+  get 'secret_data_request_forms/thanks' => 'data_request_forms#thanks'
 
-  resources :data_request_forms
+  resources :data_request_forms, path: 'secret_data_request_forms'
 
   resources :spreadsheets, only: [:index, :create, :show, :destroy]
 
