@@ -33,11 +33,12 @@
                 - Change.where(analysis_name: @analysis.analysis_name).where(country: country.iso_code).order(:replacement_name).each do |change|
                   .RM_change data-changeid = change.id
                     .row
-                      .col-xs-2.RM_replacement_name.RM_clickable
-                        - if change.replacement_name.blank?
-                          ' (not set)
-                        - else
-                          = change.replacement_name
+                      .col-xs-2
+                        .RM_replacement_name.RM_clickable
+                          - if change.replacement_name.blank?
+                            ' (not set)
+                          - else
+                            = change.replacement_name
                       .col-xs-3.RM_clickable
                         .RM_strata.RM_replaced_strata data-replacedstrata=dashify(change.replaced_strata)
                           == describe_change_strata(change.replaced_strata,@analysis.comparison_year)
@@ -64,8 +65,9 @@
 .RM_template_change
   .RM_change data-changeid = 'new'
     .row
-      .col-xs-2.RM_replacement_name.RM_clickable
-        ' (not set)
+      .col-xs-2
+        .RM_replacement_name.RM_clickable
+          ' (not set)
       .col-xs-3.RM_clickable
         .RM_strata.RM_replaced_strata data-replacedstrata='-'
           | -
