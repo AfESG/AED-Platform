@@ -17,8 +17,8 @@ class CalculateMissingAreas < ActiveRecord::Migration
     ]
     tables.each do |table|
       puts "Populating missing areas for #{table}"
-      result = p_execute <<-SQL, table
-        update survey_individual_registrations s
+      result = p_execute <<-SQL
+        update #{table} s
         set stratum_area = (ST_Area(sg.geom::geography,true)/1000000)
         from survey_geometries sg
         where
