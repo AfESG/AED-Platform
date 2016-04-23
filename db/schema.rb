@@ -11,11 +11,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160419101317) do
+ActiveRecord::Schema.define(version: 20160423200939) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
+
+  create_table "2014_rangetypeupdates5_final", primary_key: "gid", force: :cascade do |t|
+    t.integer  "range",      limit: 2
+    t.string   "rangequali", limit: 10
+    t.string   "ccode",      limit: 2
+    t.string   "cntryname",  limit: 30
+    t.integer  "area_sqkm"
+    t.integer  "refid"
+    t.string   "call_numbe", limit: 30
+    t.integer  "scaledenom"
+    t.string   "phenotype",  limit: 50
+    t.string   "phtypebasi", limit: 50
+    t.integer  "phtyperef"
+    t.string   "datastatus", limit: 2
+    t.string   "comments",   limit: 254
+    t.string   "rangetype",  limit: 20
+    t.string   "comments_1", limit: 254
+    t.string   "adjyear_1",  limit: 20
+    t.integer  "sourceyear", limit: 2
+    t.string   "publisyear", limit: 20
+    t.geometry "geom",       limit: {:srid=>0, :type=>"multi_polygon"}
+  end
 
   create_table "add_range", id: false, force: :cascade do |t|
     t.string   "site_name",           limit: 255
@@ -968,6 +990,7 @@ ActiveRecord::Schema.define(version: 20160419101317) do
     t.boolean  "is_mike_site"
     t.integer  "survey_geometry_id"
     t.string   "web_id"
+    t.integer  "stratum_area"
   end
 
   create_table "survey_others", force: :cascade do |t|
@@ -983,6 +1006,7 @@ ActiveRecord::Schema.define(version: 20160419101317) do
     t.boolean  "informed"
     t.integer  "survey_geometry_id"
     t.string   "web_id"
+    t.integer  "stratum_area"
   end
 
   create_table "survey_range_equator_countries", id: false, force: :cascade do |t|
