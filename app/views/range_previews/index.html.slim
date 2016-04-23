@@ -1,0 +1,16 @@
+.RP_FS_map
+  = map container_id: "RP_map", center: {latlng: [-12.04, 18.59], zoom: 4}
+
+.RP_FS_tables
+  .container_fluid
+    .row
+      .col-xs-6
+        b
+          ' Previewing Range Map
+    .RP_tables 
+
+.RP_FS_loading
+  =image_tag 'loading.png', class:'RP_loading'
+
+javascript:
+  RM_used_estimates = #{@used_estimates.to_json.html_safe}

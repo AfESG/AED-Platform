@@ -13,6 +13,9 @@ Aaed::Application.routes.draw do
   resources :analyses
   get 'input_zone_export/:analysis/:year' => 'analyses#export'
 
+  resources :range_previews
+  get 'range_preview_map' => 'range_previews#map'
+
   resources :report_narratives
 
   resources :users

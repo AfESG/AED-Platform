@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  range_type: MyString
+  comments: MyString
+  source_year: MyString
+  published_year: MyString
+  geom: 
+
+two:
+  range_type: MyString
+  comments: MyString
+  source_year: MyString
+  published_year: MyString
+  geom: 
