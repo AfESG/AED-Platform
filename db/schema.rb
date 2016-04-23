@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160423200939) do
+ActiveRecord::Schema.define(version: 20160423223620) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -479,6 +479,18 @@ ActiveRecord::Schema.define(version: 20160423200939) do
   end
 
   add_index "range_geometries", ["geometry"], name: "si_range_geometry", using: :gist
+
+  create_table "range_previews", force: :cascade do |t|
+    t.string   "range_type"
+    t.string   "original_comments"
+    t.string   "source_year"
+    t.string   "published_year"
+    t.string   "comments"
+    t.string   "status"
+    t.geometry "geom",              limit: {:srid=>0, :type=>"geometry"}
+    t.datetime "created_at",                                              null: false
+    t.datetime "updated_at",                                              null: false
+  end
 
   create_table "region", primary_key: "gid", force: :cascade do |t|
     t.string   "regionid",   limit: 254
