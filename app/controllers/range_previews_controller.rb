@@ -20,6 +20,7 @@ class RangePreviewsController < ApplicationController
             original_comments: range.original_comments,
             source_year: range.source_year,
             published_year: range.published_year,
+            status: range.status,
             comments: range.comments
         }
         features << feature
