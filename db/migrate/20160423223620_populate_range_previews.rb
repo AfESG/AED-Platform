@@ -11,6 +11,7 @@ class PopulateRangePreviews < ActiveRecord::Migration
     p_execute <<-SQL
       insert into range_previews
         (range_type,
+         status,
          original_comments,
          source_year,
          published_year,
@@ -19,6 +20,7 @@ class PopulateRangePreviews < ActiveRecord::Migration
          updated_at)
       select
         rangetype,
+        'Needs review',
         comments || comments_1,
         sourceyear,
         publisyear,
