@@ -59,6 +59,7 @@ patch_change = (range_id, params, and_then) ->
 interact = (feature, layer) ->
   console.log "Interacting with feature"
   console.log feature
+  window.hide_history_window()
   p = feature.properties
   $('.RP_tables').html "
     <div><b>#{p.published_year}</b></div>
@@ -81,6 +82,12 @@ interact = (feature, layer) ->
       status: $("#RP_status").val()
     }, ->
       layer.setStyle(getStyle(feature.properties))
+
+  $("#RP_comments").on "focus", ->
+    window.reveal_history('RangePreview', feature.properties.range_id)
+
+  $("#RP_comments").on "blur", ->
+    window.hide_history_window()
 
   $("#RP_comments").on "change", ->
     feature.properties.comments = $("#RP_comments").val()
