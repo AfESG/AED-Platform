@@ -274,19 +274,19 @@ select
 ---
 drop view new_strata cascade;
 create view new_strata as
- SELECT q.analysis_name,q.replacement_name,q.reason_change,q.new_stratum
-   FROM ( SELECT DISTINCT analysis_name, replacement_name, reason_change, unnest(regexp_split_to_array(changes.new_strata, ','::text)) AS new_stratum
+ SELECT q.analysis_name,q.sort_key,q.population,q.replacement_name,q.reason_change,q.new_stratum
+   FROM ( SELECT DISTINCT analysis_name, sort_key, population, replacement_name, reason_change, unnest(regexp_split_to_array(changes.new_strata, ','::text)) AS new_stratum
            FROM changes) q
   WHERE q.new_stratum IS NOT NULL AND q.new_stratum <> ''::text
-  ORDER BY q.analysis_name, q.replacement_name, q.reason_change, q.new_stratum;
+  ORDER BY q.analysis_name, q.sort_key, q.reason_change, q.new_stratum;
 
 drop view replaced_strata cascade;
 create view replaced_strata as
- SELECT q.analysis_name,q.replacement_name,'-'::text reason_change,q.replaced_stratum
-   FROM ( SELECT DISTINCT analysis_name, replacement_name, unnest(regexp_split_to_array(changes.replaced_strata, ','::text)) AS replaced_stratum
+ SELECT q.analysis_name,q.sort_key,q.population,q.replacement_name,'-'::text reason_change,q.replaced_stratum
+   FROM ( SELECT DISTINCT analysis_name, sort_key, population, replacement_name, unnest(regexp_split_to_array(changes.replaced_strata, ','::text)) AS replaced_stratum
            FROM changes) q
   WHERE q.replaced_stratum IS NOT NULL AND q.replaced_stratum <> ''::text
-  ORDER BY q.analysis_name, q.replacement_name, q.replaced_stratum;
+  ORDER BY q.analysis_name, q.sort_key, q.replaced_stratum;
 
 ---
 --- estimate_factors_analyses
@@ -307,6 +307,8 @@ select
   a.analysis_year,
   a.comparison_year,
   a.analysis_year - completion_year age,
+  n.sort_key,
+  n.population,
   n.replacement_name,
   reason_change,
   citation,
@@ -336,6 +338,8 @@ select
   a.comparison_year,
   a.comparison_year,
   a.comparison_year - completion_year age,
+  r.sort_key,
+  r.population,
   r.replacement_name,
   reason_change,
   citation,
@@ -373,6 +377,8 @@ select
   analysis_name,
   analysis_year,
   age,
+  sort_key,
+  population,
   replacement_name,
   CAST(CASE
       WHEN reason_change = '-' and age >= 10 and (comparison_year - completion_year <= 10) AND NOT (estimate_type='O' and (quality_level IS NULL or quality_level != 1)) THEN 'DD'
