@@ -30,10 +30,15 @@
                 .col-xs-3
                   .RM_other_header Status and comments
               .RM_changes
-                - Change.where(analysis_name: @analysis.analysis_name).where(country: country.iso_code).order(:replacement_name).each do |change|
+                - Change.where(analysis_name: @analysis.analysis_name).where(country: country.iso_code).order(:sort_key).each do |change|
                   .RM_change data-changeid = change.id
                     .row
                       .col-xs-2
+                        .RM_population.RM_clickable
+                          - if change.population.blank?
+                            '
+                          - else
+                            = change.population
                         .RM_replacement_name.RM_clickable
                           - if change.replacement_name.blank?
                             ' (not set)
@@ -66,6 +71,7 @@
   .RM_change data-changeid = 'new'
     .row
       .col-xs-2
+        .RM_population.RM_clickable
         .RM_replacement_name.RM_clickable
           ' (not set)
       .col-xs-3.RM_clickable
