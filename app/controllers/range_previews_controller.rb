@@ -1,4 +1,7 @@
 class RangePreviewsController < ApplicationController
+
+  before_filter :authenticate_superuser!
+
   def index
     respond_to do |format|
       format.html {
@@ -32,4 +35,21 @@ class RangePreviewsController < ApplicationController
       features: features
     }
   end
+
+  # PATCH /range_previews/1.json
+  def update
+    @range_preview = RangePreview.find(params[:id])
+    if params[:range_preview] and params[:range_preview][:comments] != nil and params[:range_preview][:comments].blank?
+      params[:range_preview][:comments] = nil
+    end
+
+    respond_to do |format|
+      if @range_preview.update_attributes(params[:range_preview])
+        format.json { head :no_content }
+      else
+        format.json { render json: @range_preview.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
 end
