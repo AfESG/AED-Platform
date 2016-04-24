@@ -136,36 +136,58 @@ rc_changed = (element) ->
 
 name_activate = (element) ->
   commit_active_cell()
-  $(element).closest('.RM_change').find('.RM_replacement_name').each ->
-    $(this).off 'click'
-    val = $(this).html()
-    $(this).html "<input type='text'>"
-    $(this).find('input').each ->
-      $(this).val(val)
-      $(this).on 'change', ->
-        commit_active_cell()
-      $(this).on 'keyup', (event) ->
-        if event.which == 13
+  $(element).closest('.RM_change').each ->
+    $(this).find('.RM_population').each ->
+      $(this).off 'click'
+      val = $(this).html()
+      $(this).html "Population:<br/><input type='text'>"
+      $(this).find('input').each ->
+        $(this).val(val)
+        $(this).on 'change', ->
           commit_active_cell()
-      $(this).on 'blur', (event) ->
-        commit_active_cell()
-      prepare_commit_function ->
-        name_changed(element)
-      $(this).focus()
+        $(this).on 'keyup', (event) ->
+          if event.which == 13
+            commit_active_cell()
+        $(this).on 'blur', (event) ->
+          commit_active_cell()
+    $(this).find('.RM_replacement_name').each ->
+      $(this).off 'click'
+      val = $(this).html()
+      $(this).html "Input Zone:<br/><input type='text'>"
+      $(this).find('input').each ->
+        $(this).val(val)
+        $(this).on 'change', ->
+          commit_active_cell()
+        $(this).on 'keyup', (event) ->
+          if event.which == 13
+            commit_active_cell()
+        $(this).on 'blur', (event) ->
+          commit_active_cell()
+    prepare_commit_function ->
+      name_changed(element)
 
 name_changed = (element) ->
   $(element).closest('.RM_change').each ->
     change_id = $(this).data 'changeid'
-    val = ''
+    replacement_name = ''
+    population = ''
     $(this).find('.RM_replacement_name').each ->
       $(this).find('input').each ->
-        val = $(this).val()
+        replacement_name = $(this).val()
         $(this).parent().each ->
-          $(this).html val
+          $(this).html replacement_name
+          $(this).on 'click', ->
+            name_activate this
+    $(this).find('.RM_population').each ->
+      $(this).find('input').each ->
+        population = $(this).val()
+        $(this).parent().each ->
+          $(this).html population
           $(this).on 'click', ->
             name_activate this
     patch_change change_id,
-      replacement_name: val
+      population: population,
+      replacement_name: replacement_name
 
 status_activate = (element) ->
   commit_active_cell()
@@ -402,6 +424,8 @@ hook_change_editing_events = (element) ->
   change.find(".RM_comments").on 'click', ->
     status_activate this
   change.find(".RM_replacement_name").on 'click', ->
+    name_activate this
+  change.find(".RM_population").on 'click', ->
     name_activate this
   change.find(".RM_stratum").on 'click', ->
     highlight_stratum this

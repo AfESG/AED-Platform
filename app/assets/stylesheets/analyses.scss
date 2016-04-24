@@ -58,7 +58,7 @@
   font-weight: bold;
 }
 .RM_population {
-  color: #777;
+  color: #070;
   font-size: x-small;
 }
 .RM_clickable {
@@ -74,7 +74,7 @@
 .RM_replacement_name {
   font-size: small;
 }
-.RM_replacement_name input {
+.RM_replacement_name input, .RM_population input {
   font-size: small;
   width: 75px;
 }
