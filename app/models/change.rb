@@ -18,6 +18,14 @@ class Change < ActiveRecord::Base
     :comments
   )
 
+  before_validation :generate_sort_key
+
+  def generate_sort_key
+    self.population = '' unless self.population
+    self.replacement_name = '' unless self.replacement_name
+    self.sort_key = self.population + self.replacement_name
+  end
+
   def fetch_strata(s)
     mappings={
       'AS' => 'SurveyAerialSampleCountStratum',
