@@ -1,4 +1,18 @@
 .RM_FS_map
+  .RM_date_limits
+    ' Show surveys from:
+    select#RM_from_year
+      - range = PopulationSubmission.where('completion_year is not null').order(:completion_year)
+      - min_year = range.first.completion_year
+      - max_year = range.last.completion_year
+      option selected='selected' value=min_year =min_year
+      - (min_year+1).upto(max_year) do |y|
+        option value=y =y
+    '  to:
+    select#RM_to_year
+      - (min_year).upto(max_year-1) do |y|
+        option value=y =y
+      option selected='selected' value=max_year =max_year
   = map container_id: "RM_map", center: {latlng: [-12.04, 18.59], zoom: 4}
 
 .RM_FS_tables

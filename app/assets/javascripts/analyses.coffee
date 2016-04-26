@@ -64,6 +64,7 @@ map_country = (element) ->
     COUNTRY_LAYER.addTo map
     try
       map.fitBounds COUNTRY_LAYER.getBounds()
+      update_year_filter()
       $(".RM_FS_loading").hide()
     catch
       $(".RM_FS_loading").hide()
@@ -442,6 +443,33 @@ hook_editing_events = ->
   $(".RM_new_change_button").on 'click', ->
     add_new_change this
 
+update_year_filter = ->
+  from_year = parseInt($('#RM_from_year').val())
+  to_year = parseInt($('#RM_to_year').val())
+  console.log "Limit years to #{from_year} - #{to_year}"
+  COUNTRY_LAYER.eachLayer (l)->
+    y = l.feature.geometry.properties.aed_year
+    show = false
+    if y
+      yy = parseInt(y)
+      if from_year <= yy and yy <= to_year
+        show = true
+    if show
+      l.setStyle
+        opacity: 1
+        fillOpacity: 0.4
+      l.bringToFront()
+    else
+      l.setStyle
+        opacity: 0
+        fillOpacity: 0
+        pointerEvents: false
+        clickable: false
+
+hook_filtering_events = ->
+  $("#RM_from_year").on 'change', update_year_filter
+  $("#RM_to_year").on 'change', update_year_filter
+
 initialize_map = ->
   survey_map = new L.geoJson()
   L.control.scale(
@@ -455,4 +483,5 @@ $ ->
   $("#RM_map").each ->
     initialize_map()
     hook_editing_events()
+    hook_filtering_events()
     mark_removal_eligible_changes()

@@ -10,6 +10,17 @@
   height: 100%;
 }
 
+.RM_date_limits {
+  position: absolute;
+  right: 0px;
+  width: 45%;
+  background-color: #eee;
+  padding: 5px;
+  font-size: x-small;
+  z-index: 32000;
+  opacity: 0.8;
+}
+
 .RM_FS_tables {
   position: absolute;
   left: 0px;
