@@ -54,7 +54,7 @@ module AltDppsHelper
       'B': ['GUESS_MIN', 'GUESS_MAX'],
       'C': ['CONFIDENCE'],
       'D': ['CONFIDENCE'],
-      'E': ['CONFIDENCE'],
+      'E': ['ESTIMATE', 'CONFIDENCE'],
       'F': ['ESTIMATE', 'CONFIDENCE'],
       'G': ['ESTIMATE', 'CONFIDENCE']
     }
