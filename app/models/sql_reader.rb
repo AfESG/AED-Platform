@@ -41,7 +41,7 @@ class SqlReader
     end
 
     if stopped
-      raise Exception.new "Could not run SQL update on all queries"
+      raise Exception.new "Could not run SQL update on all queries in #{path}"
     end
   end
 
