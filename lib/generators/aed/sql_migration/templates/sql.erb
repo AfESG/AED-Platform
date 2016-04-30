@@ -1,0 +1,14 @@
+class <%= class_name %> < ActiveRecord::Migration
+
+  def change
+    <% @sql_files.each do |file| %>run_file '<%= file %>'
+    <% end %>
+  end
+
+  def run_file file
+    path = File.join(Rails.root, 'script', 'etl', file)
+    SqlReader.parse(path) { |sql| execute sql }
+  end
+
+
+end
