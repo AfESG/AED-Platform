@@ -1,0 +1,7 @@
+= render 'table_causes_of_change', totals: local_assigns[:base_totals], sums: local_assigns[:base_sums]
+= render 'table_causes_of_change', totals: local_assigns[:scaled_totals], sums: local_assigns[:scaled_sums],
+  hideable: true,
+  title: 'Interpretation of Changes in Estimates from Previous Report (2007 scaling)'
+
+.toggle style=('margin-top:-20px; margin-bottom: 10px; text-align: right')
+  a onclick='toggle_hideables()'  toggle scaling

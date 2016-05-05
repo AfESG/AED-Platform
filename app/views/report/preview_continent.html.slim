@@ -23,14 +23,10 @@
       { admin: true, title: 'Alternate, No Rounding', template: 'table_alt_dpps', args: { level: @continent, totals: @alt_summary_totals } } ]
 
     - if current_user and current_user.admin?
-      = render 'table_causes_of_change', totals: @causes_of_change_by_continent_u, sums: @causes_of_change_sums_by_continent_u
-
-      = render 'table_causes_of_change', totals: @causes_of_change_by_continent, sums: @causes_of_change_sums_by_continent,
-        hideable: true,
-        title: 'Interpretation of Changes in Estimates from Previous Report (2007 Scaling)'
-
-      .toggle style=('margin-top:-20px; margin-bottom: 10px; text-align: right')
-        a onclick='toggle_hideables()'  toggle scaling
+      = render 'tabs', id: 'ioc', tabs: [ { title: 'DPPS Interpretation of Changes', template: 'table_causes_of_change_dpps', 
+        args: { base_totals: @causes_of_change_by_continent_u, base_sums: @causes_of_change_sums_by_continent_u,
+          scaled_totals: @causes_of_change_by_continent, scaled_sums: @causes_of_change_sums_by_continent } },
+        { title: 'ADD Interpretation of Changes', template: 'table_causes_of_change_add' } ]
 
     = render 'table_area_of_range_covered', totals: @area_of_range_covered_by_continent, sums: @area_of_range_covered_sum_by_continent
 
