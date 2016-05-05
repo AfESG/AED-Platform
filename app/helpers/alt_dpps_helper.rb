@@ -46,6 +46,12 @@ module AltDppsHelper
     content_tag :td, number_with_delimiter(value.to_f.round(opts[:precision] || 0)), defaults
   end
 
+  def signed_cell value, opts={}
+    defaults = { class: 'numeric' }
+    defaults.merge!(opts[:attrs]) if opts[:attrs]
+    content_tag :td, signed_number(value.to_f.round(opts[:precision] || 0)), defaults
+  end
+
   def is_blank_cell? row, column
     return false unless row['CATEGORY']
 
@@ -93,6 +99,60 @@ module AltDppsHelper
       defaults.merge!(opts[:attrs]) if opts[:attrs]
       content_tag :td, number_with_delimiter(round ? rounded(num) : num), defaults
     end
+  end
+
+  def alt_dpps_causes_of_change scope, year, filter=nil
+    analysis_name = filter.nil?? '' : "AND a.analysis_name = '#{filter}'"
+    <<-SQL
+      SELECT
+        cc.name as "CAUSE",
+        sum(new.best_estimate - old.best_estimate) as "ESTIMATE",
+        sum(1.96*sqrt(new.population_variance) - 1.96*sqrt(old.population_variance)) as "CONFIDENCE",
+        sum(new.population_lower_confidence_limit - old.population_lower_confidence_limit) as "GUESS_MIN",
+        sum(new.population_upper_confidence_limit - old.population_upper_confidence_limit) as "GUESS_MAX",
+        cc.display_order as "SEQUENCE"
+      FROM analyses a
+      JOIN changed_strata ch ON ch.analysis_name = a.analysis_name
+      LEFT JOIN estimate_factors_analyses_categorized_for_add new ON
+        new.analysis_name = a.analysis_name AND new.analysis_year = a.analysis_year AND new.input_zone_id = ch.new_stratum
+      LEFT JOIN estimate_factors_analyses_categorized_for_add old ON 
+        old.analysis_name = a.analysis_name AND old.analysis_year = a.comparison_year AND old.input_zone_id = ch.replaced_stratum
+      JOIN cause_of_changes cc ON cc.code = new.reason_change
+      JOIN countries c ON new.country = c.name
+      JOIN regions r ON c.region_id = r.id
+      WHERE
+        (new.reason_change IS NOT NULL AND new.reason_change <> '-')
+        AND a.analysis_year = #{@year}
+        #{analysis_name}
+        AND #{scope}
+      GROUP BY cc.name, cc.display_order
+      ORDER BY cc.display_order
+    SQL
+  end
+
+  def alt_dpps_causes_of_change_sums scope, year, filter=nil
+    analysis_name = filter.nil?? '' : "AND a.analysis_name = '#{filter}'"
+    <<-SQL
+      SELECT
+        sum(new.best_estimate - old.best_estimate) as "ESTIMATE",
+        sum(1.96*sqrt(new.population_variance) - 1.96*sqrt(old.population_variance)) as "CONFIDENCE",
+        sum(new.population_lower_confidence_limit - old.population_lower_confidence_limit) as "GUESS_MIN",
+        sum(new.population_upper_confidence_limit - old.population_upper_confidence_limit) as "GUESS_MAX"
+      FROM analyses a
+      JOIN changed_strata ch ON ch.analysis_name = a.analysis_name
+      LEFT JOIN estimate_factors_analyses_categorized_for_add new ON
+        new.analysis_name = a.analysis_name and new.analysis_year = a.analysis_year AND new.input_zone_id = ch.new_stratum
+      LEFT JOIN estimate_factors_analyses_categorized_for_add old ON 
+        old.analysis_name = a.analysis_name and old.analysis_year = a.comparison_year AND old.input_zone_id = ch.replaced_stratum
+      JOIN cause_of_changes cc ON cc.code = new.reason_change
+      JOIN countries c ON new.country = c.name
+      JOIN regions r ON c.region_id = r.id
+      WHERE
+        (new.reason_change IS NOT NULL AND new.reason_change <> '-')
+        AND a.analysis_year = #{@year}
+        #{analysis_name}
+        AND #{scope}
+    SQL
   end
 
   def alt_dpps_country_area scope, year, filter=nil

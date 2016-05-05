@@ -1,0 +1,20 @@
+Description:
+    Pass the name of an SQL file existing in script/etl/ and it will create a 
+    migration that runs those sql files.
+
+Example:
+    rails generate aed:sql_migration MigrationName sql_file1.sql sql_file2.sql
+
+    This will create:
+        db/migrate/201604281234_migration_name.rb
+
+    And will have two run_file methods calling both SQL files.
+
+    A shortcut for when there only a single SQL file to run:
+
+    rails generate aed:sql_migration sql_file.sql
+
+    This will create:
+       db/migrate/201604281234_sql_file.rb
+
+    With a run_file method to call that single SQL file.

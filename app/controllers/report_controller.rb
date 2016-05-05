@@ -165,6 +165,9 @@ class ReportController < ApplicationController
     @alt_regions        = execute alt_dpps_continental_stats("1=1", @year, @filter)
     @alt_regions_sums   = execute alt_dpps_continental_stats_sums("1=1", @year, @filter)
 
+    @alt_causes_of_change = execute alt_dpps_causes_of_change("1=1", @year, @filter)
+    @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("1=1", @year, @filter)
+
     @summary_totals_by_continent = execute totalizer("1=1",@filter,@year)
     if @summary_totals_by_continent.num_tuples < 1
       raise ActionController::RoutingError.new('Not Found')
@@ -346,6 +349,9 @@ class ReportController < ApplicationController
     @alt_countries      = execute alt_dpps_country_stats("region = '#{@region}'", @year, @filter)
     @alt_country_sums   = execute alt_dpps_region_stats("region = '#{@region}'", @year, @filter)
 
+    @alt_causes_of_change = execute alt_dpps_causes_of_change("r.name = '#{@region}'", @year, @filter)
+    @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("r.name = '#{@region}'", @year, @filter)
+
     @summary_totals_by_region = execute totalizer("region='#{@region}'",@filter,@year)
 
     if @summary_totals_by_region.num_tuples < 1
@@ -521,6 +527,8 @@ class ReportController < ApplicationController
 
     @alt_summary_totals = execute alt_dpps("country = '#{sql_escape @country}'", @year, @filter)
     @alt_areas          = execute alt_dpps_country_area("country = '#{sql_escape @country}'", @year, @filter)
+    @alt_causes_of_change = execute alt_dpps_causes_of_change("c.name = '#{sql_escape @country}'", @year, @filter)
+    @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("c.name = '#{sql_escape @country}'", @year, @filter)
 
     @baseline_total = execute <<-SQL, @country
       select sum(definite) definite, sum(probable) probable, sum(possible) possible,

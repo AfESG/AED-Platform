@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160427225620) do
+ActiveRecord::Schema.define(version: 20160504212857) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,6 +83,12 @@ ActiveRecord::Schema.define(version: 20160427225620) do
     t.integer  "analysis_id"
     t.string   "status"
     t.text     "comments"
+  end
+
+  create_table "cause_of_changes", id: false, force: :cascade do |t|
+    t.string  "code",          limit: 4
+    t.string  "name",          limit: 100
+    t.integer "display_order"
   end
 
   create_table "changes", force: :cascade do |t|

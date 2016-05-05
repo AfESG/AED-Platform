@@ -1,0 +1,33 @@
+- totals   = local_assigns[:totals] || @alt_causes_of_change
+- sums     = local_assigns[:sums] || @alt_causes_of_change_s
+- hideable = local_assigns[:hideable] || false
+- title    = local_assigns[:title] || 'Interpretation of Changes in Estimates from Previous Report'
+- columns  = ['ESTIMATE', 'CONFIDENCE', 'GUESS_MIN', 'GUESS_MAX']
+
+- if !totals.nil? && totals.num_tuples > 0
+  h2 class=(hideable ? 'hideable' : nil) = title
+
+  table class=(hideable ? 'table hideable' : 'table') style='font-size:16px'
+    tr
+      th width='40%' &nbsp;
+      th.text-center colspan='2' Estimates from Surveys
+      th.text-center colspan='2' Guesses
+    tr
+      th width='40%'  Cause of Change
+      th.text-center width='15%'  Estimate
+      th.text-center width='15%'  &plusmn; 95% CL
+      th.text-center width='15%'  From
+      th.text-center width='15%'  To
+    - totals.each do |row|
+      tr style=('height: 24px;') 
+        td = row['CAUSE']
+        - columns.each do |col|
+          = signed_cell row[col]
+    - unless sums.nil?
+      - sums.each do |row|
+        tr.totals style=('height: 24px; font-weight: bold') 
+          td Totals
+          - columns.each do |col|
+            = signed_cell row[col]
+
+

@@ -27,13 +27,8 @@
 
     .below_tabs
       - if current_user and current_user.admin?
-        = render 'table_causes_of_change', totals: @causes_of_change_by_country_u, sums: @causes_of_change_sums_by_country_u
-        = render 'table_causes_of_change', totals: @causes_of_change_by_country, sums: @causes_of_change_sums_by_country,
-          hideable: true,
-          title: 'Interpretation of Changes in Estimates from Previous Report (2007 scaling)'
-
-        .toggle style=('margin-top:-20px; margin-bottom: 10px; text-align: right')
-          a onclick='toggle_hideables()'  toggle scaling
+        = render 'tabs', id: 'ioc', tabs: [ { title: 'DPPS Interpretation of Changes', template: 'table_causes_of_change_dpps' },
+          { title: 'ADD Interpretation of Changes', template: 'table_causes_of_change_add', args: { totals: @alt_causes_of_change, sums: @alt_causes_of_change_s } } ]
 
       = render 'table_area_of_range_covered', totals: @area_of_range_covered_by_country, sums: @area_of_range_covered_sum_by_country
 
