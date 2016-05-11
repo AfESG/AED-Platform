@@ -1,0 +1,12 @@
+Description:
+    Will create a new calculation folder based on today with a proper 
+    migration file. From there, edit the files and run the migration
+
+Example:
+    rails generate aed:recalc name
+
+    This will create:
+        db/migrate/201604281234_{name}.rb
+
+    And will have build_calculator methods for your calculation folders
+
