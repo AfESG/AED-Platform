@@ -585,7 +585,7 @@ create view estimate_locator_with_geometry as
 select
   g.id as id,
   l.*,
-  g.geometry
+  g.geom
 from survey_geometries g
   join estimate_factors f
     on f.survey_geometry_id = g.id
