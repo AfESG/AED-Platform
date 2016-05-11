@@ -1,0 +1,15 @@
+require 'sql_helper'
+
+class <%= class_name %> < ActiveRecord::Migration
+
+  include SqlHelper
+
+  def up
+    build_calculator '<%= @current %>'
+  end
+
+  def down
+    build_calculator '<%= @previous %>'
+  end
+
+end

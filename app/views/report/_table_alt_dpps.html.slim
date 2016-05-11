@@ -1,4 +1,5 @@
 - raw_totals = local_assigns[:totals] || @alt_summary_totals
+- raw_sums   = local_assigns[:sums] || @alt_summary_sums
 - round      = local_assigns[:rounded] || false
 - year       = local_assigns[:year] || @year
 - level      = local_assigns[:level]
@@ -24,6 +25,10 @@
       - totals[row['CATEGORY']] = row unless row['GUESS_MIN'].blank?
     - else
       - totals[row['CATEGORY']] = row
+
+  - sums = {}
+  - if raw_sums.any?
+    - raw_sums.first.each { |key,value| sums[key] = value }
 
   table.table style='font-size:16px'
     tr
@@ -53,6 +58,7 @@
           = add_and_display_area_cell area_total[row['CATEGORY']], 'CATEGORY_RANGE_ASSESSED', table_totals, attrs: { rowspan: merged_categories.include?(keys[index+1] || nil) ? merged_keys.count + 1 : 1 }
         = (round_area_sqkm_cell(area_total[row['CATEGORY']]['AREA']) || 0) unless merged_categories.include?(row['CATEGORY']) rescue '!ERR!'
 
+    - table_totals.merge!(sums)
     tr.bold
       td Total Numbers
       - data_columns.each do |column|

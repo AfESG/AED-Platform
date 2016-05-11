@@ -161,6 +161,7 @@ class ReportController < ApplicationController
     @preview_title = official_title(@filter) or @filter.humanize.upcase
 
     @alt_summary_totals = execute alt_dpps("1=1", @year, @filter)
+    @alt_summary_sums   = execute alt_dpps_totals("1=1", @year, @filter)
     @alt_areas          = execute alt_dpps_continent_area("1=1", @year, @filter)
     @alt_regions        = execute alt_dpps_continental_stats("1=1", @year, @filter)
     @alt_regions_sums   = execute alt_dpps_continental_stats_sums("1=1", @year, @filter)
@@ -345,6 +346,7 @@ class ReportController < ApplicationController
     @preview_title = official_title(@filter) or @filter.humanize.upcase
 
     @alt_summary_totals = execute alt_dpps("region = '#{@region}'", @year, @filter)
+    @alt_summary_sums   = execute alt_dpps_totals("region = '#{@region}'", @year, @filter)
     @alt_areas          = execute alt_dpps_region_area("region = '#{@region}'", @year, @filter)
     @alt_countries      = execute alt_dpps_country_stats("region = '#{@region}'", @year, @filter)
     @alt_country_sums   = execute alt_dpps_region_stats("region = '#{@region}'", @year, @filter)
@@ -526,6 +528,7 @@ class ReportController < ApplicationController
     @preview_title = official_title(@filter) or @filter.humanize.upcase
 
     @alt_summary_totals = execute alt_dpps("country = '#{sql_escape @country}'", @year, @filter)
+    @alt_summary_sums   = execute alt_dpps_totals("country = '#{sql_escape @country}'", @year, @filter)
     @alt_areas          = execute alt_dpps_country_area("country = '#{sql_escape @country}'", @year, @filter)
     @alt_causes_of_change = execute alt_dpps_causes_of_change("c.name = '#{sql_escape @country}'", @year, @filter)
     @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("c.name = '#{sql_escape @country}'", @year, @filter)

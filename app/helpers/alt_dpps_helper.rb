@@ -52,6 +52,14 @@ module AltDppsHelper
     content_tag :td, signed_number(value.to_f.round(opts[:precision] || 0)), defaults
   end
 
+  def error_cell message, opts={}
+    defaults = { class: 'text-center', icon: 'exclamation-sign' }
+    defaults.merge! opts
+    content_tag :td, title: message, class: defaults[:class], 'data-message': message do
+      content_tag :i, '', class: "glyphicon glyphicon-#{defaults[:icon]} text-danger"
+    end
+  end
+
   def is_blank_cell? row, column
     return false unless row['CATEGORY']
 
@@ -62,7 +70,14 @@ module AltDppsHelper
       'D': ['CONFIDENCE'],
       'E': ['ESTIMATE', 'CONFIDENCE'],
       'F': ['ESTIMATE', 'CONFIDENCE'],
-      'G': ['ESTIMATE', 'CONFIDENCE']
+      'G': ['ESTIMATE', 'CONFIDENCE'],
+      'H': ['CONFIDENCE', 'GUESS_MIN', 'GUESS_MAX'],
+      'I': ['CONFIDENCE', 'GUESS_MIN', 'GUESS_MAX'],
+      'J': ['GUESS_MIN', 'GUESS_MAX'],
+      'K': ['GUESS_MIN', 'GUESS_MAX'],
+      'L': ['GUESS_MIN', 'GUESS_MAX'],
+      'M': ['CONFIDENCE', 'GUESS_MIN', 'GUESS_MAX'],
+      'N': ['CONFIDENCE', 'GUESS_MIN', 'GUESS_MAX']
     }
 
     values = @@blank_cells[row['CATEGORY'].to_sym]
@@ -81,8 +96,8 @@ module AltDppsHelper
         totals[column] += num
         round_area_cell num, opts
       end
-    rescue
-      '!ERR!'
+    rescue StandardError => e
+      error_cell e.message
     end
   end
 
@@ -99,6 +114,8 @@ module AltDppsHelper
       defaults.merge!(opts[:attrs]) if opts[:attrs]
       content_tag :td, number_with_delimiter(round ? rounded(num) : num), defaults
     end
+  rescue StandardError => e
+    error_cell e.message
   end
 
   def alt_dpps_causes_of_change scope, year, filter=nil
@@ -393,18 +410,37 @@ module AltDppsHelper
       SELECT
       "CATEGORY",
       "SURVEYTYPE",
+      st.display_order,
       sum("ESTIMATE") AS "ESTIMATE",
       1.96*sqrt(sum("POPULATION_VARIANCE")) AS "CONFIDENCE",
       sum("GUESS_MIN") AS "GUESS_MIN",
       sum("GUESS_MAX") AS "GUESS_MAX"
       FROM
         estimate_factors_analyses_categorized_totals_for_add s
+      JOIN surveytypes st ON st.category = "CATEGORY"
       WHERE
         s.analysis_year = #{year}
         #{analysis_name}
         AND #{scope}
-      GROUP BY "CATEGORY", "SURVEYTYPE"
-      ORDER BY "CATEGORY"
+      GROUP BY "CATEGORY", "SURVEYTYPE", display_order
+      ORDER BY st.display_order
+    SQL
+  end
+
+  def alt_dpps_totals scope, year, filter=nil
+    analysis_name = filter.nil?? '' : "AND s.analysis_name = '#{filter}'"
+    <<-SQL
+      SELECT
+        SUM("ESTIMATE") AS "ESTIMATE",
+        1.96*sqrt(sum("POPULATION_VARIANCE")) AS "CONFIDENCE",
+        SUM("GUESS_MIN") AS "GUESS_MIN",
+        SUM("GUESS_MAX") AS "GUESS_MAX"
+      FROM
+        estimate_factors_analyses_categorized_totals_for_add s
+      WHERE
+        s.analysis_year = #{year}
+        #{analysis_name}
+        AND #{scope}
     SQL
   end
 
