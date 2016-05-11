@@ -9,7 +9,7 @@ module SqlHelper
   def build_calculator date
     puts "Building calculator version #{date}"
     path = File.join(Rails.root, 'script', 'calculator', date)
-    Dir.foreach path do |file|
+    Dir.entries(path).sort.each do |file|
       if file.end_with?('sql')
         puts "Executing #{file}"
         script = File.join(path, file)
