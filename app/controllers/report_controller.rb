@@ -663,6 +663,27 @@ class ReportController < ApplicationController
         and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
     SQL
 
+    @ioc_tabs = [
+      {
+        title: 'DPPS Interpretation of Changes',
+        template: 'table_causes_of_change_dpps',
+        args: {
+          base_totals: @causes_of_change_by_country_u,
+          base_sums: @causes_of_change_sums_by_country_u,
+          scaled_totals: @causes_of_change_by_country,
+          scaled_sums: @causes_of_change_sums_by_country
+        }
+      },
+      {
+        title: 'ADD Interpretation of Changes',
+        template: 'table_causes_of_change_add',
+        args: {
+          totals: @alt_causes_of_change,
+          sums: @alt_causes_of_change_s
+        }
+      }
+    ]
+
     @area_of_range_covered_by_country = execute <<-SQL, @country, @country
       SELECT surveytype, ROUND(known) known, ROUND(possible) possible, ROUND(total) total
       FROM area_of_range_covered where country=?

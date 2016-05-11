@@ -27,8 +27,7 @@
 
     .below_tabs
       - if current_user and current_user.admin?
-        = render 'tabs', id: 'ioc', tabs: [ { title: 'DPPS Interpretation of Changes', template: 'table_causes_of_change_dpps' },
-          { title: 'ADD Interpretation of Changes', template: 'table_causes_of_change_add', args: { totals: @alt_causes_of_change, sums: @alt_causes_of_change_s } } ]
+        = render 'tabs', id: 'ioc', tabs: @ioc_tabs
 
       = render 'table_area_of_range_covered', totals: @area_of_range_covered_by_country, sums: @area_of_range_covered_sum_by_country
 
