@@ -272,7 +272,7 @@ select
 ---
 --- expand the CSV columns stored in the changes table
 ---
-drop view new_strata cascade;
+drop view if exists new_strata cascade;
 create view new_strata as
  SELECT q.analysis_name,q.sort_key,q.population,q.replacement_name,q.reason_change,q.new_stratum
    FROM ( SELECT DISTINCT analysis_name, sort_key, population, replacement_name, reason_change, unnest(regexp_split_to_array(changes.new_strata, ','::text)) AS new_stratum
@@ -280,7 +280,7 @@ create view new_strata as
   WHERE q.new_stratum IS NOT NULL AND q.new_stratum <> ''::text
   ORDER BY q.analysis_name, q.sort_key, q.reason_change, q.new_stratum;
 
-drop view replaced_strata cascade;
+drop view if exists replaced_strata cascade;
 create view replaced_strata as
  SELECT q.analysis_name,q.sort_key,q.population,q.replacement_name,'-'::text reason_change,q.replaced_stratum
    FROM ( SELECT DISTINCT analysis_name, sort_key, population, replacement_name, unnest(regexp_split_to_array(changes.replaced_strata, ','::text)) AS replaced_stratum

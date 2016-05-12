@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160511053451) do
+ActiveRecord::Schema.define(version: 20160511181514) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,8 +95,8 @@ ActiveRecord::Schema.define(version: 20160511053451) do
     t.string   "analysis_name",    limit: 255
     t.integer  "analysis_year"
     t.string   "replacement_name", limit: 255
-    t.string   "replaced_strata",  limit: 255
-    t.string   "new_strata",       limit: 255
+    t.string   "replaced_strata",  limit: 512
+    t.string   "new_strata",       limit: 512
     t.string   "reason_change",    limit: 255
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
@@ -909,19 +909,6 @@ ActiveRecord::Schema.define(version: 20160511053451) do
   end
 
   add_index "survey_geometries", ["geom"], name: "si_survey_geom", using: :gist
-
-  create_table "survey_geometry_locator_buffered", id: false, force: :cascade do |t|
-    t.string   "site_name",           limit: 255
-    t.text     "analysis_name"
-    t.integer  "analysis_year"
-    t.string   "region",              limit: 255
-    t.text     "category"
-    t.string   "reason_change",       limit: 255
-    t.integer  "population_estimate"
-    t.string   "country",             limit: 255
-    t.text     "input_zone_id"
-    t.geometry "survey_geometry",     limit: {:srid=>0, :type=>"geometry"}
-  end
 
   create_table "survey_ground_sample_count_strata", force: :cascade do |t|
     t.integer  "survey_ground_sample_count_id"
