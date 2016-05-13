@@ -6,6 +6,12 @@ module SqlHelper
     SqlReader.parse(path) { |sql| execute sql }
   end
 
+  def preflush_calculator date
+    puts "Pre-flushing calculator version #{date}"
+    path = File.join(Rails.root, 'script', 'calculator', date, '1000_flush_analyses_view_dependencies.sql')
+    SqlReader.parse(path) { |sql| execute sql }
+  end
+
   def build_calculator date
     puts "Building calculator version #{date}"
     path = File.join(Rails.root, 'script', 'calculator', date)
