@@ -119,56 +119,60 @@ module AltDppsHelper
   end
 
   def alt_dpps_causes_of_change scope, year, filter=nil
-    analysis_name = filter.nil?? '' : "AND a.analysis_name = '#{filter}'"
-    <<-SQL
-      SELECT
-        cc.name as "CAUSE",
-        sum(new.best_estimate - old.best_estimate) as "ESTIMATE",
-        sum(1.96*sqrt(new.population_variance) - 1.96*sqrt(old.population_variance)) as "CONFIDENCE",
-        sum(new.population_lower_confidence_limit - old.population_lower_confidence_limit) as "GUESS_MIN",
-        sum(new.population_upper_confidence_limit - old.population_upper_confidence_limit) as "GUESS_MAX",
-        cc.display_order as "SEQUENCE"
-      FROM analyses a
-      JOIN changed_strata ch ON ch.analysis_name = a.analysis_name
-      LEFT JOIN estimate_factors_analyses_categorized_for_add new ON
-        new.analysis_name = a.analysis_name AND new.analysis_year = a.analysis_year AND new.input_zone_id = ch.new_stratum
-      LEFT JOIN estimate_factors_analyses_categorized_for_add old ON 
-        old.analysis_name = a.analysis_name AND old.analysis_year = a.comparison_year AND old.input_zone_id = ch.replaced_stratum
-      JOIN cause_of_changes cc ON cc.code = new.reason_change
-      JOIN countries c ON new.country = c.name
-      JOIN regions r ON c.region_id = r.id
-      WHERE
-        (new.reason_change IS NOT NULL AND new.reason_change <> '-')
-        AND a.analysis_year = #{@year}
-        #{analysis_name}
-        AND #{scope}
-      GROUP BY cc.name, cc.display_order
-      ORDER BY cc.display_order
-    SQL
+    alt_dpps_causes_of_change_query scope, year, filter: filter, group: true
   end
 
   def alt_dpps_causes_of_change_sums scope, year, filter=nil
-    analysis_name = filter.nil?? '' : "AND a.analysis_name = '#{filter}'"
+    alt_dpps_causes_of_change_query scope, year, filter: filter
+  end
+
+  def alt_dpps_causes_of_change_query scope, year, opts
+    sql = { group_cols: '', group_by: '', analysis_name: '', order_by: '' }
+    if opts[:group]
+      sql[:group_cols] = 'cc.name AS "CAUSE", cc.display_order AS "SEQUENCE",'
+      sql[:group_by] = 'GROUP BY cc.name, cc.display_order'
+      sql[:order_by] = 'ORDER BY cc.display_order'
+    end
+    if opts[:filter]
+      sql[:analysis_name] = "AND a.analysis_name = '#{opts[:filter]}'"
+    end
     <<-SQL
       SELECT
-        sum(new.best_estimate - old.best_estimate) as "ESTIMATE",
-        sum(1.96*sqrt(new.population_variance) - 1.96*sqrt(old.population_variance)) as "CONFIDENCE",
-        sum(new.population_lower_confidence_limit - old.population_lower_confidence_limit) as "GUESS_MIN",
-        sum(new.population_upper_confidence_limit - old.population_upper_confidence_limit) as "GUESS_MAX"
-      FROM analyses a
-      JOIN changed_strata ch ON ch.analysis_name = a.analysis_name
-      LEFT JOIN estimate_factors_analyses_categorized_for_add new ON
-        new.analysis_name = a.analysis_name and new.analysis_year = a.analysis_year AND new.input_zone_id = ch.new_stratum
-      LEFT JOIN estimate_factors_analyses_categorized_for_add old ON 
-        old.analysis_name = a.analysis_name and old.analysis_year = a.comparison_year AND old.input_zone_id = ch.replaced_stratum
-      JOIN cause_of_changes cc ON cc.code = new.reason_change
-      JOIN countries c ON new.country = c.name
-      JOIN regions r ON c.region_id = r.id
-      WHERE
-        (new.reason_change IS NOT NULL AND new.reason_change <> '-')
-        AND a.analysis_year = #{@year}
-        #{analysis_name}
-        AND #{scope}
+        #{sql[:group_cols]}
+        sum(i.new_be - i.old_be) as "ESTIMATE",
+        sum(i.new_pv - i.old_pv) as "CONFIDENCE",
+        sum(i.new_lcl - i.old_lcl) as "GUESS_MIN",
+        sum(i.new_ucl - i.old_ucl) as "GUESS_MAX"
+      FROM (
+        SELECT
+          ch.replaced_stratum,
+          ch.reason_change,
+          old.best_estimate as old_be,
+          1.96*sqrt(old.population_variance) as old_pv,
+          old.population_lower_confidence_limit as old_lcl,
+          old.population_upper_confidence_limit as old_ucl,
+          sum(new.best_estimate) as new_be,
+          sum(1.96*sqrt(new.population_variance)) as new_pv,
+          sum(new.population_lower_confidence_limit) as new_lcl,
+          sum(new.population_upper_confidence_limit) as new_ucl
+        FROM analyses a
+        JOIN changed_strata ch ON ch.analysis_name = a.analysis_name
+        LEFT JOIN estimate_factors_analyses_categorized_for_add new ON
+          new.analysis_name = a.analysis_name AND new.analysis_year = a.analysis_year AND new.input_zone_id = ch.new_stratum
+        LEFT JOIN estimate_factors_analyses_categorized_for_add old ON 
+           old.analysis_name = a.analysis_name AND old.analysis_year = a.comparison_year AND old.input_zone_id = ch.replaced_stratum
+        JOIN countries c ON new.country = c.name
+        JOIN regions r ON c.region_id = r.id
+        WHERE
+          (new.reason_change IS NOT NULL AND new.reason_change <> '-')
+          AND a.analysis_year = #{year}
+          #{sql[:analysis_name]}
+          AND #{scope}
+        GROUP BY ch.replaced_stratum, ch.reason_change, old_be, old_pv, old_lcl, old_ucl
+      ) i
+      JOIN cause_of_changes cc ON cc.code = i.reason_change
+      #{sql[:group_by]}
+      #{sql[:order_by]}
     SQL
   end
 
