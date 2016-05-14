@@ -145,22 +145,27 @@ module AltDppsHelper
         sum(i.new_ucl - i.old_ucl) as "GUESS_MAX"
       FROM (
         SELECT
-          ch.replaced_stratum,
-          ch.reason_change,
-          old.best_estimate as old_be,
-          1.96*sqrt(old.population_variance) as old_pv,
-          old.population_lower_confidence_limit as old_lcl,
-          old.population_upper_confidence_limit as old_ucl,
+          old.input_zone_id as i_replaced_stratum,
+          CASE
+            WHEN old.reason_change = '-' AND old.age > 10 THEN 'DD'
+            ELSE ch.reason_change
+          END as i_reason_change,
+          COALESCE(old.best_estimate, 0) as old_be,
+          COALESCE(1.96*sqrt(old.population_variance), 0) as old_pv,
+          COALESCE(old.population_lower_confidence_limit, 0) as old_lcl,
+          COALESCE(old.population_upper_confidence_limit, 0) as old_ucl,
           sum(new.best_estimate) as new_be,
           sum(1.96*sqrt(new.population_variance)) as new_pv,
           sum(new.population_lower_confidence_limit) as new_lcl,
           sum(new.population_upper_confidence_limit) as new_ucl
         FROM analyses a
-        JOIN changed_strata ch ON ch.analysis_name = a.analysis_name
+        JOIN changes ch ON ch.analysis_name = a.analysis_name
         LEFT JOIN estimate_factors_analyses_categorized_for_add new ON
-          new.analysis_name = a.analysis_name AND new.analysis_year = a.analysis_year AND new.input_zone_id = ch.new_stratum
+          new.analysis_name = a.analysis_name AND new.analysis_year = a.analysis_year AND 
+          new.input_zone_id = ANY((regexp_split_to_array(ch.new_strata::text, ','::text)))
         LEFT JOIN estimate_factors_analyses_categorized_for_add old ON 
-           old.analysis_name = a.analysis_name AND old.analysis_year = a.comparison_year AND old.input_zone_id = ch.replaced_stratum
+          old.analysis_name = a.analysis_name AND old.analysis_year = a.comparison_year AND 
+          old.input_zone_id = ANY((regexp_split_to_array(ch.replaced_strata::text, ','::text)))
         JOIN countries c ON new.country = c.name
         JOIN regions r ON c.region_id = r.id
         WHERE
@@ -168,9 +173,9 @@ module AltDppsHelper
           AND a.analysis_year = #{year}
           #{sql[:analysis_name]}
           AND #{scope}
-        GROUP BY ch.replaced_stratum, ch.reason_change, old_be, old_pv, old_lcl, old_ucl
+        GROUP BY i_replaced_stratum, i_reason_change, old_be, old_pv, old_lcl, old_ucl
       ) i
-      JOIN cause_of_changes cc ON cc.code = i.reason_change
+      JOIN cause_of_changes cc ON cc.code = i.i_reason_change
       #{sql[:group_by]}
       #{sql[:order_by]}
     SQL
