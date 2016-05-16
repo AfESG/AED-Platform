@@ -37,7 +37,7 @@ module AltDppsHelper
   end
 
   def round_area_sqkm_cell area
-    content_tag :td, number_with_delimiter(area.to_f.round), class: 'numeric'
+    content_tag :td, number_with_delimiter((area).to_f.round), class: 'numeric'
   end
 
   def numeric_cell value, opts={}
@@ -134,6 +134,36 @@ module AltDppsHelper
       sql[:order_by] = 'ORDER BY cc.display_order'
     end
     if opts[:filter]
+      sql[:analysis_name] = "AND i.analysis_name = '#{opts[:filter]}'"
+    end
+    <<-SQL
+      SELECT
+        #{sql[:group_cols]}
+        sum(estimate) as "ESTIMATE",
+        sum(confidence) as "CONFIDENCE",
+        sum(guess_min) as "GUESS_MIN",
+        sum(guess_max) as "GUESS_MAX"
+      FROM add_sums_country_category_reason i
+      JOIN cause_of_changes cc ON cc.code = i.reason_change
+      WHERE
+        (i.reason_change IS NOT NULL AND i.reason_change <> '-')
+        AND i.analysis_year = #{year}
+        #{sql[:analysis_name]}
+        AND #{scope}
+      #{sql[:group_by]}
+      #{sql[:order_by]}
+    SQL
+  end
+
+
+  def old_alt_dpps_causes_of_change_query scope, year, opts
+    sql = { group_cols: '', group_by: '', analysis_name: '', order_by: '' }
+    if opts[:group]
+      sql[:group_cols] = 'cc.name AS "CAUSE", cc.display_order AS "SEQUENCE",'
+      sql[:group_by] = 'GROUP BY cc.name, cc.display_order'
+      sql[:order_by] = 'ORDER BY cc.display_order'
+    end
+    if opts[:filter]
       sql[:analysis_name] = "AND a.analysis_name = '#{opts[:filter]}'"
     end
     <<-SQL
@@ -147,8 +177,8 @@ module AltDppsHelper
         SELECT
           old.input_zone_id as i_replaced_stratum,
           CASE
-            WHEN old.reason_change = '-' AND old.age > 10 THEN 'DD'
-            ELSE ch.reason_change
+            WHEN new.reason_change = '-' AND new.age > 10 THEN 'DD'
+            ELSE new.reason_change
           END as i_reason_change,
           COALESCE(old.best_estimate, 0) as old_be,
           COALESCE(1.96*sqrt(old.population_variance), 0) as old_pv,
@@ -169,7 +199,7 @@ module AltDppsHelper
         JOIN countries c ON new.country = c.name
         JOIN regions r ON c.region_id = r.id
         WHERE
-          (new.reason_change IS NOT NULL AND new.reason_change <> '-')
+          (ch.reason_change IS NOT NULL AND ch.reason_change <> '-')
           AND a.analysis_year = #{year}
           #{sql[:analysis_name]}
           AND #{scope}
@@ -192,16 +222,18 @@ module AltDppsHelper
         ct."CATEGORY_PERCENT_RANGE_ASSESSED" as percent_range_assessed
       FROM (
         SELECT
-          category, region, country, sum(area_sqkm) as "AREA"
+          analysis_name, analysis_year, category,
+          region, country, sum(COALESCE(area_sqkm, 0)) as "AREA"
         FROM
           survey_range_intersection_metrics_add sm
         WHERE
           analysis_year = #{@year}
           #{analysis_name}
           AND #{scope}
-        GROUP BY category, region, country
+        GROUP BY analysis_name, analysis_year, category, region, country
       ) a
-      JOIN country_range_totals ct ON ct.country = a.country AND analysis_year = #{@year}
+      JOIN country_range_totals ct ON ct.country = a.country AND 
+        a.analysis_year = ct.analysis_year AND a.analysis_name = ct.analysis_name
       ORDER BY category
     SQL
   end
@@ -217,6 +249,7 @@ module AltDppsHelper
         rt.percent_range_assessed
       FROM (
         SELECT
+          analysis_name, analysis_year,
           category, region, sum(area_sqkm) as "AREA"
         FROM
           survey_range_intersection_metrics_add sm
@@ -224,9 +257,10 @@ module AltDppsHelper
           analysis_year = #{@year}
           #{analysis_name}
           AND #{scope}
-        GROUP BY category, region
+        GROUP BY analysis_name, analysis_year, category, region
       ) a
-      JOIN regional_range_totals rt ON rt.region = a.region
+      JOIN regional_range_totals rt ON rt.region = a.region AND
+        a.analysis_year = rt.analysis_year AND a.analysis_name = rt.analysis_name
       ORDER BY category
     SQL
   end
@@ -242,16 +276,17 @@ module AltDppsHelper
         rt.percent_range_assessed
       FROM (
         SELECT
-          category, sum(area_sqkm) as "AREA"
+          analysis_name, analysis_year, category, sum(area_sqkm) as "AREA"
         FROM
           survey_range_intersection_metrics_add sm
         WHERE
           analysis_year = #{@year}
           #{analysis_name}
           AND #{scope}
-        GROUP BY category
+        GROUP BY analysis_name, analysis_year, category
       ) a
-      JOIN continental_range_totals rt ON rt.continent = 'Africa'
+      JOIN continental_range_totals rt ON rt.continent = 'Africa' AND
+        a.analysis_year = rt.analysis_year AND a.analysis_name = rt.analysis_name
       ORDER BY category
     SQL
   end
@@ -274,6 +309,8 @@ module AltDppsHelper
         "ASSESSED_RANGE" / "RANGE_AREA" * 100 as "PERCENT_OF_RANGE_ASSESSED"
       FROM (
         SELECT
+          x.analysis_name,
+          x.analysis_year,
           x.region,
           sum(x."ESTIMATE") as "ESTIMATE",
           1.96*sqrt(sum(x."POPULATION_VARIANCE")) as "CONFIDENCE",
@@ -282,14 +319,15 @@ module AltDppsHelper
           sum(distinct "ASSESSED_RANGE") AS "ASSESSED_RANGE",
           sum(distinct "RANGE_AREA") AS "RANGE_AREA"
         FROM estimate_factors_analyses_categorized_totals_for_add x
-        JOIN country_range_totals crt ON crt.country = x.country AND crt.analysis_year = x.analysis_year
+        JOIN country_range_totals crt ON crt.country = x.country AND crt.analysis_year = x.analysis_year AND
+          x.analysis_name = crt.analysis_name AND x.analysis_year = crt.analysis_year
         WHERE
-          x.analysis_year = 2013
-          AND x.analysis_name = '2013_africa_final'
-        GROUP BY x.region
+          x.analysis_year = #{year}
+          #{analysis_name}
+        GROUP BY x.analysis_name, x.analysis_year, x.region
       ) p
-      JOIN regional_range_totals rrt ON rrt.region = p.region
-      JOIN continental_range_totals cont ON continent = 'Africa'
+      JOIN regional_range_totals rrt ON rrt.region = p.region AND rrt.analysis_name = p.analysis_name AND rrt.analysis_year = p.analysis_year
+      JOIN continental_range_totals cont ON continent = 'Africa' AND cont.analysis_name = rrt.analysis_name AND cont.analysis_year = rrt.analysis_year
       WHERE
         p.#{scope}
       ORDER BY p.region
@@ -316,6 +354,8 @@ module AltDppsHelper
         "ASSESSED_RANGE" / "RANGE_AREA" * 100 as "PERCENT_OF_RANGE_ASSESSED"
       FROM (
         SELECT
+          x.analysis_name,
+          x.analysis_year,
           x.country,
           x.region,
           sum(x."ESTIMATE") as "ESTIMATE",
@@ -325,14 +365,14 @@ module AltDppsHelper
           "ASSESSED_RANGE",
           "RANGE_AREA"
         FROM estimate_factors_analyses_categorized_totals_for_add x
-        JOIN country_range_totals crt ON crt.country = x.country AND crt.analysis_year = x.analysis_year
+        JOIN country_range_totals crt ON crt.country = x.country AND crt.analysis_year = x.analysis_year AND crt.analysis_name = x.analysis_name
         WHERE
           x.analysis_year = #{year}
           #{analysis_name}
-        GROUP BY x.country, x.region, "RANGE_AREA", "ASSESSED_RANGE"
+        GROUP BY x.analysis_name, x.analysis_year, x.country, x.region, "RANGE_AREA", "ASSESSED_RANGE"
       ) p
-      JOIN regional_range_totals rrt ON rrt.region = p.region
-      JOIN continental_range_totals cont ON continent = 'Africa'
+      JOIN regional_range_totals rrt ON rrt.region = p.region AND rrt.analysis_name = p.analysis_name AND rrt.analysis_year = p.analysis_year
+      JOIN continental_range_totals cont ON continent = 'Africa' AND cont.analysis_name = rrt.analysis_name AND cont.analysis_year = rrt.analysis_year
       WHERE
         p.#{scope}
       ORDER BY country
@@ -359,6 +399,8 @@ module AltDppsHelper
         "ASSESSED_RANGE" / "RANGE_AREA" * 100 as "PERCENT_OF_RANGE_ASSESSED"
       FROM (
         SELECT
+          x.analysis_name,
+          x.analysis_year,
           x.region,
           sum(x."ESTIMATE") as "ESTIMATE",
           1.96*sqrt(sum(x."POPULATION_VARIANCE")) AS "CONFIDENCE",
@@ -367,13 +409,13 @@ module AltDppsHelper
           range_assessed as "ASSESSED_RANGE",
           range_area as "RANGE_AREA"
         FROM estimate_factors_analyses_categorized_totals_for_add x
-        JOIN regional_range_totals rt ON rt.region = x.region
+        JOIN regional_range_totals rt ON x.analysis_name = rt.analysis_name AND x.analysis_year = rt.analysis_year AND rt.region = x.region
         WHERE
           x.analysis_year = #{year}
           #{analysis_name}
-        GROUP BY x.region, "RANGE_AREA", "ASSESSED_RANGE"
+        GROUP BY x.analysis_name, x.analysis_year, x.region, "RANGE_AREA", "ASSESSED_RANGE"
       ) p
-      JOIN continental_range_totals cont ON continent = 'Africa'
+      JOIN continental_range_totals cont ON continent = 'Africa' AND p.analysis_name = cont.analysis_name AND p.analysis_year = cont.analysis_year
       ORDER BY region
     SQL
   end
@@ -397,6 +439,8 @@ module AltDppsHelper
         "ASSESSED_RANGE" / "RANGE_AREA" * 100 as "PERCENT_OF_RANGE_ASSESSED"
       FROM (
         SELECT
+          x.analysis_name,
+          x.analysis_year,
           sum(x."ESTIMATE") as "ESTIMATE",
           1.96*sqrt(sum(x."POPULATION_VARIANCE")) AS "CONFIDENCE",
           sum(x."GUESS_MIN") as "GUESS_MIN",
@@ -404,12 +448,13 @@ module AltDppsHelper
           sum(distinct range_assessed) as "ASSESSED_RANGE",
           sum(distinct range_area) as "RANGE_AREA"
         FROM estimate_factors_analyses_categorized_totals_for_add x
-        JOIN regional_range_totals rt ON rt.region = x.region
+        JOIN regional_range_totals rt ON rt.region = x.region AND rt.analysis_name = x.analysis_name AND rt.analysis_year = x.analysis_year
         WHERE
           x.analysis_year = #{year}
           #{analysis_name}
+        GROUP BY x.analysis_name, x.analysis_year
       ) p
-      JOIN continental_range_totals cont ON continent = 'Africa'
+      JOIN continental_range_totals cont ON continent = 'Africa' AND cont.analysis_name = p.analysis_name AND cont.analysis_year = p.analysis_year
     SQL
   end
 
