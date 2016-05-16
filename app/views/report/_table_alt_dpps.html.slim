@@ -50,13 +50,14 @@
     - merged_keys = keys.select { |key| merged_categories.include?(key) }
     - keys.each_with_index do |category, index|
       - row = totals[category]
+      - area = area_total[row['CATEGORY']] || { 'CATEGORY_RANGE_ASSESSED' => 0, 'AREA' => 0 }
       tr
         td = row['SURVEYTYPE']
         - data_columns.each do |column|
           = add_and_display_cell row, column, table_totals, round: column.eql?('CONFIDENCE') ? false : round
         - unless merged_categories.include?(row['CATEGORY'])
-          = add_and_display_area_cell area_total[row['CATEGORY']], 'CATEGORY_RANGE_ASSESSED', table_totals, attrs: { rowspan: merged_categories.include?(keys[index+1] || nil) ? merged_keys.count + 1 : 1 }
-        = (round_area_sqkm_cell(area_total[row['CATEGORY']]['AREA']) || 0) unless merged_categories.include?(row['CATEGORY']) rescue '!ERR!'
+          = add_and_display_area_cell area, 'CATEGORY_RANGE_ASSESSED', table_totals, attrs: { rowspan: merged_categories.include?(keys[index+1] || nil) ? merged_keys.count + 1 : 1 }
+        = (round_area_sqkm_cell(area['AREA']) ) unless merged_categories.include?(row['CATEGORY'])
 
     - table_totals.merge!(sums)
     tr.bold

@@ -177,8 +177,9 @@ class ReportController < ApplicationController
     @baseline_total = execute <<-SQL, @continent
       select sum(definite) definite, sum(probable) probable, sum(possible) possible,
         sum(speculative) speculative
-      from dpps_sums_continent_category
-      where analysis_name = '#{@filter}' and analysis_year='2007' and continent=?;
+      from analyses a
+      join dpps_sums_continent_category d ON a.analysis_name = d.analysis_name AND a.comparison_year = d.analysis_year
+      where a.analysis_name = '#{@filter}' and a.analysis_year='#{@year}' and continent=?;
     SQL
 
     begin
@@ -198,8 +199,8 @@ class ReportController < ApplicationController
           round(ln((((definite+probable)/(definite+probable+possible+speculative))*(cm.range_assessed/range_area)+1)/(cm.range_area/cm.continental_range))) "PFS"
         from
           dpps_sums_region d
-          join continental_range_table cm on d.region = cm.region
-          where analysis_name = '#{@filter}' and analysis_year = '#{@year}';
+          join continental_range_table cm on d.region = cm.region AND cm.analysis_name = d.analysis_name AND cm.analysis_year = d.analysis_year
+          where d.analysis_name = '#{@filter}' and d.analysis_year = '#{@year}';
       SQL
       @regions_sum = execute <<-SQL, @continent
         select
@@ -215,8 +216,8 @@ class ReportController < ApplicationController
           0 "PFS"
         from
           dpps_sums_continent d
-          join continental_range_totals ct on ct.continent = d.continent
-          where analysis_name = '#{@filter}' and analysis_year = '#{@year}';
+          join continental_range_totals ct on ct.continent = d.continent AND ct.analysis_name = d.analysis_name AND ct.analysis_year = d.analysis_year
+          where d.analysis_name = '#{@filter}' and d.analysis_year = '#{@year}';
       SQL
     rescue
       @regions = nil
@@ -249,15 +250,18 @@ class ReportController < ApplicationController
     @area_of_range_covered_by_continent = execute <<-SQL
       SELECT surveytype, ROUND(known) known, ROUND(possible) possible, ROUND(total) total
       FROM continental_area_of_range_covered
+      WHERE analysis_name = '#{@filter}' and analysis_year = '#{@year}'
       union
       SELECT 'Unassessed Range', ROUND(known) known, ROUND(possible) possible, ROUND(total) total
       FROM continental_area_of_range_covered_unassessed
+      WHERE analysis_name = '#{@filter}' and analysis_year = '#{@year}'
       order by surveytype
     SQL
 
     @area_of_range_covered_sum_by_continent = execute <<-SQL, @region
       SELECT ROUND(known) known, ROUND(possible) possible, ROUND(total) total
       FROM continental_area_of_range_covered_totals
+      WHERE analysis_name = '#{@filter}' and analysis_year = '#{@year}'
     SQL
 
   end
@@ -351,8 +355,8 @@ class ReportController < ApplicationController
     @alt_countries      = execute alt_dpps_country_stats("region = '#{@region}'", @year, @filter)
     @alt_country_sums   = execute alt_dpps_region_stats("region = '#{@region}'", @year, @filter)
 
-    @alt_causes_of_change = execute alt_dpps_causes_of_change("r.name = '#{@region}'", @year, @filter)
-    @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("r.name = '#{@region}'", @year, @filter)
+    @alt_causes_of_change = execute alt_dpps_causes_of_change("region = '#{@region}'", @year, @filter)
+    @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("region = '#{@region}'", @year, @filter)
 
     @summary_totals_by_region = execute totalizer("region='#{@region}'",@filter,@year)
 
@@ -363,8 +367,9 @@ class ReportController < ApplicationController
     @baseline_total = execute <<-SQL, @region
       select sum(definite) definite, sum(probable) probable, sum(possible) possible,
         sum(speculative) speculative
-      from dpps_sums_region_category
-      where analysis_name = '#{@filter}' and analysis_year='2007' and region=?;
+      from analyses a
+      join dpps_sums_region_category d ON a.analysis_name = d.analysis_name AND a.comparison_year = d.analysis_year
+      where a.analysis_name = '#{@filter}' and a.analysis_year='#{@year}' and region=?;
     SQL
     @countries = nil
     @countries = execute <<-SQL, @region
@@ -384,8 +389,8 @@ class ReportController < ApplicationController
       from
         (select distinct continental_range from continental_range_table) ca,
         dpps_sums_country d
-        join regional_range_table rm on d.country = rm.country
-        where analysis_name = '#{@filter}' and analysis_year = '#{@year}' and d.region=?;
+        join regional_range_table rm on d.country = rm.country AND rm.analysis_name = d.analysis_name AND rm.analysis_year = d.analysis_year
+        where d.analysis_name = '#{@filter}' and d.analysis_year = '#{@year}' and d.region=?;
     SQL
     @countries_sum = execute <<-SQL, @region
       select
@@ -403,8 +408,8 @@ class ReportController < ApplicationController
        from
         (select distinct continental_range from continental_range_table) ca,
         dpps_sums_region d
-        join regional_range_totals rm on d.region = rm.region
-        where analysis_name = '#{@filter}' and analysis_year = '#{@year}' and d.region=?;
+        join regional_range_totals rm on d.region = rm.region AND rm.analysis_name = d.analysis_name AND rm.analysis_year = d.analysis_year
+        where d.analysis_name = '#{@filter}' and d.analysis_year = '#{@year}' and d.region=?;
     SQL
     @causes_of_change_by_region = execute <<-SQL, @region
       SELECT *
@@ -428,16 +433,22 @@ class ReportController < ApplicationController
     SQL
     @area_of_range_covered_by_region = execute <<-SQL, @region, @region
       SELECT surveytype, ROUND(known) known, ROUND(possible) possible, ROUND(total) total
-      FROM regional_area_of_range_covered where region=?
+      FROM regional_area_of_range_covered 
+      WHERE region=?
+        and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
       union
       SELECT 'Unassessed Range', ROUND(known) known, ROUND(possible) possible, ROUND(total) total
-      FROM regional_area_of_range_covered_unassessed where region=?
+      FROM regional_area_of_range_covered_unassessed
+      WHERE region=?
+        and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
       order by surveytype
     SQL
 
     @area_of_range_covered_sum_by_region = execute <<-SQL, @region
       SELECT ROUND(known) known, ROUND(possible) possible, ROUND(total) total
-      FROM regional_area_of_range_covered_totals where region=?
+      FROM regional_area_of_range_covered_totals 
+      where region=?
+        and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
     SQL
   end
 
@@ -530,14 +541,15 @@ class ReportController < ApplicationController
     @alt_summary_totals = execute alt_dpps("country = '#{sql_escape @country}'", @year, @filter)
     @alt_summary_sums   = execute alt_dpps_totals("country = '#{sql_escape @country}'", @year, @filter)
     @alt_areas          = execute alt_dpps_country_area("country = '#{sql_escape @country}'", @year, @filter)
-    @alt_causes_of_change = execute alt_dpps_causes_of_change("c.name = '#{sql_escape @country}'", @year, @filter)
-    @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("c.name = '#{sql_escape @country}'", @year, @filter)
+    @alt_causes_of_change = execute alt_dpps_causes_of_change("country = '#{sql_escape @country}'", @year, @filter)
+    @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("country = '#{sql_escape @country}'", @year, @filter)
 
     @baseline_total = execute <<-SQL, @country
       select sum(definite) definite, sum(probable) probable, sum(possible) possible,
         sum(speculative) speculative
-      from dpps_sums_country_category
-      where analysis_name = '#{@filter}' and analysis_year='2007' and country=?;
+      from analyses a
+      join dpps_sums_country_category d ON a.analysis_name = d.analysis_name and a.comparison_year = d.analysis_year
+      where a.analysis_name = '#{@filter}' and a.analysis_year='#{@year}' and country=?;
     SQL
 
     @summary_totals_by_country = execute totalizer("country='#{sql_escape @country}'",@filter,@year)
@@ -603,7 +615,8 @@ class ReportController < ApplicationController
           and e.analysis_year = a.analysis_year
         join surveytypes t on t.category = e.category
         join population_submissions on e.population_submission_id = population_submissions.id
-        join regional_range_table rm on e.country = rm.country
+        join regional_range_table rm on e.country = rm.country AND 
+          e.analysis_name = rm.analysis_name AND e.analysis_year = rm.analysis_year
         where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
         and e.country=?
       order by e.replacement_name, e.site_name, e.stratum_name
@@ -689,16 +702,16 @@ class ReportController < ApplicationController
 
     @area_of_range_covered_by_country = execute <<-SQL, @country, @country
       SELECT surveytype, ROUND(known) known, ROUND(possible) possible, ROUND(total) total
-      FROM area_of_range_covered where country=?
+      FROM area_of_range_covered where country=? and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
       union
       SELECT 'Unassessed Range', ROUND(known) known, ROUND(possible) possible, ROUND(total) total
-      FROM area_of_range_covered_unassessed where country=?
+      FROM area_of_range_covered_unassessed where country=? and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
       order by surveytype
     SQL
 
     @area_of_range_covered_sum_by_country = execute <<-SQL, @country
       SELECT ROUND(known) known, ROUND(possible) possible, ROUND(total) total
-      FROM area_of_range_covered_totals where country=?
+      FROM area_of_range_covered_totals where country=? and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
     SQL
 
   end
