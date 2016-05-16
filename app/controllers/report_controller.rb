@@ -168,6 +168,7 @@ class ReportController < ApplicationController
 
     @alt_causes_of_change = execute alt_dpps_causes_of_change("1=1", @year, @filter)
     @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("1=1", @year, @filter)
+    @alt_areas_by_reason  = execute alt_dpps_continent_area_by_reason("1=1", @year, @filter)
 
     @summary_totals_by_continent = execute totalizer("1=1",@filter,@year)
     if @summary_totals_by_continent.num_tuples < 1
@@ -357,6 +358,7 @@ class ReportController < ApplicationController
 
     @alt_causes_of_change = execute alt_dpps_causes_of_change("region = '#{@region}'", @year, @filter)
     @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("region = '#{@region}'", @year, @filter)
+    @alt_areas_by_reason  = execute alt_dpps_region_area_by_reason("region = '#{@region}'", @year, @filter)
 
     @summary_totals_by_region = execute totalizer("region='#{@region}'",@filter,@year)
 
@@ -543,6 +545,7 @@ class ReportController < ApplicationController
     @alt_areas          = execute alt_dpps_country_area("country = '#{sql_escape @country}'", @year, @filter)
     @alt_causes_of_change = execute alt_dpps_causes_of_change("country = '#{sql_escape @country}'", @year, @filter)
     @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("country = '#{sql_escape @country}'", @year, @filter)
+    @alt_areas_by_reason  = execute alt_dpps_country_area_by_reason("country = '#{sql_escape @country}'", @year, @filter)
 
     @baseline_total = execute <<-SQL, @country
       select sum(definite) definite, sum(probable) probable, sum(possible) possible,

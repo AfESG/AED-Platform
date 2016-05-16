@@ -7,27 +7,38 @@
 - if !totals.nil? && totals.num_tuples > 0
   h2 class=(hideable ? 'hideable' : nil) = title
 
+  - area_total = {}
+  - @alt_areas_by_reason.each { |row| area_total[row['display']] = row }
+  - table_totals = {}
+
   table class=(hideable ? 'table hideable' : 'table') style='font-size:16px'
     tr
-      th width='40%' &nbsp;
-      th.text-center colspan='2' Estimates from Surveys
-      th.text-center colspan='2' Guesses
+      th width='28%' &nbsp;
+      th.text-center width='24%' colspan='2' Estimates from Surveys
+      th.text-center width='24%' colspan='2' Guesses
+      th.text-center width='24%' colspan='2' Area
     tr
-      th width='40%'  Cause of Change
-      th.text-center width='15%'  Estimate
-      th.text-center width='15%'  &plusmn; 95% CL
-      th.text-center width='15%'  From
-      th.text-center width='15%'  To
+      th width='10%'  Cause of Change
+      th.text-center width='12%'  Estimate
+      th.text-center width='12%'  &plusmn; 95% CL
+      th.text-center width='12%'  From
+      th.text-center width='12%'  To
+      th.text-center width='12%' = "% Known and Possible"
+      th.text-center width='12%' Total
     - totals.each do |row|
       tr style=('height: 24px;') 
+        - area = area_total[row['CAUSE']] || { 'CATEGORY_RANGE_ASSESSED' => 0, 'AREA' => 0 }
         td = row['CAUSE']
         - columns.each do |col|
           = signed_cell row[col]
+        = add_and_display_area_cell area, 'CATEGORY_RANGE_ASSESSED', table_totals
+        = round_area_sqkm_cell(area['AREA'])
     - unless sums.nil?
       - sums.each do |row|
         tr.totals style=('height: 24px; font-weight: bold') 
           td Totals
           - columns.each do |col|
             = signed_cell row[col]
-
+          = round_area_cell table_totals['CATEGORY_RANGE_ASSESSED'] || 0
+          = round_area_sqkm_cell (@alt_areas_by_reason.inject(0) { |sum, tuple| sum+= tuple['AREA'].to_f })
 
