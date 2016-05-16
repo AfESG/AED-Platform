@@ -211,83 +211,85 @@ module AltDppsHelper
     SQL
   end
 
+  def alt_dpps_country_area_by_reason scope, year, filter=nil
+    alt_dpps_area_query scope, year, 'country', filter: filter, category: 'reason_change'
+  end
+
+  def alt_dpps_region_area_by_reason scope, year, filter=nil
+    alt_dpps_area_query scope, year, 'region', filter: filter, category: 'reason_change'
+  end
+
+  def alt_dpps_continent_area_by_reason scope, year, filter=nil
+    alt_dpps_area_query scope, year, 'continent', filter: filter, category: 'reason_change'
+  end
+
   def alt_dpps_country_area scope, year, filter=nil
-    analysis_name = filter.nil?? '' : "AND analysis_name = '#{filter}'"
-    <<-SQL
-      SELECT
-        a.category,
-        a."AREA",
-        a."AREA" / ct."RANGE_AREA" * 100 as "CATEGORY_RANGE_ASSESSED",
-        ct."RANGE_AREA" as range_area,
-        ct."CATEGORY_PERCENT_RANGE_ASSESSED" as percent_range_assessed
-      FROM (
-        SELECT
-          analysis_name, analysis_year, category,
-          region, country, sum(COALESCE(area_sqkm, 0)) as "AREA"
-        FROM
-          survey_range_intersection_metrics_add sm
-        WHERE
-          analysis_year = #{@year}
-          #{analysis_name}
-          AND #{scope}
-        GROUP BY analysis_name, analysis_year, category, region, country
-      ) a
-      JOIN country_range_totals ct ON ct.country = a.country AND 
-        a.analysis_year = ct.analysis_year AND a.analysis_name = ct.analysis_name
-      ORDER BY category
-    SQL
+    alt_dpps_area_query scope, year, 'country', filter: filter
   end
 
   def alt_dpps_region_area scope, year, filter=nil
-    analysis_name = filter.nil?? '' : "AND analysis_name = '#{filter}'"
-    <<-SQL
-      SELECT
-        a.category,
-        a."AREA",
-        a."AREA" / rt.range_area * 100 as "CATEGORY_RANGE_ASSESSED",
-        rt.range_area,
-        rt.percent_range_assessed
-      FROM (
-        SELECT
-          analysis_name, analysis_year,
-          category, region, sum(area_sqkm) as "AREA"
-        FROM
-          survey_range_intersection_metrics_add sm
-        WHERE
-          analysis_year = #{@year}
-          #{analysis_name}
-          AND #{scope}
-        GROUP BY analysis_name, analysis_year, category, region
-      ) a
-      JOIN regional_range_totals rt ON rt.region = a.region AND
-        a.analysis_year = rt.analysis_year AND a.analysis_name = rt.analysis_name
-      ORDER BY category
-    SQL
+    alt_dpps_area_query scope, year, 'region', filter: filter
   end
 
   def alt_dpps_continent_area scope, year, filter=nil
-    analysis_name = filter.nil?? '' : "AND analysis_name = '#{filter}'"
+    alt_dpps_area_query scope, year, 'continent', filter: filter
+  end
+
+  def alt_dpps_area_query scope, year, level, opts={}
+    analysis_name = opts[:filter].nil?? '' : "AND sm.analysis_name = '#{opts[:filter]}'"
+    category      = opts[:category] || 'category'
+    scope         = scope.nil? || scope == '1=1' ? '1=1' : "sm.#{scope}"
+    grouping      = ", #{level}"
+    range_join    = "a.#{level}"
+    range_area    = 'range_area'
+    range_percent = 'percent_range_assessed'
+    display_col   = 'surveytypes.surveytype'
+    display_join  = 'JOIN surveytypes ON surveytypes.category = sm.category'
+
+    if level == 'country'
+      range_table = 'country_range_totals'
+      range_area  = '"RANGE_AREA"'
+      range_percent = '"CATEGORY_PERCENT_RANGE_ASSESSED"'
+    elsif level == 'region'
+      range_table = 'regional_range_totals'
+    elsif level == 'continent'
+      range_table = 'continental_range_totals'
+      grouping    = ''
+      range_join  = "'Africa'"
+    else
+      raise Exception.new "Invalid level #{level}"
+    end
+
+    if category == 'reason_change'
+      display_col = 'cause_of_changes.name'
+      display_join = 'JOIN cause_of_changes ON cause_of_changes.code = sm.reason_change'
+    end
+
     <<-SQL
       SELECT
-        a.category,
+        a.#{category},
+        a.display,
         a."AREA",
-        a."AREA" / rt.range_area * 100 as "CATEGORY_RANGE_ASSESSED",
-        rt.range_area,
-        rt.percent_range_assessed
+        a."AREA" / range.#{range_area} * 100 as "CATEGORY_RANGE_ASSESSED",
+        range.#{range_area} as range_area,
+        range.#{range_percent} as percent_range_assessed
       FROM (
         SELECT
-          analysis_name, analysis_year, category, sum(area_sqkm) as "AREA"
+          analysis_name, analysis_year,
+          #{display_col} as display,
+          sm.#{category}#{grouping}, sum(area_sqkm) as "AREA"
         FROM
           survey_range_intersection_metrics_add sm
+        #{display_join}
         WHERE
-          analysis_year = #{@year}
+          sm.analysis_year = #{year}
           #{analysis_name}
           AND #{scope}
-        GROUP BY analysis_name, analysis_year, category
+        GROUP BY sm.analysis_name, sm.analysis_year, #{display_col}, sm.#{category}#{grouping}
       ) a
-      JOIN continental_range_totals rt ON rt.continent = 'Africa' AND
-        a.analysis_year = rt.analysis_year AND a.analysis_name = rt.analysis_name
-      ORDER BY category
+      JOIN #{range_table} range ON range.#{level} = #{range_join} AND 
+        range.analysis_year = a.analysis_year AND range.analysis_name = a.analysis_name
+      ORDER BY a.#{category}
     SQL
   end
 
