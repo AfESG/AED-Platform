@@ -65,7 +65,8 @@ gem 'protected_attributes'
 gem 'roo'
 
 # For shapefile writing support
-gem 'georuby'
+gem 'dbf', '2.0.7'
+gem 'georuby', :git => 'git://github.com/nofxx/georuby.git'
 
 # Make ActiveRecord PostGIS-aware
 gem 'activerecord-postgis-adapter'

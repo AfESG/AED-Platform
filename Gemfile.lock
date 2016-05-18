@@ -1,4 +1,10 @@
 GIT
+  remote: git://github.com/nofxx/georuby.git
+  revision: 96a99cc1d92b6b9ce5da440872eed53d0ff68bcd
+  specs:
+    georuby (2.5.2)
+
+GIT
   remote: git://github.com/sferik/rails_admin.git
   revision: 354cf2a78cc77c871a7a714c3755fe1ed1d56190
   specs:
@@ -103,7 +109,8 @@ GEM
       sort_alphabetical (~> 1.0)
     currencies (0.4.2)
     dalli (2.7.4)
-    dbf (3.0.1)
+    dbf (2.0.7)
+      fastercsv (~> 1.5.4)
     devise (3.5.2)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -113,13 +120,13 @@ GEM
       warden (~> 1.2.3)
     erubis (2.7.0)
     execjs (2.5.2)
+    fastercsv (1.5.5)
     font-awesome-rails (4.4.0.0)
       railties (>= 3.2, < 5.0)
     formtastic (3.1.3)
       actionpack (>= 3.2.13)
     formtastic-bootstrap (3.1.1)
       formtastic (>= 3.0)
-    georuby (2.5.2)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     haml (4.0.7)
@@ -286,10 +293,11 @@ DEPENDENCIES
   coffee-rails
   country_select
   dalli
+  dbf (= 2.0.7)
   devise
   formtastic
   formtastic-bootstrap
-  georuby
+  georuby!
   haml
   hpricot
   jquery-rails
