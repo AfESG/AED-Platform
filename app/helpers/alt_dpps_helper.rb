@@ -49,7 +49,7 @@ module AltDppsHelper
   def signed_cell value, opts={}
     defaults = { class: 'numeric' }
     defaults.merge!(opts[:attrs]) if opts[:attrs]
-    content_tag :td, signed_number(value.to_f.round(opts[:precision] || 0)), defaults
+    content_tag :td, signed_number(value.to_f.round(opts[:precision] || 0), opts), defaults
   end
 
   def error_cell message, opts={}
@@ -123,7 +123,7 @@ module AltDppsHelper
   end
 
   def alt_dpps_causes_of_change_sums scope, year, filter=nil
-    alt_dpps_causes_of_change_query scope, year, filter: filter
+    alt_dpps_causes_of_change_sums_query scope, year, filter:filter
   end
 
   def alt_dpps_causes_of_change_query scope, year, opts
@@ -140,7 +140,7 @@ module AltDppsHelper
       SELECT
         #{sql[:group_cols]}
         sum(estimate) as "ESTIMATE",
-        sum(confidence) as "CONFIDENCE",
+        1.96*sqrt(sum(population_variance)) as "CONFIDENCE",
         sum(guess_min) as "GUESS_MIN",
         sum(guess_max) as "GUESS_MAX"
       FROM add_sums_country_category_reason i
@@ -152,6 +152,32 @@ module AltDppsHelper
         AND #{scope}
       #{sql[:group_by]}
       #{sql[:order_by]}
+    SQL
+  end
+
+  def alt_dpps_causes_of_change_sums_query scope, year, opts
+    sql = { analysis_name: '' }
+    if opts[:filter]
+      sql[:analysis_name] = "AND t.analysis_name = '#{opts[:filter]}'"
+    end
+    if scope.include? 'country'
+      sql[:table] = 'country'
+    elsif scope.include? 'region'
+      sql[:table] = 'region'
+    else
+      sql[:table] = 'continent'
+    end
+    <<-SQL
+      SELECT
+        estimate as "ESTIMATE",
+        confidence as "CONFIDENCE",
+        guess_min as "GUESS_MIN",
+        guess_max as "GUESS_MAX"
+      FROM add_totals_#{sql[:table]}_category_reason t
+      WHERE
+        t.analysis_year = #{year}
+        #{sql[:analysis_name]}
+        AND #{scope}
     SQL
   end
 
