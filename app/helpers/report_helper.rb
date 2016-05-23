@@ -1,6 +1,8 @@
 module ReportHelper
 
-  def signed_number(n)
+  def signed_number(n, opts={})
+    defaults = { positive: '+', negative: '' }
+    defaults.merge!(opts) { |k,d,o| o.blank?? d : o }
     if n.nil?
       '0'
     else
@@ -8,9 +10,9 @@ module ReportHelper
       if number.nil? or number == 0
         '0'
       elsif number.to_i>0
-        "+#{number_with_delimiter number}"
+        "#{defaults[:positive]}#{number_with_delimiter number}".html_safe
       else
-        "#{number_with_delimiter number}"
+        "#{defaults[:negative]}#{number_with_delimiter number}".html_safe
       end
     end
   end

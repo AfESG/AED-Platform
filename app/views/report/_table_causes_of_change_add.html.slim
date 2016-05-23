@@ -30,7 +30,7 @@
         - area = area_total[row['CAUSE']] || { 'CATEGORY_RANGE_ASSESSED' => 0, 'AREA' => 0 }
         td = row['CAUSE']
         - columns.each do |col|
-          = signed_cell row[col]
+          = signed_cell row[col], positive: col.eql?('CONFIDENCE') ? '&plusmn;' : nil
         = add_and_display_area_cell area, 'CATEGORY_RANGE_ASSESSED', table_totals
         = round_area_sqkm_cell(area['AREA'])
     - unless sums.nil?
@@ -38,7 +38,7 @@
         tr.totals style=('height: 24px; font-weight: bold') 
           td Totals
           - columns.each do |col|
-            = signed_cell row[col]
+            = signed_cell row[col], positive: col.eql?('CONFIDENCE') ? '&plusmn;' : nil
           = round_area_cell table_totals['CATEGORY_RANGE_ASSESSED'] || 0
           = round_area_sqkm_cell (@alt_areas_by_reason.inject(0) { |sum, tuple| sum+= tuple['AREA'].to_f })
 
