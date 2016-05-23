@@ -4,18 +4,25 @@ class CountriesController < ApplicationController
   end
 
   def geojson_map
-    @country = Country.find_by_iso_code(params[:iso_code])
     render json: {
       type: 'FeatureCollection',
-      features: @country.features
+      features: country.features
     }
+  end
+
+  def dpps
+    render json: country.dpps(year)
+  end
+
+  def add
+    render json: country.add(year)
   end
 
   def geojson_map_public
     analysis = Analysis.where(analysis_name: params[:analysis]).first
     year = params[:year].to_i
     features = []
-    analysis.input_zones.where(country: params[:iso_code]).each do |input_zone|
+    analysis.input_zones.where(country: params[:iso_code].upcase).each do |input_zone|
       strata = []
       if analysis.comparison_year == year
         strata = input_zone.fetch_replaced_strata
@@ -46,4 +53,12 @@ class CountriesController < ApplicationController
     render :json => feature_collection
   end
 
+  private
+  def country
+    Country.find_by_iso_code(params[:iso_code].upcase)
+  end
+
+  def year
+    params[:year] || 2013
+  end
 end

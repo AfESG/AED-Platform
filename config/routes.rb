@@ -85,15 +85,21 @@ Aaed::Application.routes.draw do
   # country endpoints
   get 'countries' => 'countries#index'
   get 'country/:iso_code/map' => 'countries#geojson_map'
+  get 'country/:iso_code/dpps' => 'countries#dpps'
+  get 'country/:iso_code/add' => 'countries#add'
   get 'country/survey_map/:iso_code/:analysis/:year' => 'countries#geojson_map_public'
 
   # region endpoints
   get 'regions' => 'regions#index'
   get 'region/:id/map' => 'regions#geojson_map'
+  get 'region/:id/dpps' => 'regions#dpps'
+  get 'region/:id/add' => 'regions#add'
 
   # continent endpoints
   get 'continents' => 'continents#index'
   get 'continent/:id/map' => 'continents#geojson_map'
+  get 'continent/:id/dpps' => 'continents#dpps'
+  get 'continent/:id/add' => 'continents#add'
 
   get 'data_request_forms/new' => 'data_request_forms#hold'
   get 'secret_data_request_forms/thanks' => 'data_request_forms#thanks'
