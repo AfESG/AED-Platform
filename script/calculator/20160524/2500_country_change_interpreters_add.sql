@@ -153,7 +153,7 @@ CREATE VIEW ioc_add_replaced AS
     old.country,
     old.reason_change,
     -1*sum(old.estimate) estimate,
-    -1*sum(old.population_variance) population_variance,
+    sum(old.population_variance) population_variance,
     -1*sum(old.guess_min) guess_min,
     -1*sum(old.guess_max) guess_max,
     old.input_zone_id
@@ -332,9 +332,9 @@ create view i_add_sums_country_category_reason as
     sum(guess_min) guess_min,
     sum(guess_max) guess_max
   FROM (
-    SELECT * FROM ioc_add_new
+    SELECT * FROM ioc_add_new i JOIN cause_of_changes c ON i.reason_change = c.code
   UNION ALL
-    SELECT * FROM ioc_add_replaced
+    SELECT * FROM ioc_add_replaced i JOIN cause_of_changes c ON i.reason_change = c.code
   ) x
   GROUP BY analysis_name, analysis_year, continent, region, country, reason_change
   ORDER BY analysis_name, analysis_year, continent, region, country, reason_change;
@@ -354,38 +354,10 @@ create view i_add_totals_country_category_reason as
     region,
     country,
     sum(estimate) estimate,
-    sum(confidence) confidence,
+    1.96*sqrt(sum(population_variance)) confidence,
     sum(guess_min) guess_min,
     sum(guess_max) guess_max
-  FROM (
-    SELECT
-      analysis_name,
-      analysis_year,
-      continent,
-      region,
-      country,
-      sum(estimate) estimate,
-      1.96*sqrt(sum(population_variance)) confidence,
-      sum(guess_min) guess_min,
-      sum(guess_max) guess_max
-    FROM ioc_add_new i
-    JOIN cause_of_changes c ON i.reason_change = c.code
-    GROUP BY analysis_name, analysis_year, continent, region, country
-    UNION ALL
-    SELECT
-      analysis_name,
-      analysis_year,
-      continent,
-      region,
-      country,
-      sum(estimate) estimate,
-      -1.96*sqrt(abs(sum(population_variance))) confidence,
-      sum(guess_min) guess_min,
-      sum(guess_max) guess_max
-    FROM ioc_add_replaced i
-    JOIN cause_of_changes c ON i.reason_change = c.code
-    GROUP BY analysis_name, analysis_year, continent, region, country
-  ) x
+  FROM i_add_sums_country_category_reason
   GROUP BY analysis_name, analysis_year, continent, region, country
   ORDER BY analysis_name, analysis_year, continent, region, country;
 
@@ -400,36 +372,10 @@ create view i_add_totals_region_category_reason as
     continent,
     region,
     sum(estimate) estimate,
-    sum(confidence) confidence,
+    1.96*sqrt(sum(population_variance)) confidence,
     sum(guess_min) guess_min,
     sum(guess_max) guess_max
-  FROM (
-    SELECT
-      analysis_name,
-      analysis_year,
-      continent,
-      region,
-      sum(estimate) estimate,
-      1.96*sqrt(sum(population_variance)) confidence,
-      sum(guess_min) guess_min,
-      sum(guess_max) guess_max
-    FROM ioc_add_new i
-    JOIN cause_of_changes c ON i.reason_change = c.code
-    GROUP BY analysis_name, analysis_year, continent, region
-    UNION ALL
-    SELECT
-      analysis_name,
-      analysis_year,
-      continent,
-      region,
-      sum(estimate) estimate,
-      -1.96*sqrt(abs(sum(population_variance))) confidence,
-      sum(guess_min) guess_min,
-      sum(guess_max) guess_max
-    FROM ioc_add_replaced i
-    JOIN cause_of_changes c ON i.reason_change = c.code
-    GROUP BY analysis_name, analysis_year, continent, region
-  ) x
+  FROM i_add_sums_country_category_reason
   GROUP BY analysis_name, analysis_year, continent, region
   ORDER BY analysis_name, analysis_year, continent, region;
 
@@ -443,34 +389,10 @@ create view i_add_totals_continent_category_reason as
     analysis_year,
     continent,
     sum(estimate) estimate,
-    sum(confidence) confidence,
+    1.96*sqrt(sum(population_variance)) confidence,
     sum(guess_min) guess_min,
     sum(guess_max) guess_max
-  FROM (
-    SELECT
-      analysis_name,
-      analysis_year,
-      continent,
-      sum(estimate) estimate,
-      1.96*sqrt(sum(population_variance)) confidence,
-      sum(guess_min) guess_min,
-      sum(guess_max) guess_max
-    FROM ioc_add_new i
-    JOIN cause_of_changes c ON i.reason_change = c.code
-    GROUP BY analysis_name, analysis_year, continent
-    UNION ALL
-    SELECT
-      analysis_name,
-      analysis_year,
-      continent,
-      sum(estimate) estimate,
-      -1.96*sqrt(abs(sum(population_variance))) confidence,
-      sum(guess_min) guess_min,
-      sum(guess_max) guess_max
-    FROM ioc_add_replaced i
-    JOIN cause_of_changes c ON i.reason_change = c.code
-    GROUP BY analysis_name, analysis_year, continent
-  ) x
+  FROM i_add_sums_country_category_reason
   GROUP BY analysis_name, analysis_year, continent
   ORDER BY analysis_name, analysis_year, continent;
 
