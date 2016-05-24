@@ -64,35 +64,26 @@ class WelcomeController < ApplicationController
     Thread.new {
       logger.info("Recalc started")
       $RECALC_RUNNING = true
-      execute <<-SQL
-        begin;
+      sql = 'begin;'
 
-        delete from dpps_sums_continent_category;
-        insert into dpps_sums_continent_category
-        select * from i_dpps_sums_continent_category;
+      tables = ['dpps_sums_continent_category', 'dpps_sums_continent_category_reason', 
+                'dpps_sums_region_category', 'dpps_sums_region_category_reason',
+                'dpps_sums_country_category', 'dpps_sums_country_category_reason',
+                'add_sums_country_category_reason', 'add_totals_country_category_reason',
+                'add_totals_region_category_reason', 'add_totals_continent_category_reason']
 
-        delete from dpps_sums_continent_category_reason;
-        insert into dpps_sums_continent_category_reason
-        select * from i_dpps_sums_continent_category_reason;
+      tables.each do |table|
+        sql += <<-SQL
 
-        delete from dpps_sums_region_category;
-        insert into dpps_sums_region_category
-        select * from i_dpps_sums_region_category;
+          delete from #{table};
+          insert into #{table}
+            select * from i_#{table};
 
-        delete from dpps_sums_region_category_reason;
-        insert into dpps_sums_region_category_reason
-        select * from i_dpps_sums_region_category_reason;
+        SQL
+      end
 
-        delete from dpps_sums_country_category;
-        insert into dpps_sums_country_category
-        select * from i_dpps_sums_country_category;
-
-        delete from dpps_sums_country_category_reason;
-        insert into dpps_sums_country_category_reason
-        select * from i_dpps_sums_country_category_reason;
-
-        commit;
-      SQL
+      sql += 'commit;'
+      execute sql
       $RECALC_RUNNING = false
       logger.info("Recalc finished")
     }
