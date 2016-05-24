@@ -21,6 +21,7 @@ class Submission < ActiveRecord::Base
   has_many :survey_ground_sample_counts, :through => :population_submissions
   has_many :survey_ground_total_counts, :through => :population_submissions
   has_many :survey_individual_registrations, :through => :population_submissions
+  has_many :survey_modeled_extrapolations, :through => :population_submissions
   has_many :survey_others, :through => :population_submissions
 
   belongs_to :country

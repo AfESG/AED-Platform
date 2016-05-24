@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160518014444) do
+ActiveRecord::Schema.define(version: 20160524175628) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,12 +55,12 @@ ActiveRecord::Schema.define(version: 20160518014444) do
   create_table "add_sums_country_category_reason", id: false, force: :cascade do |t|
     t.string  "analysis_name"
     t.integer "analysis_year"
-    t.string  "continent",     limit: 255
-    t.string  "region",        limit: 255
-    t.string  "country",       limit: 255
-    t.string  "reason_change", limit: 255
+    t.string  "continent",           limit: 255
+    t.string  "region",              limit: 255
+    t.string  "country",             limit: 255
+    t.string  "reason_change"
     t.decimal "estimate"
-    t.float   "confidence"
+    t.float   "population_variance"
     t.decimal "guess_min"
     t.decimal "guess_max"
   end
@@ -74,6 +74,39 @@ ActiveRecord::Schema.define(version: 20160518014444) do
     t.string  "reason_change",       limit: 255
     t.decimal "estimate"
     t.float   "population_variance"
+    t.decimal "guess_min"
+    t.decimal "guess_max"
+  end
+
+  create_table "add_totals_continent_category_reason", id: false, force: :cascade do |t|
+    t.string  "analysis_name"
+    t.integer "analysis_year"
+    t.string  "continent",     limit: 255
+    t.decimal "estimate"
+    t.float   "confidence"
+    t.decimal "guess_min"
+    t.decimal "guess_max"
+  end
+
+  create_table "add_totals_country_category_reason", id: false, force: :cascade do |t|
+    t.string  "analysis_name"
+    t.integer "analysis_year"
+    t.string  "continent",     limit: 255
+    t.string  "region",        limit: 255
+    t.string  "country",       limit: 255
+    t.decimal "estimate"
+    t.float   "confidence"
+    t.decimal "guess_min"
+    t.decimal "guess_max"
+  end
+
+  create_table "add_totals_region_category_reason", id: false, force: :cascade do |t|
+    t.string  "analysis_name"
+    t.integer "analysis_year"
+    t.string  "continent",     limit: 255
+    t.string  "region",        limit: 255
+    t.decimal "estimate"
+    t.float   "confidence"
     t.decimal "guess_min"
     t.decimal "guess_max"
   end
@@ -936,6 +969,19 @@ ActiveRecord::Schema.define(version: 20160518014444) do
 
   add_index "survey_geometries", ["geom"], name: "si_survey_geom", using: :gist
 
+  create_table "survey_geometry_locator_buffered", id: false, force: :cascade do |t|
+    t.string   "site_name",           limit: 255
+    t.text     "analysis_name"
+    t.integer  "analysis_year"
+    t.string   "region",              limit: 255
+    t.text     "category"
+    t.string   "reason_change",       limit: 255
+    t.integer  "population_estimate"
+    t.string   "country",             limit: 255
+    t.text     "input_zone_id"
+    t.geometry "survey_geometry",     limit: {:srid=>0, :type=>"geometry"}
+  end
+
   create_table "survey_ground_sample_count_strata", force: :cascade do |t|
     t.integer  "survey_ground_sample_count_id"
     t.string   "stratum_name",                               limit: 255
@@ -1023,6 +1069,21 @@ ActiveRecord::Schema.define(version: 20160518014444) do
     t.integer  "survey_geometry_id"
     t.string   "web_id"
     t.integer  "stratum_area"
+  end
+
+  create_table "survey_modeled_extrapolations", force: :cascade do |t|
+    t.integer  "population_submission_id"
+    t.string   "other_method_description"
+    t.integer  "population_estimate_min"
+    t.integer  "population_estimate_max"
+    t.integer  "mike_site_id"
+    t.boolean  "is_mike_site"
+    t.integer  "actually_seen"
+    t.boolean  "informed"
+    t.integer  "survey_geometry_id"
+    t.integer  "stratum_area"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "survey_others", force: :cascade do |t|
