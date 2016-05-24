@@ -49,6 +49,8 @@ class PopulationSubmission < ActiveRecord::Base
 
   has_many :survey_individual_registrations, dependent: :destroy
 
+  has_many :survey_modeled_extrapolations, dependent: :destroy
+
   has_many :survey_others, dependent: :destroy
 
   has_many :population_submission_attachments, dependent: :destroy
@@ -65,6 +67,7 @@ class PopulationSubmission < ActiveRecord::Base
       'GS' => 'survey_ground_sample_count',
       'GT' => 'survey_ground_total_count',
       'IR' => 'survey_individual_registration',
+      'ME' => 'survey_modeled_extrapolation',
       'O' => 'survey_other'
     }
 
@@ -77,6 +80,7 @@ class PopulationSubmission < ActiveRecord::Base
       'GS' => 'a ground sample count',
       'GT' => 'a ground total count',
       'IR' => 'an individual_registration',
+      'ME' => 'a modeled extrapolation',
       'O' => 'an "other" description'
     }
 

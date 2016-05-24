@@ -1,0 +1,24 @@
+.row
+  .col-xs-12
+    h1= t('.title')
+    p= link_to t('.new'), new_survey_modeled_extrapolation_path
+
+    table.table
+      thead
+        tr
+          th= SurveyModeledExtrapolation.human_attribute_name :population_submission_id
+          th= SurveyModeledExtrapolation.human_attribute_name :other_method_description
+          th= SurveyModeledExtrapolation.human_attribute_name :population_estimate_min
+          th= SurveyModeledExtrapolation.human_attribute_name :population_estimate_max
+          th colspan=3 = t 'actions'
+      
+      tbody
+        - for survey_other in @survey_modeled_extrapolations
+          tr  class=cycle(:odd, :even)  
+            td= survey_other.population_submission_id
+            td= survey_other.other_method_description
+            td= survey_other.population_estimate_min
+            td= survey_other.population_estimate_max
+            td.action= link_to t('show'), survey_other
+            td.action= link_to t('edit'), edit_survey_modeled_extrapolation_path(survey_other)
+            td.action= link_to t('destroy'), survey_other, :confirm => t('are_you_sure'), :method => :delete

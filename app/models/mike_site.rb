@@ -12,6 +12,7 @@ class MikeSite < ActiveRecord::Base
   has_many :survey_ground_sample_count_strata
   has_many :survey_ground_total_count_strata
   has_many :survey_individual_registrations
+  has_many :survey_modeled_extrapolations
   has_many :survey_others
 
   default_scope { order('site_code ASC') } 

@@ -33,6 +33,7 @@ Aaed::Application.routes.draw do
     resources :survey_ground_sample_counts
     resources :survey_ground_total_counts
     resources :survey_individual_registrations
+    resources :survey_modeled_extrapolations
     resources :survey_others
     resources :population_submission_attachments
     resources :linked_citations
@@ -71,6 +72,7 @@ Aaed::Application.routes.draw do
   resources :survey_ground_total_count_strata
 
   resources :survey_individual_registrations
+  resources :survey_modeled_extrapolations
   resources :survey_others
 
   resources :population_submission_attachments

@@ -10,6 +10,7 @@ module AnalysesHelper
       'GS' => '/survey_ground_sample_count_strata/',
       'GT' => '/survey_ground_total_count_strata/',
       'IR' => '/survey_individual_registrations/',
+      'ME' => '/survey_modeled_extrapolations/',
       'O' => '/survey_others/'
     }
     u = "#{e}"

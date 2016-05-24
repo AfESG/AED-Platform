@@ -107,6 +107,10 @@ en:
         monitoring_frequency: "On average, how frequently is every individual in the population re-sighted?"
         fenced_site: "Is the site fenced?"
         porous_fenced_site: "Is there a possibility of elephants entering or leaving the site?"
+      survey_modeled_extrapolation:
+        other_method_description: "Give a short description of the method used to arrive at the estimate"
+        population_estimate_min: "Population estimate - minimum"
+        population_estimate_max: "Population estimate - maximum"
       survey_other:
         other_method_description: "Give a short description of the method used to arrive at the estimate"
         population_estimate_min: "Population estimate - minimum"
@@ -291,6 +295,13 @@ en:
       title: "Individual Registration"
     edit:
       title: "Edit Individual Registration"
+  survey_modeled_extrapolations:
+    new:
+      title: "New Modeled Extrapolation"
+    show:
+      title: "Modeled Extrapolation"
+    edit:
+      title: "Edit Modeled Extrapolation"
   survey_others:
     new:
       title: "New Other Survey"
