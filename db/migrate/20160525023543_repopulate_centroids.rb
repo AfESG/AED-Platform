@@ -1,4 +1,4 @@
-class PopulateCentroids < ActiveRecord::Migration
+class RepopulateCentroids < ActiveRecord::Migration
   def up
     PopulationSubmission.recalculate_centroids
   end
