@@ -10,7 +10,11 @@ module DppsCountryHelper
 
     elephant_estimates_by_country = execute <<-SQL, country
       select
+        e.sort_key,
+        e.population,
         e.replacement_name,
+        e.site_name,
+        e.stratum_name,
         e.population_variance,
         CASE WHEN reason_change='NC' THEN
           '-'
@@ -18,8 +22,6 @@ module DppsCountryHelper
           reason_change
         END as "ReasonForChange",
         e.population_submission_id,
-        e.site_name,
-        e.stratum_name,
         e.input_zone_id method_and_quality,
         e.category "CATEGORY",
         e.completion_year "CYEAR",
@@ -69,7 +71,7 @@ module DppsCountryHelper
           e.analysis_name = rm.analysis_name AND e.analysis_year = rm.analysis_year
         where e.analysis_name = '#{filter}' and e.analysis_year = '#{year}'
         and e.country=?
-      order by e.replacement_name, e.site_name, e.stratum_name
+      order by e.sort_key, e.site_name, e.stratum_name
     SQL
 
     coverage_table = execute <<-SQL, country
@@ -82,6 +84,7 @@ module DppsCountryHelper
     group = []
     current_replacement_name = elephant_estimates_by_country[0]['replacement_name']
     elephant_estimates_by_country.each do |row|
+      puts row['sort_key']
       if row['replacement_name'] == current_replacement_name
         group << row
       else
