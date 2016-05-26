@@ -1,4 +1,8 @@
 class Country < ActiveRecord::Base
+  include AltDppsHelper
+  include DppsCountryHelper
+  include TotalizerHelper
+
   has_paper_trail
 
   # this model is not web-serviceable
@@ -13,6 +17,10 @@ class Country < ActiveRecord::Base
 
   def to_s
     name
+  end
+
+  def escaped_name
+    ActiveRecord::Base.connection.instance_variable_get(:@connection).escape(name)
   end
 
   def features
@@ -63,5 +71,37 @@ class Country < ActiveRecord::Base
     end
 
     features.sort_by { |h| h['properties'][:aed_year] }
+  end
+
+  def dpps(year)
+    filter = Analysis.find_by_analysis_year(year).analysis_name rescue nil
+    {
+        country: name,
+        year: year,
+        analysis_name: filter,
+        country_totals: execute(totalizer("country='#{escaped_name}'", filter, year))
+    }.merge(get_country_values(name, filter, year))
+  end
+
+  def add(year)
+    filter = Analysis.find_by_analysis_year(year).analysis_name rescue nil
+    args = ["country='#{escaped_name}'", year, filter]
+    {
+        country: name,
+        year: year,
+        analysis_name: filter,
+        summary_totals: execute(alt_dpps(*args)),
+        summary_sums: execute(alt_dpps_totals(*args)),
+        areas: execute(alt_dpps_country_area(*args)),
+        causes_of_change: execute(alt_dpps_causes_of_change(*args)),
+        causes_of_change_sums: execute(alt_dpps_causes_of_change_sums(*args)),
+        areas_by_reason: execute(alt_dpps_country_area_by_reason(*args))
+    }
+  end
+
+  private
+  def execute(*array)
+    sql = ActiveRecord::Base.send(:sanitize_sql_array, array)
+    ActiveRecord::Base.connection.execute(sql)
   end
 end

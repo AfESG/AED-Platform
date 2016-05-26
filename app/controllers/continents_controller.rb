@@ -4,10 +4,26 @@ class ContinentsController < ApplicationController
   end
 
   def geojson_map
-    @continent = Continent.find_by_id(params[:id])
     render json: {
         type: 'FeatureCollection',
-        features: @continent.countries.map(&:features).flatten
+        features: continent.countries.map(&:features).flatten
     }
+  end
+
+  def dpps
+    render json: continent.dpps(year)
+  end
+
+  def add
+    render json: continent.add(year)
+  end
+
+  private
+  def continent
+    Continent.find_by_id(params[:id])
+  end
+
+  def year
+    params[:year] || 2013
   end
 end
