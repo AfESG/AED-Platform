@@ -371,11 +371,11 @@ class ReportController < ApplicationController
         '-' "PFS",
         e.stratum_area "AREA_SQKM",
         CASE WHEN longitude<0 THEN
-          to_char(abs(longitude),'999D9')||'W'
+          to_char(abs(longitude),'990D9')||'W'
         WHEN longitude=0 THEN
           '0.0'
         ELSE
-          to_char(abs(longitude),'999D9')||'E'
+          to_char(abs(longitude),'990D9')||'E'
         END "LON",
         CASE WHEN latitude<0 THEN
           to_char(abs(latitude),'990D9')||'S'
