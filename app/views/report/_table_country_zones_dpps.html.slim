@@ -82,8 +82,8 @@
           - @last_pop = @pop
           tr
             td colspan='12' style='font-weight: bold' = @pop
-        - else
-          - @indent = 7
+      - else
+        - @indent = 7
       tr
         td style="padding-left: #{@indent}px"
           a href="javascript:toggle_section('#{@rn.gsub(/[^\w\d]/,'')}')" style='text-decoration:none'  +
