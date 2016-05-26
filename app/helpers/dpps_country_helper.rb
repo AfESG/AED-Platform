@@ -43,18 +43,18 @@ module DppsCountryHelper
         a.area_sqkm "CALC_SQKM",
         e.stratum_area "AREA_SQKM",
         CASE WHEN longitude<0 THEN
-          to_char(abs(longitude),'999D9')||'W'
+          to_char(abs(longitude),'990D9')||'W'
         WHEN longitude=0 THEN
           '0.0'
         ELSE
-          to_char(abs(longitude),'999D9')||'E'
+          to_char(abs(longitude),'990D9')||'E'
         END "LON",
         CASE WHEN latitude<0 THEN
-          to_char(abs(latitude),'999D9')||'S'
+          to_char(abs(latitude),'990D9')||'S'
         WHEN latitude=0 THEN
           '0.0'
         ELSE
-          to_char(abs(latitude),'999D9')||'N'
+          to_char(abs(latitude),'990D9')||'N'
         END "LAT"
       from estimate_locator e
         join estimate_dpps d on e.input_zone_id = d.input_zone_id
