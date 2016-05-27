@@ -34,10 +34,11 @@
       th style='text-align:center'  Lon.
       th style='text-align:center'  Lat.
     - @elephant_estimate_groups.each do |group|
-      - @rn = @cc = @ty = @yr = @re = ''
+      - @pop = @rn = @cc = @ty = @yr = @re = ''
       - @ar = @n = @pv = @es = @cl = @lcl = @ucl = @car = @ra = 0
       - if group.size > 1
         - group.each do |row|
+          - @pop = row['population']
           - @rn = row['replacement_name']
           - @cc = row['ReasonForChange']
           - @ca = row['CATEGORY']
@@ -56,6 +57,7 @@
           - @n = @n + 1
       - else
         - group.each do |row|
+          - @pop = row['population']
           - @rn = row['replacement_name']
           - @cc = row['ReasonForChange']
           - @ca = row['CATEGORY']
@@ -74,8 +76,16 @@
           - @n = @n + 1
           - @ra = row['RA'].to_f
       - @pf = (Math.log10((((@es+0.001)/(@es+@ucl+(1.96*Math.sqrt(@pv))+0.001))+1)/(@car/@ra))).round rescue '?'
+      - if @pop and !@pop.blank?
+        - @indent = 20
+        - if @pop != @last_pop
+          - @last_pop = @pop
+          tr
+            td colspan='12' style='font-weight: bold' = @pop
+      - else
+        - @indent = 7
       tr
-        td
+        td style="padding-left: #{@indent}px"
           a href="javascript:toggle_section('add_#{@rn.gsub(/[^\w\d]/,'')}')" style='text-decoration:none'  +
           '
           = @rn

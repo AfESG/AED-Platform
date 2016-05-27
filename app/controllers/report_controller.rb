@@ -290,12 +290,14 @@ class ReportController < ApplicationController
 
     @alt_elephant_estimates_by_country = execute <<-SQL, @country
       SELECT
+        el.sort_key,
+        el.population,
+        e.site_name,
+        e.stratum_name,
         e.replacement_name,
         e.population_variance,
         CASE WHEN e.reason_change = 'NC' THEN '-' ELSE e.reason_change END AS "ReasonForChange",
         e.population_submission_id,
-        e.site_name,
-        e.stratum_name,
         e.input_zone_id method_and_quality,
         e.category "CATEGORY",
         e.completion_year "CYEAR",
@@ -346,7 +348,7 @@ class ReportController < ApplicationController
           e.analysis_name = rm.analysis_name AND e.analysis_year = rm.analysis_year
         where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
         and e.country=?
-      order by e.replacement_name, e.site_name, e.stratum_name
+      order by el.sort_key, e.site_name, e.stratum_name
     SQL
 
     @ioc_tabs = [
