@@ -22,7 +22,9 @@ class Change < ActiveRecord::Base
 
   def generate_sort_key
     self.population = '' unless self.population
+    self.population = self.population.strip
     self.replacement_name = '' unless self.replacement_name
+    self.replacement_name = self.replacement_name.strip
     self.sort_key = self.population + self.replacement_name
   end
 
