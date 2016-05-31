@@ -11,11 +11,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160526050858) do
+ActiveRecord::Schema.define(version: 20160531135031) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
+
+  create_table "2014_range_map_edit_for_2016", primary_key: "gid", force: :cascade do |t|
+    t.integer  "range",      limit: 2
+    t.string   "rangequali", limit: 10
+    t.string   "ccode",      limit: 2
+    t.string   "cntryname",  limit: 30
+    t.integer  "area_sqkm"
+    t.integer  "refid"
+    t.string   "datastatus", limit: 2
+    t.string   "comments",   limit: 254
+    t.string   "rangetype",  limit: 20
+    t.string   "comments_1", limit: 254
+    t.string   "adjyear_1",  limit: 20
+    t.integer  "sourceyear", limit: 2
+    t.string   "publisyear", limit: 20
+    t.string   "2016",       limit: 20
+    t.string   "comnts2016", limit: 254
+    t.string   "ref_2016",   limit: 254
+    t.string   "chnges2016", limit: 254
+    t.geometry "geom",       limit: {:srid=>0, :type=>"multi_polygon"}
+  end
 
   create_table "2014_rangetypeupdates5_final", primary_key: "gid", force: :cascade do |t|
     t.integer  "range",      limit: 2
