@@ -143,7 +143,7 @@ class AnalysesController < ApplicationController
       analysis=? and ayear=?
     SQL
 
-    input_filenames = ["export.shp", "export.dbf", "export.shx"]
+    input_filenames = ["export.shp", "export.dbf", "export.shx", "export.cpg"]
     input_filenames.each do |filename|
       File.delete(filename) rescue nil
     end
@@ -156,15 +156,15 @@ class AnalysesController < ApplicationController
         GeoRuby::Shp4r::Dbf::Field.new('ayear', 'N', 10),
         GeoRuby::Shp4r::Dbf::Field.new('region', 'C', 30),
         GeoRuby::Shp4r::Dbf::Field.new('country', 'C', 30),
-        GeoRuby::Shp4r::Dbf::Field.new('inpzone', 'C', 30),
-        GeoRuby::Shp4r::Dbf::Field.new('site', 'C', 30),
-        GeoRuby::Shp4r::Dbf::Field.new('stratum', 'C', 30),
+        GeoRuby::Shp4r::Dbf::Field.new('inpzone', 'C', 60),
+        GeoRuby::Shp4r::Dbf::Field.new('site', 'C', 60),
+        GeoRuby::Shp4r::Dbf::Field.new('stratum', 'C', 60),
         GeoRuby::Shp4r::Dbf::Field.new('strcode', 'C', 10),
         GeoRuby::Shp4r::Dbf::Field.new('est_type', 'C', 15),
         GeoRuby::Shp4r::Dbf::Field.new('category', 'C', 4),
         GeoRuby::Shp4r::Dbf::Field.new('year', 'C', 6),
         GeoRuby::Shp4r::Dbf::Field.new('rc', 'C', 4),
-        GeoRuby::Shp4r::Dbf::Field.new('full_cit', 'C', 254),
+        GeoRuby::Shp4r::Dbf::Field.new('full_cit', 'C', 512),
         GeoRuby::Shp4r::Dbf::Field.new('short_cit', 'C', 254),
         GeoRuby::Shp4r::Dbf::Field.new('estimate', 'N', 10, 3),
         GeoRuby::Shp4r::Dbf::Field.new('variance', 'N', 10, 3),
@@ -191,6 +191,8 @@ class AnalysesController < ApplicationController
 
     zipfile_name = 'export-analysis-' + params[:analysis] + '-' + params[:year] + '.zip'
 
+    File.write('export.cpg', 'UTF-8')
+    
     File.delete(zipfile_name) rescue nil
 
     puts "Creating Zip"
