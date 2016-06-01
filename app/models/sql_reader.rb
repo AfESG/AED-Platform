@@ -15,7 +15,7 @@ class SqlReader
       end
 
       sql << line
-      sql << ' ' unless line.blank?
+      sql << "\n" unless line.blank?
       if line.end_with?(';')
         found = true
         begin

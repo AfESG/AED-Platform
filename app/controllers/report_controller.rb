@@ -169,8 +169,8 @@ class ReportController < ApplicationController
     @alt_summary_totals = execute alt_dpps("region = '#{@region}'", @year, @filter)
     @alt_summary_sums   = execute alt_dpps_totals("region = '#{@region}'", @year, @filter)
     @alt_areas          = execute alt_dpps_region_area("region = '#{@region}'", @year, @filter)
-    @alt_countries      = execute alt_dpps_country_stats("region = '#{@region}'", @year, @filter)
-    @alt_country_sums   = execute alt_dpps_region_stats("region = '#{@region}'", @year, @filter)
+    @alt_countries      = execute alt_dpps_region_stats("region = '#{@region}'", @year, @filter)
+    @alt_country_sums   = execute alt_dpps_region_stats_sums("region = '#{@region}'", @year, @filter)
     @alt_causes_of_change = execute alt_dpps_causes_of_change("region = '#{@region}'", @year, @filter)
     @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("region = '#{@region}'", @year, @filter)
     @alt_areas_by_reason  = execute alt_dpps_region_area_by_reason("region = '#{@region}'", @year, @filter)
@@ -185,173 +185,111 @@ class ReportController < ApplicationController
     end
   end
 
-  def region
-    @year = params[:year].to_i
-    @continent = params[:continent]
-    @region = params[:region].gsub('_',' ')
-    db = "aed#{@year}"
+def region
+  @year = params[:year].to_i
+  @continent = params[:continent]
+  @region = params[:region].gsub('_',' ')
+  db = "aed#{@year}"
 
-    begin
-      @summary_totals_by_region = execute <<-SQL, @region
-        SELECT *
-        FROM #{db}.summary_totals_by_region where "REGION"=?
-      SQL
-    rescue
-      raise ActiveRecord::RecordNotFound
-    end
-
-    begin
-      @summary_sums_by_region = execute <<-SQL, @region
-        SELECT *
-        FROM #{db}.summary_sums_by_region where "REGION"=?
-      SQL
-    rescue
-      @summary_sums_by_region = nil
-    end
-
-    begin
-      @causes_of_change_by_region = execute <<-SQL, @region
-        SELECT *
-        FROM #{db}.causes_of_change_by_region where "REGION"=?
-      SQL
-    rescue
-      @causes_of_change_by_region = nil
-    end
-
-    begin
-      @causes_of_change_sums_by_region = execute <<-SQL, @region
-        SELECT *
-        FROM #{db}.causes_of_change_sums_by_region where "REGION"=?
-      SQL
-    rescue
-      @causes_of_change_sums_by_region = nil
-    end
-
-    begin
-      @area_of_range_covered_by_region = execute <<-SQL, @region
-        SELECT *
-        FROM #{db}.area_of_range_covered_by_region where "REGION"=?
-      SQL
-
-      @area_of_range_covered_sum_by_region = execute <<-SQL, @region
-        SELECT *
-        FROM #{db}.area_of_range_covered_sum_by_region where "REGION"=?
-      SQL
-    rescue
-      @area_of_range_covered_by_region = nil
-      @area_of_range_covered_sum_by_region = nil
-    end
-
-    begin
-      @countries = execute <<-SQL, @region
-        SELECT *
-        FROM #{db}.country_and_regional_totals_and_data_quality where "REGION"=?;
-      SQL
-    rescue
-      @countries = nil
-    end
-
-    begin
-      @countries_sum = execute <<-SQL, @region
-        SELECT *
-        FROM #{db}.country_and_regional_totals_and_data_quality_sum where "REGION"=?;
-      SQL
-    rescue
-      @countries_sum = nil
-    end
+  begin
+    @summary_totals_by_region = execute <<-SQL, @region
+      SELECT *
+      FROM #{db}.summary_totals_by_region where "REGION"=?
+    SQL
+  rescue
+    raise ActiveRecord::RecordNotFound
   end
 
-  def preview_country
-    return unless allowed_preview?
-    @year = params[:year].to_i
-    @continent = params[:continent]
-    @region = params[:region].gsub('_',' ')
-    @country = params[:country].gsub('_',' ')
-    @map_uri = Country.where(name: @country).first().iso_code + "/" + params[:filter] + "/" + params[:year]
-    @filter = params[:filter]
-    @preview_title = official_title(@filter) or @filter.humanize.upcase
+  begin
+    @summary_sums_by_region = execute <<-SQL, @region
+      SELECT *
+      FROM #{db}.summary_sums_by_region where "REGION"=?
+    SQL
+  rescue
+    @summary_sums_by_region = nil
+  end
 
-    # ADD values
-    @alt_summary_totals = execute alt_dpps("country = '#{sql_escape @country}'", @year, @filter)
-    @alt_summary_sums   = execute alt_dpps_totals("country = '#{sql_escape @country}'", @year, @filter)
-    @alt_areas          = execute alt_dpps_country_area("country = '#{sql_escape @country}'", @year, @filter)
-    @alt_causes_of_change = execute alt_dpps_causes_of_change("country = '#{sql_escape @country}'", @year, @filter)
-    @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("country = '#{sql_escape @country}'", @year, @filter)
-    @alt_areas_by_reason  = execute alt_dpps_country_area_by_reason("country = '#{sql_escape @country}'", @year, @filter)
+  begin
+    @causes_of_change_by_region = execute <<-SQL, @region
+      SELECT *
+      FROM #{db}.causes_of_change_by_region where "REGION"=?
+    SQL
+  rescue
+    @causes_of_change_by_region = nil
+  end
 
-    # DPPS values
-    get_country_values(@country, @filter, @year).each do |k, v|
-      instance_variable_set("@#{k}".to_sym, v)
-    end
-    @summary_totals_by_country = execute totalizer("country='#{sql_escape @country}'",@filter,@year)
-    if @summary_totals_by_country.num_tuples < 1
-      raise ActionController::RoutingError.new('Not Found')
-    end
+  begin
+    @causes_of_change_sums_by_region = execute <<-SQL, @region
+      SELECT *
+      FROM #{db}.causes_of_change_sums_by_region where "REGION"=?
+    SQL
+  rescue
+    @causes_of_change_sums_by_region = nil
+  end
 
-    @alt_elephant_estimates_by_country = execute <<-SQL, @country
-      SELECT
-        el.sort_key,
-        el.population,
-        e.site_name,
-        e.stratum_name,
-        e.replacement_name,
-        e.population_variance,
-        CASE WHEN e.reason_change = 'NC' THEN '-' ELSE e.reason_change END AS "ReasonForChange",
-        e.population_submission_id,
-        e.input_zone_id method_and_quality,
-        e.category "CATEGORY",
-        e.completion_year "CYEAR",
-        e.best_estimate "ESTIMATE",
-        e.population_lower_confidence_limit "GUESS_MIN",
-        e.population_upper_confidence_limit "GUESS_MAX",
-        CASE WHEN e.population_upper_confidence_limit IS NOT NULL THEN
-          CASE WHEN e.estimate_type='O' THEN
-            to_char(e.population_upper_confidence_limit-e.population_estimate,'999,999') || '*'
-          ELSE
-            to_char(e.population_upper_confidence_limit-e.population_estimate,'999,999')
-          END
-        WHEN e.population_confidence_interval IS NOT NULL THEN
-          to_char(ROUND(e.population_confidence_interval),'999,999')
-        ELSE
-          ''
-        END "CL95",
-        e.short_citation "REFERENCE",
-        round(log((1+(e.best_estimate / (e.best_estimate + (1.96*sqrt(e.population_variance)) + e.population_upper_confidence_limit + 0.0001))) /
-          (a.area_sqkm / rm.range_area))) "PFS",
-        rm.range_area "RA",
-        a.area_sqkm "CALC_SQKM",
-        e.stratum_area "AREA_SQKM",
-        CASE WHEN longitude<0 THEN
-          to_char(abs(longitude),'999D9')||'W'
-        WHEN longitude=0 THEN
-          '0.0'
-        ELSE
-          to_char(abs(longitude),'999D9')||'E'
-        END "LON",
-        CASE WHEN latitude<0 THEN
-          to_char(abs(latitude),'999D9')||'S'
-        WHEN latitude=0 THEN
-          '0.0'
-        ELSE
-          to_char(abs(latitude),'999D9')||'N'
-        END "LAT"
-      FROM estimate_locator el
-        join estimate_factors_analyses_categorized_for_add e on e.input_zone_id = el.input_zone_id
-          and e.analysis_name = el.analysis_name
-          and e.analysis_year = el.analysis_year
-        join estimate_locator_areas a on e.input_zone_id = a.input_zone_id
-          and e.analysis_name = a.analysis_name
-          and e.analysis_year = a.analysis_year
-        join surveytypes t on t.category = e.category
-        join population_submissions on e.population_submission_id = population_submissions.id
-        join regional_range_table rm on e.country = rm.country AND
-          e.analysis_name = rm.analysis_name AND e.analysis_year = rm.analysis_year
-        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
-        and e.country=?
-      order by el.sort_key, e.site_name, e.stratum_name
+  begin
+    @area_of_range_covered_by_region = execute <<-SQL, @region
+      SELECT *
+      FROM #{db}.area_of_range_covered_by_region where "REGION"=?
     SQL
 
-    @ioc_tabs = [
+    @area_of_range_covered_sum_by_region = execute <<-SQL, @region
+      SELECT *
+      FROM #{db}.area_of_range_covered_sum_by_region where "REGION"=?
+    SQL
+  rescue
+    @area_of_range_covered_by_region = nil
+    @area_of_range_covered_sum_by_region = nil
+  end
+
+  begin
+    @countries = execute <<-SQL, @region
+      SELECT *
+      FROM #{db}.country_and_regional_totals_and_data_quality where "REGION"=?;
+    SQL
+  rescue
+    @countries = nil
+  end
+
+  begin
+    @countries_sum = execute <<-SQL, @region
+      SELECT *
+      FROM #{db}.country_and_regional_totals_and_data_quality_sum where "REGION"=?;
+    SQL
+  rescue
+    @countries_sum = nil
+  end
+end
+
+def preview_country
+  return unless allowed_preview?
+  @year = params[:year].to_i
+  @continent = params[:continent]
+  @region = params[:region].gsub('_',' ')
+  @country = params[:country].gsub('_',' ')
+  @map_uri = Country.where(name: @country).first().iso_code + "/" + params[:filter] + "/" + params[:year]
+  @filter = params[:filter]
+  @preview_title = official_title(@filter) or @filter.humanize.upcase
+
+  # ADD values
+  @alt_summary_totals = execute alt_dpps("country = '#{sql_escape @country}'", @year, @filter)
+  @alt_summary_sums   = execute alt_dpps_totals("country = '#{sql_escape @country}'", @year, @filter)
+  @alt_areas          = execute alt_dpps_country_area("country = '#{sql_escape @country}'", @year, @filter)
+  @alt_causes_of_change = execute alt_dpps_causes_of_change("country = '#{sql_escape @country}'", @year, @filter)
+  @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("country = '#{sql_escape @country}'", @year, @filter)
+  @alt_areas_by_reason  = execute alt_dpps_country_area_by_reason("country = '#{sql_escape @country}'", @year, @filter)
+  @alt_elephant_estimates_by_country = execute alt_dpps_country_stats(@country, @year, @filter)
+
+  # DPPS values
+  get_country_values(@country, @filter, @year).each do |k, v|
+    instance_variable_set("@#{k}".to_sym, v)
+  end
+  @summary_totals_by_country = execute totalizer("country='#{sql_escape @country}'",@filter,@year)
+  if @summary_totals_by_country.num_tuples < 1
+    raise ActionController::RoutingError.new('Not Found')
+  end
+
+  @ioc_tabs = [
         {
             title: 'DPPS Interpretation of Changes',
             template: 'table_causes_of_change_dpps',
@@ -626,7 +564,7 @@ class ReportController < ApplicationController
 
   def appendix_2
     @filter = params[:filter]
-    @table = execute <<-SQL, @filter, @filter
+    @table = execute <<-SQL, @filter
       SELECT
         analysis_year,
         region,
@@ -635,65 +573,8 @@ class ReportController < ApplicationController
         estimate_type,
         estimate,
         confidence
-      FROM
-      (
-        SELECT
-          s0.analysis_year,
-          s0.region,
-          s0.country,
-          s0.replacement_name,
-          s0.estimate_type,
-          sum(s0.estimate) estimate,
-          ROUND(1.96*sqrt(sum(s0.confidence))) confidence
-        FROM (
-          SELECT DISTINCT
-            e.analysis_year,
-            l.region,
-            l.country,
-            l.replacement_name,
-            l.estimate_type,
-            e."ESTIMATE" estimate,
-            e."POPULATION_VARIANCE" confidence
-          FROM analyses a
-          JOIN changes_expanded c ON a.analysis_name = c.analysis_name
-          JOIN estimate_factors_analyses_reasons_for_add e ON c.new_stratum = e.input_zone_id
-          JOIN estimate_locator l ON l.input_zone_id = e.input_zone_id
-          WHERE
-            a.analysis_name = ?
-            AND e.analysis_year = a.analysis_year
-            AND c.adjusted_reason_change = 'RS'
-        ) s0
-        GROUP BY s0.region, s0.country, s0.replacement_name, s0.estimate_type, s0.analysis_year
-
-        UNION SELECT
-          s2.analysis_year,
-          s2.region,
-          s2.country,
-          s2.replacement_name,
-          s2.estimate_type,
-          sum(s2.estimate) estimate,
-          ROUND(1.96*sqrt(sum(s2.confidence))) confidence
-        FROM (
-          SELECT DISTINCT
-            e.analysis_year,
-            l.region,
-            l.country,
-            l.replacement_name,
-            l.estimate_type,
-            e."ESTIMATE" estimate,
-            e."POPULATION_VARIANCE" confidence
-          FROM analyses a
-          JOIN changes_expanded c ON a.analysis_name = c.analysis_name
-          JOIN estimate_factors_analyses_reasons_for_add e ON c.replaced_stratum = e.input_zone_id
-          JOIN estimate_locator l ON l.input_zone_id = e.input_zone_id
-          WHERE
-            a.analysis_name = ?
-            AND e.analysis_year = a.comparison_year
-            AND c.adjusted_reason_change = 'RS'
-        ) s2
-        GROUP BY s2.region, s2.country, s2.replacement_name, s2.estimate_type, s2.analysis_year
-      ) s1
-      ORDER BY region, country, replacement_name, analysis_year
+      FROM appendix_2_add
+      WHERE analysis_name = ?
     SQL
   end
 
