@@ -638,40 +638,60 @@ class ReportController < ApplicationController
       FROM
       (
         SELECT
-          e.analysis_year,
-          l.region,
-          l.country,
-          l.replacement_name,
-          l.estimate_type,
-          sum(e."ESTIMATE") estimate,
-          1.96*sqrt(sum(e."POPULATION_VARIANCE")) confidence
-        FROM analyses a
-        JOIN changes_expanded c ON a.analysis_name = c.analysis_name
-        JOIN estimate_factors_analyses_reasons_for_add e ON c.new_stratum = e.input_zone_id
-        JOIN estimate_locator l ON l.input_zone_id = e.input_zone_id
-        WHERE
-          a.analysis_name = ?
-          AND e.analysis_year = a.analysis_year
-          AND c.adjusted_reason_change = 'RS'
-        GROUP BY l.region, l.country, l.replacement_name, l.estimate_type, e.analysis_year
+          s0.analysis_year,
+          s0.region,
+          s0.country,
+          s0.replacement_name,
+          s0.estimate_type,
+          sum(s0.estimate) estimate,
+          ROUND(1.96*sqrt(sum(s0.confidence))) confidence
+        FROM (
+          SELECT DISTINCT
+            e.analysis_year,
+            l.region,
+            l.country,
+            l.replacement_name,
+            l.estimate_type,
+            e."ESTIMATE" estimate,
+            e."POPULATION_VARIANCE" confidence
+          FROM analyses a
+          JOIN changes_expanded c ON a.analysis_name = c.analysis_name
+          JOIN estimate_factors_analyses_reasons_for_add e ON c.new_stratum = e.input_zone_id
+          JOIN estimate_locator l ON l.input_zone_id = e.input_zone_id
+          WHERE
+            a.analysis_name = ?
+            AND e.analysis_year = a.analysis_year
+            AND c.adjusted_reason_change = 'RS'
+        ) s0
+        GROUP BY s0.region, s0.country, s0.replacement_name, s0.estimate_type, s0.analysis_year
 
         UNION SELECT
-          e.analysis_year,
-          l.region,
-          l.country,
-          l.replacement_name,
-          l.estimate_type,
-          sum(e."ESTIMATE") estimate,
-          1.96*sqrt(sum(e."POPULATION_VARIANCE")) confidence
-        FROM analyses a
-        JOIN changes_expanded c ON a.analysis_name = c.analysis_name
-        JOIN estimate_factors_analyses_reasons_for_add e ON c.replaced_stratum = e.input_zone_id
-        JOIN estimate_locator l ON l.input_zone_id = e.input_zone_id
-        WHERE
-          a.analysis_name = ?
-          AND e.analysis_year = a.comparison_year
-          AND c.adjusted_reason_change = 'RS'
-        GROUP BY l.region, l.country, l.replacement_name, l.estimate_type, e.analysis_year
+          s2.analysis_year,
+          s2.region,
+          s2.country,
+          s2.replacement_name,
+          s2.estimate_type,
+          sum(s2.estimate) estimate,
+          ROUND(1.96*sqrt(sum(s2.confidence))) confidence
+        FROM (
+          SELECT DISTINCT
+            e.analysis_year,
+            l.region,
+            l.country,
+            l.replacement_name,
+            l.estimate_type,
+            e."ESTIMATE" estimate,
+            e."POPULATION_VARIANCE" confidence
+          FROM analyses a
+          JOIN changes_expanded c ON a.analysis_name = c.analysis_name
+          JOIN estimate_factors_analyses_reasons_for_add e ON c.replaced_stratum = e.input_zone_id
+          JOIN estimate_locator l ON l.input_zone_id = e.input_zone_id
+          WHERE
+            a.analysis_name = ?
+            AND e.analysis_year = a.comparison_year
+            AND c.adjusted_reason_change = 'RS'
+        ) s2
+        GROUP BY s2.region, s2.country, s2.replacement_name, s2.estimate_type, s2.analysis_year
       ) s1
       ORDER BY region, country, replacement_name, analysis_year
     SQL
