@@ -316,7 +316,7 @@ class ReportController < ApplicationController
           ''
         END "CL95",
         e.short_citation "REFERENCE",
-        round(log((1+(e.best_estimate / (e.best_estimate + (1.96*sqrt(e.population_variance)) + e.population_upper_confidence_limit + 0.0001))) / 
+        round(log((1+(e.best_estimate / (e.best_estimate + (1.96*sqrt(e.population_variance)) + e.population_upper_confidence_limit + 0.0001))) /
           (a.area_sqkm / rm.range_area))) "PFS",
         rm.range_area "RA",
         a.area_sqkm "CALC_SQKM",
@@ -344,7 +344,7 @@ class ReportController < ApplicationController
           and e.analysis_year = a.analysis_year
         join surveytypes t on t.category = e.category
         join population_submissions on e.population_submission_id = population_submissions.id
-        join regional_range_table rm on e.country = rm.country AND 
+        join regional_range_table rm on e.country = rm.country AND
           e.analysis_name = rm.analysis_name AND e.analysis_year = rm.analysis_year
         where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
         and e.country=?
@@ -614,6 +614,93 @@ class ReportController < ApplicationController
     @filter = params[:filter]
     @bibliography = execute <<-SQL, @filter
       select input_zone_id, short_citation, citation from estimate_factors join new_strata on analysis_name=? and input_zone_id=new_stratum;
+    SQL
+  end
+
+  def appendix_1
+    @filter = params[:filter]
+    @year = params[:year]
+    @table = execute <<-SQL
+    SQL
+  end
+
+  def appendix_2
+    @filter = params[:filter]
+    @table = execute <<-SQL, @filter, @filter
+      SELECT
+        analysis_year,
+        region,
+        country,
+        replacement_name,
+        estimate_type,
+        estimate,
+        confidence
+      FROM
+      (
+        SELECT
+          s0.analysis_year,
+          s0.region,
+          s0.country,
+          s0.replacement_name,
+          s0.estimate_type,
+          sum(s0.estimate) estimate,
+          ROUND(1.96*sqrt(sum(s0.confidence))) confidence
+        FROM (
+          SELECT DISTINCT
+            e.analysis_year,
+            l.region,
+            l.country,
+            l.replacement_name,
+            l.estimate_type,
+            e."ESTIMATE" estimate,
+            e."POPULATION_VARIANCE" confidence
+          FROM analyses a
+          JOIN changes_expanded c ON a.analysis_name = c.analysis_name
+          JOIN estimate_factors_analyses_reasons_for_add e ON c.new_stratum = e.input_zone_id
+          JOIN estimate_locator l ON l.input_zone_id = e.input_zone_id
+          WHERE
+            a.analysis_name = ?
+            AND e.analysis_year = a.analysis_year
+            AND c.adjusted_reason_change = 'RS'
+        ) s0
+        GROUP BY s0.region, s0.country, s0.replacement_name, s0.estimate_type, s0.analysis_year
+
+        UNION SELECT
+          s2.analysis_year,
+          s2.region,
+          s2.country,
+          s2.replacement_name,
+          s2.estimate_type,
+          sum(s2.estimate) estimate,
+          ROUND(1.96*sqrt(sum(s2.confidence))) confidence
+        FROM (
+          SELECT DISTINCT
+            e.analysis_year,
+            l.region,
+            l.country,
+            l.replacement_name,
+            l.estimate_type,
+            e."ESTIMATE" estimate,
+            e."POPULATION_VARIANCE" confidence
+          FROM analyses a
+          JOIN changes_expanded c ON a.analysis_name = c.analysis_name
+          JOIN estimate_factors_analyses_reasons_for_add e ON c.replaced_stratum = e.input_zone_id
+          JOIN estimate_locator l ON l.input_zone_id = e.input_zone_id
+          WHERE
+            a.analysis_name = ?
+            AND e.analysis_year = a.comparison_year
+            AND c.adjusted_reason_change = 'RS'
+        ) s2
+        GROUP BY s2.region, s2.country, s2.replacement_name, s2.estimate_type, s2.analysis_year
+      ) s1
+      ORDER BY region, country, replacement_name, analysis_year
+    SQL
+  end
+
+  def general_statistics
+    @filter = params[:filter]
+    @year = params[:year]
+    @table = execute <<-SQL
     SQL
   end
 
