@@ -1,9 +1,5 @@
 class AnalysesController < ApplicationController
 
-  include GeoRuby::SimpleFeatures
-  require 'geo_ruby/shp'
-  require 'geo_ruby/ewk'
-
   before_filter :authenticate_superuser!
 
   # GET /analyses
@@ -143,69 +139,24 @@ class AnalysesController < ApplicationController
       analysis=? and ayear=?
     SQL
 
-    input_filenames = ["export.shp", "export.dbf", "export.shx", "export.cpg"]
-    input_filenames.each do |filename|
-      File.delete(filename) rescue nil
-    end
-
-    puts "Adding features to shapefile"
-    fn = "export.shp"
-    shpfile = GeoRuby::Shp4r::ShpFile.create(fn, GeoRuby::Shp4r::ShpType::POLYGON, [
-        GeoRuby::Shp4r::Dbf::Field.new('id', 'N', 10),
-        GeoRuby::Shp4r::Dbf::Field.new('analysis', 'C', 30),
-        GeoRuby::Shp4r::Dbf::Field.new('ayear', 'N', 10),
-        GeoRuby::Shp4r::Dbf::Field.new('region', 'C', 30),
-        GeoRuby::Shp4r::Dbf::Field.new('country', 'C', 30),
-        GeoRuby::Shp4r::Dbf::Field.new('inpzone', 'C', 60),
-        GeoRuby::Shp4r::Dbf::Field.new('site', 'C', 60),
-        GeoRuby::Shp4r::Dbf::Field.new('stratum', 'C', 60),
-        GeoRuby::Shp4r::Dbf::Field.new('strcode', 'C', 10),
-        GeoRuby::Shp4r::Dbf::Field.new('est_type', 'C', 15),
-        GeoRuby::Shp4r::Dbf::Field.new('category', 'C', 4),
-        GeoRuby::Shp4r::Dbf::Field.new('year', 'C', 6),
-        GeoRuby::Shp4r::Dbf::Field.new('rc', 'C', 4),
-        GeoRuby::Shp4r::Dbf::Field.new('full_cit', 'C', 512),
-        GeoRuby::Shp4r::Dbf::Field.new('short_cit', 'C', 254),
-        GeoRuby::Shp4r::Dbf::Field.new('estimate', 'N', 10, 3),
-        GeoRuby::Shp4r::Dbf::Field.new('variance', 'N', 10, 3),
-        GeoRuby::Shp4r::Dbf::Field.new('std_err', 'N', 10, 3),
-        GeoRuby::Shp4r::Dbf::Field.new('ci', 'N', 10, 3),
-        GeoRuby::Shp4r::Dbf::Field.new('lcl', 'N', 10, 3),
-        GeoRuby::Shp4r::Dbf::Field.new('ucl', 'N', 10, 3),
-        GeoRuby::Shp4r::Dbf::Field.new('lcl95', 'N', 10, 3),
-        GeoRuby::Shp4r::Dbf::Field.new('quality', 'N', 10, 3),
-        GeoRuby::Shp4r::Dbf::Field.new('seen', 'N', 10, 3),
-        GeoRuby::Shp4r::Dbf::Field.new('area_rep', 'N', 10, 3),
-        GeoRuby::Shp4r::Dbf::Field.new('area_calc', 'N', 10, 3)
-      ])
-    shpfile.transaction do |tr|
-      @export.each do |row|
-        puts "Adding feature #{row['sgid']} to shapefile"
-        mp = MultiPolygon.from_ewkb(SurveyGeometry.find(row['sgid']).geom.as_binary)
-        properties = row.select { |key, value| !key.match(/sgid.*/) }
-        p properties
-        record = GeoRuby::Shp4r::ShpRecord.new(mp, properties)
-        tr.add(record)
+    features = []
+    @export.each do |row|
+      geom = RGeo::GeoJSON.encode(SurveyGeometry.find(row['sgid']).geom)
+      if geom
+        feature = {
+          "type" => "Feature",
+          "geometry" => geom
+        }
+        feature['properties'] = row.select { |key, value| !key.match(/sgid.*/) }
+        features << feature
       end
     end
-
-    zipfile_name = 'export-analysis-' + params[:analysis] + '-' + params[:year] + '.zip'
-
-    File.write('export.cpg', 'UTF-8')
-    
-    File.delete(zipfile_name) rescue nil
-
-    puts "Creating Zip"
-    Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
-      input_filenames.each do |filename|
-        zipfile.add(filename, filename)
-      end
-    end
-    input_filenames.each do |filename|
-      File.delete(filename)
-    end
-
-    send_file zipfile_name, :type => "application/octet-stream", :x_sendfile => true
+    feature_collection = {
+      'type' => 'FeatureCollection',
+      'features' => features
+    }
+    fn = 'export-analysis-' + params[:analysis] + '-' + params[:year] + '.geojson'
+    send_data feature_collection.to_json, filename: fn, type: :json
   end
 
 end
