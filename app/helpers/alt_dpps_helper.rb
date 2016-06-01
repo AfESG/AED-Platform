@@ -119,121 +119,46 @@ module AltDppsHelper
   end
 
   def alt_dpps_causes_of_change scope, year, filter=nil
-    alt_dpps_causes_of_change_query scope, year, filter: filter, group: true
+    sql = { analysis_name: '' }
+    apply_table_for_scope scope, sql
+    if filter
+      sql[:analysis_name] = "AND e.analysis_name = '#{filter}'"
+    end
+    <<-SQL
+      SELECT
+        cc.name AS "CAUSE",
+        cc.display_order AS "SEQUENCE",
+        e.estimate AS "ESTIMATE",
+        e.confidence AS "CONFIDENCE",
+        e.guess_min AS "GUESS_MIN",
+        e.guess_max AS "GUESS_MAX"
+      FROM add_sums_#{sql[:table]}_category_reason e
+      JOIN cause_of_changes cc ON cc.code = e.reason_change
+      WHERE
+        e.analysis_year = #{year}
+        #{sql[:analysis_name]}
+        AND #{scope}
+      ORDER BY cc.display_order
+    SQL
   end
 
   def alt_dpps_causes_of_change_sums scope, year, filter=nil
-    alt_dpps_causes_of_change_sums_query scope, year, filter:filter
-  end
-
-  def alt_dpps_causes_of_change_query scope, year, opts
-    sql = { group_cols: '', group_by: '', analysis_name: '', order_by: '' }
-    if opts[:group]
-      sql[:group_cols] = 'cc.name AS "CAUSE", cc.display_order AS "SEQUENCE",'
-      sql[:group_by] = 'GROUP BY cc.name, cc.display_order'
-      sql[:order_by] = 'ORDER BY cc.display_order'
-    end
-    if opts[:filter]
-      sql[:analysis_name] = "AND i.analysis_name = '#{opts[:filter]}'"
-    end
-    <<-SQL
-      SELECT
-        #{sql[:group_cols]}
-        sum(estimate) as "ESTIMATE",
-        1.96*sqrt(sum(population_variance)) as "CONFIDENCE",
-        sum(guess_min) as "GUESS_MIN",
-        sum(guess_max) as "GUESS_MAX"
-      FROM add_sums_country_category_reason i
-      JOIN cause_of_changes cc ON cc.code = i.reason_change
-      WHERE
-        (i.reason_change IS NOT NULL AND i.reason_change <> '-')
-        AND i.analysis_year = #{year}
-        #{sql[:analysis_name]}
-        AND #{scope}
-      #{sql[:group_by]}
-      #{sql[:order_by]}
-    SQL
-  end
-
-  def alt_dpps_causes_of_change_sums_query scope, year, opts
     sql = { analysis_name: '' }
-    if opts[:filter]
-      sql[:analysis_name] = "AND t.analysis_name = '#{opts[:filter]}'"
-    end
-    if scope.include? 'country'
-      sql[:table] = 'country'
-    elsif scope.include? 'region'
-      sql[:table] = 'region'
-    else
-      sql[:table] = 'continent'
+    apply_table_for_scope scope, sql
+    if filter
+      sql[:analysis_name] = "AND e.analysis_name = '#{filter}'"
     end
     <<-SQL
       SELECT
-        estimate as "ESTIMATE",
-        confidence as "CONFIDENCE",
-        guess_min as "GUESS_MIN",
-        guess_max as "GUESS_MAX"
-      FROM add_totals_#{sql[:table]}_category_reason t
+        e.estimate AS "ESTIMATE",
+        e.confidence AS "CONFIDENCE",
+        e.guess_min AS "GUESS_MIN",
+        e.guess_max AS "GUESS_MAX"
+      FROM add_totals_#{sql[:table]}_category_reason e
       WHERE
-        t.analysis_year = #{year}
+        e.analysis_year = #{year}
         #{sql[:analysis_name]}
         AND #{scope}
-    SQL
-  end
-
-
-  def old_alt_dpps_causes_of_change_query scope, year, opts
-    sql = { group_cols: '', group_by: '', analysis_name: '', order_by: '' }
-    if opts[:group]
-      sql[:group_cols] = 'cc.name AS "CAUSE", cc.display_order AS "SEQUENCE",'
-      sql[:group_by] = 'GROUP BY cc.name, cc.display_order'
-      sql[:order_by] = 'ORDER BY cc.display_order'
-    end
-    if opts[:filter]
-      sql[:analysis_name] = "AND a.analysis_name = '#{opts[:filter]}'"
-    end
-    <<-SQL
-      SELECT
-        #{sql[:group_cols]}
-        sum(i.new_be - i.old_be) as "ESTIMATE",
-        sum(i.new_pv - i.old_pv) as "CONFIDENCE",
-        sum(i.new_lcl - i.old_lcl) as "GUESS_MIN",
-        sum(i.new_ucl - i.old_ucl) as "GUESS_MAX"
-      FROM (
-        SELECT
-          old.input_zone_id as i_replaced_stratum,
-          CASE
-            WHEN new.reason_change = '-' AND new.age > 10 THEN 'DD'
-            ELSE new.reason_change
-          END as i_reason_change,
-          COALESCE(old.best_estimate, 0) as old_be,
-          COALESCE(1.96*sqrt(old.population_variance), 0) as old_pv,
-          COALESCE(old.population_lower_confidence_limit, 0) as old_lcl,
-          COALESCE(old.population_upper_confidence_limit, 0) as old_ucl,
-          sum(new.best_estimate) as new_be,
-          sum(1.96*sqrt(new.population_variance)) as new_pv,
-          sum(new.population_lower_confidence_limit) as new_lcl,
-          sum(new.population_upper_confidence_limit) as new_ucl
-        FROM analyses a
-        JOIN changes ch ON ch.analysis_name = a.analysis_name
-        LEFT JOIN estimate_factors_analyses_categorized_for_add new ON
-          new.analysis_name = a.analysis_name AND new.analysis_year = a.analysis_year AND 
-          new.input_zone_id = ANY((regexp_split_to_array(ch.new_strata::text, ','::text)))
-        LEFT JOIN estimate_factors_analyses_categorized_for_add old ON 
-          old.analysis_name = a.analysis_name AND old.analysis_year = a.comparison_year AND 
-          old.input_zone_id = ANY((regexp_split_to_array(ch.replaced_strata::text, ','::text)))
-        JOIN countries c ON new.country = c.name
-        JOIN regions r ON c.region_id = r.id
-        WHERE
-          (ch.reason_change IS NOT NULL AND ch.reason_change <> '-')
-          AND a.analysis_year = #{year}
-          #{sql[:analysis_name]}
-          AND #{scope}
-        GROUP BY i_replaced_stratum, i_reason_change, old_be, old_pv, old_lcl, old_ucl
-      ) i
-      JOIN cause_of_changes cc ON cc.code = i.i_reason_change
-      #{sql[:group_by]}
-      #{sql[:order_by]}
     SQL
   end
 
@@ -319,91 +244,128 @@ module AltDppsHelper
     SQL
   end
 
+  def alt_dpps_country_stats country, year, filter=nil
+    analysis_name = filter.nil?? '' : "AND e.analysis_name = '#{filter}'"
+    <<-SQL
+      SELECT
+        el.sort_key,
+        el.population,
+        e.site_name,
+        e.stratum_name,
+        e.replacement_name,
+        e.best_population_variance as population_variance,
+        CASE WHEN e.reason_change = 'NC' THEN '-' ELSE e.reason_change END AS "ReasonForChange",
+        e.population_submission_id,
+        e.input_zone_id method_and_quality,
+        e.category "CATEGORY",
+        e.completion_year "CYEAR",
+        e.best_estimate "ESTIMATE",
+        e.population_lower_confidence_limit "GUESS_MIN",
+        e.population_upper_confidence_limit "GUESS_MAX",
+        CASE 
+          WHEN e.population_upper_confidence_limit IS NOT NULL THEN
+            CASE WHEN e.estimate_type='O' THEN
+              to_char(e.population_upper_confidence_limit-e.population_estimate,'999,999') || '*'
+            ELSE
+              to_char(e.population_upper_confidence_limit-e.population_estimate,'999,999')
+            END
+          WHEN e.population_confidence_interval IS NOT NULL THEN
+            to_char(ROUND(e.population_confidence_interval),'999,999')
+          ELSE ''
+        END "CL95",
+        e.short_citation "REFERENCE",
+        round(log((1+(e.best_estimate / (e.best_estimate + (1.96*sqrt(e.best_population_variance)) + e.population_upper_confidence_limit + 0.0001))) / 
+          (a.area_sqkm / rm.range_area))) "PFS",
+        rm.range_area "RA",
+        a.area_sqkm "CALC_SQKM",
+        e.stratum_area "AREA_SQKM",
+        CASE WHEN longitude<0 THEN
+          to_char(abs(longitude),'999D9')||'W'
+        WHEN longitude=0 THEN
+          '0.0'
+        ELSE
+          to_char(abs(longitude),'999D9')||'E'
+        END "LON",
+        CASE WHEN latitude<0 THEN
+          to_char(abs(latitude),'999D9')||'S'
+        WHEN latitude=0 THEN
+          '0.0'
+        ELSE
+          to_char(abs(latitude),'999D9')||'N'
+        END "LAT"
+      FROM estimate_locator el
+        join estimate_factors_analyses_categorized_for_add e on e.input_zone_id = el.input_zone_id
+          and e.analysis_name = el.analysis_name
+          and e.analysis_year = el.analysis_year
+        join estimate_locator_areas a on e.input_zone_id = a.input_zone_id
+          and e.analysis_name = a.analysis_name
+          and e.analysis_year = a.analysis_year
+        join surveytypes t on t.category = e.category
+        join population_submissions on e.population_submission_id = population_submissions.id
+        join regional_range_table rm on e.country = rm.country AND 
+          e.analysis_name = rm.analysis_name AND e.analysis_year = rm.analysis_year
+      WHERE
+        e.analysis_year = #{year}
+        #{analysis_name}
+        AND e.country = '#{country}'
+      ORDER BY el.sort_key, e.site_name, e.stratum_name
+    SQL
+  end
+
+  def alt_dpps_region_stats_sums scope, year, filter=nil
+    analysis_name = filter.nil?? '' : "AND x.analysis_name = '#{filter}'"
+    <<-SQL
+      SELECT
+        x."ESTIMATE",
+        x."CONFIDENCE",
+        x."GUESS_MIN",
+        x."GUESS_MAX",
+        x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX") as "PF",
+        rrt.range_assessed / rrt.range_area as "ARF",
+        (x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX")) * (rrt.range_assessed / rrt.range_area) AS "IQI",
+        (rrt.range_area / cont.range_area) AS "CRF",
+        log((1+(x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX")) * (rrt.range_assessed / rrt.range_area)) / (rrt.range_area / cont.range_area)) AS "PFS",
+        rrt.range_area as "RANGE_AREA",
+        rrt.range_area / rrt.range_area * 100 AS "PERCENT_OF_RANGE_COVERED",
+        rrt.range_assessed / rrt.range_area * 100 as "PERCENT_OF_RANGE_ASSESSED"
+      FROM estimate_factors_analyses_categorized_totals_region_for_add x
+      JOIN regional_range_totals rrt ON rrt.region = x.region AND rrt.analysis_name = x.analysis_name AND rrt.analysis_year = x.analysis_year
+      JOIN continental_range_totals cont ON cont.continent = 'Africa' AND cont.analysis_name = rrt.analysis_name AND cont.analysis_year = rrt.analysis_year
+      WHERE
+        x.analysis_year = #{year}
+        #{analysis_name}
+        AND x.#{scope}
+      ORDER BY x.region
+    SQL
+  end
+
   def alt_dpps_region_stats scope, year, filter=nil
     analysis_name = filter.nil?? '' : "AND x.analysis_name = '#{filter}'"
     <<-SQL
       SELECT
-        "ESTIMATE",
-        "CONFIDENCE",
-        "GUESS_MIN",
-        "GUESS_MAX",
-        "ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX") as "PF",
-        "ASSESSED_RANGE" / "RANGE_AREA" as "ARF",
-        ("ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX")) * ("ASSESSED_RANGE" / "RANGE_AREA") AS "IQI",
-        ("RANGE_AREA" / cont.range_area) AS "CRF",
-        log((1+("ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX")) * ("ASSESSED_RANGE" / "RANGE_AREA")) / ("RANGE_AREA" / cont.range_area)) AS "PFS",
-        "RANGE_AREA",
-        "RANGE_AREA" / rrt.range_area * 100 AS "PERCENT_OF_RANGE_COVERED",
-        "ASSESSED_RANGE" / "RANGE_AREA" * 100 as "PERCENT_OF_RANGE_ASSESSED"
-      FROM (
-        SELECT
-          x.analysis_name,
-          x.analysis_year,
-          x.region,
-          sum(x."ESTIMATE") as "ESTIMATE",
-          1.96*sqrt(sum(x."POPULATION_VARIANCE")) as "CONFIDENCE",
-          sum(x."GUESS_MIN") as "GUESS_MIN",
-          sum(x."GUESS_MAX") as "GUESS_MAX",
-          sum(distinct "ASSESSED_RANGE") AS "ASSESSED_RANGE",
-          sum(distinct "RANGE_AREA") AS "RANGE_AREA"
-        FROM estimate_factors_analyses_categorized_totals_for_add x
-        JOIN country_range_totals crt ON crt.country = x.country AND crt.analysis_year = x.analysis_year AND
-          x.analysis_name = crt.analysis_name AND x.analysis_year = crt.analysis_year
-        WHERE
-          x.analysis_year = #{year}
-          #{analysis_name}
-        GROUP BY x.analysis_name, x.analysis_year, x.region
-      ) p
-      JOIN regional_range_totals rrt ON rrt.region = p.region AND rrt.analysis_name = p.analysis_name AND rrt.analysis_year = p.analysis_year
-      JOIN continental_range_totals cont ON continent = 'Africa' AND cont.analysis_name = rrt.analysis_name AND cont.analysis_year = rrt.analysis_year
+        x.country,
+        x."ESTIMATE",
+        x."CONFIDENCE",
+        x."GUESS_MIN",
+        x."GUESS_MAX",
+        x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX") as "PF",
+        crt."ASSESSED_RANGE" / crt."RANGE_AREA" as "ARF",
+        (x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX")) * (crt."ASSESSED_RANGE" / crt."RANGE_AREA") AS "IQI",
+        (crt."RANGE_AREA" / cont.range_area) AS "CRF",
+        log((1+(x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX")) * (crt."ASSESSED_RANGE" / crt."RANGE_AREA")) / (crt."RANGE_AREA" / cont.range_area)) AS "PFS",
+        crt."ASSESSED_RANGE",
+        crt."RANGE_AREA",
+        crt."RANGE_AREA" / rrt.range_area * 100 AS "PERCENT_OF_RANGE_COVERED",
+        crt."ASSESSED_RANGE" / crt."RANGE_AREA" * 100 as "PERCENT_OF_RANGE_ASSESSED"
+      FROM estimate_factors_analyses_categorized_totals_country_for_add x
+      JOIN country_range_totals crt ON crt.country = x.country AND crt.analysis_year = x.analysis_year AND crt.analysis_name = x.analysis_name
+      JOIN regional_range_totals rrt ON rrt.region = crt.region AND rrt.analysis_name = crt.analysis_name AND rrt.analysis_year = crt.analysis_year
+      JOIN continental_range_totals cont ON cont.continent = 'Africa' AND cont.analysis_name = rrt.analysis_name AND cont.analysis_year = rrt.analysis_year
       WHERE
-        p.#{scope}
-      ORDER BY p.region
-    SQL
-  end
-
-  def alt_dpps_country_stats scope, year, filter=nil
-    analysis_name = filter.nil?? '' : "AND x.analysis_name = '#{filter}'"
-    <<-SQL
-      SELECT
-        p.country,
-        "ESTIMATE",
-        "CONFIDENCE",
-        "GUESS_MIN",
-        "GUESS_MAX",
-        "ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX") as "PF",
-        "ASSESSED_RANGE" / "RANGE_AREA" as "ARF",
-        ("ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX")) * ("ASSESSED_RANGE" / "RANGE_AREA") AS "IQI",
-        ("RANGE_AREA" / cont.range_area) AS "CRF",
-        log((1+("ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX")) * ("ASSESSED_RANGE" / "RANGE_AREA")) / ("RANGE_AREA" / cont.range_area)) AS "PFS",
-        "ASSESSED_RANGE",
-        "RANGE_AREA",
-        "RANGE_AREA" / rrt.range_area * 100 AS "PERCENT_OF_RANGE_COVERED",
-        "ASSESSED_RANGE" / "RANGE_AREA" * 100 as "PERCENT_OF_RANGE_ASSESSED"
-      FROM (
-        SELECT
-          x.analysis_name,
-          x.analysis_year,
-          x.country,
-          x.region,
-          sum(x."ESTIMATE") as "ESTIMATE",
-          1.96*sqrt(sum(x."POPULATION_VARIANCE")) as "CONFIDENCE",
-          sum(x."GUESS_MIN") as "GUESS_MIN",
-          sum(x."GUESS_MAX") as "GUESS_MAX",
-          "ASSESSED_RANGE",
-          "RANGE_AREA"
-        FROM estimate_factors_analyses_categorized_totals_for_add x
-        JOIN country_range_totals crt ON crt.country = x.country AND crt.analysis_year = x.analysis_year AND crt.analysis_name = x.analysis_name
-        WHERE
-          x.analysis_year = #{year}
-          #{analysis_name}
-        GROUP BY x.analysis_name, x.analysis_year, x.country, x.region, "RANGE_AREA", "ASSESSED_RANGE"
-      ) p
-      JOIN regional_range_totals rrt ON rrt.region = p.region AND rrt.analysis_name = p.analysis_name AND rrt.analysis_year = p.analysis_year
-      JOIN continental_range_totals cont ON continent = 'Africa' AND cont.analysis_name = rrt.analysis_name AND cont.analysis_year = rrt.analysis_year
-      WHERE
-        p.#{scope}
-      ORDER BY country
+        x.analysis_year = #{year}
+        #{analysis_name}
+        AND x.#{scope}
+      ORDER BY x.country
     SQL
   end
 
@@ -411,40 +373,28 @@ module AltDppsHelper
     analysis_name = filter.nil?? '' : "AND x.analysis_name = '#{filter}'"
     <<-SQL
       SELECT
-        p.region,
-        "ESTIMATE",
-        "CONFIDENCE",
-        "GUESS_MIN",
-        "GUESS_MAX",
-        "ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX") as "PF",
-        "ASSESSED_RANGE" / "RANGE_AREA" as "ARF",
-        ("ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX")) * ("ASSESSED_RANGE" / "RANGE_AREA") AS "IQI",
-        ("RANGE_AREA" / cont.range_area) AS "CRF",
-        log((1+("ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX")) * ("ASSESSED_RANGE" / "RANGE_AREA")) / ("RANGE_AREA" / cont.range_area)) AS "PFS",
-        "ASSESSED_RANGE",
-        "RANGE_AREA",
-        "RANGE_AREA" / cont.range_area * 100 AS "PERCENT_OF_RANGE_COVERED",
-        "ASSESSED_RANGE" / "RANGE_AREA" * 100 as "PERCENT_OF_RANGE_ASSESSED"
-      FROM (
-        SELECT
-          x.analysis_name,
-          x.analysis_year,
-          x.region,
-          sum(x."ESTIMATE") as "ESTIMATE",
-          1.96*sqrt(sum(x."POPULATION_VARIANCE")) AS "CONFIDENCE",
-          sum(x."GUESS_MIN") as "GUESS_MIN",
-          sum(x."GUESS_MAX") as "GUESS_MAX",
-          range_assessed as "ASSESSED_RANGE",
-          range_area as "RANGE_AREA"
-        FROM estimate_factors_analyses_categorized_totals_for_add x
-        JOIN regional_range_totals rt ON x.analysis_name = rt.analysis_name AND x.analysis_year = rt.analysis_year AND rt.region = x.region
-        WHERE
-          x.analysis_year = #{year}
-          #{analysis_name}
-        GROUP BY x.analysis_name, x.analysis_year, x.region, "RANGE_AREA", "ASSESSED_RANGE"
-      ) p
-      JOIN continental_range_totals cont ON continent = 'Africa' AND p.analysis_name = cont.analysis_name AND p.analysis_year = cont.analysis_year
-      ORDER BY region
+        x.region,
+        x."ESTIMATE",
+        x."CONFIDENCE",
+        x."GUESS_MIN",
+        x."GUESS_MAX",
+        x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX") as "PF",
+        rt.range_assessed / rt.range_area as "ARF",
+        (x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX")) * (rt.range_assessed / rt.range_area) AS "IQI",
+        (rt.range_area / cont.range_area) AS "CRF",
+        log((1+(x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX")) * (rt.range_assessed / rt.range_area)) / (rt.range_area / cont.range_area)) AS "PFS",
+        rt.range_assessed as "ASSESSED_RANGE",
+        rt.range_area as "RANGE_AREA",
+        rt.range_area / cont.range_area * 100 AS "PERCENT_OF_RANGE_COVERED",
+        rt.range_assessed / rt.range_area * 100 as "PERCENT_OF_RANGE_ASSESSED"
+      FROM estimate_factors_analyses_categorized_totals_region_for_add x
+      JOIN regional_range_totals rt ON x.analysis_name = rt.analysis_name AND x.analysis_year = rt.analysis_year AND rt.region = x.region
+      JOIN continental_range_totals cont ON cont.continent = 'Africa' AND rt.analysis_name = cont.analysis_name AND rt.analysis_year = cont.analysis_year
+      WHERE
+        x.analysis_year = #{year}
+        #{analysis_name}
+      --GROUP BY x.analysis_name, x.analysis_year, x.region, rt.range_area 
+      ORDER BY x.region
     SQL
   end
 
@@ -452,73 +402,63 @@ module AltDppsHelper
     analysis_name = filter.nil?? '' : "AND x.analysis_name = '#{filter}'"
     <<-SQL
       SELECT
-        "ESTIMATE",
-        "CONFIDENCE",
-        "GUESS_MIN",
-        "GUESS_MAX",
-        "ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX") as "PF",
-        "ASSESSED_RANGE" / "RANGE_AREA" as "ARF",
-        ("ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX")) * ("ASSESSED_RANGE" / "RANGE_AREA") AS "IQI",
-        ("RANGE_AREA" / cont.range_area) AS "CRF",
-        log((1+("ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX")) * ("ASSESSED_RANGE" / "RANGE_AREA")) / ("RANGE_AREA" / cont.range_area)) AS "PFS",
-        "ASSESSED_RANGE",
-        "RANGE_AREA",
-        "RANGE_AREA" / cont.range_area * 100 AS "PERCENT_OF_RANGE_COVERED",
-        "ASSESSED_RANGE" / "RANGE_AREA" * 100 as "PERCENT_OF_RANGE_ASSESSED"
-      FROM (
-        SELECT
-          x.analysis_name,
-          x.analysis_year,
-          sum(x."ESTIMATE") as "ESTIMATE",
-          1.96*sqrt(sum(x."POPULATION_VARIANCE")) AS "CONFIDENCE",
-          sum(x."GUESS_MIN") as "GUESS_MIN",
-          sum(x."GUESS_MAX") as "GUESS_MAX",
-          sum(distinct range_assessed) as "ASSESSED_RANGE",
-          sum(distinct range_area) as "RANGE_AREA"
-        FROM estimate_factors_analyses_categorized_totals_for_add x
-        JOIN regional_range_totals rt ON rt.region = x.region AND rt.analysis_name = x.analysis_name AND rt.analysis_year = x.analysis_year
-        WHERE
-          x.analysis_year = #{year}
-          #{analysis_name}
-        GROUP BY x.analysis_name, x.analysis_year
-      ) p
-      JOIN continental_range_totals cont ON continent = 'Africa' AND cont.analysis_name = p.analysis_name AND cont.analysis_year = p.analysis_year
+        x."ESTIMATE",
+        x."CONFIDENCE",
+        x."GUESS_MIN",
+        x."GUESS_MAX",
+        x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX") as "PF",
+        cont.range_assessed / cont.range_area as "ARF",
+        ("ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX")) * (cont.range_assessed / cont.range_area) AS "IQI",
+        (cont.range_area / cont.range_area) AS "CRF",
+        log((1+("ESTIMATE" / ("ESTIMATE" + "CONFIDENCE" + "GUESS_MAX")) * (cont.range_assessed / cont.range_area)) / (cont.range_area / cont.range_area)) AS "PFS",
+        cont.range_assessed as "ASSESSED_RANGE",
+        cont.range_area as "RANGE_AREA",
+        cont.range_area / cont.range_area * 100 AS "PERCENT_OF_RANGE_COVERED",
+        cont.range_assessed / cont.range_area * 100 as "PERCENT_OF_RANGE_ASSESSED"
+      FROM estimate_factors_analyses_categorized_totals_continent_for_add x
+      JOIN continental_range_totals cont ON x.continent = cont.continent AND cont.analysis_name = x.analysis_name AND cont.analysis_year = x.analysis_year
+      WHERE x.analysis_year = #{year}
+        #{analysis_name}
+        AND x.continent = 'Africa'
     SQL
   end
 
   def alt_dpps scope, year, filter=nil
+    sql = {}
+    apply_table_for_scope scope, sql
     analysis_name = filter.nil?? '' : "AND s.analysis_name = '#{filter}'"
     <<-SQL
       SELECT
-      "CATEGORY",
-      "SURVEYTYPE",
-      st.display_order,
-      sum("ESTIMATE") AS "ESTIMATE",
-      1.96*sqrt(sum("POPULATION_VARIANCE")) AS "CONFIDENCE",
-      sum("GUESS_MIN") AS "GUESS_MIN",
-      sum("GUESS_MAX") AS "GUESS_MAX"
+        "CATEGORY",
+        "SURVEYTYPE",
+        st.display_order,
+        "ESTIMATE",
+        "CONFIDENCE",
+        "GUESS_MIN",
+        "GUESS_MAX"
       FROM
-        estimate_factors_analyses_categorized_totals_for_add s
-      JOIN surveytypes st ON st.category = "CATEGORY"
+        estimate_factors_analyses_categorized_sums_#{sql[:table]}_for_add s
+      JOIN surveytypes st ON st.category = s."CATEGORY"
       WHERE
         s.analysis_year = #{year}
         #{analysis_name}
         AND #{scope}
-      GROUP BY "CATEGORY", "SURVEYTYPE", display_order
       ORDER BY st.display_order
     SQL
   end
 
   def alt_dpps_totals scope, year, filter=nil
+    sql = {}
+    apply_table_for_scope scope, sql
     analysis_name = filter.nil?? '' : "AND s.analysis_name = '#{filter}'"
     <<-SQL
       SELECT
-        SUM("ESTIMATE") AS "ESTIMATE",
-        1.96*sqrt(sum("POPULATION_VARIANCE")) AS "CONFIDENCE",
-        SUM("GUESS_MIN") AS "GUESS_MIN",
-        SUM("GUESS_MAX") AS "GUESS_MAX"
+        "ESTIMATE",
+        "CONFIDENCE",
+        "GUESS_MIN",
+        "GUESS_MAX"
       FROM
-        estimate_factors_analyses_categorized_totals_for_add s
+        estimate_factors_analyses_categorized_totals_#{sql[:table]}_for_add s
       WHERE
         s.analysis_year = #{year}
         #{analysis_name}
@@ -526,37 +466,16 @@ module AltDppsHelper
     SQL
   end
 
-  def old_alt_dpps scope, year
-    <<-SQL
-      SELECT
-        CASE
-          WHEN e.completion_year > #{year - 10} THEN e.category
-          ELSE 'F'
-        END "CATEGORY",
-        CASE
-          WHEN e.completion_year > #{year - 10} THEN surveytype
-          ELSE 'Degraded Data'
-        END "SURVEYTYPE",
-        sum(e.actually_seen) as seen,
-        sum(e.population_estimate) as estimate,
-        sum(e.population_lower_confidence_limit) as min,
-        sum(e.population_upper_confidence_limit) as max,
-        1.96*sqrt(sum(e.population_variance)) as confidence,
-        sum(e.population_variance) as var,
-        sum(e.stratum_area) as area
-      FROM
-        estimate_factors_analyses_categorized e
-      JOIN population_submissions ps ON ps.id = e.population_submission_id
-      JOIN submissions s ON ps.submission_id = s.id
-      JOIN countries c ON s.country_id = c.id
-      JOIN regions r ON c.region_id = r.id
-      JOIN surveytypes st ON e.category = st.category
-      WHERE
-        e.analysis_year = #{year}
-        AND #{scope}
-      GROUP BY "CATEGORY", "SURVEYTYPE"
-      ORDER BY "CATEGORY"
-    SQL
+  private
+
+  def apply_table_for_scope scope, sql
+    if scope.include? 'country'
+      sql[:table] = 'country'
+    elsif scope.include? 'region'
+      sql[:table] = 'region'
+    else
+      sql[:table] = 'continent'
+    end
   end
 
 end

@@ -17,27 +17,6 @@ ActiveRecord::Schema.define(version: 20160531135031) do
   enable_extension "plpgsql"
   enable_extension "postgis"
 
-  create_table "2014_range_map_edit_for_2016", primary_key: "gid", force: :cascade do |t|
-    t.integer  "range",      limit: 2
-    t.string   "rangequali", limit: 10
-    t.string   "ccode",      limit: 2
-    t.string   "cntryname",  limit: 30
-    t.integer  "area_sqkm"
-    t.integer  "refid"
-    t.string   "datastatus", limit: 2
-    t.string   "comments",   limit: 254
-    t.string   "rangetype",  limit: 20
-    t.string   "comments_1", limit: 254
-    t.string   "adjyear_1",  limit: 20
-    t.integer  "sourceyear", limit: 2
-    t.string   "publisyear", limit: 20
-    t.string   "2016",       limit: 20
-    t.string   "comnts2016", limit: 254
-    t.string   "ref_2016",   limit: 254
-    t.string   "chnges2016", limit: 254
-    t.geometry "geom",       limit: {:srid=>0, :type=>"multi_polygon"}
-  end
-
   create_table "2014_rangetypeupdates5_final", primary_key: "gid", force: :cascade do |t|
     t.integer  "range",      limit: 2
     t.string   "rangequali", limit: 10
@@ -73,17 +52,30 @@ ActiveRecord::Schema.define(version: 20160531135031) do
     t.geometry "survey_geometry",     limit: {:srid=>4326, :type=>"multi_polygon", :has_z=>true, :has_m=>true}
   end
 
+  create_table "add_sums_continent_category_reason", id: false, force: :cascade do |t|
+    t.string  "analysis_name"
+    t.integer "analysis_year"
+    t.string  "continent",                limit: 255
+    t.string  "reason_change"
+    t.decimal "estimate"
+    t.float   "confidence"
+    t.float   "guess_min"
+    t.float   "guess_max"
+    t.float   "meta_population_variance"
+  end
+
   create_table "add_sums_country_category_reason", id: false, force: :cascade do |t|
     t.string  "analysis_name"
     t.integer "analysis_year"
-    t.string  "continent",           limit: 255
-    t.string  "region",              limit: 255
-    t.string  "country",             limit: 255
+    t.string  "continent",                limit: 255
+    t.string  "region",                   limit: 255
+    t.string  "country",                  limit: 255
     t.string  "reason_change"
     t.decimal "estimate"
-    t.float   "population_variance"
-    t.decimal "guess_min"
-    t.decimal "guess_max"
+    t.float   "confidence"
+    t.float   "guess_min"
+    t.float   "guess_max"
+    t.float   "meta_population_variance"
   end
 
   create_table "add_sums_country_reason_raw", id: false, force: :cascade do |t|
@@ -99,14 +91,27 @@ ActiveRecord::Schema.define(version: 20160531135031) do
     t.decimal "guess_max"
   end
 
+  create_table "add_sums_region_category_reason", id: false, force: :cascade do |t|
+    t.string  "analysis_name"
+    t.integer "analysis_year"
+    t.string  "continent",                limit: 255
+    t.string  "region",                   limit: 255
+    t.string  "reason_change"
+    t.decimal "estimate"
+    t.float   "confidence"
+    t.float   "guess_min"
+    t.float   "guess_max"
+    t.float   "meta_population_variance"
+  end
+
   create_table "add_totals_continent_category_reason", id: false, force: :cascade do |t|
     t.string  "analysis_name"
     t.integer "analysis_year"
     t.string  "continent",     limit: 255
     t.decimal "estimate"
     t.float   "confidence"
-    t.decimal "guess_min"
-    t.decimal "guess_max"
+    t.float   "guess_min"
+    t.float   "guess_max"
   end
 
   create_table "add_totals_country_category_reason", id: false, force: :cascade do |t|
@@ -117,8 +122,8 @@ ActiveRecord::Schema.define(version: 20160531135031) do
     t.string  "country",       limit: 255
     t.decimal "estimate"
     t.float   "confidence"
-    t.decimal "guess_min"
-    t.decimal "guess_max"
+    t.float   "guess_min"
+    t.float   "guess_max"
   end
 
   create_table "add_totals_region_category_reason", id: false, force: :cascade do |t|
@@ -128,8 +133,8 @@ ActiveRecord::Schema.define(version: 20160531135031) do
     t.string  "region",        limit: 255
     t.decimal "estimate"
     t.float   "confidence"
-    t.decimal "guess_min"
-    t.decimal "guess_max"
+    t.float   "guess_min"
+    t.float   "guess_max"
   end
 
   create_table "analyses", force: :cascade do |t|
