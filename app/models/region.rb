@@ -25,8 +25,8 @@ class Region < ActiveRecord::Base
         summary_totals: execute(alt_dpps(*args)),
         summary_sums: execute(alt_dpps_totals(*args)),
         areas: execute(alt_dpps_region_area(*args)),
-        countries: execute(alt_dpps_country_stats(*args)),
-        country_sums: execute(alt_dpps_country_stats(*args)),
+        countries: execute(alt_dpps_region_stats(*args)),
+        country_sums: execute(alt_dpps_region_stats_sums(*args)),
         causes_of_change: execute(alt_dpps_causes_of_change(*args)),
         causes_of_change_sums: execute(alt_dpps_causes_of_change_sums(*args)),
         areas_by_reason: execute(alt_dpps_region_area_by_reason(*args))
