@@ -11,11 +11,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160531135031) do
+ActiveRecord::Schema.define(version: 20160604225027) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
+
+  create_table "2014_range_map_edit_for_2016", primary_key: "gid", force: :cascade do |t|
+    t.integer  "range",      limit: 2
+    t.string   "rangequali", limit: 10
+    t.string   "ccode",      limit: 2
+    t.string   "cntryname",  limit: 30
+    t.integer  "area_sqkm"
+    t.integer  "refid"
+    t.string   "datastatus", limit: 2
+    t.string   "comments",   limit: 254
+    t.string   "rangetype",  limit: 20
+    t.string   "comments_1", limit: 254
+    t.string   "adjyear_1",  limit: 20
+    t.integer  "sourceyear", limit: 2
+    t.string   "publisyear", limit: 20
+    t.string   "2016",       limit: 20
+    t.string   "comnts2016", limit: 254
+    t.string   "ref_2016",   limit: 254
+    t.string   "chnges2016", limit: 254
+    t.geometry "geom",       limit: {:srid=>0, :type=>"multi_polygon"}
+  end
 
   create_table "2014_rangetypeupdates5_final", primary_key: "gid", force: :cascade do |t|
     t.integer  "range",      limit: 2
@@ -275,6 +296,33 @@ ActiveRecord::Schema.define(version: 20160531135031) do
   end
 
   add_index "country", ["geom"], name: "si_country_geom", using: :gist
+
+  create_table "country_pa", id: false, force: :cascade do |t|
+    t.string   "country",        limit: 50
+    t.integer  "stated"
+    t.geometry "protected_area", limit: {:srid=>0, :type=>"geometry"}
+  end
+
+  create_table "country_pa_metrics", id: false, force: :cascade do |t|
+    t.string  "country",             limit: 50
+    t.integer "stated"
+    t.float   "protected_area_sqkm"
+    t.float   "percent_protected"
+  end
+
+  create_table "country_pa_range", id: false, force: :cascade do |t|
+    t.string   "country",              limit: 50
+    t.integer  "stated"
+    t.geometry "protected_area_range", limit: {:srid=>0, :type=>"geometry"}
+  end
+
+  create_table "country_pa_range_metrics", id: false, force: :cascade do |t|
+    t.string  "country",                   limit: 50
+    t.integer "stated"
+    t.float   "range_sqkm"
+    t.float   "protected_area_range_sqkm"
+    t.float   "percent_protected_range"
+  end
 
   create_table "country_range", id: false, force: :cascade do |t|
     t.string   "country",        limit: 50

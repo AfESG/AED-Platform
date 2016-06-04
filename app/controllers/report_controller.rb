@@ -580,8 +580,30 @@ def preview_country
 
   def general_statistics
     @filter = params[:filter]
-    @year = params[:year]
-    @table = execute <<-SQL
+    @table = execute <<-SQL, @filter
+      select
+        crt.region,
+        pam.country,
+        pam.stated country_area,
+        ROUND("RANGE_AREA") range_area,
+        ROUND(("RANGE_AREA"/pam.stated)*100) percent_range_area,
+        percent_protected protected_area_coverage,
+        cprm.percent_protected_range protected_range,
+        to_char((x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX")) * (crt."ASSESSED_RANGE" / crt."RANGE_AREA"),'990D99') iqi
+      from country_pa_metrics pam
+      join country_range_totals crt
+      on pam.country = crt.country
+      join country_pa_range_metrics cprm
+      on crt.country = cprm.country
+      join analyses a
+      on crt.analysis_name = a.analysis_name
+      and crt.analysis_year = a.analysis_year
+      join estimate_factors_analyses_categorized_totals_country_for_add x
+      on x.analysis_name = a.analysis_name
+      and x.analysis_year = a.analysis_year
+      and crt.country = x.country
+      where crt.analysis_name = ?
+      order by region, pam.country;
     SQL
   end
 
