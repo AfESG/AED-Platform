@@ -116,8 +116,8 @@
           td= row['CYEAR']
           td.numeric= number_with_delimiter row['ESTIMATE']
           td.numeric= row['CL95'].to_s.gsub(/[^\d]/, '')!="0" ? (number_with_delimiter row['CL95']) : ""
-          td.numeric= number_with_delimiter row['GUESS_MIN']
-          td.numeric= number_with_delimiter row['GUESS_MAX']
+          td.text-center= number_with_delimiter row['GUESS_MIN']
+          td.text-center= number_with_delimiter row['GUESS_MAX']
           td style="padding-left:10px" = row['REFERENCE']
           td style='text-align:center'
           td.numeric style="padding-right:10px" = number_with_delimiter row['AREA_SQKM']

@@ -43,7 +43,11 @@ module AltDppsHelper
   def numeric_cell value, opts={}
     defaults = { class: 'numeric' }
     defaults.merge!(opts[:attrs]) if opts[:attrs]
-    content_tag :td, number_with_delimiter(value.to_f.round(opts[:precision] || 0)), defaults
+    display = number_with_delimiter(value.to_f.round(opts[:precision] || 0))
+    if opts[:zeroes] == false && display.to_f <= 1
+      display = "#{"%0.2f" % display}"[1..-1]
+    end
+    content_tag :td, display, defaults
   end
 
   def signed_cell value, opts={}
@@ -110,9 +114,7 @@ module AltDppsHelper
     else
       num = value.to_f.round(opts[:precision] || 0)
       totals[column] += num
-      defaults = { class: 'numeric' }
-      defaults.merge!(opts[:attrs]) if opts[:attrs]
-      content_tag :td, number_with_delimiter(round ? rounded(num) : num), defaults
+      numeric_cell round ? rounded(num) : num, opts
     end
   rescue StandardError => e
     error_cell e.message
