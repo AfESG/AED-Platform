@@ -3,11 +3,15 @@ class RegionsController < ApplicationController
     render json: { regions: Region.all }
   end
 
-  def geojson_map
+  def geojson_strata
     render json: {
         type: 'FeatureCollection',
         features: region.countries.map(&:features).flatten
     }
+  end
+
+  def geojson_map
+    render json: region.geojson_map
   end
 
   def dpps

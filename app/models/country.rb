@@ -73,6 +73,10 @@ class Country < ActiveRecord::Base
     features.sort_by { |h| h['properties'][:aed_year] }
   end
 
+  def geojson_map
+    execute('SELECT ST_AsGeoJSON(geom) as "geo" FROM country WHERE gid = ?', id).first['geo']
+  end
+
   def dpps(year)
     filter = Analysis.find_by_analysis_year(year).analysis_name rescue nil
     {

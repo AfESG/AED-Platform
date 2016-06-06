@@ -1,13 +1,17 @@
 class ContinentsController < ApplicationController
   def index
-    render json: { regions: Continent.all }
+    render json: { continents: Continent.all }
   end
 
-  def geojson_map
+  def geojson_strata
     render json: {
         type: 'FeatureCollection',
         features: continent.countries.map(&:features).flatten
     }
+  end
+
+  def geojson_map
+    render json: continent.geojson_map
   end
 
   def dpps

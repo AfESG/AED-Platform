@@ -3,11 +3,15 @@ class CountriesController < ApplicationController
     render json: { countries: Country.all }
   end
 
-  def geojson_map
+  def geojson_strata
     render json: {
       type: 'FeatureCollection',
       features: country.features
     }
+  end
+
+  def geojson_map
+    render json: country.geojson_map
   end
 
   def dpps

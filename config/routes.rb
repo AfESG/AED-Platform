@@ -1,9 +1,5 @@
 Aaed::Application.routes.draw do
 
-  get 'continents/index'
-
-  get 'continents/geojson_map'
-
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
   devise_for :users
@@ -82,25 +78,30 @@ Aaed::Application.routes.draw do
   get 'survey_geometry/:id/map' => 'survey_geometries#geojson_map'
   get 'survey_geometry/:id/download' => 'survey_geometries#download'
 
-  # country endpoints
-  get 'countries' => 'countries#index'
-  get 'country/:iso_code/map' => 'countries#geojson_map'
-  get 'country/:iso_code/dpps' => 'countries#dpps'
-  get 'country/:iso_code/add' => 'countries#add'
+  namespace :api, module: nil do
+    # country endpoints
+    get 'countries' => 'countries#index'
+    get 'country/:iso_code/geojson_map' => 'countries#geojson_map'
+    get 'country/:iso_code/geojson_strata' => 'countries#geojson_strata'
+    get 'country/:iso_code/:year/dpps' => 'countries#dpps'
+    get 'country/:iso_code/:year/add' => 'countries#add'
+
+    # region endpoints
+    get 'regions' => 'regions#index'
+    get 'region/:id/geojson_map' => 'regions#geojson_map'
+    get 'region/:id/geojson_strata' => 'regions#geojson_strata'
+    get 'region/:id/:year/dpps' => 'regions#dpps'
+    get 'region/:id/:year/add' => 'regions#add'
+
+    # continent endpoints
+    get 'continents' => 'continents#index'
+    get 'continent/:id/geojson_map' => 'continents#geojson_map'
+    get 'continent/:id/geojson_strata' => 'continents#geojson_strata'
+    get 'continent/:id/:year/dpps' => 'continents#dpps'
+    get 'continent/:id/:year/add' => 'continents#add'
+  end
+
   get 'country/survey_map/:iso_code/:analysis/:year' => 'countries#geojson_map_public'
-
-  # region endpoints
-  get 'regions' => 'regions#index'
-  get 'region/:id/map' => 'regions#geojson_map'
-  get 'region/:id/dpps' => 'regions#dpps'
-  get 'region/:id/add' => 'regions#add'
-
-  # continent endpoints
-  get 'continents' => 'continents#index'
-  get 'continent/:id/map' => 'continents#geojson_map'
-  get 'continent/:id/dpps' => 'continents#dpps'
-  get 'continent/:id/add' => 'continents#add'
-
   get 'data_request_forms/new' => 'data_request_forms#hold'
   get 'secret_data_request_forms/thanks' => 'data_request_forms#thanks'
 
