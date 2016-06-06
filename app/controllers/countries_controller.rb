@@ -3,7 +3,7 @@ class CountriesController < ApplicationController
     render json: { countries: Country.all }
   end
 
-  def geojson_map
+  def map
     render json: {
       type: 'FeatureCollection',
       features: country.features
