@@ -1,9 +1,5 @@
 Aaed::Application.routes.draw do
 
-  get 'continents/index'
-
-  get 'continents/geojson_map'
-
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
   devise_for :users
@@ -85,19 +81,22 @@ Aaed::Application.routes.draw do
   namespace :api, module: nil do
     # country endpoints
     get 'countries' => 'countries#index'
-    get 'country/:iso_code/map' => 'countries#map'
+    get 'country/:iso_code/geojson_map' => 'countries#geojson_map'
+    get 'country/:iso_code/geojson_strata' => 'countries#geojson_strata'
     get 'country/:iso_code/:year/dpps' => 'countries#dpps'
     get 'country/:iso_code/:year/add' => 'countries#add'
 
     # region endpoints
     get 'regions' => 'regions#index'
-    get 'region/:id/map' => 'regions#map'
+    get 'region/:id/geojson_map' => 'regions#geojson_map'
+    get 'region/:id/geojson_strata' => 'regions#geojson_strata'
     get 'region/:id/:year/dpps' => 'regions#dpps'
     get 'region/:id/:year/add' => 'regions#add'
 
     # continent endpoints
     get 'continents' => 'continents#index'
-    get 'continent/:id/map' => 'continents#map'
+    get 'continent/:id/geojson_map' => 'continents#geojson_map'
+    get 'continent/:id/geojson_strata' => 'continents#geojson_strata'
     get 'continent/:id/:year/dpps' => 'continents#dpps'
     get 'continent/:id/:year/add' => 'continents#add'
   end
