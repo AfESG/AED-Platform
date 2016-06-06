@@ -248,67 +248,12 @@ module AltDppsHelper
     analysis_name = filter.nil?? '' : "AND e.analysis_name = '#{filter}'"
     <<-SQL
       SELECT
-        el.sort_key,
-        el.population,
-        e.site_name,
-        e.stratum_name,
-        e.replacement_name,
-        e.best_population_variance as population_variance,
-        CASE WHEN e.reason_change = 'NC' THEN '-' ELSE e.reason_change END AS "ReasonForChange",
-        e.population_submission_id,
-        e.input_zone_id method_and_quality,
-        e.category "CATEGORY",
-        e.completion_year "CYEAR",
-        e.best_estimate "ESTIMATE",
-        e.population_lower_confidence_limit "GUESS_MIN",
-        e.population_upper_confidence_limit "GUESS_MAX",
-        CASE 
-          WHEN e.population_upper_confidence_limit IS NOT NULL THEN
-            CASE WHEN e.estimate_type='O' THEN
-              to_char(e.population_upper_confidence_limit-e.population_estimate,'999,999') || '*'
-            ELSE
-              to_char(e.population_upper_confidence_limit-e.population_estimate,'999,999')
-            END
-          WHEN e.population_confidence_interval IS NOT NULL THEN
-            to_char(ROUND(e.population_confidence_interval),'999,999')
-          ELSE ''
-        END "CL95",
-        e.short_citation "REFERENCE",
-        round(log((1+(e.best_estimate / (e.best_estimate + (1.96*sqrt(e.best_population_variance)) + e.population_upper_confidence_limit + 0.0001))) / 
-          (a.area_sqkm / rm.range_area))) "PFS",
-        rm.range_area "RA",
-        a.area_sqkm "CALC_SQKM",
-        e.stratum_area "AREA_SQKM",
-        CASE WHEN longitude<0 THEN
-          to_char(abs(longitude),'999D9')||'W'
-        WHEN longitude=0 THEN
-          '0.0'
-        ELSE
-          to_char(abs(longitude),'999D9')||'E'
-        END "LON",
-        CASE WHEN latitude<0 THEN
-          to_char(abs(latitude),'999D9')||'S'
-        WHEN latitude=0 THEN
-          '0.0'
-        ELSE
-          to_char(abs(latitude),'999D9')||'N'
-        END "LAT"
-      FROM estimate_locator el
-        join estimate_factors_analyses_categorized_for_add e on e.input_zone_id = el.input_zone_id
-          and e.analysis_name = el.analysis_name
-          and e.analysis_year = el.analysis_year
-        join estimate_locator_areas a on e.input_zone_id = a.input_zone_id
-          and e.analysis_name = a.analysis_name
-          and e.analysis_year = a.analysis_year
-        join surveytypes t on t.category = e.category
-        join population_submissions on e.population_submission_id = population_submissions.id
-        join regional_range_table rm on e.country = rm.country AND 
-          e.analysis_name = rm.analysis_name AND e.analysis_year = rm.analysis_year
+        *
+      FROM estimate_factors_analyses_categorized_zones_for_add e
       WHERE
         e.analysis_year = #{year}
         #{analysis_name}
         AND e.country = '#{country}'
-      ORDER BY el.sort_key, e.site_name, e.stratum_name
     SQL
   end
 

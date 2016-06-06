@@ -280,6 +280,21 @@ def preview_country
   @alt_areas_by_reason  = execute alt_dpps_country_area_by_reason("country = '#{sql_escape @country}'", @year, @filter)
   @alt_elephant_estimates_by_country = execute alt_dpps_country_stats(@country, @year, @filter)
 
+  @alt_elephant_estimate_groups = []
+  group = []
+  current_replacement_name = @alt_elephant_estimates_by_country[0]['replacement_name']
+  @alt_elephant_estimates_by_country.each do |row|
+    if row['replacement_name'] == current_replacement_name
+      group << row
+    else
+      @alt_elephant_estimate_groups << group
+      group = []
+      group << row
+      current_replacement_name = row['replacement_name']
+    end
+  end
+  @alt_elephant_estimate_groups << group
+
   # DPPS values
   get_country_values(@country, @filter, @year).each do |k, v|
     instance_variable_set("@#{k}".to_sym, v)
