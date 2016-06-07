@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160606070742) do
+ActiveRecord::Schema.define(version: 20160607160851) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,6 +57,30 @@ ActiveRecord::Schema.define(version: 20160606070742) do
     t.string   "adjyear_1",  limit: 20
     t.integer  "sourceyear", limit: 2
     t.string   "publisyear", limit: 20
+    t.geometry "geom",       limit: {:srid=>0, :type=>"multi_polygon"}
+  end
+
+  create_table "2016_aed_pa_layer", primary_key: "gid", force: :cascade do |t|
+    t.decimal  "__gid",                                                 precision: 10
+    t.decimal  "ptacode",                                               precision: 10
+    t.string   "ptaname",    limit: 254
+    t.string   "ccode",      limit: 254
+    t.decimal  "year_est",                                              precision: 10
+    t.string   "iucncat",    limit: 254
+    t.decimal  "iucncatara",                                            precision: 10
+    t.string   "designate",  limit: 254
+    t.string   "abvdesig",   limit: 254
+    t.decimal  "area_sqkm",                                             precision: 10
+    t.decimal  "reported",                                              precision: 10
+    t.decimal  "calculated",                                            precision: 10
+    t.string   "source",     limit: 254
+    t.decimal  "refid",                                                 precision: 10
+    t.decimal  "inrange",                                               precision: 10
+    t.decimal  "samesurvey",                                            precision: 10
+    t.decimal  "shape_leng"
+    t.decimal  "shape_area"
+    t.decimal  "selection",                                             precision: 10
+    t.string   "aed2016dis", limit: 5
     t.geometry "geom",       limit: {:srid=>0, :type=>"multi_polygon"}
   end
 
@@ -578,29 +602,28 @@ ActiveRecord::Schema.define(version: 20160606070742) do
     t.text     "object_changes"
   end
 
-  create_table "protected_area_geometries", primary_key: "gid", force: :cascade do |t|
-    t.integer  "ptacode"
-    t.string   "ptaname",    limit: 50
-    t.string   "ccode",      limit: 3
-    t.integer  "year_est",   limit: 2
-    t.string   "iucncat",    limit: 4
-    t.integer  "iucncatara", limit: 2
-    t.string   "designate",  limit: 50
-    t.string   "abvdesig",   limit: 5
-    t.integer  "area_sqkm"
-    t.integer  "reported"
-    t.integer  "calculated"
-    t.string   "source",     limit: 50
-    t.integer  "refid",      limit: 2
-    t.integer  "inrange",    limit: 2
-    t.integer  "samesurvey", limit: 2
+  create_table "protected_area_geometries", id: false, force: :cascade do |t|
+    t.integer  "gid"
+    t.decimal  "ptacode",                                               precision: 10
+    t.string   "ptaname",    limit: 254
+    t.string   "ccode",      limit: 254
+    t.decimal  "year_est",                                              precision: 10
+    t.string   "iucncat",    limit: 254
+    t.decimal  "iucncatara",                                            precision: 10
+    t.string   "designate",  limit: 254
+    t.string   "abvdesig",   limit: 254
+    t.decimal  "area_sqkm",                                             precision: 10
+    t.decimal  "reported",                                              precision: 10
+    t.decimal  "calculated",                                            precision: 10
+    t.string   "source",     limit: 254
+    t.decimal  "refid",                                                 precision: 10
+    t.decimal  "inrange",                                               precision: 10
+    t.decimal  "samesurvey",                                            precision: 10
     t.decimal  "shape_leng"
     t.decimal  "shape_area"
-    t.integer  "selection",  limit: 2
+    t.decimal  "selection",                                             precision: 10
     t.geometry "geometry",   limit: {:srid=>0, :type=>"multi_polygon"}
   end
-
-  add_index "protected_area_geometries", ["geometry"], name: "protarea_the_geom_gist", using: :gist
 
   create_table "range_discrepancies", id: false, force: :cascade do |t|
     t.integer "gid"

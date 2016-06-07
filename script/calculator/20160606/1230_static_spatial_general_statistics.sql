@@ -3,7 +3,7 @@ create table country_pa as
 select
   cntryname country,
   cntryarea stated,
-  ST_Intersection(
+  safe_isect(
     ST_SetSRID(geom,4326),
     ST_SetSRID(all_pa_geom,4326)
   ) protected_area
