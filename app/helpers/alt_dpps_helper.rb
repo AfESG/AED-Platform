@@ -240,7 +240,7 @@ module AltDppsHelper
           AND #{scope}
         GROUP BY sm.analysis_name, sm.analysis_year, #{display_col}, sm.#{category}#{grouping}
       ) a
-      JOIN #{range_table} range ON range.#{level} = #{range_join} AND 
+      JOIN #{range_table} range ON range.#{level} = #{range_join} AND
         range.analysis_year = a.analysis_year AND range.analysis_name = a.analysis_name
       ORDER BY a.#{category}
     SQL
@@ -255,7 +255,7 @@ module AltDppsHelper
       WHERE
         e.analysis_year = #{year}
         #{analysis_name}
-        AND e.country = '#{country}'
+        AND e.country = '#{country.gsub("\'","\'\'")}'
     SQL
   end
 
@@ -340,7 +340,7 @@ module AltDppsHelper
       WHERE
         x.analysis_year = #{year}
         #{analysis_name}
-      --GROUP BY x.analysis_name, x.analysis_year, x.region, rt.range_area 
+      --GROUP BY x.analysis_name, x.analysis_year, x.region, rt.range_area
       ORDER BY x.region
     SQL
   end
