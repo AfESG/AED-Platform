@@ -52,7 +52,7 @@ map_country = (element) ->
   country_element = $(element).closest('.RM_country')
   iso_code = country_element.data('isocode')
   $(".RM_FS_loading").show()
-  $.getJSON "/country/" + iso_code + "/map", (data) ->
+  $.getJSON "/api/country/" + iso_code + "/geojson_strata", (data) ->
     $(".RM_changes, .RM_other_header, .RM_new_change").hide()
     country_element.find(".RM_changes, .RM_other_header, .RM_new_change").show()
     if COUNTRY_LAYER
