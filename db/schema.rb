@@ -61,27 +61,27 @@ ActiveRecord::Schema.define(version: 20160607160851) do
   end
 
   create_table "2016_aed_pa_layer", primary_key: "gid", force: :cascade do |t|
-    t.decimal  "__gid",                                                 precision: 10
-    t.decimal  "ptacode",                                               precision: 10
+    t.decimal  "__gid",                                                      precision: 10
+    t.decimal  "ptacode",                                                    precision: 10
     t.string   "ptaname",    limit: 254
     t.string   "ccode",      limit: 254
-    t.decimal  "year_est",                                              precision: 10
+    t.decimal  "year_est",                                                   precision: 10
     t.string   "iucncat",    limit: 254
-    t.decimal  "iucncatara",                                            precision: 10
+    t.decimal  "iucncatara",                                                 precision: 10
     t.string   "designate",  limit: 254
     t.string   "abvdesig",   limit: 254
-    t.decimal  "area_sqkm",                                             precision: 10
-    t.decimal  "reported",                                              precision: 10
-    t.decimal  "calculated",                                            precision: 10
+    t.decimal  "area_sqkm",                                                  precision: 10
+    t.decimal  "reported",                                                   precision: 10
+    t.decimal  "calculated",                                                 precision: 10
     t.string   "source",     limit: 254
-    t.decimal  "refid",                                                 precision: 10
-    t.decimal  "inrange",                                               precision: 10
-    t.decimal  "samesurvey",                                            precision: 10
+    t.decimal  "refid",                                                      precision: 10
+    t.decimal  "inrange",                                                    precision: 10
+    t.decimal  "samesurvey",                                                 precision: 10
     t.decimal  "shape_leng"
     t.decimal  "shape_area"
-    t.decimal  "selection",                                             precision: 10
+    t.decimal  "selection",                                                  precision: 10
     t.string   "aed2016dis", limit: 5
-    t.geometry "geom",       limit: {:srid=>0, :type=>"multi_polygon"}
+    t.geometry "geom",       limit: {:srid=>102022, :type=>"multi_polygon"}
   end
 
   create_table "add_range", id: false, force: :cascade do |t|
@@ -604,25 +604,25 @@ ActiveRecord::Schema.define(version: 20160607160851) do
 
   create_table "protected_area_geometries", id: false, force: :cascade do |t|
     t.integer  "gid"
-    t.decimal  "ptacode",                                               precision: 10
+    t.decimal  "ptacode",                                          precision: 10
     t.string   "ptaname",    limit: 254
     t.string   "ccode",      limit: 254
-    t.decimal  "year_est",                                              precision: 10
+    t.decimal  "year_est",                                         precision: 10
     t.string   "iucncat",    limit: 254
-    t.decimal  "iucncatara",                                            precision: 10
+    t.decimal  "iucncatara",                                       precision: 10
     t.string   "designate",  limit: 254
     t.string   "abvdesig",   limit: 254
-    t.decimal  "area_sqkm",                                             precision: 10
-    t.decimal  "reported",                                              precision: 10
-    t.decimal  "calculated",                                            precision: 10
+    t.decimal  "area_sqkm",                                        precision: 10
+    t.decimal  "reported",                                         precision: 10
+    t.decimal  "calculated",                                       precision: 10
     t.string   "source",     limit: 254
-    t.decimal  "refid",                                                 precision: 10
-    t.decimal  "inrange",                                               precision: 10
-    t.decimal  "samesurvey",                                            precision: 10
+    t.decimal  "refid",                                            precision: 10
+    t.decimal  "inrange",                                          precision: 10
+    t.decimal  "samesurvey",                                       precision: 10
     t.decimal  "shape_leng"
     t.decimal  "shape_area"
-    t.decimal  "selection",                                             precision: 10
-    t.geometry "geometry",   limit: {:srid=>0, :type=>"multi_polygon"}
+    t.decimal  "selection",                                        precision: 10
+    t.geometry "geometry",   limit: {:srid=>0, :type=>"geometry"}
   end
 
   create_table "range_discrepancies", id: false, force: :cascade do |t|
