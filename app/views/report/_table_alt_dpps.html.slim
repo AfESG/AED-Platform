@@ -1,5 +1,6 @@
 - raw_totals = local_assigns[:totals] || @alt_summary_totals
 - raw_sums   = local_assigns[:sums] || @alt_summary_sums
+- raw_base   = local_assigns[:baselines] || @alt_summary_sums_s || []
 - round      = local_assigns[:rounded] || false
 - year       = local_assigns[:year] || @year
 - level      = local_assigns[:level]
@@ -29,6 +30,10 @@
   - sums = {}
   - if raw_sums.any?
     - raw_sums.first.each { |key,value| sums[key] = value }
+
+  - baseline = {}
+  - if raw_base.any?
+    - raw_base.first.each { |key,value| baseline[key] = value }
 
   table.table style='font-size:16px'
     tr
@@ -60,12 +65,21 @@
         = (round_area_sqkm_cell(area['AREA']) ) unless merged_categories.include?(row['CATEGORY'])
 
     - table_totals.merge!(sums)
-    tr.bold
-      td Total Numbers
-      - data_columns.each do |column|
-        td.numeric = number_with_delimiter(round ? rounded(table_totals[column].to_i) : table_totals[column].to_i)
-      td &nbsp;
-      td &nbsp;
+    - if baseline.any?
+      - [ { year: 2015, totals: table_totals }, { year: 2006, totals: baseline } ].each do |v|
+        tr.bold
+          td = "Totals #{v[:year]}"
+          - data_columns.each do |column|
+            td.numeric = number_with_delimiter(round ? rounded(v[:totals][column].to_i) : v[:totals][column].to_i)
+          td &nbsp;
+          td &nbsp;
+    - else
+      tr.bold
+        td Total Numbers
+        - data_columns.each do |column|
+          td.numeric = number_with_delimiter(round ? rounded(table_totals[column].to_i) : table_totals[column].to_i)
+        td &nbsp;
+        td &nbsp;
 
     tr
       td align='right' colspan='5' Assessed Range

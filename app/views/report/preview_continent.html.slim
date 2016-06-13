@@ -19,7 +19,7 @@
 
     == narrative
 
-    = render 'tabs', id: 'summary', tabs: [ { admin: true, title: 'Alternate, No Rounding', template: 'table_alt_dpps', args: { level: @continent, totals: @alt_summary_totals } },
+    = render 'tabs', id: 'summary', tabs: [ { admin: true, title: 'Alternate, No Rounding', template: 'table_alt_dpps', args: { level: @continent, totals: @alt_summary_totals, baselines: @alt_summary_sums_s } },
       { title: 'DPPS Calculations', template: 'table_preview_summary_totals', args: { level: @continent, totals: @summary_totals_by_continent, baselines: @baseline_total } } ]
 
     - if current_user and current_user.admin?
