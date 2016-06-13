@@ -41,4 +41,5 @@
             = signed_cell row[col], positive: col.eql?('CONFIDENCE') ? '&plusmn;' : nil
           = round_area_cell table_totals['CATEGORY_RANGE_ASSESSED'] || 0
           = round_area_sqkm_cell (@alt_areas_by_reason.inject(0) { |sum, tuple| sum+= tuple['AREA'].to_f })
-
+- else
+  p style='margin-top:10px' = t('report.cause_of_change.no_difference')
