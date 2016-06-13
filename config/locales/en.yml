@@ -384,6 +384,9 @@ en:
   new_survey_ground_total_block: "New Ground Total Block"
   new_point_observation: "New point observation"
   all_submissions: "All Submissions"
+  report:
+    cause_of_change:
+      no_difference: "No changes between current and previous report."
   footnotes:
     iqi:
       "IQI: Information Quality Index: This index quantifies overall data quality at the regional level based on the

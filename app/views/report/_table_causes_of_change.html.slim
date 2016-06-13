@@ -24,4 +24,5 @@
           td Totals
           - ['definite','probable','possible','specul'].each do |key|
             td.numeric= signed_number row[key]
-
+- else
+  p = t('report.cause_of_change.no_difference')
