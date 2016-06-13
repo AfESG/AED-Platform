@@ -39,7 +39,7 @@
       tr.totals style=('height: 24px; font-style: italic;')
         td
           ' Totals
-          = base['comparison_year']
+          = official_publication_year(base['comparison_year'])
         td.numeric= number_with_delimiter base['definite']
         td.numeric= number_with_delimiter base['probable']
         td.numeric= number_with_delimiter base['possible']
