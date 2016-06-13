@@ -61,10 +61,12 @@ class ReportController < ApplicationController
     @continent = params[:continent]
     @filter = params[:filter]
     @preview_title = official_title(@filter) or @filter.humanize.upcase
+    @comp_year = Analysis.find_by_analysis_name(@filter).try(:comparison_year)
 
     # ADD values
     @alt_summary_totals = execute alt_dpps("1=1", @year, @filter)
     @alt_summary_sums   = execute alt_dpps_totals("1=1", @year, @filter)
+    @alt_summary_sums_s = execute alt_dpps_totals("1=1", @comp_year, @filter) if @comp_year != @year
     @alt_areas          = execute alt_dpps_continent_area("1=1", @year, @filter)
     @alt_regions        = execute alt_dpps_continental_stats("1=1", @year, @filter)
     @alt_regions_sums   = execute alt_dpps_continental_stats_sums("1=1", @year, @filter)
@@ -164,10 +166,12 @@ class ReportController < ApplicationController
     @region = params[:region].gsub('_',' ')
     @filter = params[:filter]
     @preview_title = official_title(@filter) or @filter.humanize.upcase
+    @comp_year = Analysis.find_by_analysis_name(@filter).try(:comparison_year)
 
     # ADD values
     @alt_summary_totals = execute alt_dpps("region = '#{@region}'", @year, @filter)
     @alt_summary_sums   = execute alt_dpps_totals("region = '#{@region}'", @year, @filter)
+    @alt_summary_sums_s = execute alt_dpps_totals("region = '#{@region}'", @comp_year, @filter) if @comp_year != @year
     @alt_areas          = execute alt_dpps_region_area("region = '#{@region}'", @year, @filter)
     @alt_countries      = execute alt_dpps_region_stats("region = '#{@region}'", @year, @filter)
     @alt_country_sums   = execute alt_dpps_region_stats_sums("region = '#{@region}'", @year, @filter)
@@ -270,10 +274,12 @@ def preview_country
   @map_uri = Country.where(name: @country).first().iso_code + "/" + params[:filter] + "/" + params[:year]
   @filter = params[:filter]
   @preview_title = official_title(@filter) or @filter.humanize.upcase
+  @comp_year = Analysis.find_by_analysis_name(@filter).try(:comparison_year)
 
   # ADD values
   @alt_summary_totals = execute alt_dpps("country = '#{sql_escape @country}'", @year, @filter)
   @alt_summary_sums   = execute alt_dpps_totals("country = '#{sql_escape @country}'", @year, @filter)
+  @alt_summary_sums_s = execute alt_dpps_totals("country = '#{sql_escape @country}'", @comp_year, @filter) if @comp_year != @year
   @alt_areas          = execute alt_dpps_country_area("country = '#{sql_escape @country}'", @year, @filter)
   @alt_causes_of_change = execute alt_dpps_causes_of_change("country = '#{sql_escape @country}'", @year, @filter)
   @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("country = '#{sql_escape @country}'", @year, @filter)
@@ -306,6 +312,14 @@ def preview_country
 
   @ioc_tabs = [
         {
+            title: 'ADD Interpretation of Changes',
+            template: 'table_causes_of_change_add',
+            args: {
+                totals: @alt_causes_of_change,
+                sums: @alt_causes_of_change_s
+            }
+        },
+        {
             title: 'DPPS Interpretation of Changes',
             template: 'table_causes_of_change_dpps',
             args: {
@@ -314,16 +328,8 @@ def preview_country
                 scaled_totals: @causes_of_change_by_country,
                 scaled_sums: @causes_of_change_sums_by_country
             }
-        },
-        {
-            title: 'ADD Interpretation of Changes',
-            template: 'table_causes_of_change_add',
-            args: {
-                totals: @alt_causes_of_change,
-                sums: @alt_causes_of_change_s
-            }
         }
-    ]
+  ]
   end
 
   def preview_site
