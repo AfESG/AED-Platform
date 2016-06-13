@@ -573,7 +573,38 @@ def preview_country
   def appendix_1
     @filter = params[:filter]
     @year = params[:year]
-    @table = execute <<-SQL
+    @table = execute <<-SQL, @filter, @filter
+      SELECT DISTINCT
+        x.country "Country",
+	substring(c.region from 1 for 1) "Region",
+        TO_CHAR(x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX"),'990D99') as "Probable Fraction",
+        TO_CHAR(crt."ASSESSED_RANGE" / crt."RANGE_AREA",'990D99') as "Assessed Range Fraction",
+        TO_CHAR((x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX")) * (crt."ASSESSED_RANGE" / crt."RANGE_AREA"),'990D99') AS "IQI",
+	TO_CHAR(((x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX")) * (crt."ASSESSED_RANGE" / crt."RANGE_AREA"))-prev_iqi,'990D99') "Change on Previous Report",
+        TO_CHAR((crt."RANGE_AREA" / cont.range_area)*100,'990D99%') "Continental Range Fraction",
+        ROUND(log((1+(x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX")) * (crt."ASSESSED_RANGE" / crt."RANGE_AREA")) / (crt."RANGE_AREA" / cont.range_area))) "PFS"
+      FROM estimate_factors_analyses_categorized_totals_country_for_add x
+      JOIN country_range_totals crt ON crt.country = x.country AND crt.analysis_year = x.analysis_year AND crt.analysis_name = x.analysis_name
+      JOIN regional_range_totals rrt ON rrt.region = crt.region AND rrt.analysis_name = crt.analysis_name AND rrt.analysis_year = crt.analysis_year
+      JOIN continental_range_totals cont ON cont.continent = 'Africa' AND cont.analysis_name = rrt.analysis_name AND cont.analysis_year = rrt.analysis_year
+      JOIN analyses a ON x.analysis_year = a.analysis_year
+      JOIN country c ON c.cntryname = x.country
+      JOIN
+      ( SELECT DISTINCT
+          x.country,
+          (x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX")) * (crt."ASSESSED_RANGE" / crt."RANGE_AREA") AS prev_iqi
+        FROM estimate_factors_analyses_categorized_totals_country_for_add x
+        JOIN country_range_totals crt ON crt.country = x.country AND crt.analysis_year = x.analysis_year AND crt.analysis_name = x.analysis_name
+        JOIN regional_range_totals rrt ON rrt.region = crt.region AND rrt.analysis_name = crt.analysis_name AND rrt.analysis_year = crt.analysis_year
+        JOIN continental_range_totals cont ON cont.continent = 'Africa' AND cont.analysis_name = rrt.analysis_name AND cont.analysis_year = rrt.analysis_year
+        JOIN analyses a ON x.analysis_year = a.comparison_year
+        JOIN country c ON c.cntryname = x.country
+        WHERE
+  	     a.analysis_name = ?
+      ) prev ON prev.country = x.country
+      WHERE
+	     a.analysis_name = ?
+      ORDER BY "PFS", "Country";
     SQL
   end
 
