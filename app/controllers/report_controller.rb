@@ -574,7 +574,7 @@ def preview_country
     @filter = params[:filter]
     @year = params[:year]
     @table = execute <<-SQL, @filter, @filter
-      SELECT DISTINCT
+      SELECT
         x.country "Country",
 	substring(c.region from 1 for 1) "Region",
         TO_CHAR(x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX"),'990D99') as "Probable Fraction",
@@ -590,14 +590,17 @@ def preview_country
       JOIN analyses a ON x.analysis_year = a.analysis_year
       JOIN country c ON c.cntryname = x.country
       JOIN
-      ( SELECT DISTINCT
+      ( SELECT
           x.country,
           (x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX")) * (crt."ASSESSED_RANGE" / crt."RANGE_AREA") AS prev_iqi
-        FROM estimate_factors_analyses_categorized_totals_country_for_add x
-        JOIN country_range_totals crt ON crt.country = x.country AND crt.analysis_year = x.analysis_year AND crt.analysis_name = x.analysis_name
-        JOIN regional_range_totals rrt ON rrt.region = crt.region AND rrt.analysis_name = crt.analysis_name AND rrt.analysis_year = crt.analysis_year
-        JOIN continental_range_totals cont ON cont.continent = 'Africa' AND cont.analysis_name = rrt.analysis_name AND cont.analysis_year = rrt.analysis_year
-        JOIN analyses a ON x.analysis_year = a.comparison_year
+        FROM
+        analyses a
+        JOIN estimate_factors_analyses_categorized_totals_country_for_add x
+	       ON x.analysis_year = a.comparison_year
+	       AND x.analysis_name = a.analysis_name
+        JOIN country_range_totals crt ON crt.country = x.country AND crt.analysis_year = a.comparison_year AND crt.analysis_name = x.analysis_name
+        JOIN regional_range_totals rrt ON rrt.region = crt.region AND rrt.analysis_name = a.analysis_name AND rrt.analysis_year = a.comparison_year
+        JOIN continental_range_totals cont ON cont.continent = 'Africa' AND cont.analysis_name = a.analysis_name AND cont.analysis_year = a.comparison_year
         JOIN country c ON c.cntryname = x.country
         WHERE
   	     a.analysis_name = ?
