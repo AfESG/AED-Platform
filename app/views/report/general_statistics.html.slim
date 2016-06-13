@@ -28,3 +28,23 @@
     div
       ' Information Quality Index (IQI):
       = row['iqi']
+
+- @regional_table.each do |row|
+  .region
+    div style='font-weight: bold; margin-top: 10px;'
+      = row['region']
+    div
+      ' Total area: 
+      = "#{number_with_delimiter(row['region_area'])} km²"
+    div
+      ' Range area (% of region):
+      = "#{number_with_delimiter(row['range_area'])} km² (#{row['percent_range_area']}%)"
+    div
+      ' Protected area coverage (% of region):
+      = "#{row['protected_area_coverage']}%"
+    div
+      ' Protected range (% of known and possible range):
+      = "#{row['protected_range']}%"
+    div
+      ' Information Quality Index (IQI):
+      = row['iqi']

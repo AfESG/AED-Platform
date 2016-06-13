@@ -626,6 +626,7 @@ def preview_country
 
   def general_statistics
     @filter = params[:filter]
+    
     @table = execute <<-SQL, @filter
       select
         crt.region,
@@ -650,6 +651,71 @@ def preview_country
       and crt.country = x.country
       where crt.analysis_name = ?
       order by region, pam.country;
+    SQL
+
+    @regional_table = execute <<-SQL, @filter, @filter
+      select
+        s1.region,
+        s1.country_area region_area,
+        s1.range_area,
+        s1.percent_range_area,
+        TO_CHAR((s3.pa_area / s1.country_area)*100,'990D99') protected_area_coverage,
+        s4.percent_protected protected_range,
+        s2.iqi
+        from
+      (
+            select
+              crt.region,
+              sum(pam.stated) country_area,
+              ROUND(sum("RANGE_AREA")) range_area,
+              ROUND((sum("RANGE_AREA")/sum(pam.stated))*100) percent_range_area
+            from country_pa_metrics pam
+            join country_range_totals crt
+            on pam.country = crt.country
+            join analyses a
+            on crt.analysis_name = a.analysis_name
+            and crt.analysis_year = a.analysis_year
+            where crt.analysis_name = ?
+            group by region
+      ) s1
+        join
+      (
+            select
+              crt.region,
+              to_char((x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX")) * (crt.range_assessed / crt.range_area),'990D99') iqi
+            from regional_range_totals crt
+            join analyses a
+            on crt.analysis_name = a.analysis_name
+            and crt.analysis_year = a.analysis_year
+            join estimate_factors_analyses_categorized_totals_region_for_add x
+            on x.analysis_name = a.analysis_name
+            and x.analysis_year = a.analysis_year
+            and crt.region = x.region
+            where crt.analysis_name = ?
+      ) s2
+      on s1.region = s2.region
+        join
+      (
+            select
+              region,
+              sum(protected_area_sqkm) pa_area
+            from country
+            join country_pa_metrics
+            on cntryname=country
+            group by region
+      ) s3
+      on s1.region = s3.region
+        join
+      (
+            select
+      	region,
+              TO_CHAR((sum(protected_area_range_sqkm)/sum(range_sqkm))*100,'990D99') percent_protected
+      	from country
+      	join country_pa_range_metrics
+      	on cntryname=country group by region
+      ) s4
+      on s1.region = s4.region
+      order by region;
     SQL
   end
 
