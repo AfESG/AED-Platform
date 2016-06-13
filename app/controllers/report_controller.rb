@@ -626,7 +626,7 @@ def preview_country
 
   def general_statistics
     @filter = params[:filter]
-    
+
     @table = execute <<-SQL, @filter
       select
         crt.region,
@@ -716,6 +716,56 @@ def preview_country
       ) s4
       on s1.region = s4.region
       order by region;
+    SQL
+
+  @continental_table = execute <<-SQL, @filter, @filter
+      select
+      s1.country_area continental_area,
+      s1.range_area,
+      s1.percent_range_area,
+      TO_CHAR((s3.pa_area / s1.country_area)*100,'990D99') protected_area_coverage,
+      s4.percent_protected protected_range,
+      s2.iqi
+      from
+    (
+          select
+            sum(pam.stated) country_area,
+            ROUND(sum("RANGE_AREA")) range_area,
+            ROUND((sum("RANGE_AREA")/sum(pam.stated))*100) percent_range_area
+          from country_pa_metrics pam
+          join country_range_totals crt
+          on pam.country = crt.country
+          join analyses a
+          on crt.analysis_name = a.analysis_name
+          and crt.analysis_year = a.analysis_year
+          where crt.analysis_name = ?
+    ) s1,
+    (
+          select
+            to_char((x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX")) * (crt.range_assessed / crt.range_area),'990D99') iqi
+          from continental_range_totals crt
+          join analyses a
+          on crt.analysis_name = a.analysis_name
+          and crt.analysis_year = a.analysis_year
+          join estimate_factors_analyses_categorized_totals_continent_for_add x
+          on x.analysis_name = a.analysis_name
+          and x.analysis_year = a.analysis_year
+          where crt.analysis_name = ?
+    ) s2,
+    (
+          select
+            sum(protected_area_sqkm) pa_area
+          from country
+          join country_pa_metrics
+          on cntryname=country
+    ) s3,
+    (
+          select
+            TO_CHAR((sum(protected_area_range_sqkm)/sum(range_sqkm))*100,'990D99') percent_protected
+    	from country
+    	join country_pa_range_metrics
+    	on cntryname=country
+    ) s4
     SQL
   end
 

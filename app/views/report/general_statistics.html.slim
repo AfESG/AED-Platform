@@ -48,3 +48,23 @@
     div
       ' Information Quality Index (IQI):
       = row['iqi']
+      
+- @continental_table.each do |row|
+  .continent
+    div style='font-weight: bold; margin-top: 10px;'
+      ' Africa
+    div
+      ' Total area: 
+      = "#{number_with_delimiter(row['continental_area'])} km²"
+    div
+      ' Range area (% of continent):
+      = "#{number_with_delimiter(row['range_area'])} km² (#{row['percent_range_area']}%)"
+    div
+      ' Protected area coverage (% of continent):
+      = "#{row['protected_area_coverage']}%"
+    div
+      ' Protected range (% of known and possible range):
+      = "#{row['protected_range']}%"
+    div
+      ' Information Quality Index (IQI):
+      = row['iqi']
