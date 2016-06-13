@@ -306,6 +306,14 @@ def preview_country
 
   @ioc_tabs = [
         {
+            title: 'ADD Interpretation of Changes',
+            template: 'table_causes_of_change_add',
+            args: {
+                totals: @alt_causes_of_change,
+                sums: @alt_causes_of_change_s
+            }
+        },
+        {
             title: 'DPPS Interpretation of Changes',
             template: 'table_causes_of_change_dpps',
             args: {
@@ -314,16 +322,8 @@ def preview_country
                 scaled_totals: @causes_of_change_by_country,
                 scaled_sums: @causes_of_change_sums_by_country
             }
-        },
-        {
-            title: 'ADD Interpretation of Changes',
-            template: 'table_causes_of_change_add',
-            args: {
-                totals: @alt_causes_of_change,
-                sums: @alt_causes_of_change_s
-            }
         }
-    ]
+  ]
   end
 
   def preview_site
