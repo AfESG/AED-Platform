@@ -35,15 +35,15 @@
       td.numeric= number_with_delimiter @sprob
       td.numeric= number_with_delimiter @sposs
       td.numeric= number_with_delimiter @sspec
-    - if year==2013
-      - baselines.each do |base|
-        tr.totals style=('height: 24px; font-style: italic;')
-          td Totals 2006
-          td.numeric= number_with_delimiter base['definite']
-          td.numeric= number_with_delimiter base['probable']
-          td.numeric= number_with_delimiter base['possible']
-          td.numeric= number_with_delimiter base['speculative']
+    - baselines.each do |base|
+      tr.totals style=('height: 24px; font-style: italic;')
+        td
+          ' Totals
+          = base['comparison_year']
+        td.numeric= number_with_delimiter base['definite']
+        td.numeric= number_with_delimiter base['probable']
+        td.numeric= number_with_delimiter base['possible']
+        td.numeric= number_with_delimiter base['speculative']
 
 - else
   h2 No estimates were available for #{level} in #{year}
-

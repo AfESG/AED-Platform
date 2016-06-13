@@ -1,11 +1,12 @@
 module DppsContinentHelper
   def get_continent_values(continent, filter, year)
     baseline_total = execute <<-SQL, continent
-        select sum(definite) definite, sum(probable) probable, sum(possible) possible,
+        select a.comparison_year, sum(definite) definite, sum(probable) probable, sum(possible) possible,
           sum(speculative) speculative
         from analyses a
         join dpps_sums_continent_category d ON a.analysis_name = d.analysis_name AND a.comparison_year = d.analysis_year
-        where a.analysis_name = '#{filter}' and a.analysis_year='#{year}' and continent=?;
+        where a.analysis_name = '#{filter}' and a.analysis_year='#{year}' and continent=?
+        group by a.comparison_year;
     SQL
 
     begin

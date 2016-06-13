@@ -1,11 +1,12 @@
 module DppsRegionHelper
   def get_region_values(region, filter, year)
     baseline_total = execute <<-SQL, region
-      select sum(definite) definite, sum(probable) probable, sum(possible) possible,
+      select a.comparison_year, sum(definite) definite, sum(probable) probable, sum(possible) possible,
         sum(speculative) speculative
       from analyses a
       join dpps_sums_region_category d ON a.analysis_name = d.analysis_name AND a.comparison_year = d.analysis_year
-      where a.analysis_name = '#{filter}' and a.analysis_year='#{year}' and region=?;
+      where a.analysis_name = '#{filter}' and a.analysis_year='#{year}' and region=?
+      group by a.comparison_year;
     SQL
 
     countries = execute <<-SQL, region

@@ -1,11 +1,12 @@
 module DppsCountryHelper
   def get_country_values(country, filter, year)
     baseline_total = execute <<-SQL, country
-      select sum(definite) definite, sum(probable) probable, sum(possible) possible,
+      select a.comparison_year, sum(definite) definite, sum(probable) probable, sum(possible) possible,
         sum(speculative) speculative
       from analyses a
       join dpps_sums_country_category d ON a.analysis_name = d.analysis_name and a.comparison_year = d.analysis_year
-      where a.analysis_name = '#{filter}' and a.analysis_year='#{year}' and country=?;
+      where a.analysis_name = '#{filter}' and a.analysis_year='#{year}' and country=?
+      group by a.comparison_year;
     SQL
 
     elephant_estimates_by_country = execute <<-SQL, country
