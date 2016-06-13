@@ -631,6 +631,16 @@ def preview_country
       FROM appendix_2_add
       WHERE analysis_name = ?
     SQL
+    @regional_totals = execute <<-SQL, @filter
+      SELECT
+        analysis_year,
+        region,
+        "ESTIMATE" as estimate,
+        "CONFIDENCE" as confidence
+      FROM estimate_factors_analyses_categorized_totals_region_for_add
+      WHERE analysis_name = ?
+      ORDER BY region, analysis_year
+    SQL
   end
 
   def general_statistics

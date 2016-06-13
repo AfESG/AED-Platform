@@ -13,3 +13,20 @@
               = numeric_cell v, precision: 2
             - else
               td = v
+
+.row
+  .col-xs-12
+    h2 Regional Totals
+    table.table
+      tr
+        - @regional_totals[0].each do |k,v|
+          th = k
+      - @regional_totals.each do |row|
+        tr
+          - row.each do |k,v|
+            - if k == 'estimate'
+              = numeric_cell v
+            - elsif k == 'confidence'
+              = numeric_cell v, precision: 2
+            - else
+              td = v
