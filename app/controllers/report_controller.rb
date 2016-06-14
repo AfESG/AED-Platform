@@ -631,14 +631,26 @@ def preview_country
       FROM appendix_2_add
       WHERE analysis_name = ?
     SQL
-    @regional_totals = execute <<-SQL, @filter
+    @regional_totals = execute <<-SQL, @filter, @filter
       SELECT
         analysis_year,
         region,
-        "ESTIMATE" as estimate,
-        "CONFIDENCE" as confidence
-      FROM estimate_factors_analyses_categorized_totals_region_for_add
-      WHERE analysis_name = ?
+        sum(population_estimate) AS estimate,
+        1.96*sqrt(sum(population_variance)) AS confidence
+      FROM ioc_add_new_base
+      WHERE
+        reason_change = 'RS' AND analysis_name = ?
+      GROUP BY analysis_year, region
+      UNION
+      SELECT
+        analysis_year,
+        region,
+        sum(population_estimate) AS estimate,
+        1.96*sqrt(sum(population_variance)) AS confidence
+      FROM ioc_add_replaced_base
+      WHERE
+        reason_change = 'RS' AND analysis_name = ?
+      GROUP BY analysis_year, region
       ORDER BY region, analysis_year
     SQL
   end
