@@ -51,6 +51,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def authenticate
+    return true if is_api_request?
     if !ENV['authenticate_all_requests'].nil?
       authenticate_or_request_with_http_basic do |username, password|
         username == "pachyderm" && password == ENV['authenticate_all_requests']
@@ -58,6 +59,10 @@ class ApplicationController < ActionController::Base
     else
       true
     end
+  end
+
+  def is_api_request?
+    request.fullpath[0..4].downcase == '/api/'
   end
 
   def sql_escape(str)
