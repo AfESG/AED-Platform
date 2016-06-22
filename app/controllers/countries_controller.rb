@@ -15,11 +15,11 @@ class CountriesController < ApplicationController
   end
 
   def dpps
-    render json: country.dpps(year)
+    render json: { data: country.dpps(year), input_zones: country.input_zones(year) }
   end
 
   def add
-    render json: country.add(year)
+    render json: { data: country.add(year), input_zones: country.input_zones(year) }
   end
 
   def geojson_map_public
@@ -55,10 +55,6 @@ class CountriesController < ApplicationController
       'features' => features
     }
     render :json => feature_collection
-  end
-
-  def input_zones
-    render json: { input_zones: country.input_zones }
   end
 
   private

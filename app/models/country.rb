@@ -103,8 +103,18 @@ class Country < ActiveRecord::Base
     }
   end
 
-  def input_zones
-    []
+  def input_zones(year)
+    input_zones_sql = 'SELECT DISTINCT(inpzone), SUM(estimate) AS estimate, SUM(area_rep) AS area
+      FROM input_zone_export WHERE country = ? AND ayear = ? GROUP BY inpzone ORDER BY inpzone'
+    strata_sql = 'SELECT * FROM input_zone_export WHERE country = ? AND ayear = ? AND inpzone = ?'
+    execute(input_zones_sql, name, year).map do |iz|
+      {
+          input_zone: iz['inpzone'],
+          estimate: iz['estimate'],
+          area: iz['area'],
+          strata: execute(strata_sql, name, year, iz['inpzone'])
+      }
+    end
   end
 
   private
