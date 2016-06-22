@@ -103,6 +103,10 @@ class Country < ActiveRecord::Base
     }
   end
 
+  def input_zones
+    []
+  end
+
   private
   def execute(*array)
     sql = ActiveRecord::Base.send(:sanitize_sql_array, array)

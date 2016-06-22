@@ -22,6 +22,10 @@ class RegionsController < ApplicationController
     render json: region.add(year)
   end
 
+  def countries
+    render json: { countries: region.countries }
+  end
+
   private
   def region
     Region.find_by_id(params[:id])

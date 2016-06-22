@@ -57,6 +57,10 @@ class CountriesController < ApplicationController
     render :json => feature_collection
   end
 
+  def input_zones
+    render json: { input_zones: country.input_zones }
+  end
+
   private
   def country
     Country.find_by_iso_code(params[:iso_code].upcase)

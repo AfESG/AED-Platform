@@ -81,6 +81,7 @@ Aaed::Application.routes.draw do
   namespace :api, module: nil do
     # country endpoints
     get 'countries' => 'countries#index'
+    get 'country/:iso_code/input_zones' => 'countries#input_zones'
     get 'country/:iso_code/geojson_map' => 'countries#geojson_map'
     get 'country/:iso_code/geojson_strata' => 'countries#geojson_strata'
     get 'country/:iso_code/:year/dpps' => 'countries#dpps'
@@ -88,6 +89,7 @@ Aaed::Application.routes.draw do
 
     # region endpoints
     get 'regions' => 'regions#index'
+    get 'region/:id/countries' => 'regions#countries'
     get 'region/:id/geojson_map' => 'regions#geojson_map'
     get 'region/:id/geojson_strata' => 'regions#geojson_strata'
     get 'region/:id/:year/dpps' => 'regions#dpps'
