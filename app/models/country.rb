@@ -74,7 +74,7 @@ class Country < ActiveRecord::Base
   end
 
   def geojson_map
-    execute('SELECT ST_AsGeoJSON(geom) as "geo" FROM country WHERE gid = ?', id).first['geo']
+    execute('SELECT ST_AsGeoJSON(geom) as "geo" FROM country WHERE cntryname = ?', name).first['geo']
   end
 
   def dpps(year)

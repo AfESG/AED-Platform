@@ -38,7 +38,7 @@ class Continent < ActiveRecord::Base
   end
 
   def geojson_map
-    execute('SELECT ST_AsGeoJSON(geom) as "geo" FROM continent WHERE gid = ?', 1).first['geo']
+    execute('SELECT ST_AsGeoJSON(geom) as "geo" FROM continent WHERE continent = ?', name).first['geo']
   end
 
   private
