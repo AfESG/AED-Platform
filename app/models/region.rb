@@ -34,7 +34,7 @@ class Region < ActiveRecord::Base
   end
 
   def geojson_map
-    execute('SELECT ST_AsGeoJSON(geom) as "geo" FROM region WHERE gid = ?', id).first['geo']
+    execute('SELECT ST_AsGeoJSON(geom) as "geo" FROM region WHERE region = ?', name).first['geo']
   end
 
   private
