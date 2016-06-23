@@ -6,4 +6,5 @@ class Analysis < ActiveRecord::Base
 
   attr_protected :created_at, :updated_at
 
+  YEARS = { add: [2013], dpps: [2013, 2007, 2002, 1998, 1995] }
 end

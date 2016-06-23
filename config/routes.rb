@@ -100,6 +100,9 @@ Aaed::Application.routes.draw do
     get 'continent/:id/geojson_strata' => 'continents#geojson_strata'
     get 'continent/:id/:year/dpps' => 'continents#dpps'
     get 'continent/:id/:year/add' => 'continents#add'
+
+    # analyses endpoints
+    get 'analysis/years' => 'analyses#years'
   end
 
   get 'country/survey_map/:iso_code/:analysis/:year' => 'countries#geojson_map_public'

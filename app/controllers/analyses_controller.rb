@@ -159,4 +159,7 @@ class AnalysesController < ApplicationController
     send_data feature_collection.to_json, filename: fn, type: :json
   end
 
+  def years
+    render json: Analysis::YEARS
+  end
 end
