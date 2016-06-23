@@ -25,6 +25,10 @@ class ContinentsController < ApplicationController
     render json: continent.add(year)
   end
 
+  def regions
+    render json: continent.regions.all
+  end
+
   private
   def continent
     Continent.find_by_id(params[:id])

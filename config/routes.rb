@@ -96,6 +96,7 @@ Aaed::Application.routes.draw do
 
     # continent endpoints
     get 'continents' => 'continents#index'
+    get 'continent/:id/regions' => 'continents#regions'
     get 'continent/:id/geojson_map' => 'continents#geojson_map'
     get 'continent/:id/geojson_strata' => 'continents#geojson_strata'
     get 'continent/:id/:year/dpps' => 'continents#dpps'
