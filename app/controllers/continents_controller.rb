@@ -1,4 +1,7 @@
 class ContinentsController < ApplicationController
+  include CheckYearHelper
+  before_action :check_year!
+
   def index
     render json: { continents: Continent.all }
   end
