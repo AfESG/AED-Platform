@@ -2,6 +2,7 @@ class Continent < ActiveRecord::Base
   include AltDppsHelper
   include DppsContinentHelper
   include TotalizerHelper
+  include DppsContinentPreviousHelper
 
   has_many :regions
 
@@ -10,13 +11,20 @@ class Continent < ActiveRecord::Base
   end
 
   def dpps(year)
-    filter = Analysis.find_by_analysis_year(year).analysis_name
-    {
-        continent: name,
-        year: year,
-        analysis_name: filter,
-        continent_totals: execute(totalizer('1=1', filter, year))
-    }.merge(get_continent_values(name, filter, year))
+    if year.to_i != 2013
+      {
+          continent: name,
+          year: year
+      }.merge(get_continent_previous_values(name, year))
+    else
+      filter = Analysis.find_by_analysis_year(year).analysis_name
+      {
+          continent: name,
+          year: year,
+          analysis_name: filter,
+          continent_totals: execute(totalizer('1=1', filter, year))
+      }.merge(get_continent_values(name, filter, year))
+    end
   end
 
   def add(year)

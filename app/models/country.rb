@@ -2,6 +2,7 @@ class Country < ActiveRecord::Base
   include AltDppsHelper
   include DppsCountryHelper
   include TotalizerHelper
+  include DppsCountryPreviousHelper
 
   has_paper_trail
 
@@ -78,13 +79,20 @@ class Country < ActiveRecord::Base
   end
 
   def dpps(year)
-    filter = Analysis.find_by_analysis_year(year).analysis_name rescue nil
-    {
-        country: name,
-        year: year,
-        analysis_name: filter,
-        country_totals: execute(totalizer("country='#{escaped_name}'", filter, year))
-    }.merge(get_country_values(name, filter, year))
+    if year.to_i != 2013
+      {
+          country: name,
+          year: year
+      }.merge(get_country_previous_values(name, year))
+    else
+      filter = Analysis.find_by_analysis_year(year).analysis_name
+      {
+          country: name,
+          year: year,
+          analysis_name: filter,
+          country_totals: execute(totalizer("country='#{escaped_name}'", filter, year))
+      }.merge(get_country_values(name, filter, year))
+    end
   end
 
   def add(year)

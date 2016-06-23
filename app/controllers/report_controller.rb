@@ -4,6 +4,9 @@ class ReportController < ApplicationController
   include DppsRegionHelper
   include DppsCountryHelper
   include TotalizerHelper
+  include DppsContinentPreviousHelper
+  include DppsRegionPreviousHelper
+  include DppsCountryPreviousHelper
 
   before_filter :set_past_years
 
@@ -86,77 +89,10 @@ class ReportController < ApplicationController
 
   def continent
     @year = params[:year].to_i
-    db = "aed#{@year}"
     @continent = params[:continent]
-    begin
-      @summary_totals_by_continent = execute <<-SQL, @continent
-        SELECT *
-        FROM #{db}.summary_totals_by_continent where "CONTINENT"=?
-      SQL
-    rescue
-      raise ActiveRecord::RecordNotFound
+    get_continent_previous_values(@continent, @year).each do |k,v|
+      instance_variable_set("@#{k}".to_sym, v)
     end
-
-    begin
-      @summary_sums_by_continent = execute <<-SQL, @continent
-        SELECT *
-        FROM #{db}.summary_sums_by_continent where "CONTINENT"=?
-      SQL
-    rescue
-      @summary_sums_by_continent = nil
-    end
-
-    begin
-      @causes_of_change_by_continent = execute <<-SQL, @continent
-        SELECT *
-        FROM #{db}.causes_of_change_by_continent where "CONTINENT"=?
-      SQL
-    rescue
-      @causes_of_change_by_continent = nil
-    end
-
-    begin
-      @causes_of_change_sums_by_continent = execute <<-SQL, @continent
-        SELECT *
-        FROM #{db}.causes_of_change_sums_by_continent where "CONTINENT"=?
-      SQL
-    rescue
-      @causes_of_change_sums_by_continent = nil
-    end
-
-    begin
-      @area_of_range_covered_by_continent = execute <<-SQL, @continent
-        SELECT *
-        FROM #{db}.area_of_range_covered_by_continent where "CONTINENT"=?
-      SQL
-
-      @area_of_range_covered_sum_by_continent = execute <<-SQL, @continent
-        SELECT *
-        FROM #{db}.area_of_range_covered_sum_by_continent where "CONTINENT"=?
-      SQL
-    rescue
-      @area_of_range_covered_by_continent = nil
-      @area_of_range_covered_sum_by_continent = nil
-    end
-
-    begin
-      @regions = execute <<-SQL, @continent
-        SELECT *
-        FROM #{db}.continental_and_regional_totals_and_data_quality where "CONTINENT"=?;
-      SQL
-    rescue
-      @regions = nil
-    end
-
-    begin
-      @regions_sum = execute <<-SQL, @continent
-        SELECT *
-        FROM #{db}.continental_and_regional_totals_and_data_quality_sum where "CONTINENT"=?;
-      SQL
-    rescue
-      @regions_sum = nil
-    end
-
   end
 
   def preview_region
@@ -193,75 +129,8 @@ def region
   @year = params[:year].to_i
   @continent = params[:continent]
   @region = params[:region].gsub('_',' ')
-  db = "aed#{@year}"
-
-  begin
-    @summary_totals_by_region = execute <<-SQL, @region
-      SELECT *
-      FROM #{db}.summary_totals_by_region where "REGION"=?
-    SQL
-  rescue
-    raise ActiveRecord::RecordNotFound
-  end
-
-  begin
-    @summary_sums_by_region = execute <<-SQL, @region
-      SELECT *
-      FROM #{db}.summary_sums_by_region where "REGION"=?
-    SQL
-  rescue
-    @summary_sums_by_region = nil
-  end
-
-  begin
-    @causes_of_change_by_region = execute <<-SQL, @region
-      SELECT *
-      FROM #{db}.causes_of_change_by_region where "REGION"=?
-    SQL
-  rescue
-    @causes_of_change_by_region = nil
-  end
-
-  begin
-    @causes_of_change_sums_by_region = execute <<-SQL, @region
-      SELECT *
-      FROM #{db}.causes_of_change_sums_by_region where "REGION"=?
-    SQL
-  rescue
-    @causes_of_change_sums_by_region = nil
-  end
-
-  begin
-    @area_of_range_covered_by_region = execute <<-SQL, @region
-      SELECT *
-      FROM #{db}.area_of_range_covered_by_region where "REGION"=?
-    SQL
-
-    @area_of_range_covered_sum_by_region = execute <<-SQL, @region
-      SELECT *
-      FROM #{db}.area_of_range_covered_sum_by_region where "REGION"=?
-    SQL
-  rescue
-    @area_of_range_covered_by_region = nil
-    @area_of_range_covered_sum_by_region = nil
-  end
-
-  begin
-    @countries = execute <<-SQL, @region
-      SELECT *
-      FROM #{db}.country_and_regional_totals_and_data_quality where "REGION"=?;
-    SQL
-  rescue
-    @countries = nil
-  end
-
-  begin
-    @countries_sum = execute <<-SQL, @region
-      SELECT *
-      FROM #{db}.country_and_regional_totals_and_data_quality_sum where "REGION"=?;
-    SQL
-  rescue
-    @countries_sum = nil
+  get_region_previous_values(@region, @year).each do |k,v|
+    instance_variable_set("@#{k}".to_sym, v)
   end
 end
 
@@ -436,80 +305,9 @@ def preview_country
     @continent = params[:continent]
     @region = params[:region].gsub('_',' ')
     @country = params[:country].gsub('_',' ')
-    db = "aed#{@year}"
-
-    conn = ActiveRecord::Base.connection.instance_variable_get("@connection")
-
-    begin
-      ccodes = execute <<-SQL, @country
-        SELECT "CCODE"
-        FROM #{db}."Country" where "CNTRYNAME"=?
-      SQL
-      @ccode = ccodes[0]['CCODE']
-    rescue => e
-      @ccode = @country
+    get_country_previous_values(@country, @year).each do |k,v|
+      instance_variable_set("@#{k}".to_sym, v)
     end
-
-    begin
-      @causes_of_change_by_country = execute <<-SQL, @ccode
-        SELECT *
-        FROM #{db}.causes_of_change_by_country where ccode=?
-      SQL
-    rescue
-      @causes_of_change_by_country = nil
-    end
-
-    begin
-      @causes_of_change_sums_by_country = execute <<-SQL, @ccode
-        SELECT *
-        FROM #{db}.causes_of_change_sums_by_country where ccode=?
-      SQL
-    rescue
-      @causes_of_change_sums_by_country = nil
-    end
-
-    begin
-      @summary_totals_by_country = execute <<-SQL, @ccode
-        SELECT *
-        FROM #{db}.summary_totals_by_country where ccode=?
-      SQL
-    rescue
-      raise ActiveRecord::RecordNotFound
-    end
-
-    begin
-      @summary_sums_by_country = execute <<-SQL, @ccode
-        SELECT *
-        FROM #{db}.summary_sums_by_country where ccode=?
-      SQL
-    rescue
-      @summary_sums_by_country = nil
-    end
-
-    begin
-      @area_of_range_covered_by_country = execute <<-SQL, @ccode
-        SELECT *
-        FROM #{db}.area_of_range_covered_by_country where ccode=?
-      SQL
-
-      @area_of_range_covered_sum_by_country = execute <<-SQL, @ccode
-        SELECT *
-        FROM #{db}.area_of_range_covered_sum_by_country where ccode=?
-      SQL
-    rescue
-      @area_of_range_covered_by_country = nil
-      @area_of_range_covered_sum_by_country = nil
-    end
-
-    begin
-      @elephant_estimates_by_country = execute <<-SQL, @ccode
-        SELECT *
-        FROM #{db}.elephant_estimates_by_country where ccode=?
-      SQL
-    rescue
-      @elephant_estimates_by_country = nil
-    end
-
   end
 
   def survey

@@ -2,18 +2,26 @@ class Region < ActiveRecord::Base
   include AltDppsHelper
   include DppsRegionHelper
   include TotalizerHelper
+  include DppsRegionPreviousHelper
 
   belongs_to :continent
   has_many :countries
 
   def dpps(year)
-    filter = Analysis.find_by_analysis_year(year).analysis_name rescue nil
-    {
-        region: name,
-        year: year,
-        analysis_name: filter,
-        region_totals: execute(totalizer("region='#{name}'", filter, year))
-    }.merge(get_region_values(name, filter, year))
+    if year.to_i != 2013
+      {
+          region: name,
+          year: year,
+      }.merge(get_region_previous_values(name, year))
+    else
+      filter = Analysis.find_by_analysis_year(year).analysis_name rescue nil
+      {
+          region: name,
+          year: year,
+          analysis_name: filter,
+          region_totals: execute(totalizer("region='#{name}'", filter, year))
+      }.merge(get_region_values(name, filter, year))
+    end
   end
 
   def add(year)
