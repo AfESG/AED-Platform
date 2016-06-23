@@ -1,5 +1,11 @@
 Aaed::Application.routes.draw do
 
+  get 'api/autocomplete'
+
+  get 'api/csv_dump'
+
+  get 'api/help'
+
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
   devise_for :users
@@ -102,8 +108,9 @@ Aaed::Application.routes.draw do
     get 'continent/:id/:year/dpps' => 'continents#dpps'
     get 'continent/:id/:year/add' => 'continents#add'
 
-    # analyses endpoints
+    # misc endpoints
     get 'analysis/years' => 'analyses#years'
+    get 'dump' => 'api#dump', defaults: { format: :json }
   end
 
   get 'country/survey_map/:iso_code/:analysis/:year' => 'countries#geojson_map_public'

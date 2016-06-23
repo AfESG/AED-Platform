@@ -125,9 +125,38 @@ class Country < ActiveRecord::Base
     end
   end
 
+  def self.add_dump
+    where.not(region_id: nil).order(:name).map do |c|
+      filter = Analysis.find_by_analysis_year(2013).analysis_name
+      args = ["country='#{c.escaped_name}'", 2013, filter]
+      {
+          country: c.name,
+          year: 2013,
+          analysis_name: filter,
+          summary_sums: execute(c.alt_dpps_totals(*args)),
+          causes_of_change_sums: execute(c.alt_dpps_causes_of_change_sums(*args)),
+      }
+    end
+  end
+
+  def self.add_csv_dump
+    dump = add_dump
+    headers = dump.first.map do |key, val|
+      val.is_a?(PG::Result) ? val.fields.map { |k| "#{key}__#{k}" } : key
+    end.flatten.map(&:downcase)
+    rows = dump.map do |row|
+      row.values.map { |v| v.is_a?(PG::Result) ? v.values : v }.flatten.map(&:to_s)
+    end
+    CSV.generate(headers: true) { |csv| ([headers] + rows).each { |row| csv << row }}
+  end
+
   private
-  def execute(*array)
+  def self.execute(*array)
     sql = ActiveRecord::Base.send(:sanitize_sql_array, array)
     ActiveRecord::Base.connection.execute(sql)
+  end
+
+  def execute(*array)
+    self.class.execute(*array)
   end
 end
