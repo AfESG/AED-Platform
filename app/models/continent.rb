@@ -12,25 +12,30 @@ class Continent < ActiveRecord::Base
 
   def dpps(year)
     if year.to_i != 2013
-      {
+      values = {
           continent: name,
           year: year
       }.merge(get_continent_previous_values(name, year))
     else
       filter = Analysis.find_by_analysis_year(year).analysis_name
-      {
+      values = {
           continent: name,
           year: year,
           analysis_name: filter,
           continent_totals: execute(totalizer('1=1', filter, year))
       }.merge(get_continent_values(name, filter, year))
     end
+    values[:regions] = values[:regions].map do |region|
+      region['id'] = Region.find_by_name(region['REGION']).id
+      region
+    end
+    values
   end
 
   def add(year)
     filter = Analysis.find_by_analysis_year(year).analysis_name
     args = ['1=1', year, filter]
-    {
+    values = {
         continent: name,
         year: year,
         analysis_name: filter,
@@ -43,6 +48,11 @@ class Continent < ActiveRecord::Base
         causes_of_change_sums: execute(alt_dpps_causes_of_change_sums(*args)),
         areas_by_reason: execute(alt_dpps_continent_area_by_reason(*args))
     }
+    values[:regions] = values[:regions].map do |region|
+      region['id'] = Region.find_by_name(region['region']).id
+      region
+    end
+    values
   end
 
   def geojson_map
