@@ -106,6 +106,7 @@ Aaed::Application.routes.draw do
     get 'continent/:id/:year/add' => 'continents#add'
 
     # misc endpoints
+    get 'stratum/:strcode/geojson_map' => 'api#strata_geojson'
     get 'analysis/years' => 'analyses#years'
     get 'dump' => 'api#dump', defaults: { format: :json }
   end
