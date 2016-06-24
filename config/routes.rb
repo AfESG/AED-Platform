@@ -88,7 +88,6 @@ Aaed::Application.routes.draw do
     # country endpoints
     get 'countries' => 'countries#index'
     get 'country/:iso_code/geojson_map' => 'countries#geojson_map'
-    get 'country/:iso_code/geojson_strata' => 'countries#geojson_strata'
     get 'country/:iso_code/:year/dpps' => 'countries#dpps'
     get 'country/:iso_code/:year/add' => 'countries#add'
 
@@ -96,7 +95,6 @@ Aaed::Application.routes.draw do
     get 'regions' => 'regions#index'
     get 'region/:id/countries' => 'regions#countries'
     get 'region/:id/geojson_map' => 'regions#geojson_map'
-    get 'region/:id/geojson_strata' => 'regions#geojson_strata'
     get 'region/:id/:year/dpps' => 'regions#dpps'
     get 'region/:id/:year/add' => 'regions#add'
 
@@ -104,7 +102,6 @@ Aaed::Application.routes.draw do
     get 'continents' => 'continents#index'
     get 'continent/:id/regions' => 'continents#regions'
     get 'continent/:id/geojson_map' => 'continents#geojson_map'
-    get 'continent/:id/geojson_strata' => 'continents#geojson_strata'
     get 'continent/:id/:year/dpps' => 'continents#dpps'
     get 'continent/:id/:year/add' => 'continents#add'
 
