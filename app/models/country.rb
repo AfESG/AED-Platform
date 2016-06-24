@@ -125,6 +125,11 @@ class Country < ActiveRecord::Base
     end
   end
 
+  def strata(year)
+    sql = 'SELECT * FROM input_zone_export WHERE country = ? AND ayear = ?'
+    execute(sql, name, year)
+  end
+
   def self.add_dump
     where.not(region_id: nil).order(:name).map do |c|
       filter = Analysis.find_by_analysis_year(2013).analysis_name
