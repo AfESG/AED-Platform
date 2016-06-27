@@ -111,6 +111,7 @@ Aaed::Application.routes.draw do
     get 'dump' => 'api#dump', defaults: { format: :json }
   end
 
+  get 'country/:iso_code/geojson_strata' => 'countries#geojson_strata'
   get 'country/survey_map/:iso_code/:analysis/:year' => 'countries#geojson_map_public'
   get 'data_request_forms/new' => 'data_request_forms#hold'
   get 'secret_data_request_forms/thanks' => 'data_request_forms#thanks'
