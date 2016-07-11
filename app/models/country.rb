@@ -75,7 +75,8 @@ class Country < ActiveRecord::Base
   end
 
   def geojson_map
-    execute('SELECT ST_AsGeoJSON(geom) as "geo" FROM country WHERE cntryname = ?', name).first['geo']
+    country_name = (name == 'Sudan' ? 'South Sudan' : name) # fix for Sudan vs. South Sudan
+    execute('SELECT ST_AsGeoJSON(geom) as "geo" FROM country WHERE cntryname = ?', country_name).first['geo']
   end
 
   def dpps(year)
