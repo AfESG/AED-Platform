@@ -18,11 +18,11 @@ class CountriesController < ApplicationController
   end
 
   def dpps
-    render json: { data: country.dpps(year), strata: country.strata(year) }
+    render json: country.dpps(year).merge(strata: country.strata(year))
   end
 
   def add
-    render json: { data: country.add(year), strata: country.strata(year) }
+    render json: country.add(year).merge(strata: country.strata(year))
   end
 
   def geojson_map_public
