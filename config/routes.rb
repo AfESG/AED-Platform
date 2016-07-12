@@ -109,6 +109,7 @@ Aaed::Application.routes.draw do
     get 'stratum/:strcode/geojson_map' => 'api#strata_geojson'
     get 'analysis/years' => 'analyses#years'
     get 'dump' => 'api#dump', defaults: { format: :json }
+    get 'autocomplete' => 'api#autocomplete'
   end
 
   get 'country/:iso_code/geojson_strata' => 'countries#geojson_strata'

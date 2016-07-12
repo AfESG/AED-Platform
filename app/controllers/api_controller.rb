@@ -1,5 +1,41 @@
 class ApiController < ApplicationController
   def autocomplete
+    list = {}
+    Continent.where(name: 'Africa').each do |c|
+      list[c.name] = {
+          id: c.id,
+          geographicType: 'continent',
+          parent: nil
+      }
+    end
+    Region.all.each do |r|
+      list[r.name] = {
+          id: r.id,
+          geographicType: 'region',
+          parent: r.continent.name
+      }
+    end
+    Country.where.not(region: nil).each do |c|
+      list[c.name] = {
+          id: c.iso_code,
+          geographicType: 'country',
+          parent: c.region.name
+      }
+    end
+    sql = "SELECT DISTINCT
+             input_zone_id,
+             stratum_name || ' (' || analysis_year || ')' AS name,
+             country
+           FROM estimate_locator
+           WHERE analysis_year < 2015"
+    execute(sql).each do |s|
+      list[s['name']] = {
+          id: s['input_zone_id'],
+          geographicType: 'stratum',
+          parent: s['country']
+      }
+    end
+    render json: list
   end
 
   def dump
