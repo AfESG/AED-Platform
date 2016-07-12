@@ -55,8 +55,9 @@ class Continent < ActiveRecord::Base
     values
   end
 
-  def geojson_map
-    execute('SELECT ST_AsGeoJSON(geom) as "geo" FROM continent WHERE continent = ?', name).first['geo']
+  def geojson_map(simplify = 0.0)
+    sql = 'SELECT ST_AsGeoJSON(ST_SimplifyPreserveTopology(geom, ?), 10) as "geo" FROM continent WHERE continent = ?'
+    execute(sql, simplify, name).first['geo']
   end
 
   private

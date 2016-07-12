@@ -14,7 +14,7 @@ class CountriesController < ApplicationController
   end
 
   def geojson_map
-    render json: country.geojson_map
+    render json: country.geojson_map(simplify)
   end
 
   def dpps
@@ -67,5 +67,9 @@ class CountriesController < ApplicationController
 
   def year
     params[:year] || 2013
+  end
+
+  def simplify
+    params[:simplify].to_f * 0.1
   end
 end

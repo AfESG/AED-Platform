@@ -52,8 +52,9 @@ class Region < ActiveRecord::Base
     values
   end
 
-  def geojson_map
-    execute('SELECT ST_AsGeoJSON(geom) as "geo" FROM region WHERE region = ?', name).first['geo']
+  def geojson_map(simplify = 0.0)
+    sql = 'SELECT ST_AsGeoJSON(ST_SimplifyPreserveTopology(geom, ?), 10) as "geo" FROM region WHERE region = ?'
+    execute(sql, simplify, name).first['geo']
   end
 
   def assessed_range(year)
