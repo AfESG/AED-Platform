@@ -1,6 +1,6 @@
 class AnalysesController < ApplicationController
 
-  before_filter :authenticate_superuser!
+  before_filter :authenticate_superuser!, except: %i(years)
 
   # GET /analyses
   # GET /analyses.json
