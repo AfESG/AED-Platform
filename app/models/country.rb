@@ -102,6 +102,7 @@ class Country < ActiveRecord::Base
     {
         country: name,
         year: year,
+        assessed_range: assessed_range(year),
         analysis_name: filter,
         summary_totals: execute(alt_dpps(*args)),
         summary_sums: execute(alt_dpps_totals(*args)),
@@ -154,6 +155,11 @@ class Country < ActiveRecord::Base
       row.values.map { |v| v.is_a?(PG::Result) ? v.values : v }.flatten.map(&:to_s)
     end
     CSV.generate(headers: true) { |csv| ([headers] + rows).each { |row| csv << row }}
+  end
+
+  def assessed_range(year)
+    sql = 'SELECT "ASSESSED_RANGE" as range FROM country_range_totals WHERE country = ? AND analysis_year = ? LIMIT 1'
+    execute(sql, name, year).first['range']
   end
 
   private

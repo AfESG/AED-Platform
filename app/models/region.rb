@@ -35,6 +35,7 @@ class Region < ActiveRecord::Base
     values = {
         region: name,
         year: year,
+        assessed_range: assessed_range(year),
         summary_totals: execute(alt_dpps(*args)),
         summary_sums: execute(alt_dpps_totals(*args)),
         areas: execute(alt_dpps_region_area(*args)),
@@ -53,6 +54,11 @@ class Region < ActiveRecord::Base
 
   def geojson_map
     execute('SELECT ST_AsGeoJSON(geom) as "geo" FROM region WHERE region = ?', name).first['geo']
+  end
+
+  def assessed_range(year)
+    sql = 'SELECT range_assessed FROM regional_range_totals WHERE region = ? AND analysis_year = ? LIMIT 1'
+    execute(sql, name, year).first['range_assessed']
   end
 
   private
