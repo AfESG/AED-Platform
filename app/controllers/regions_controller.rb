@@ -14,7 +14,8 @@ class RegionsController < ApplicationController
   end
 
   def geojson_map
-    render json: region.geojson_map(simplify)
+    geojson = simplify > 0 ? region.geojson_map_simple(simplify) : region.geojson_map
+    render json: geojson
   end
 
   def dpps

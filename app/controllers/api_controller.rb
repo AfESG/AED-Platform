@@ -49,10 +49,18 @@ class ApiController < ApplicationController
   end
 
   def strata_geojson
-    sql = 'SELECT ST_AsGeoJSON(ST_SimplifyPreserveTopology(sg.geom, ?), 10) as "geo" FROM estimate_factors ef
-           LEFT JOIN survey_geometries sg ON (ef.survey_geometry_id = sg.id)
-           WHERE ef.input_zone_id = ?'
-    render json: execute(sql, simplify, params[:strcode].upcase).first['geo']
+    if simplify > 0.0
+      sql = 'SELECT ST_AsGeoJSON(ST_SimplifyPreserveTopology(sg.geom, ?), 10) as "geo" FROM estimate_factors ef
+             LEFT JOIN survey_geometries sg ON (ef.survey_geometry_id = sg.id)
+             WHERE ef.input_zone_id = ?'
+      geojson = execute(sql, simplify, params[:strcode].upcase).first['geo']
+    else
+      sql = 'SELECT ST_AsGeoJSON(sg.geom, 10) as "geo" FROM estimate_factors ef
+             LEFT JOIN survey_geometries sg ON (ef.survey_geometry_id = sg.id)
+             WHERE ef.input_zone_id = ?'
+      geojson = execute(sql, params[:strcode].upcase).first['geo']
+    end
+    render json: geojson
   end
 
   private

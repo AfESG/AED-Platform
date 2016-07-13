@@ -74,10 +74,16 @@ class Country < ActiveRecord::Base
     features.sort_by { |h| h['properties'][:aed_year] }
   end
 
-  def geojson_map(simplify = 0.0)
+  def geojson_map_simple(simplify = 0.0)
     country_name = (name == 'Sudan' ? 'South Sudan' : name) # fix for Sudan vs. South Sudan
     sql = 'SELECT ST_AsGeoJSON(ST_SimplifyPreserveTopology(geom, ?), 10) as "geo" FROM country WHERE cntryname = ?'
     execute(sql, simplify, country_name).first['geo']
+  end
+
+  def geojson_map
+    country_name = (name == 'Sudan' ? 'South Sudan' : name) # fix for Sudan vs. South Sudan
+    sql = 'SELECT ST_AsGeoJSON(geom, 10) as "geo" FROM country WHERE cntryname = ?'
+    execute(sql, country_name).first['geo']
   end
 
   def dpps(year)
