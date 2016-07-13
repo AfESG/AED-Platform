@@ -1,5 +1,6 @@
 class RegionsController < ApplicationController
   include CheckYearHelper
+  include NarrativeHelper
   before_action :check_year!
 
   def index
@@ -28,6 +29,10 @@ class RegionsController < ApplicationController
 
   def countries
     render json: { countries: region.countries }
+  end
+
+  def narrative
+    render json: { narrative: fake_narrative_content }
   end
 
   private

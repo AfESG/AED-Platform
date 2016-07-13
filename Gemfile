@@ -71,6 +71,9 @@ gem 'georuby', :git => 'git://github.com/nofxx/georuby.git'
 # Make ActiveRecord PostGIS-aware
 gem 'activerecord-postgis-adapter'
 
+# For faking narratives (for now)
+gem 'faker'
+
 # To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)
 # gem 'ruby-debug'
 # gem 'ruby-debug19', :require => 'ruby-debug'
