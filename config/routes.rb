@@ -110,6 +110,10 @@ Aaed::Application.routes.draw do
     get 'analysis/years' => 'analyses#years'
     get 'dump' => 'api#dump', defaults: { format: :json }
     get 'autocomplete' => 'api#autocomplete'
+    get 'known/geojson_map' => 'api#known_geojson'
+    get 'possible/geojson_map' => 'api#possible_geojson'
+    get 'doubtful/geojson_map' => 'api#doubtful_geojson'
+    get 'protected/geojson_map' => 'api#protected_geojson'
   end
 
   get 'country/:iso_code/geojson_strata' => 'countries#geojson_strata'

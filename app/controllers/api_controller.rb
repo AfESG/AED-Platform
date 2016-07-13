@@ -63,6 +63,42 @@ class ApiController < ApplicationController
     render json: geojson
   end
 
+  def known_geojson
+    sql = 'SELECT ST_AsGeoJSON(geometry, 10) as "geo" FROM range_geometries
+           WHERE range = ? AND rangequali = ? AND geometry IS NOT NULL'
+    render json: {
+        type: 'GeometryCollection',
+        geometries: execute(sql, 1, 'Known').map { |r| JSON.parse(r['geo']) }
+    }
+  end
+
+  def possible_geojson
+    sql = 'SELECT ST_AsGeoJSON(geometry, 10) as "geo" FROM range_geometries
+           WHERE range = ? AND rangequali = ? AND geometry IS NOT NULL'
+    render json: {
+        type: 'GeometryCollection',
+        geometries: execute(sql, 1, 'Possible').map { |r| JSON.parse(r['geo']) }
+    }
+  end
+
+  def doubtful_geojson
+    sql = 'SELECT ST_AsGeoJSON(geometry, 10) as "geo" FROM range_geometries
+           WHERE range = ? AND rangequali = ? AND geometry IS NOT NULL'
+    render json: {
+        type: 'GeometryCollection',
+        geometries: execute(sql, 0, 'Possible').map { |r| JSON.parse(r['geo']) }
+    }
+  end
+
+  def protected_geojson
+    sql = 'SELECT ST_AsGeoJSON(geometry, 10) as "geo" FROM protected_area_geometries
+           WHERE geometry IS NOT NULL'
+    render json: {
+        type: 'GeometryCollection',
+        geometries: execute(sql).map { |r| JSON.parse(r['geo']) }
+    }
+  end
+
   private
   def execute(*array)
     sql = ActiveRecord::Base.send(:sanitize_sql_array, array)
