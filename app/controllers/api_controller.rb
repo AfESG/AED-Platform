@@ -1,4 +1,6 @@
 class ApiController < ApplicationController
+  include StrataDataHelper
+
   def autocomplete
     list = {}
     Continent.where(name: 'Africa').each do |c|
@@ -53,14 +55,18 @@ class ApiController < ApplicationController
       sql = 'SELECT ST_AsGeoJSON(ST_SimplifyPreserveTopology(sg.geom, ?), 10) as "geo" FROM estimate_factors ef
              LEFT JOIN survey_geometries sg ON (ef.survey_geometry_id = sg.id)
              WHERE ef.input_zone_id = ?'
-      geojson = execute(sql, simplify, params[:strcode].upcase).first['geo']
+      geojson = execute(sql, simplify, strcode).first['geo']
     else
       sql = 'SELECT ST_AsGeoJSON(sg.geom, 10) as "geo" FROM estimate_factors ef
              LEFT JOIN survey_geometries sg ON (ef.survey_geometry_id = sg.id)
              WHERE ef.input_zone_id = ?'
-      geojson = execute(sql, params[:strcode].upcase).first['geo']
+      geojson = execute(sql, strcode).first['geo']
     end
     render json: geojson
+  end
+
+  def strata_data
+    render json: get_strata_data(strcode)
   end
 
   def known_geojson
@@ -107,5 +113,9 @@ class ApiController < ApplicationController
 
   def simplify
     params[:simplify].to_f * 0.1
+  end
+
+  def strcode
+    params[:strcode].upcase
   end
 end
