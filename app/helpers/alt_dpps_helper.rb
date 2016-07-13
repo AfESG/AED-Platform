@@ -272,6 +272,7 @@ module AltDppsHelper
         (x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX")) * (rrt.range_assessed / rrt.range_area) AS "IQI",
         (rrt.range_area / cont.range_area) AS "CRF",
         log((1+(x."ESTIMATE" / (x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX")) * (rrt.range_assessed / rrt.range_area)) / (rrt.range_area / cont.range_area)) AS "PFS",
+        rrt.range_assessed AS "ASSESSED_RANGE",
         rrt.range_area as "RANGE_AREA",
         rrt.range_area / rrt.range_area * 100 AS "PERCENT_OF_RANGE_COVERED",
         rrt.range_assessed / rrt.range_area * 100 as "PERCENT_OF_RANGE_ASSESSED"
