@@ -74,6 +74,9 @@ gem 'activerecord-postgis-adapter'
 # For faking narratives (for now)
 gem 'faker'
 
+# Cache actions for API responses
+gem 'actionpack-action_caching'
+
 # To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)
 # gem 'ruby-debug'
 # gem 'ruby-debug19', :require => 'ruby-debug'

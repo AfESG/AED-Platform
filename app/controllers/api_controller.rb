@@ -1,6 +1,14 @@
 class ApiController < ApplicationController
   include StrataDataHelper
 
+  caches_action :strata_geojson,
+                :known_geojson,
+                :possible_geojson,
+                :doubtful_geojson,
+                :protected_geojson,
+                expires: 24.hours,
+                cache_path: Proc.new { |c| c.params.keep_if { |k,v| k == 'simplify' }}
+
   def autocomplete
     list = {}
     Continent.where(name: 'Africa').each do |c|
@@ -70,38 +78,66 @@ class ApiController < ApplicationController
   end
 
   def known_geojson
-    sql = 'SELECT ST_AsGeoJSON(geometry, 10) as "geo" FROM range_geometries
+    if simplify > 0.0
+      sql = 'SELECT ST_AsGeoJSON(ST_SimplifyPreserveTopology(geometry, ?), 10) as "geo" FROM range_geometries
            WHERE range = ? AND rangequali = ? AND geometry IS NOT NULL'
+      result = execute(sql, simplify, 1, 'Known')
+    else
+      sql = 'SELECT ST_AsGeoJSON(geometry, 10) as "geo" FROM range_geometries
+           WHERE range = ? AND rangequali = ? AND geometry IS NOT NULL'
+      result = execute(sql, 1, 'Known')
+    end
     render json: {
         type: 'GeometryCollection',
-        geometries: execute(sql, 1, 'Known').map { |r| JSON.parse(r['geo']) }
+        geometries: result.map { |r| JSON.parse(r['geo']) }
     }
   end
 
   def possible_geojson
-    sql = 'SELECT ST_AsGeoJSON(geometry, 10) as "geo" FROM range_geometries
+    if simplify > 0.0
+      sql = 'SELECT ST_AsGeoJSON(ST_SimplifyPreserveTopology(geometry, ?), 10) as "geo" FROM range_geometries
            WHERE range = ? AND rangequali = ? AND geometry IS NOT NULL'
+      result = execute(sql, simplify, 1, 'Possible')
+    else
+      sql = 'SELECT ST_AsGeoJSON(geometry, 10) as "geo" FROM range_geometries
+           WHERE range = ? AND rangequali = ? AND geometry IS NOT NULL'
+      result = execute(sql, 1, 'Possible')
+    end
     render json: {
         type: 'GeometryCollection',
-        geometries: execute(sql, 1, 'Possible').map { |r| JSON.parse(r['geo']) }
+        geometries: result.map { |r| JSON.parse(r['geo']) }
     }
   end
 
   def doubtful_geojson
-    sql = 'SELECT ST_AsGeoJSON(geometry, 10) as "geo" FROM range_geometries
+    if simplify > 0.0
+      sql = 'SELECT ST_AsGeoJSON(ST_SimplifyPreserveTopology(geometry, ?), 10) as "geo" FROM range_geometries
            WHERE range = ? AND rangequali = ? AND geometry IS NOT NULL'
+      result = execute(sql, simplify, 0, 'Possible')
+    else
+      sql = 'SELECT ST_AsGeoJSON(geometry, 10) as "geo" FROM range_geometries
+           WHERE range = ? AND rangequali = ? AND geometry IS NOT NULL'
+      result = execute(sql, 0, 'Possible')
+    end
     render json: {
         type: 'GeometryCollection',
-        geometries: execute(sql, 0, 'Possible').map { |r| JSON.parse(r['geo']) }
+        geometries: result.map { |r| JSON.parse(r['geo']) }
     }
   end
 
   def protected_geojson
-    sql = 'SELECT ST_AsGeoJSON(geometry, 10) as "geo" FROM protected_area_geometries
+    if simplify > 0.0
+      sql = 'SELECT ST_AsGeoJSON(ST_SimplifyPreserveTopology(geometry, ?), 10) as "geo" FROM protected_area_geometries
            WHERE geometry IS NOT NULL'
+      result = execute(sql, simplify)
+    else
+      sql = 'SELECT ST_AsGeoJSON(geometry, 10) as "geo" FROM protected_area_geometries
+           WHERE geometry IS NOT NULL'
+      result = execute(sql)
+    end
     render json: {
         type: 'GeometryCollection',
-        geometries: execute(sql).map { |r| JSON.parse(r['geo']) }
+        geometries: result.map { |r| JSON.parse(r['geo']) }
     }
   end
 

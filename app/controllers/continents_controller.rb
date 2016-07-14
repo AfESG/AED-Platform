@@ -2,6 +2,7 @@ class ContinentsController < ApplicationController
   include CheckYearHelper
   include NarrativeHelper
   before_action :check_year!
+  include CachesMap
 
   def index
     render json: { continents: Continent.all }
