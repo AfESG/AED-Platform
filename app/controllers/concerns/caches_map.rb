@@ -4,6 +4,6 @@ module CachesMap
   included do
     caches_action :geojson_map,
                   expires: 24.hours,
-                  cache_path: Proc.new { |c| c.params.keep_if { |k, v| k == 'simplify' }}
+                  cache_path: Proc.new { |c| c.params.reject { |k, _| k != 'simplify' } }
   end
 end
