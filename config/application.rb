@@ -37,7 +37,7 @@ module Aaed
       g.template_engine :haml
     end
 
-    config.cache_store = :dalli_store, { compress: true }
+    config.cache_store = :dalli_store
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
