@@ -7,7 +7,7 @@ class ApiController < ApplicationController
                 :doubtful_geojson,
                 :protected_geojson,
                 expires: 24.hours,
-                cache_path: Proc.new { |c| c.params.keep_if { |k,v| k == 'simplify' }}
+                cache_path: Proc.new { |c| c.params.keep_if { |k,v| %w(simplify strcode) }}
 
   def autocomplete
     list = {}
