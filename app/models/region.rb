@@ -3,9 +3,14 @@ class Region < ActiveRecord::Base
   include DppsRegionHelper
   include TotalizerHelper
   include DppsRegionPreviousHelper
+  include NarrativeBoilerplates
 
   belongs_to :continent
   has_many :countries
+
+  def to_s
+    name
+  end
 
   def dpps(year)
     if year.to_i != 2013

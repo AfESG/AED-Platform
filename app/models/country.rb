@@ -3,6 +3,7 @@ class Country < ActiveRecord::Base
   include DppsCountryHelper
   include TotalizerHelper
   include DppsCountryPreviousHelper
+  include NarrativeBoilerplates
 
   has_paper_trail
 

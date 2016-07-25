@@ -3,8 +3,13 @@ class Continent < ActiveRecord::Base
   include DppsContinentHelper
   include TotalizerHelper
   include DppsContinentPreviousHelper
+  include NarrativeBoilerplates
 
   has_many :regions
+
+  def to_s
+    name
+  end
 
   def countries
     Country.where(region: self.regions)
