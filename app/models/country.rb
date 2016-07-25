@@ -167,7 +167,7 @@ class Country < ActiveRecord::Base
 
   def assessed_range(year)
     sql = 'SELECT "ASSESSED_RANGE" as range FROM country_range_totals WHERE country = ? AND analysis_year = ? LIMIT 1'
-    execute(sql, name, year).first['range']
+    execute(sql, name, year).first['range'] rescue nil
   end
 
   private

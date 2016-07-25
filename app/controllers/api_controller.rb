@@ -48,10 +48,31 @@ class ApiController < ApplicationController
     render json: list
   end
 
-  def dump
+  def add_dump
     respond_to do |format|
       format.json { render json: Country.add_dump }
-      format.csv { send_data(Country.add_csv_dump, filename: 'dump.csv') }
+      format.csv { send_data(Country.add_csv_dump, filename: 'add_dump.csv') }
+    end
+  end
+
+  def boilerplate_dump
+    year = Analysis.latest_add_year
+    africa = Continent.find_by_name('Africa')
+    regions = africa.regions.to_a.delete_if { |r| r.countries.count == 0 }.sort_by(&:name)
+    countries = regions.map(&:countries).flatten.delete_if { |c| !c.is_surveyed }.sort_by(&:name) # TODO exclude these?
+
+    respond_to do |format|
+      format.json do
+        render json: {
+            continents: [{ 'Africa': africa.narrative_boilerplate(year) }],
+            regions: regions.reduce({}) { |o, r| o[r.name] = r.narrative_boilerplate(year); o },
+            countries: countries.reduce({}) { |o, c| o[c.name] = c.narrative_boilerplate(year); o }
+        }
+      end
+
+      format.text do
+        ''
+      end
     end
   end
 

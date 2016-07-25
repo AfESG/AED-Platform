@@ -2,9 +2,13 @@ module NarrativeBoilerplates
   extend ActiveSupport::Concern
 
   def narrative_boilerplate(year)
-    add_data = add(year)
+    add_data = add(year) # TODO custom query here may be faster
     summary_sums = add_data[:summary_sums].first
     ranges = add_data[:areas].first
+
+    unless summary_sums
+      return "No estimate available for #{name}." # TODO figure out what to do in this case
+    end
 
     name = to_s
     estimate = summary_sums['ESTIMATE']
@@ -14,8 +18,9 @@ module NarrativeBoilerplates
 
     guesses_from = summary_sums['GUESS_MIN'].to_f.round
     guesses_to = summary_sums['GUESS_MAX'].to_f.round
-    if guesses_from && guesses_to
-      boilerplate << "There may be an additional #{guesses_from} to #{guesses_to} elephants in areas
+    if guesses_from > 0
+      guesses = guesses_from != guesses_to ? "#{guesses_from} to #{guesses_to}" : guesses_from
+      boilerplate << "There may be an additional #{guesses} elephants in areas
       not systematically surveyed in #{name}. These guesses likely represent a minimum number, and actual
       numbers could be higher than those reported."
     end
