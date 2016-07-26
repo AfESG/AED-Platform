@@ -14,7 +14,7 @@ module NarrativeBoilerplates
     estimate = summary_sums['ESTIMATE']
     confidence = summary_sums['CONFIDENCE'].to_f.round
     boilerplate = ["The estimated number of elephants in areas surveyed in the last ten years in
-    #{name} is #{estimate} &plusmn; #{confidence} (95% CL) at the time of the last survey for each area."]
+    #{name} is #{estimate} &#177; #{confidence} (95% CL) at the time of the last survey for each area."]
 
     guesses_from = summary_sums['GUESS_MIN'].to_f.round
     guesses_to = summary_sums['GUESS_MAX'].to_f.round
@@ -27,7 +27,7 @@ module NarrativeBoilerplates
 
     area = ranges['range_area'].to_f.round
     pct_assessed = ranges['percent_range_assessed'].to_f.round
-    boilerplate << "Together, this estimate and guess apply to #{area} km&sup2;, which is #{pct_assessed}%
+    boilerplate << "Together, this estimate and guess apply to #{area} km&#178;, which is #{pct_assessed}%
     of the estimated known and possible elephant range in #{name}."
     if pct_assessed < 100
       boilerplate << "There remains an additional #{100 - pct_assessed}% of the estimated known and possible

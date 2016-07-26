@@ -70,8 +70,10 @@ class ApiController < ApplicationController
         }
       end
 
-      format.text do
-        ''
+      format.txt do
+        narratives = ([africa] + regions + countries).map { |r| "#{r.to_s}\n#{r.narrative_boilerplate(year)}" }
+        dump_text = narratives.join("\n\n").gsub('&#177;', "\u00b1").gsub('&#178;', "\u00b2").encode('utf-8')
+        send_data(dump_text, filename: 'narrative_dump.txt')
       end
     end
   end
