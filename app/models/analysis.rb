@@ -6,5 +6,9 @@ class Analysis < ActiveRecord::Base
 
   attr_protected :created_at, :updated_at
 
-  YEARS = { add: [2013], dpps: [2013, 2007, 2002, 1998, 1995] }
+  YEARS = { add: [2015, 2013], dpps: [2013, 2007, 2002, 1998, 1995] }
+
+  def self.latest_add_year
+    YEARS[:add].max
+  end
 end

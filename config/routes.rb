@@ -98,7 +98,7 @@ Aaed::Application.routes.draw do
     get 'region/:id/geojson_map' => 'regions#geojson_map'
     get 'region/:id/:year/dpps' => 'regions#dpps'
     get 'region/:id/:year/add' => 'regions#add'
-    get 'region/:iso_code/narrative' => 'regions#narrative'
+    get 'region/:id/narrative' => 'regions#narrative'
 
     # continent endpoints
     get 'continents' => 'continents#index'
@@ -106,13 +106,14 @@ Aaed::Application.routes.draw do
     get 'continent/:id/geojson_map' => 'continents#geojson_map'
     get 'continent/:id/:year/dpps' => 'continents#dpps'
     get 'continent/:id/:year/add' => 'continents#add'
-    get 'continent/:iso_code/narrative' => 'continents#narrative'
+    get 'continent/:id/narrative' => 'continents#narrative'
 
     # misc endpoints
     get 'stratum/:strcode/geojson_map' => 'api#strata_geojson'
     get 'stratum/:strcode/data' => 'api#strata_data'
     get 'analysis/years' => 'analyses#years'
-    get 'dump' => 'api#dump', defaults: { format: :json }
+    get 'add_dump' => 'api#add_dump', defaults: { format: :json }
+    get 'boilerplate_dump' => 'api#boilerplate_dump', defaults: { format: :json }
     get 'autocomplete' => 'api#autocomplete'
     get 'known/geojson_map' => 'api#known_geojson'
     get 'possible/geojson_map' => 'api#possible_geojson'

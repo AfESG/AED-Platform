@@ -33,7 +33,8 @@ class ContinentsController < ApplicationController
   end
 
   def narrative
-    render json: { narrative: fake_narrative_content }
+    boilerplate = continent.narrative_boilerplate(2015)
+    render json: { narrative: "<p>#{boilerplate}</p>" + fake_narrative_content }
   end
 
   private

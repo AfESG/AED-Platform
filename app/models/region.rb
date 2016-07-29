@@ -3,9 +3,14 @@ class Region < ActiveRecord::Base
   include DppsRegionHelper
   include TotalizerHelper
   include DppsRegionPreviousHelper
+  include NarrativeBoilerplates
 
   belongs_to :continent
   has_many :countries
+
+  def to_s
+    name
+  end
 
   def dpps(year)
     if year.to_i != 2013
@@ -64,7 +69,7 @@ class Region < ActiveRecord::Base
 
   def assessed_range(year)
     sql = 'SELECT range_assessed FROM regional_range_totals WHERE region = ? AND analysis_year = ? LIMIT 1'
-    execute(sql, name, year).first['range_assessed']
+    execute(sql, name, year).first['range_assessed'] rescue nil
   end
 
   private
