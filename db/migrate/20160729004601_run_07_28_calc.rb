@@ -1,6 +1,6 @@
 require 'sql_helper'
 
-class 20160728 < ActiveRecord::Migration
+class Run0728Calc < ActiveRecord::Migration
 
   include SqlHelper
 
