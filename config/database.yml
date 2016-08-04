@@ -18,3 +18,13 @@ production:
   adapter: postgis
   database: <%=ENV['POSTGRESQL_DATABASE']%>
   pool: 5
+
+vulcan-dev:
+  encoding: unicode
+  adapter: postgis
+  database: <%= ENV['RDS_DB_NAME'] %>
+  username: <%= ENV['RDS_USERNAME'] %>
+  password: <%= ENV['RDS_PASSWORD'] %>
+  host: <%= ENV['RDS_HOSTNAME'] %>
+  port: <%= ENV['RDS_PORT'] %>
+  pool: 5
