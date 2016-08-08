@@ -95,23 +95,6 @@ CREATE OR REPLACE VIEW input_zones AS
   FROM iz_data;
 
 
--- input zone years
-DROP VIEW IF EXISTS input_zones_years CASCADE;
-CREATE OR REPLACE VIEW input_zones_years AS
-  WITH year_data AS (
-      SELECT
-        trim(e.replacement_name) AS name,
-        e.analysis_year
-      FROM estimate_factors_analyses_categorized e
-  )
-  SELECT
-    iz.id,
-    yd.analysis_year
-  FROM input_zones iz
-    JOIN year_data yd ON (iz.name = yd.name)
-  ORDER BY iz.id, yd.analysis_year;
-
-
 --- population view
 DROP VIEW IF EXISTS populations CASCADE;
 CREATE OR REPLACE VIEW populations AS
