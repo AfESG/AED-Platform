@@ -1,6 +1,6 @@
 -- input zone view
 DROP VIEW IF EXISTS input_zones CASCADE;
-CREATE OR REPLACE VIEW input_zones AS
+CREATE MATERIALIZED VIEW input_zones AS
   WITH aggregate_data AS (
       SELECT
         trim(e.replacement_name)                                              AS name,
@@ -97,7 +97,7 @@ CREATE OR REPLACE VIEW input_zones AS
 
 --- population view
 DROP VIEW IF EXISTS populations CASCADE;
-CREATE OR REPLACE VIEW populations AS
+CREATE MATERIALIZED VIEW populations AS
   SELECT
     ps.id                         AS id,
     ps.site_name                  AS name,
