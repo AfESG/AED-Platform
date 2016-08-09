@@ -14,6 +14,7 @@ class Country < ActiveRecord::Base
   has_many :species, :through => :species_range_state_countries # , :source => :species_range_state_country
   has_many :mike_sites
   has_many :submissions
+  has_many :populations
 
   belongs_to :region
 
@@ -119,20 +120,6 @@ class Country < ActiveRecord::Base
         causes_of_change_sums: execute(alt_dpps_causes_of_change_sums(*args)),
         areas_by_reason: execute(alt_dpps_country_area_by_reason(*args))
     }
-  end
-
-  def input_zones(year)
-    input_zones_sql = 'SELECT DISTINCT(inpzone), SUM(estimate) AS estimate, SUM(area_rep) AS area
-      FROM input_zone_export WHERE country = ? AND ayear = ? GROUP BY inpzone ORDER BY inpzone'
-    strata_sql = 'SELECT * FROM input_zone_export WHERE country = ? AND ayear = ? AND inpzone = ?'
-    execute(input_zones_sql, name, year).map do |iz|
-      {
-          input_zone: iz['inpzone'],
-          estimate: iz['estimate'],
-          area: iz['area'],
-          strata: execute(strata_sql, name, year, iz['inpzone'])
-      }
-    end
   end
 
   def strata(year)
