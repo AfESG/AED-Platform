@@ -22,6 +22,14 @@ module SqlHelper
         SqlReader.parse(script) { |sql| execute sql }
       end
     end
+    refresh_materialized_views
   end
 
+  def refresh_materialized_views(mat_views = nil)
+    list_sql = 'SELECT matviewname FROM pg_matviews'
+    mat_views ||= ActiveRecord::Base.connection.execute(list_sql).map { |x| x['matviewname'] }
+    mat_views.each do |mat_view|
+      ActiveRecord::Base.connection.execute("REFRESH MATERIALIZED VIEW #{mat_view}")
+    end
+  end
 end
