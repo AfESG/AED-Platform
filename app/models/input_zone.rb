@@ -1,4 +1,5 @@
 class InputZone < ActiveRecord::Base
+  self.primary_key = :id
   belongs_to :population
 
   def strata(year)
