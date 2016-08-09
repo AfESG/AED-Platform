@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160722171715) do
+ActiveRecord::Schema.define(version: 20160803165841) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -461,6 +461,31 @@ ActiveRecord::Schema.define(version: 20160722171715) do
     t.float   "probable"
     t.float   "possible"
     t.float   "speculative"
+  end
+
+  create_table "ead_pa_layer_2016", primary_key: "gid", force: :cascade do |t|
+    t.decimal  "__gid",                                                      precision: 10
+    t.decimal  "ptacode",                                                    precision: 10
+    t.string   "ptaname",    limit: 254
+    t.string   "ccode",      limit: 254
+    t.decimal  "year_est",                                                   precision: 10
+    t.string   "iucncat",    limit: 254
+    t.decimal  "iucncatara",                                                 precision: 10
+    t.string   "designate",  limit: 254
+    t.string   "abvdesig",   limit: 254
+    t.decimal  "area_sqkm",                                                  precision: 10
+    t.decimal  "reported",                                                   precision: 10
+    t.decimal  "calculated",                                                 precision: 10
+    t.string   "source",     limit: 254
+    t.decimal  "refid",                                                      precision: 10
+    t.decimal  "inrange",                                                    precision: 10
+    t.decimal  "samesurvey",                                                 precision: 10
+    t.decimal  "shape_leng"
+    t.decimal  "shape_area"
+    t.decimal  "selection",                                                  precision: 10
+    t.string   "aed2016dis", limit: 5
+    t.string   "country",    limit: 100
+    t.geometry "geom",       limit: {:srid=>102022, :type=>"multi_polygon"}
   end
 
   create_table "julian_2007", primary_key: "gid", force: :cascade do |t|
