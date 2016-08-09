@@ -29,7 +29,7 @@ module SqlHelper
     list_sql = 'SELECT matviewname FROM pg_matviews'
     mat_views ||= ActiveRecord::Base.connection.execute(list_sql).map { |x| x['matviewname'] }
     mat_views.each do |mat_view|
-      ActiveRecord::Base.connection.execute.("REFRESH MATERIALIZED VIEW #{mat_view}")
+      ActiveRecord::Base.connection.execute("REFRESH MATERIALIZED VIEW #{mat_view}")
     end
   end
 end
