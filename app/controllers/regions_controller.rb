@@ -37,6 +37,10 @@ class RegionsController < ApplicationController
     render json: { narrative: "<p>#{boilerplate}</p>" + fake_narrative_content }
   end
 
+  def boilerplate_data
+    render json: region.narrative_boilerplate_data(2015)
+  end
+
   private
   def region
     Region.find_by_id(params[:id])

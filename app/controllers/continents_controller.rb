@@ -37,6 +37,10 @@ class ContinentsController < ApplicationController
     render json: { narrative: "<p>#{boilerplate}</p>" + fake_narrative_content }
   end
 
+  def boilerplate_data
+    render json: continent.narrative_boilerplate_data(2015)
+  end
+
   private
   def continent
     Continent.find_by_id(params[:id])

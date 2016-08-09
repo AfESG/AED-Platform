@@ -78,6 +78,33 @@ class ApiController < ApplicationController
     end
   end
 
+  def boilerplate_data_dump
+    year = Analysis.latest_add_year
+    africa = Continent.find_by_name('Africa')
+    regions = africa.regions.to_a.delete_if { |r| r.countries.count == 0 }.sort_by(&:name)
+    countries = regions.map(&:countries).flatten.delete_if { |c| !c.is_surveyed }.sort_by(&:name) # TODO exclude these?
+
+    respond_to do |format|
+      format.json do
+        render json: {
+            continents: [{ 'Africa': africa.narrative_boilerplate_data(year) }],
+            regions: regions.reduce({}) { |o, r| o[r.name] = r.narrative_boilerplate_data(year); o },
+            countries: countries.reduce({}) { |o, c| o[c.name] = c.narrative_boilerplate_data(year); o }
+        }
+      end
+
+      format.csv do
+        csv_data = CSV.generate do |csv|
+          csv << %w(type name estimate confidence guesses_from guesses_to area pct_assessed)
+          csv << %w(continent) + africa.narrative_boilerplate_data(year).values
+          regions.each { |region| csv << %w(region) + region.narrative_boilerplate_data(year).values }
+          countries.each { |country| csv << %w(country) + country.narrative_boilerplate_data(year).values }
+        end
+        send_data(csv_data, filename: 'narrative_data_dump.csv')
+      end
+    end
+  end
+
   def help
   end
 

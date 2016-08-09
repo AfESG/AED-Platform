@@ -1,16 +1,33 @@
 module NarrativeBoilerplates
   extend ActiveSupport::Concern
 
+  def narrative_boilerplate_data(year)
+    add_data = add(year)
+    summary_sums = add_data[:summary_sums].first
+    ranges = add_data[:areas].first
+    return { name: to_s, data: nil } unless summary_sums
+    {
+        name: to_s,
+        estimate: summary_sums['ESTIMATE'],
+        confidence: summary_sums['CONFIDENCE'].to_f.round,
+        guesses_from: summary_sums['GUESS_MIN'].to_f.round,
+        guesses_to: summary_sums['GUESS_MAX'].to_f.round,
+        area: ranges['range_area'].to_f.round,
+        pct_assessed: ranges['percent_range_assessed'].to_f.round
+    }
+  end
+
   def narrative_boilerplate(year)
     add_data = add(year) # TODO custom query here may be faster
     summary_sums = add_data[:summary_sums].first
     ranges = add_data[:areas].first
 
+    name = to_s
+
     unless summary_sums
       return "No estimate available for #{name}." # TODO figure out what to do in this case
     end
 
-    name = to_s
     estimate = summary_sums['ESTIMATE']
     confidence = summary_sums['CONFIDENCE'].to_f.round
     boilerplate = ["The estimated number of elephants in areas surveyed in the last ten years in

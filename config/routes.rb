@@ -102,6 +102,7 @@ Aaed::Application.routes.draw do
     get 'country/:iso_code/:year/dpps' => 'countries#dpps'
     get 'country/:iso_code/:year/add' => 'countries#add'
     get 'country/:iso_code/narrative' => 'countries#narrative'
+    get 'country/:iso_code/boilerplate_data' => 'countries#boilerplate_data'
 
     # region endpoints
     get 'regions' => 'regions#index'
@@ -110,6 +111,7 @@ Aaed::Application.routes.draw do
     get 'region/:id/:year/dpps' => 'regions#dpps'
     get 'region/:id/:year/add' => 'regions#add'
     get 'region/:id/narrative' => 'regions#narrative'
+    get 'region/:id/boilerplate_data' => 'regions#boilerplate_data'
 
     # continent endpoints
     get 'continents' => 'continents#index'
@@ -118,6 +120,7 @@ Aaed::Application.routes.draw do
     get 'continent/:id/:year/dpps' => 'continents#dpps'
     get 'continent/:id/:year/add' => 'continents#add'
     get 'continent/:id/narrative' => 'continents#narrative'
+    get 'continent/:id/boilerplate_data' => 'continents#boilerplate_data'
 
     # misc endpoints
     get 'stratum/:strcode/geojson_map' => 'api#strata_geojson'
@@ -125,6 +128,7 @@ Aaed::Application.routes.draw do
     get 'analysis/years' => 'analyses#years'
     get 'add_dump' => 'api#add_dump', defaults: { format: :json }
     get 'boilerplate_dump' => 'api#boilerplate_dump', defaults: { format: :json }
+    get 'boilerplate_data_dump' => 'api#boilerplate_data_dump', defaults: { format: :json }
     get 'autocomplete' => 'api#autocomplete'
     get 'known/geojson_map' => 'api#known_geojson'
     get 'possible/geojson_map' => 'api#possible_geojson'

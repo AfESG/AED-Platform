@@ -68,6 +68,10 @@ class CountriesController < ApplicationController
     render json: { narrative: "<p>#{boilerplate}</p>" + fake_narrative_content }
   end
 
+  def boilerplate_data
+    render json: country.narrative_boilerplate_data(2015)
+  end
+
   def populations
     render json: { populations: country.populations }
   end
