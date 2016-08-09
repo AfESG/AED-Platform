@@ -68,6 +68,10 @@ class CountriesController < ApplicationController
     render json: { narrative: "<p>#{boilerplate}</p>" + fake_narrative_content }
   end
 
+  def populations
+    render json: { populations: country.populations }
+  end
+
   private
   def country
     Country.find_by_iso_code(params[:iso_code].upcase)

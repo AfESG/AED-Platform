@@ -85,8 +85,19 @@ Aaed::Application.routes.draw do
   get 'survey_geometry/:id/download' => 'survey_geometries#download'
 
   namespace :api, module: nil do
+    # input zone endpoints
+    get 'input_zones' => 'input_zones#index'
+    get 'input_zone/:id/strata' => 'input_zones#strata'
+    get 'input_zone/:id/geojson_map' => 'input_zones#geojson_map'
+
+    # population endpoints
+    get 'populations' => 'populations#index'
+    get 'population/:id/input_zones' => 'populations#input_zones'
+    get 'population/:id/geojson_map' => 'populations#geojson_map'
+
     # country endpoints
     get 'countries' => 'countries#index'
+    get 'country/:iso_code/populations' => 'countries#populations'
     get 'country/:iso_code/geojson_map' => 'countries#geojson_map'
     get 'country/:iso_code/:year/dpps' => 'countries#dpps'
     get 'country/:iso_code/:year/add' => 'countries#add'
