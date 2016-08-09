@@ -1,7 +1,6 @@
 require 'sql_helper'
 
 class PopulationAndInputZoneViews < ActiveRecord::Migration
-
   include SqlHelper
 
   def change
