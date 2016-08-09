@@ -106,4 +106,4 @@ CREATE MATERIALIZED VIEW populations AS
   FROM population_submissions ps
     JOIN submissions s ON (ps.submission_id = s.id)
     JOIN input_zones iz ON (iz.population_id = ps.id)
-  GROUP BY (ps.id, ps.site_name, s.country_id)
+  GROUP BY (ps.id, ps.site_name, s.country_id);
