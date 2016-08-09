@@ -160,6 +160,6 @@ class AnalysesController < ApplicationController
   end
 
   def years
-    render json: Analysis::YEARS
+    render json: Analysis.years
   end
 end
