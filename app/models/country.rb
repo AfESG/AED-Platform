@@ -161,6 +161,18 @@ class Country < ActiveRecord::Base
     execute(sql, name, year).first['range'] rescue nil
   end
 
+  def estimates
+    sql = <<-SQL
+SELECT
+  analysis_year,
+  "ESTIMATE" AS estimate
+FROM estimate_factors_analyses_categorized_totals_country_for_add
+WHERE country = ?
+ORDER BY analysis_year;
+    SQL
+    execute(sql, name).to_a
+  end
+
   private
   def self.execute(*array)
     sql = ActiveRecord::Base.send(:sanitize_sql_array, array)

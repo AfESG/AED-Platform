@@ -70,6 +70,18 @@ class Continent < ActiveRecord::Base
     execute(sql, name).first['geo']
   end
 
+  def estimates
+    sql = <<-SQL
+SELECT
+  analysis_year,
+  "ESTIMATE" AS estimate
+FROM estimate_factors_analyses_categorized_totals_continent_for_add
+WHERE continent = 'Africa'
+ORDER BY analysis_year;
+    SQL
+    execute(sql).to_a
+  end
+
   private
   def execute(*array)
     sql = ActiveRecord::Base.send(:sanitize_sql_array, array)
