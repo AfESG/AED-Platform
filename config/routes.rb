@@ -89,6 +89,7 @@ Aaed::Application.routes.draw do
     get 'input_zones' => 'input_zones#index'
     get 'input_zone/:id/strata' => 'input_zones#strata'
     get 'input_zone/:id/geojson_map' => 'input_zones#geojson_map'
+    get 'input_zone/:id/data' => 'input_zones#data'
 
     # population endpoints
     get 'populations' => 'populations#index'
@@ -130,10 +131,17 @@ Aaed::Application.routes.draw do
     get 'boilerplate_dump' => 'api#boilerplate_dump', defaults: { format: :json }
     get 'boilerplate_data_dump' => 'api#boilerplate_data_dump', defaults: { format: :json }
     get 'autocomplete' => 'api#autocomplete'
+
+    # TODO deprecate after new URL is used
     get 'known/geojson_map' => 'api#known_geojson'
     get 'possible/geojson_map' => 'api#possible_geojson'
     get 'doubtful/geojson_map' => 'api#doubtful_geojson'
     get 'protected/geojson_map' => 'api#protected_geojson'
+
+    get 'range/known/geojson_map' => 'api#known_geojson'
+    get 'range/possible/geojson_map' => 'api#possible_geojson'
+    get 'range/doubtful/geojson_map' => 'api#doubtful_geojson'
+    get 'range/protected/geojson_map' => 'api#protected_geojson'
   end
 
   get 'country/:iso_code/geojson_strata' => 'countries#geojson_strata'

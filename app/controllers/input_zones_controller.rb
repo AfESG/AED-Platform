@@ -4,7 +4,11 @@ class InputZonesController < ApplicationController
   include CachesMap
 
   def index
-    render json: { input_zones: InputZone.all }
+    render json: { input_zones: InputZone.select(:id, :name, :analysis_year, :analysis_name) }
+  end
+
+  def data
+    render json: input_zone
   end
 
   def geojson_map
