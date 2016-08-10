@@ -8,6 +8,7 @@ class ApiController < ApplicationController
                 :protected_geojson,
                 expires: 24.hours,
                 cache_path: Proc.new { |c| c.params.keep_if { |k,v| %w(simplify strcode) }}
+  caches_action :autocomplete, expires: 24.hours
 
   def autocomplete
     list = {}
@@ -15,34 +16,24 @@ class ApiController < ApplicationController
       list[c.name] = {
           id: c.id,
           geographicType: 'continent',
-          parent: nil
+          parent: nil,
+          children_count: c.regions.count
       }
     end
     Region.all.each do |r|
       list[r.name] = {
           id: r.id,
           geographicType: 'region',
-          parent: r.continent.name
+          parent: r.continent.name,
+          children_count: r.countries.count
       }
     end
     Country.where.not(region: nil).each do |c|
       list[c.name] = {
           id: c.iso_code,
           geographicType: 'country',
-          parent: c.region.name
-      }
-    end
-    sql = "SELECT DISTINCT
-             input_zone_id,
-             stratum_name || ' (' || analysis_year || ')' AS name,
-             country
-           FROM estimate_locator
-           WHERE analysis_year < 2015"
-    execute(sql).each do |s|
-      list[s['name']] = {
-          id: s['input_zone_id'],
-          geographicType: 'stratum',
-          parent: s['country']
+          parent: c.region.name,
+          children_count: c.populations.count
       }
     end
     render json: list
