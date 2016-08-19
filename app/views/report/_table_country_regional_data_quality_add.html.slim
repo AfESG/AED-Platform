@@ -30,8 +30,9 @@
               a href=("#{@region.gsub(' ','_')}/#{u row['country'].gsub(' ','_')}") = row['country']
             - else
               a href=("#{@region.gsub(' ','_')}/#{u row['country'].gsub(' ','_')}") = row['country'] 
-          - ['ESTIMATE','CONFIDENCE','GUESS_MIN','GUESS_MAX','RANGE_AREA','PERCENT_OF_RANGE_COVERED','PERCENT_OF_RANGE_ASSESSED'].each do |key|
+          - ['ESTIMATE','CONFIDENCE','GUESS_MIN','GUESS_MAX','RANGE_AREA','PERCENT_OF_RANGE_COVERED'].each do |key|
             = add_and_display_cell row, key, totals, round: false
+          = add_and_display_cell row, 'PERCENT_OF_RANGE_ASSESSED', totals, format: :percent, round: false
           = add_and_display_cell row, 'IQI', totals, precision: 2, zeroes: false
           = add_and_display_cell row, 'PFS', totals, pfs: true
     - @alt_country_sums.each do |row|

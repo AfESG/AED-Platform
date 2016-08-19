@@ -31,6 +31,7 @@ module AltDppsHelper
   end
 
   def round_area_cell area, opts={}
+    area = round_area_percent(area)
     defaults = { class: 'numeric' }
     defaults.merge!(opts[:attrs]) if opts[:attrs]
     content_tag :td, round_area(area), defaults
@@ -88,6 +89,17 @@ module AltDppsHelper
     return !values.nil? && values.include?(column)
   end
 
+  def round_area_percent(num)
+    num = num.to_f
+    if num>=98
+      return 100.0
+    end
+    if num<=0
+      return 0.0
+    end
+    num
+  end
+
   def add_and_display_area_cell row, column, totals, opts={}
     begin
       totals[column] ||= 0
@@ -97,6 +109,9 @@ module AltDppsHelper
       else
         num = value.to_f
         num = round_pfs(num) if opts[:pfs]
+        if opts[:format] and opts[:format] == :percent
+          num = round_area_percent(num)
+        end
         totals[column] += num
         round_area_cell num, opts
       end
@@ -113,6 +128,9 @@ module AltDppsHelper
       unused_cell
     else
       num = value.to_f.round(opts[:precision] || 0)
+      if opts[:format] and opts[:format] == :percent
+        num = round_area_percent(num)
+      end
       totals[column] += num
       numeric_cell round ? rounded(num) : num, opts
     end
