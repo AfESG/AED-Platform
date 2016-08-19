@@ -34,7 +34,7 @@ select
   ) protected_area_range
 from
   country_pa cpa,
-  (select ST_Union(geometry) all_range_geom
+  (select ST_MemUnion(geometry) all_range_geom
 	from range_geometries
 	where range=1
   ) arg;
