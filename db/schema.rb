@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160811202109) do
+ActiveRecord::Schema.define(version: 20160819023141) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -82,6 +82,27 @@ ActiveRecord::Schema.define(version: 20160811202109) do
     t.decimal  "selection",                                                  precision: 10
     t.string   "aed2016dis", limit: 5
     t.geometry "geom",       limit: {:srid=>102022, :type=>"multi_polygon"}
+  end
+
+  create_table "2016_range_only_fixed", primary_key: "gid", force: :cascade do |t|
+    t.integer  "range",      limit: 2
+    t.string   "rangequali", limit: 10
+    t.string   "ccode",      limit: 2
+    t.string   "cntryname",  limit: 30
+    t.integer  "area_sqkm"
+    t.integer  "refid"
+    t.string   "datastatus", limit: 2
+    t.string   "comments",   limit: 254
+    t.string   "rangetype",  limit: 20
+    t.string   "comments_1", limit: 254
+    t.string   "adjyear_1",  limit: 20
+    t.integer  "sourceyear", limit: 2
+    t.string   "publisyear", limit: 20
+    t.string   "2016",       limit: 20
+    t.string   "comnts2016", limit: 254
+    t.string   "ref_2016",   limit: 254
+    t.string   "chnges2016", limit: 254
+    t.geometry "geom",       limit: {:srid=>4326, :type=>"multi_polygon"}
   end
 
   create_table "add_range", id: false, force: :cascade do |t|
@@ -182,6 +203,28 @@ ActiveRecord::Schema.define(version: 20160811202109) do
     t.float   "guess_max"
   end
 
+  create_table "aed_range_layer_2016_data_sharing", primary_key: "gid", force: :cascade do |t|
+    t.string   "region",     limit: 30
+    t.string   "country",    limit: 30
+    t.string   "ccode",      limit: 5
+    t.string   "range",      limit: 20
+    t.float    "area_sqkm"
+    t.integer  "publish_yr", limit: 2
+    t.geometry "geom",       limit: {:srid=>4326, :type=>"multi_polygon"}
+  end
+
+  create_table "aed_range_layer_2016_data_sharing_old", primary_key: "gid", force: :cascade do |t|
+    t.string   "region",     limit: 30
+    t.string   "country",    limit: 30
+    t.string   "ccode",      limit: 5
+    t.string   "2016",       limit: 20
+    t.float    "area_sqkm"
+    t.integer  "publish_yr", limit: 2
+    t.geometry "geom",       limit: {:srid=>4326, :type=>"multi_polygon"}
+    t.integer  "range"
+    t.string   "rangequali", limit: 20
+  end
+
   create_table "analyses", force: :cascade do |t|
     t.string   "analysis_name"
     t.integer  "comparison_year"
@@ -213,6 +256,13 @@ ActiveRecord::Schema.define(version: 20160811202109) do
     t.integer  "analysis_id"
     t.string   "status"
     t.text     "comments"
+  end
+
+  create_table "base_country_range", id: false, force: :cascade do |t|
+    t.string   "country",        limit: 50
+    t.decimal  "range",                                                precision: 10
+    t.string   "range_quality",  limit: 10
+    t.geometry "range_geometry", limit: {:srid=>0, :type=>"geometry"}
   end
 
   create_table "cause_of_changes", id: false, force: :cascade do |t|
@@ -364,6 +414,22 @@ ActiveRecord::Schema.define(version: 20160811202109) do
     t.decimal "range",                    precision: 10
     t.string  "range_quality", limit: 10
     t.float   "area_sqkm"
+  end
+
+  create_table "country_range_union_metrics", id: false, force: :cascade do |t|
+    t.text    "continent"
+    t.string  "region",        limit: 20
+    t.string  "country",       limit: 50
+    t.decimal "range",                    precision: 10
+    t.string  "range_quality", limit: 10
+    t.float   "area_sqkm"
+  end
+
+  create_table "country_range_unions", id: false, force: :cascade do |t|
+    t.string   "country",        limit: 50
+    t.decimal  "range",                                                precision: 10
+    t.string   "range_quality",  limit: 10
+    t.geometry "range_geometry", limit: {:srid=>0, :type=>"geometry"}
   end
 
   create_table "data_request_forms", force: :cascade do |t|
@@ -593,6 +659,29 @@ ActiveRecord::Schema.define(version: 20160811202109) do
     t.boolean  "in2015list"
   end
 
+  create_table "old_staging_protected_area_geometries", id: false, force: :cascade do |t|
+    t.integer  "gid"
+    t.decimal  "ptacode",                                          precision: 10
+    t.string   "ptaname",    limit: 254
+    t.string   "ccode",      limit: 254
+    t.decimal  "year_est",                                         precision: 10
+    t.string   "iucncat",    limit: 254
+    t.decimal  "iucncatara",                                       precision: 10
+    t.string   "designate",  limit: 254
+    t.string   "abvdesig",   limit: 254
+    t.decimal  "area_sqkm",                                        precision: 10
+    t.decimal  "reported",                                         precision: 10
+    t.decimal  "calculated",                                       precision: 10
+    t.string   "source",     limit: 254
+    t.decimal  "refid",                                            precision: 10
+    t.decimal  "inrange",                                          precision: 10
+    t.decimal  "samesurvey",                                       precision: 10
+    t.decimal  "shape_leng"
+    t.decimal  "shape_area"
+    t.decimal  "selection",                                        precision: 10
+    t.geometry "geometry",   limit: {:srid=>0, :type=>"geometry"}
+  end
+
   create_table "population_submission_attachments", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -690,6 +779,13 @@ ActiveRecord::Schema.define(version: 20160811202109) do
   end
 
   add_index "range_geometries", ["geometry"], name: "si_range_geometry", using: :gist
+
+  create_table "range_geometries_old", id: false, force: :cascade do |t|
+    t.integer  "gid"
+    t.decimal  "range",                                                    precision: 10
+    t.string   "rangequali", limit: 10
+    t.geometry "geometry",   limit: {:srid=>4326, :type=>"multi_polygon"}
+  end
 
   create_table "range_previews", force: :cascade do |t|
     t.string   "range_type"
