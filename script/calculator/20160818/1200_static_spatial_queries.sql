@@ -1,12 +1,13 @@
 update range_geometries set geometry=ST_MakeValid(geometry) where not ST_IsValid(geometry);
 
-drop table if exists country_range cascade;
+drop table if exists base_country_range cascade;
 create table base_country_range as
 select
   c.cntryname country, g.range, g.rangequali range_quality,
   ST_MakeValid(ST_Multi(ST_CollectionExtract(ST_Intersection(geometry,geom),3))) range_geometry
 from range_geometries g, country c where ST_Intersects(geometry,geom);
 
+drop table if exists country_range cascade;
 create table country_range as
 select
   country, range, range_quality,
