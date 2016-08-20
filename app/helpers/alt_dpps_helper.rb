@@ -27,7 +27,7 @@ module AltDppsHelper
   end
 
   def round_area area
-    area.to_f.round(1)
+    area.to_f.round
   end
 
   def round_area_cell area, opts={}
