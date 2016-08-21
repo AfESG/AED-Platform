@@ -68,6 +68,7 @@ create table survey_range_intersections as
     ST_Intersection(ST_MakeValid(ST_Force2D(ST_SetSRID(geom,4326))),ST_MakeValid(ST_Force2D(ST_SetSRID(range_geometry,4326))))
   from estimate_locator_with_geometry l
   join country_range c on ST_Intersects(ST_SetSRID(geom,4326),ST_SetSRID(range_geometry,4326))
+    and c.country = l.country
   where range=1;
 
 create view survey_range_intersections_add as
@@ -75,6 +76,7 @@ create view survey_range_intersections_add as
     ST_Intersection(ST_MakeValid(ST_Force2D(ST_SetSRID(geom,4326))),ST_MakeValid(ST_Force2D(ST_SetSRID(range_geometry,4326))))
   from estimate_locator_with_geometry_add l
   join country_range c on ST_Intersects(ST_SetSRID(geom,4326),ST_SetSRID(range_geometry,4326))
+    and c.country = l.country
   where range=1;
 
 drop table if exists survey_range_intersection_metrics cascade;
