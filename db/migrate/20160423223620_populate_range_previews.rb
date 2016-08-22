@@ -19,16 +19,18 @@ class PopulateRangePreviews < ActiveRecord::Migration
          created_at,
          updated_at)
       select
-        rangetype,
+        rangequali,
         'Needs review',
-        comments || comments_1,
-        sourceyear,
-        publisyear,
-        geom,
+        '',
+        '2015',
+        '2015',
+        geometry,
         NOW(),
         NOW()
       from
-        "2014_rangetypeupdates5_final"
+        "range_geometries"
+      where
+        range=1
     SQL
   end
 end
