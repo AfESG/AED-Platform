@@ -36,6 +36,22 @@ class ApiController < ApplicationController
           children_count: c.populations.count
       }
     end
+    Population.all.each do |p|
+      list[p.name] = {
+          id: p.id,
+          geographicType: 'population',
+          parent: p.country.name,
+          children_count: p.input_zones.count
+      }
+    end
+    InputZone.all.each do |i|
+      list[i.name] = {
+          id: i.id,
+          geographicType: 'input_zone',
+          parent: i.population.name,
+          children_count: nil
+      }
+    end
     render json: list
   end
 
