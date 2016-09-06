@@ -5,3 +5,10 @@ require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
 Aaed::Application.load_tasks
+
+namespace :memcached do
+  desc 'Clears the Rails cache'
+  task :flush => :environment do
+    Rails.cache.clear
+  end
+end
