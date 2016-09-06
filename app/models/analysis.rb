@@ -8,7 +8,7 @@ class Analysis < ActiveRecord::Base
 
   class << self
     def years
-      { add: Analysis.all.pluck(:analysis_year), dpps: [2013, 2007, 2002, 1998, 1995] }
+      { add: Analysis.all.pluck(:analysis_year), dpps: [2015, 2013, 2007, 2002, 1998, 1995] }
     end
 
     def latest_add_year

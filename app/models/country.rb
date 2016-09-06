@@ -90,7 +90,7 @@ class Country < ActiveRecord::Base
 
   def dpps(year)
     begin
-      if year.to_i != 2013
+      if year.to_i < 2013
         {
             country: name,
             year: year

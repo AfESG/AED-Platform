@@ -16,7 +16,7 @@ class Continent < ActiveRecord::Base
   end
 
   def dpps(year)
-    if year.to_i != 2013
+    if year.to_i < 2013
       values = {
           continent: name,
           year: year
