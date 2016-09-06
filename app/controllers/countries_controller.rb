@@ -21,7 +21,9 @@ class CountriesController < ApplicationController
   end
 
   def dpps
-    render json: country.dpps(year).merge(strata: country.strata(year), input_zones: country.input_zones)
+    render json: country.dpps(year).merge(strata: country.strata(year),
+                                          input_zones: country.input_zones,
+                                          summary: country.dpps_summary(year))
   end
 
   def add

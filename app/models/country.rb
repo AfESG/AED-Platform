@@ -173,6 +173,24 @@ ORDER BY analysis_year;
     execute(sql, name).to_a
   end
 
+  def dpps_summary(year)
+    sql = <<-sql
+SELECT
+  sc.definite                      AS "DEFINITE",
+  sc.possible                      AS "POSSIBLE",
+  sc.probable                      AS "PROBABLE",
+  speculative                      AS "SPECUL",
+  ROUND(rm.range_area)             AS "RANGEAREA",
+  ROUND(rm.percent_regional_range) AS "RANGEPERC",
+  ROUND(rm.percent_range_assessed) AS "SURVRANGPERC"
+FROM
+  dpps_sums_country sc
+  JOIN regional_range_table rm USING (country, analysis_year)
+WHERE sc.country = ? AND analysis_year = ?
+    sql
+    execute(sql, name, year).first
+  end
+
   def input_zones
     populations.includes(:input_zones).reduce([]) do |list, p|
       list += p.input_zones.select(:id, :name, :analysis_year)
