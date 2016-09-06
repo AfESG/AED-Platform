@@ -173,6 +173,12 @@ ORDER BY analysis_year;
     execute(sql, name).to_a
   end
 
+  def input_zones
+    populations.includes(:input_zones).reduce([]) do |list, p|
+      list += p.input_zones.select(:id, :name, :analysis_year)
+    end
+  end
+
   private
   def self.execute(*array)
     sql = ActiveRecord::Base.send(:sanitize_sql_array, array)
