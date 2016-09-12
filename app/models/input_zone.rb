@@ -10,6 +10,10 @@ class InputZone < ActiveRecord::Base
     super({ except: [:geom] }.merge(options || {}))
   end
 
+  def country
+    population.country
+  end
+
   def strata(year)
     sql = 'SELECT * FROM input_zone_export WHERE trim(inpzone) = ? and ayear = ?'
     execute(sql, name, year)

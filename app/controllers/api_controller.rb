@@ -11,44 +11,52 @@ class ApiController < ApplicationController
   caches_action :autocomplete, expires: 24.hours
 
   def autocomplete
-    list = {}
+    list = []
     Continent.where(name: 'Africa').each do |c|
-      list[c.name] = {
+      list << {
           id: c.id,
+          name: c.name,
           geographicType: 'continent',
           parent: nil,
           children_count: c.regions.count
       }
     end
     Region.all.each do |r|
-      list[r.name] = {
+      list << {
           id: r.id,
+          name: r.name,
           geographicType: 'region',
-          parent: r.continent.name,
+          parent: { id: r.continent.id, name: r.continent.name },
           children_count: r.countries.count
       }
     end
     Country.where.not(region: nil).each do |c|
-      list[c.name] = {
+      list << {
           id: c.iso_code,
+          name: c.name,
           geographicType: 'country',
-          parent: c.region.name,
+          parent:  { id: c.region.id, name: c.region.name },
           children_count: c.populations.count
       }
     end
     Population.all.each do |p|
-      list[p.name] = {
+      children_count = p.input_zones.where(analysis_year: 2015).count
+      next unless children_count > 0
+      list << {
           id: p.id,
+          name: p.name,
           geographicType: 'population',
-          parent: p.country.name,
-          children_count: p.input_zones.count
+          parent: { id: p.country.iso_code, name: p.country.name },
+          children_count: children_count
       }
     end
-    InputZone.all.each do |i|
-      list[i.name] = {
+    InputZone.where(analysis_year: 2015).each do |i|
+      list << {
           id: i.id,
+          name: i.name,
           geographicType: 'input_zone',
-          parent: i.population.name,
+          parent: { id: i.population.id, name: i.population.name },
+          parent_country: { id: i.country.iso_code, name: i.country.name },
           children_count: nil
       }
     end
