@@ -58,15 +58,42 @@ class Region < ActiveRecord::Base
   end
 
   def geojson_map_simple(simplify = 0.0)
-    sql = 'SELECT ST_AsGeoJSON(ST_SimplifyPreserveTopology(geom, ?), 10) as "geo" FROM region WHERE region = ?'
+    if name == 'Eastern Africa'
+      # subtract Sudan
+      sql = <<sql
+WITH geoms AS (
+    SELECT
+      cc.name,
+      c.geom
+    FROM countries cc
+      JOIN country c ON (cc.iso_code = c.ccode)
+    WHERE cc.region_id = 3 AND cc.name != 'Sudan'
+)
+SELECT ST_AsGeoJSON(
+  ST_SimplifyPreserveTopology(ST_Union(ST_SnapToGrid(geom, 0.0001)), ?), 10) AS geo
+FROM geoms WHERE 'Eastern Africa' = ?;
+sql
+    else
+      sql = 'SELECT ST_AsGeoJSON(ST_SimplifyPreserveTopology(geom, ?), 10) as "geo" FROM region WHERE region = ?'
+    end
     execute(sql, simplify, name).first['geo']
   end
 
   def geojson_map
     if name == 'Eastern Africa'
       # subtract Sudan
-      sql = 'SELECT ST_AsGeoJSON(ST_Difference(geom, (SELECT geom FROM country WHERE cntryname = \'Sudan\')), ' +
-        '10) AS "geo" FROM region WHERE region = ?'
+      sql = <<sql
+WITH geoms AS (
+    SELECT
+      cc.name,
+      c.geom
+    FROM countries cc
+      JOIN country c ON (cc.iso_code = c.ccode)
+    WHERE cc.region_id = 3 AND cc.name != 'Sudan'
+)
+SELECT ST_AsGeoJSON(ST_Union(ST_SnapToGrid(geom, 0.0001)), 10) AS geo
+FROM geoms WHERE 'Eastern Africa' = ?;
+sql
     else
       sql = 'SELECT ST_AsGeoJSON(geom, 10) as "geo" FROM region WHERE region = ?'
     end
