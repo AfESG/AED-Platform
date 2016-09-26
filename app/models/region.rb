@@ -63,7 +63,13 @@ class Region < ActiveRecord::Base
   end
 
   def geojson_map
-    sql = 'SELECT ST_AsGeoJSON(geom, 10) as "geo" FROM region WHERE region = ?'
+    if name == 'Eastern Africa'
+      # subtract Sudan
+      sql = 'SELECT ST_AsGeoJSON(ST_Difference(geom, (SELECT geom FROM country WHERE cntryname = \'Sudan\')), ' +
+        '10) AS "geo" FROM region WHERE region = ?'
+    else
+      sql = 'SELECT ST_AsGeoJSON(geom, 10) as "geo" FROM region WHERE region = ?'
+    end
     execute(sql, name).first['geo']
   end
 
