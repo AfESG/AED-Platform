@@ -7,7 +7,7 @@ class InputZone < ActiveRecord::Base
   end
 
   def as_json(options = nil)
-    super({ except: [:geom] }.merge(options || {}))
+    super({ except: [:geom] }.merge(options || {})).merge(population_name: population.name)
   end
 
   def country

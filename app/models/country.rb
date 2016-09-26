@@ -193,7 +193,7 @@ WHERE sc.country = ? AND analysis_year = ?
 
   def input_zones
     populations.includes(:input_zones).reduce([]) do |list, p|
-      list += p.input_zones.select(:id, :name, :analysis_year)
+      list += p.input_zones.select(:id, :name, :analysis_year, :population_id)
     end
   end
 

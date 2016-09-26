@@ -4,8 +4,7 @@ class InputZonesController < ApplicationController
   include CachesMap
 
   def index
-    render json: { input_zones: InputZone.select(:id, :name, :analysis_year, :analysis_name, :population_id).
-        map { |iz| iz.as_json.merge(population_name: iz.population.name) } }
+    render json: { input_zones: InputZone.select(:id, :name, :analysis_year, :analysis_name, :population_id) }
   end
 
   def data
