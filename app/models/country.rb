@@ -120,6 +120,7 @@ class Country < ActiveRecord::Base
         analysis_name: filter,
         summary_totals: execute(alt_dpps(*args)),
         summary_sums: execute(alt_dpps_totals(*args)),
+        baseline_year: analysis.try(:comparison_year),
         summary_baseline: analysis.try(:comparison_year) ?
             execute(alt_dpps_totals("country='#{escaped_name}'", analysis.comparison_year, filter)) :
             nil,
