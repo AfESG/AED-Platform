@@ -110,7 +110,8 @@ class Country < ActiveRecord::Base
   end
 
   def add(year)
-    filter = Analysis.find_by_analysis_year(year).analysis_name rescue nil
+    analysis = Analysis.find_by_analysis_year(year)
+    filter = analysis.try(:analysis_name)
     args = ["country='#{escaped_name}'", year, filter]
     {
         country: name,
@@ -119,6 +120,9 @@ class Country < ActiveRecord::Base
         analysis_name: filter,
         summary_totals: execute(alt_dpps(*args)),
         summary_sums: execute(alt_dpps_totals(*args)),
+        summary_baseline: analysis.try(:comparison_year) ?
+            execute(alt_dpps_totals("country='#{escaped_name}'", analysis.comparison_year, filter)) :
+            nil,
         areas: execute(alt_dpps_country_area(*args)),
         causes_of_change: execute(alt_dpps_causes_of_change(*args)),
         causes_of_change_sums: execute(alt_dpps_causes_of_change_sums(*args)),
