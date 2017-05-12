@@ -1,20 +1,24 @@
 -- input zone view
 DROP VIEW IF EXISTS input_zones CASCADE;
 CREATE MATERIALIZED VIEW input_zones AS
-  WITH aggregate_data AS (
+WITH aggregate_data AS (
       SELECT
         trim(e.replacement_name)                                              AS name,
         e.analysis_year                                                       AS analysis_year,
         e.analysis_name                                                       AS analysis_name,
         sum(e.population_estimate)                                            AS estimate,
         sum(e.stratum_area)                                                   AS area,
+        sum(e.population_variance)                                            AS pv,
         st_multi(st_collect(ST_SetSRID(sg.geom, 4326)))                       AS geom,
+
+        -- todo:  this bit is producing suspect numbers ...
         least(5, greatest(1,
                           round(log((((sum(ed.definite) + sum(ed.probable) + 0.001) /
                                       (sum(ed.definite) + sum(ed.probable) +
                                        sum(ed.possible) + sum(ed.speculative) + 0.001))
                                      + 1) /
                                     (sum(ela.area_sqkm) / rrt.range_area))))) AS pfs
+
       FROM
         estimate_locator e
         JOIN estimate_locator_areas ela ON (e.input_zone_id = ela.input_zone_id
@@ -46,6 +50,7 @@ CREATE MATERIALIZED VIEW input_zones AS
         e.completion_year          AS survey_year,
         ad.estimate                AS population_estimate,
         CASE WHEN e.population_upper_confidence_limit IS NOT NULL
+            and e.population_upper_confidence_limit != 0
           THEN
             CASE WHEN e.estimate_type = 'O'
               THEN
@@ -55,10 +60,22 @@ CREATE MATERIALIZED VIEW input_zones AS
             END
         WHEN e.population_confidence_interval IS NOT NULL
           THEN
-            to_char(ROUND(e.population_confidence_interval), '999,999')
+            case when e.population_confidence_interval = 0 and ad.pv is not null
+              then to_char(ROUND(round(sqrt(ad.pv) * 1.96)), '999,999')
+            else
+              to_char(ROUND(e.population_confidence_interval), '999,999')
+            end
         ELSE
           NULL
-        END                        AS percent_cl,
+        END as percent_cl,
+        /*
+        -- used for debugging percent_cl:
+        e.population_estimate,
+        e.population_lower_confidence_limit,
+        e.population_upper_confidence_limit,
+        e.population_confidence_interval,
+        round(sqrt(ad.pv) * 1.96) as cl95,
+        */
         e.short_citation           AS source,
         ad.pfs                     AS pfs,
         ad.area                    AS area,
