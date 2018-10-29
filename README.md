@@ -26,6 +26,21 @@ This is the web application for the African Elephant Database (www.AfricanElepha
 - `bundle install`
 - `rake db:create`
 - Load the database: use a production copy or `rake db:reset` to get an empty database.
+- Prepare the "test" database: `bundle exec rake db:reset RAILS_ENV=test`
+  - Run tests: `rake`
+- Create a '.env' file at the root of the project with the following variables:
+  ```bash
+  DOMAIN=test.com
+  AWS_ACCESS_KEY_ID=
+  AWS_SECRET_ACCESS_KEY=
+  AWS_DEFAULT_REGION=us-west-2
+  REQUEST_FORM_SUBMITTED_TO_EMAIL=
+  REQUEST_FORM_SUBMITTED_BCC_EMAIL=
+  REQUEST_FORM_THANKS_BCC_EMAIL=
+  GOOGLE_ANALYTICS_TRACKING_ID=u-disabled-1
+  ```
+  - Fill in the blanks with your development values.
+  - See [aed_env.rb](app/lib/aed_env.rb) for complete list of environment variables.
 
 ## Setup DigitalOcean Droplet
 
