@@ -37,7 +37,7 @@ rails g scaffold SurveyAerialTotalCountStratum \
   population_standard_error:float \
   population_t:float \
   population_degrees_of_freedom:integer \
-  population_confidence_limits:float \
+  population_confidence_interval:float \
   population_no_precision_estimate_available:boolean \
   \
   average_speed:integer \
@@ -65,7 +65,7 @@ rails g scaffold SurveyAerialSampleCountStratum \
   population_standard_error:float \
   population_t:float \
   population_degrees_of_freedom:integer \
-  population_confidence_limits:float \
+  population_confidence_interval:float \
   population_no_precision_estimate_available:boolean \
   \
   total_possible_transects:integer \
@@ -93,7 +93,7 @@ rails g scaffold SurveyGroundTotalCountStratum \
   population_standard_error:float \
   population_t:float \
   population_degrees_of_freedom:integer \
-  population_confidence_limits:float \
+  population_confidence_interval:float \
   population_no_precision_estimate_available:boolean \
   \
   transects_covered:integer \
@@ -118,7 +118,7 @@ rails g scaffold SurveyGroundSampleCountStratum \
   population_standard_error:float \
   population_t:float \
   population_degrees_of_freedom:integer \
-  population_confidence_limits:float \
+  population_confidence_interval:float \
   population_no_precision_estimate_available:boolean \
   \
   transects_covered:integer \
@@ -140,7 +140,7 @@ rails g scaffold SurveyDungCountLineTransectStratum \
   population_standard_error:float \
   population_t:float \
   population_degrees_of_freedom:integer \
-  population_confidence_limits:float \
+  population_confidence_interval:float \
   population_no_precision_estimate_available:boolean \
   \
   asymmetric_upper_confidence_limit:integer\
@@ -199,7 +199,7 @@ rails g scaffold SurveyFaecalDnaStratum \
   population_standard_error:float \
   population_t:float \
   population_degrees_of_freedom:integer \
-  population_confidence_limits:float \
+  population_confidence_interval:float \
   population_no_precision_estimate_available:boolean \
   \
   method_of_analysis:string \

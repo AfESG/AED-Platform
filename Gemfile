@@ -1,8 +1,8 @@
 source 'http://rubygems.org'
 
-ruby '2.2.3'
+ruby '2.5.3'
 
-gem 'rails', '~>4.2'
+gem 'rails', '~> 4.2.10'
 
 gem 'sass-rails'
 gem 'coffee-rails'
@@ -13,16 +13,11 @@ gem 'leaflet-rails'
 gem 'bootstrap-sass'
 
 #Admin interface
-gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'
+gem 'rails_admin'
 
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
-
-gem 'pg'
+gem 'pg', '< 1.0.0'
 
 gem 'devise'
-
-gem 'haml'
 
 gem 'slim'
 
@@ -37,7 +32,9 @@ gem 'rack-cache'
 
 gem 'paperclip'
 
-gem 'aws-sdk-v1'
+gem 'aws-sdk', '~> 3'
+
+gem 'aws-sdk-rails'
 
 gem 'paper_trail'
 
@@ -47,29 +44,26 @@ gem 'country_select'
 
 gem 'rubyzip'
 
+# Requires:
+#   sudo apt install libgeos-dev
+#     Make sure this lib is installed before running 'bundle install'.
+#     Otherwise: `gem uninstall rgeo`, `sudo apt install libgeos-dev`, `gem install rgeo`
+gem 'rgeo'
 gem 'rgeo-shapefile'
-
 gem 'rgeo-geojson'
 
-# gem 'sqlite3'
-
-# Use unicorn as the web server
-gem 'unicorn'
-
-# Deploy with Capistrano
-gem 'capistrano'
-gem 'rvm-capistrano', require:false
-gem 'capistrano-unicorn'
-
-gem 'protected_attributes'
-gem 'roo'
-
 # For shapefile writing support
-gem 'dbf', '2.0.7'
-gem 'georuby', :git => 'git://github.com/nofxx/georuby.git'
+gem 'dbf'
+gem 'georuby'
 
 # Make ActiveRecord PostGIS-aware
 gem 'activerecord-postgis-adapter'
+
+# Use puma as the web server
+gem 'puma'
+
+gem 'protected_attributes'
+gem 'roo'
 
 # For faking narratives (for now)
 gem 'faker'
@@ -77,21 +71,11 @@ gem 'faker'
 # Cache actions for API responses
 gem 'actionpack-action_caching'
 
-# To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)
-# gem 'ruby-debug'
-# gem 'ruby-debug19', :require => 'ruby-debug'
-
-# Bundle the extra gems:
-# gem 'bj'
-# gem 'nokogiri'
-# gem 'sqlite3-ruby', :require => 'sqlite3'
-# gem 'aws-s3', :require => 'aws/s3'
-
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
 # and rake tasks are available in development mode:
 group :test do
-  gem 'turn', :require => false
+
 end
 
 group :development do
@@ -99,10 +83,12 @@ group :development do
 end
 
 group :development, :test do
-  gem 'ruby_parser'
   gem 'hpricot'
+  gem 'dotenv-rails'
 end
 
 group :production do
+  gem 'rails_12factor'
   gem 'appygram-rails'
 end
+

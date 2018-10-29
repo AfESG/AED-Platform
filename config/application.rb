@@ -9,7 +9,7 @@ if defined?(Bundler)
   # Bundler.require(:default, :assets, Rails.env)
 end
 
-module Aaed
+module Aed
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -33,11 +33,8 @@ module Aaed
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-    config.generators do |g|
-      g.template_engine :haml
-    end
-
-    config.cache_store = :dalli_store, { compress: true }
+    #config.cache_store = :dalli_store, AedEnv.MEMCACHED_URL, { compress: true }
+    config.cache_store = :dalli_store, ENV.fetch('MEMCACHED_URL', 'localhost:11211'), { compress: true }
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
@@ -65,5 +62,8 @@ module Aaed
 
     # import future
     config.active_record.raise_in_transactional_callbacks = true
+
+    # Dump the database schema to SQL
+    config.active_record.schema_format = :sql
   end
 end

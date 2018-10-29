@@ -6,3 +6,6 @@ tmp/
 .sass-cache/
 public/assets
 public/uploads
+.idea
+.ruby-version
+.env

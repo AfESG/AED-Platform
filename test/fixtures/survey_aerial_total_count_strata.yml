@@ -9,7 +9,7 @@ one:
   population_standard_error: 1.5
   population_t: 1.5
   population_degrees_of_freedom: 1
-  population_confidence_limits: 1.5
+  population_confidence_interval: 1.5
   population_no_precision_estimate_available: false
   average_speed: 1
   average_transect_spacing: 1
@@ -30,7 +30,7 @@ two:
   population_standard_error: 1.5
   population_t: 1.5
   population_degrees_of_freedom: 1
-  population_confidence_limits: 1.5
+  population_confidence_interval: 1.5
   population_no_precision_estimate_available: false
   average_speed: 1
   average_transect_spacing: 1
