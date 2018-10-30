@@ -173,7 +173,7 @@ mkdir -p "${PUBLIC_UPLOADS_SHEETS_DIR}"
 
 echo ""
 echo "==> Linking application to public/uploads/spreadsheets"
-dokku storage:mount "${APPNAME}" ${PUBLIC_UPLOADS_SHEETS_DIR}:/public/uploads/spreadsheets
+dokku storage:mount "${APPNAME}" ${PUBLIC_UPLOADS_SHEETS_DIR}:/app/public/uploads/spreadsheets
 
 
 # This is the buildpack user
