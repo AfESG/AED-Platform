@@ -117,7 +117,7 @@ All commands should be run as the root user unless stated otherwise.
   - Note: You must have a certificate key installed on your system and on the Droplet to gain access.
     - See [User Management](http://dokku.viewdocs.io/dokku~v0.12.13/deployment/user-management/) for more information.
 - List running instances: `dokku apps:list`
-- Restart an app: dokku ps:restart <app-name>
+- Restart an app: `dokku ps:restart <app-name>`
   - Example: `dokku ps:restart production`
   - Note: Each application will be automatically restarted every day at midnight.
 - Restart a database: `dokku postgres:restart <app-name>`
