@@ -144,15 +144,11 @@ echo ""
 
 STORAGE_DIR="/var/lib/dokku/data/storage/${APPNAME}"
 VOLUMES_DIR="${STORAGE_DIR}/volumes"
-PUBLIC_SYSTEMS_DIR="${VOLUMES_DIR}/public/system"
 
+PUBLIC_SYSTEMS_DIR="${VOLUMES_DIR}/public/system"
 echo ""
 echo "==> Creating public/systems directory: ${PUBLIC_SYSTEMS_DIR}"
 mkdir -p "${PUBLIC_SYSTEMS_DIR}"
-
-# This is the buildpack user
-# http://dokku.viewdocs.io/dokku~v0.12.13/advanced-usage/persistent-storage/#usage
-chown -R 32767:32767 "${VOLUMES_DIR}"
 
 echo ""
 echo "==> Linking application to public/systems directory"
@@ -167,9 +163,22 @@ if [ -n ${POP_SUB_ATT_DIR} ]; then
   echo ""
   echo "==> Copying ${POP_SUB_ATT_DIR} to ${PUBLIC_SYSTEMS_DIR}"
   cp -r "${POP_SUB_ATT_DIR}" "${PUBLIC_SYSTEMS_DIR}/"
-  chown -R 32767:32767 "${VOLUMES_DIR}"
 fi
 
+
+PUBLIC_UPLOADS_SHEETS_DIR="${VOLUMES_DIR}/public/uploads/spreadsheets"
+echo ""
+echo "==> Creating public/uploads/spreadsheets directory: ${PUBLIC_UPLOADS_SHEETS_DIR}"
+mkdir -p "${PUBLIC_UPLOADS_SHEETS_DIR}"
+
+echo ""
+echo "==> Linking application to public/uploads/spreadsheets"
+dokku storage:mount "${APPNAME}" ${PUBLIC_UPLOADS_SHEETS_DIR}:/public/uploads/spreadsheets
+
+
+# This is the buildpack user
+# http://dokku.viewdocs.io/dokku~v0.12.13/advanced-usage/persistent-storage/#usage
+chown -R 32767:32767 "${VOLUMES_DIR}"
 
 ###################################################################################################
 # Memcached
