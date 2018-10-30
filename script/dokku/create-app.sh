@@ -288,14 +288,14 @@ export AWS_SECRET_ACCESS_KEY="\${AWS_SECRET_ACCESS_KEY}"
 export AWS_DEFAULT_REGION="\${AWS_DEFAULT_REGION}"
 
 TIMESTAMP=\$(date +"%F-%H-%M-%S")
-BACKUP_TAR_FILE="${BACKUPS_DIR}/${APPNAME}-storage-backup-\${TIMESTAMP}.tgz"
+BACKUP_TAR_FILE="${BACKUPS_DIR}/storage-backup-${APPNAME}-\${TIMESTAMP}.tgz"
 
 tar czf "\${BACKUP_TAR_FILE}" "${STORAGE_DIR}"
 
-aws s3 sync "${BACKUPS_DIR}" "s3://${BACKUPS_BUCKET_NAME}" --exclude "*" --include "*-storage-backup-*.tgz"
+aws s3 sync "${BACKUPS_DIR}" "s3://${BACKUPS_BUCKET_NAME}" --exclude "*" --include "storage-backup-*.tgz"
 if [ \$? -eq 0 ]; then
   echo "S3 Sync was Successful. Removing local backup files."
-  rm ${BACKUPS_DIR}/*-storage-backup-*.tgz
+  rm ${BACKUPS_DIR}/storage-backup-*.tgz
 else
   echo "S3 Sync failed."
 fi
