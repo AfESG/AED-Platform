@@ -79,8 +79,8 @@ if [ -z $DOMAIN ]; then DOMAIN=${DEFAULT_FULL_DOMAIN}; fi
 
 AWS_ACCESS_KEY_ID=$( input "=> Enter your AWS_ACCESS_KEY_ID:" )
 AWS_SECRET_ACCESS_KEY=$( input "=> Enter your AWS_SECRET_ACCESS_KEY:" )
-AWS_DEFAULT_REGION=$( input "=> Enter your AWS_DEFAULT_REGION (default: us-west-2):" )
-if [ -z $AWS_DEFAULT_REGION ]; then AWS_DEFAULT_REGION="us-west-2"; fi
+AWS_DEFAULT_REGION=$( input "=> Enter your AWS_DEFAULT_REGION (default: eu-central-1):" )
+if [ -z $AWS_DEFAULT_REGION ]; then AWS_DEFAULT_REGION="eu-central-1"; fi
 
 REQUEST_FORM_SUBMITTED_TO_EMAIL=$( input "=> Enter your REQUEST_FORM_SUBMITTED_TO_EMAIL:" )
 REQUEST_FORM_SUBMITTED_BCC_EMAIL=$( input "=> Enter your REQUEST_FORM_SUBMITTED_BCC_EMAIL:" )

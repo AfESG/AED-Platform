@@ -33,7 +33,7 @@ This is the web application for the African Elephant Database (www.AfricanElepha
   DOMAIN=test.com
   AWS_ACCESS_KEY_ID=
   AWS_SECRET_ACCESS_KEY=
-  AWS_DEFAULT_REGION=us-west-2
+  AWS_DEFAULT_REGION=eu-central-1
   REQUEST_FORM_SUBMITTED_TO_EMAIL=
   REQUEST_FORM_SUBMITTED_BCC_EMAIL=
   REQUEST_FORM_THANKS_BCC_EMAIL=
@@ -59,7 +59,7 @@ This is the web application for the African Elephant Database (www.AfricanElepha
 - Add block storage:
   - Skip this section.
 - Choose a datacenter region:
-  - Select **San Francisco**
+  - Select **Frankfurt**
 - Select additional options:
   - Select **Monitoring**
 - Add your SSH key:
