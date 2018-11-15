@@ -333,7 +333,7 @@ Q=$( input "=> Do you want to setup automatic database backups? [y/n]:" )
 if [ "${Q}" == "y" ]; then
   echo ""
   echo "==> Setting automatic database backup.."
-  dokku postgres:backup-auth ${APPNAME} "${AWS_ACCESS_KEY_ID}" "${AWS_SECRET_ACCESS_KEY}"
+  dokku postgres:backup-auth ${APPNAME} "${AWS_ACCESS_KEY_ID}" "${AWS_SECRET_ACCESS_KEY}" "${AWS_DEFAULT_REGION}"
 
   echo ""
   dokku postgres:backup-schedule ${APPNAME} "${CRON_SCHEDULE}" "${BACKUPS_BUCKET_NAME}"
