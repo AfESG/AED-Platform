@@ -20,7 +20,12 @@ class SubmissionsController < ApplicationController
   end
 
   def index
-    @submissions = Submission.joins(:user).joins(:population_submissions).joins('join countries on submissions.country_id=countries.id').order(translated_sort_column + ' ' + sort_direction);
+    @submissions = Submission.preload(:user, :population_submissions, :country)
+                             .joins(:user)
+                             .joins(:population_submissions)
+                             .joins('join countries on submissions.country_id=countries.id')
+                             .order(translated_sort_column + ' ' + sort_direction);
+
     unless sort_column=='created_at'
       # always add a secondary sort, to enforce a guaranteed order
       @submissions = @submissions.order('created_at desc');

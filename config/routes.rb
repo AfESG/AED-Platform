@@ -1,4 +1,4 @@
-Aaed::Application.routes.draw do
+Aed::Application.routes.draw do
 
   get 'api/autocomplete'
 

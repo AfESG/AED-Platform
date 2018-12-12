@@ -355,7 +355,7 @@ en:
   range_maps: "Range Maps"
   population_tables: "Population Tables"
   legal: "All materials on this site are Copyright (C) 1995-$today$ IUCN - The International Union for the Conservation of Nature.  Use is permitted only under the Creative Commons Attribution-NonCommercial-ShareAlike license (http://creativecommons.org/licenses/by-nc-sa/3.0/)."
-  banner: "ElephantDatabase.org"
+  banner: "AfricanElephantDatabase.org"
   about: "About"
   contribute: "Contribute"
   elephant_observation: "Elephant Observation"
@@ -409,8 +409,8 @@ en:
       of 1. See Introduction for details on how the PFS is derived."
     derived_warning:
       "Note that totals for the Definite, Probable, and Possible categories are derived by pooling the variances of
-      individual estimates, as described at <a href='http://www.elephantdatabase.org/reliability'>
-      http://www.elephantdatabase.org/reliability</a>. As a result, totals do not necessarily match the simple
+      individual estimates, as described at <a href='http://www.africanelephantdatabase.org/reliability'>
+      http://www.africanelephantdatabase.org/reliability</a>. As a result, totals do not necessarily match the simple
       sum of the entries within a given category."
   embargoed_until:
     <strong>Embargoed until</strong><br/> Your survey data will be used to create pooled estimates at the national,

@@ -6,4 +6,4 @@ require ::File.expand_path('../config/environment',  __FILE__)
 
 use Rack::Cache, :verbose => true
 
-run Aaed::Application
+run Aed::Application

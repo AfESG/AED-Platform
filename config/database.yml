@@ -1,40 +1,24 @@
+#
+# Note: The database "url" needs to start with "postgis" otherwise the adapter won't work.
+#
+
 development:
+  url: <%= ENV.fetch('DEV_DATABASE_URL', 'postgis://localhost/aed_development').sub('postgres://', 'postgis://') %>
   encoding: unicode
   adapter: postgis
-  database: aed_development
   pool: 5
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
+  url: <%= ENV.fetch('TEST_DATABASE_URL', 'postgis://localhost/aed_test').sub('postgres://', 'postgis://') %>
   encoding: unicode
   adapter: postgis
-  database: aaed_test
   pool: 5
 
 production:
+  url: <%= ENV["DATABASE_URL"]&.sub('postgres://', 'postgis://') %>
   encoding: unicode
   adapter: postgis
-  database: <%=ENV['POSTGRESQL_DATABASE']%>
-  pool: 5
-
-vulcan-dev:
-  encoding: unicode
-  adapter: postgis
-  database: <%= ENV['RDS_DB_NAME'] %>
-  username: <%= ENV['RDS_USERNAME'] %>
-  password: <%= ENV['RDS_PASSWORD'] %>
-  host: <%= ENV['RDS_HOSTNAME'] %>
-  port: <%= ENV['RDS_PORT'] %>
-  pool: 5
-
-vulcan-staging:
-  encoding: unicode
-  adapter: postgis
-  database: <%= ENV['RDS_DB_NAME'] %>
-  username: <%= ENV['RDS_USERNAME'] %>
-  password: <%= ENV['RDS_PASSWORD'] %>
-  host: <%= ENV['RDS_HOSTNAME'] %>
-  port: <%= ENV['RDS_PORT'] %>
   pool: 5
