@@ -93,7 +93,13 @@ This is the web application for the African Elephant Database (www.AfricanElepha
 
 ## Deployments
 
-Simply `git push` your branch to the droplet: `git push production master` or `git push production my-branch:master`
+1. Add the GIT remotes:
+   - `git remote add production dokku@africanelephantdatabase.org:production`
+   - `git remote add staging dokku@africanelephantdatabase.org:staging`
+2. Push your branch to a specific remote:
+   - Production:`git push production master`
+   - Staging: `git push staging master`
+   - Or push a specific branch: `git push production my-branch:master`
 
 Note: This application uses multiple buildpacks. The GEOS buildpack is located at: https://github.com/AfESG/heroku-geo-buildpack
 
