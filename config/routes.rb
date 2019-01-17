@@ -163,15 +163,12 @@ Aed::Application.routes.draw do
   get 'report/:year/:continent/:region/:country' => 'report#country'
   get 'report/:year/:continent/:region' => 'report#region'
   get 'report/:year/:continent' => 'report#continent'
-  get 'preview_report/appendix_1/:filter' => 'report#appendix_1'
-  get 'preview_report/appendix_2/:filter' => 'report#appendix_2'
-  get 'preview_report/general_statistics/:filter' => 'report#general_statistics'
-  get 'preview_report/:filter/:year/:continent' => 'report#preview_continent'
-  get 'preview_report/:filter/:year/:continent/corrections' => 'report#preview_corrections'
-  get 'preview_report/:filter/:year/:continent/:region' => 'report#preview_region'
-  get 'preview_report/:filter/:year/:continent/site/:site' => 'report#preview_site'
-  get 'preview_report/:filter/:year/:continent/:region/:country' => 'report#preview_country'
-  get 'preview_report/:filter/bibliography' => 'report#bibliography'
+  get 'report/appendix_1/:filter' => 'report#appendix_1'
+  get 'report/appendix_2/:filter' => 'report#appendix_2'
+  get 'report/general_statistics/' => 'report#general_statistics'
+  get 'report/:year/:continent/corrections' => 'report#corrections'
+  get 'report/:year/:continent/site/:site' => 'report#site'
+  get 'report//bibliography' => 'report#bibliography'
   get 'report/:year' => 'report#year'
   get 'report' => 'report#species'
 
@@ -181,8 +178,6 @@ Aed::Application.routes.draw do
 
   get 'population_submissions/:id/submit' => 'population_submissions#submit'
   get 'my_population_submissions' => 'population_submissions#my'
-
-  get 'analysis_2013' => 'population_submissions#analysis_2013'
 
   get 'species/:species_id/range_states' => 'species#range_states'
 

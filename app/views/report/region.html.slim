@@ -1,28 +1,38 @@
 .row
   .col-xs-12
-    h1 = "#{@year} Regional Totals for #{@region}"
+    h1
+      div
+        = @region
+      div style=('font-size: 20px;')
+        = @title
 
     = render 'breadcrumbs'
 
     p
     ' All Years for #{@region}:
-
-    a href=("/preview_report/2013_africa_final/2013/#{@continent}/#{@region.gsub(' ','_')}")  2013
-
-    - @past_years.each do |year|
-      '
-      ' &mdash;
-      = link_to year, "/report/#{year}/#{@continent}/#{@region.gsub(' ','_')}"
+    - @all_publication_years.each do |publication_year|
+      = link_to publication_year, "/report/#{publication_year}/#{@continent}/#{@region.gsub(' ','_')}"
+      - if publication_year != @all_publication_years.last
+        '
+        ' &mdash;
 
     == narrative
 
-    = render 'table_summary_totals', level: @region, totals: @summary_totals_by_region, sums: @summary_sums_by_region
+    = render 'tabs', id: 'summary', tabs: [ { admin: true, title: 'Alternate, No Rounding', template: 'table_alt_dpps', args: { level: @region, totals: @alt_summary_totals, baselines: @alt_summary_sums_s } },
+      { admin: true, title: 'Alternate, Rounded', template: 'table_alt_dpps', args: { level: @region, totals: @alt_summary_totals, baselines: @alt_summary_sums_s, rounded: true } },
+      { title: 'DPPS Calculations', template: 'table_summary_totals', args: { level: @region, totals: @summary_totals_by_region, baselines: @baseline_total } } ]
 
-    = render 'table_causes_of_change', totals: @causes_of_change_by_region, sums: @causes_of_change_sums_by_region
+    - if current_user and current_user.admin?
+      = render 'tabs', id: 'ioc', tabs: [ { title: 'ADD Interpretation of Change', template: 'table_causes_of_change_add' },
+        { title: 'DPPS Interpretation of Change', template: 'table_causes_of_change_dpps',
+          args: { base_totals: @causes_of_change_by_region_u, base_sums: @causes_of_change_sums_by_region_u, scaled_totals: @causes_of_change_by_region, scaled_sums: @causes_of_change_sums_by_region } } ]
 
     = render 'table_area_of_range_covered', totals: @area_of_range_covered_by_region, sums: @area_of_range_covered_sum_by_region
 
-    = render 'table_country_regional_data_quality'
+    = render 'tabs', id: 'data-quality', tabs: [ { admin: true, title: 'Alternate', template: 'table_country_regional_data_quality_add', args: {} },
+      { title: 'DPPS Calculations', template: 'table_country_regional_data_quality', args: {} } ]
+
+    == footnote
 
     p
       sup 1
@@ -30,5 +40,5 @@
     p
       sup 2
       == t 'footnotes.pfs'
-
-    == footnote
+    p
+      == t 'footnotes.derived_warning'

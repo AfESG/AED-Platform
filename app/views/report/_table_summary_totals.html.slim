@@ -1,36 +1,49 @@
-- year           = local_assigns[:year] || @year
+- analysis_year  = local_assigns[:analysis_year] || @analysis_year
 - level          = local_assigns[:level]
 - summary_totals = local_assigns[:totals]
-- summary_sums   = local_assigns[:sums]
-
+- baselines   = local_assigns[:baselines]
 
 - if summary_totals.num_tuples > 0
-  h2 style=('margin-top:20px') = "#{year} Summary Totals for #{level}"
+  h2 style=('margin-top:20px')
+    ' Summary Totals for
+    = level
 
-  table.table style='font-size:16px' 
+  table.table style='font-size:16px'
     tr
       th width='40%'  Data Category
       th.numeric width='15%'  Definite
       th.numeric width='15%'  Probable
       th.numeric width='15%'  Possible
       th.numeric width='15%'  Speculative
-    - summary_totals.each do |row|
-      tr style=('height: 24px') 
+    -@sdef = @sprob = @sposs = @sspec = 0
+    -summary_totals.each do |row|
+      tr style=('height: 24px')
         td= row['SURVEYTYPE']
         td.numeric= number_with_delimiter row['DEFINITE']
+        - @sdef = @sdef + row['DEFINITE'].to_i
         td.numeric= number_with_delimiter row['PROBABLE']
+        - @sprob = @sprob + row['PROBABLE'].to_i
         td.numeric= number_with_delimiter row['POSSIBLE']
+        - @sposs = @sposs + row['POSSIBLE'].to_i
         td.numeric= number_with_delimiter row['SPECUL']
-    - summary_sums.each do |row|
-      tr.totals style=('height: 24px; font-weight: bold') 
+        - @sspec = @sspec + row['SPECUL'].to_i
+    tr.totals style=('height: 24px; font-weight: bold')
+      td
+        ' Totals
+        = analysis_year
+      td.numeric= number_with_delimiter @sdef
+      td.numeric= number_with_delimiter @sprob
+      td.numeric= number_with_delimiter @sposs
+      td.numeric= number_with_delimiter @sspec
+    - baselines.each do |base|
+      tr.totals style=('height: 24px; font-style: italic;')
         td
-          | Total
-          - if year == 2007
-            | s 2006
-        td.numeric= number_with_delimiter row['DEFINITE']
-        td.numeric= number_with_delimiter row['PROBABLE']
-        td.numeric= number_with_delimiter row['POSSIBLE']
-        td.numeric= number_with_delimiter row['SPECUL']
-- else
-  h2 No estimates were available for #{level} in #{year}
+          ' Totals
+          = AedLegacy.official_publication_year(base['comparison_year'])
+        td.numeric= number_with_delimiter base['definite']
+        td.numeric= number_with_delimiter base['probable']
+        td.numeric= number_with_delimiter base['possible']
+        td.numeric= number_with_delimiter base['speculative']
 
+- else
+  h2 No estimates were available for #{level} in #{analysis_year}

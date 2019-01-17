@@ -1,58 +1,33 @@
 .row
   .col-xs-12
-    h1
-      div
-        = @site
-      div style=('font-size: 20px;') 
-        = @preview_title
+    h1 = "#{@country}, #{@publication_year}"
 
-    = render 'preview_breadcrumbs'
+    = render 'legacy_breadcrumbs'
 
-    .crumbs
-      | Reports
+    p
 
-      | &gt;
-
-      = @preview_nav
-
-      | &gt;
-
-      a href=("/preview_report/#{@filter}/#{@year}/#{@continent}") @continent 
-
-      | &gt;
-
-      | Site
-
-      | &gt;
-
-      = @site
-
-      p
-
-    /!
-
-      | All Years for #{@site}:
-
-      a href=("/preview_report/#{@filter}/2007/#{@continent}/site/#{@site}"  2007
-
-      | &mdash;
-
-      a href=("/preview_report/#{@filter}/2011/#{@continent}/site/#{@site}"  2011
+    ' All Years for #{@country}:
+    - @all_publication_years.each do |publication_year|
+      = link_to publication_year, "/report/#{publication_year}/#{@continent}/#{@region.gsub(' ','_')}/#{@country.gsub(' ','_')}"
+      - if publication_year != @all_publication_years.last
+        '
+        ' &mdash;
 
     == narrative
 
-    = render 'table_summary_totals', level: @site, totals: @summary_totals_by_site, sums: @summary_sums_by_site
+    = render 'table_legacy_summary_totals', level: @country, totals: @summary_totals_by_country, sums: @summary_sums_by_country
 
-    = render 'table_causes_of_change', totals: @causes_of_change_by_site, sums: @causes_of_change_sums_by_site
+    = render 'table_causes_of_change', totals: @causes_of_change_by_country, sums: @causes_of_change_sums_by_country
 
-    = render 'table_area_of_range_covered', totals: @area_of_range_covered_by_site, sums: @area_of_range_covered_sum_by_site
+    = render 'table_area_of_range_covered', totals: @area_of_range_covered_by_country, sums: @area_of_range_covered_sum_by_country
 
-    - if @elephant_estimates_by_site.num_tuples > 0
-      h2 #{@site} : Elephant Estimates
+    - if @elephant_estimates_by_country.num_tuples > 0
+      h2 #{@country} : Elephant Estimates
       table.table
         tr
           th style="border:none" 
-            th style="border:none"  Cause of
+            - if @publication_year.to_i==2007
+              th style="border:none"  Cause of
           th colspan=3 style="text-align:center" 
             | Survey Details
             sup 2
@@ -63,9 +38,10 @@
           th colspan=2 style="text-align:center"  Map Location
         tr
           th Input Zone
-          th
-            | Change
-            sup 1
+          - if @publication_year.to_i==2007
+            th
+              | Change
+              sup 1
           th Type
           th Reliab.
           th Year
@@ -78,12 +54,13 @@
           th.numeric style="padding-right:10px"  (km²)
           th style='text-align:center'  Lon.
           th style='text-align:center'  Lat.
-        - @elephant_estimates_by_site.each do |row|
+        - @elephant_estimates_by_country.each do |row|
           tr style='height:18px' 
             td
-              a href="/population_submissions/#{row['population_submission_id']}" = row['survey_zone']
-            td= row['ReasonForChange']
-            td= row['method_and_quality'].gsub(/[\d]/,'')
+              a href=("#{@country.gsub(' ','_')}/#{row['OBJECTID']}") = row['survey_zone']
+            - if @publication_year.to_i==2007
+              td= row['ReasonForChange']
+            td= row['method_and_quality']
             td style="text-align:center" = row['CATEGORY']
             td= row['CYEAR']
             td.numeric= number_with_delimiter row['ESTIMATE']
@@ -93,8 +70,6 @@
             td.numeric style="padding-right:10px" = number_with_delimiter row['AREA_SQKM']
             td style='text-align:center' = row['LON']
             td style='text-align:center' = row['LAT']
-
-    == footnote
 
     p
       | * Range of informed guess
@@ -107,3 +82,4 @@
     p
       sup 3
       == t 'footnotes.pfs'
+    == footnote

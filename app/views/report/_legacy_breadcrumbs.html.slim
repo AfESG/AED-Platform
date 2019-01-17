@@ -1,19 +1,18 @@
 - publication_year = local_assigns[:publication_year] || @publication_year
 - continent        = local_assigns[:continent] || @continent
-- site             = local_assigns[:site] || @site
 - region           = local_assigns[:region] || @region
 - country          = local_assigns[:country] || @country
-
+- survey           = local_assigns[:survey] || @survey_zone
 
 ol.breadcrumb
   li = link_to 'Reports', report_path
   - if publication_year
-    li = publication_year
+    li = link_to_if continent, publication_year, "/report/#{publication_year}"
   - if continent
-    li = link_to_unless region.nil? && site.nil?, continent, "/report/#{publication_year}/#{continent}"
+    li = link_to_if region, continent, "/report/#{publication_year}/#{continent}"
   - if region
     li = link_to_if country, region, "/report/#{publication_year}/#{continent}/#{region.gsub(' ','_')}"
-    - if country
-      li = country
-  - elsif site
-    li = site
+  - if country
+    li = link_to_if survey, country, "/report/#{publication_year}/#{continent}/#{region.gsub(' ','_')}/#{country.gsub(' ','_')}"
+  - if survey
+    li = "#{survey['survey_zone']} #{survey['designate']}"

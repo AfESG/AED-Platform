@@ -3,23 +3,20 @@ class ApplicationController < ActionController::Base
   before_filter :authenticate
   before_filter :configure_permitted_parameters, if: :devise_controller?
 
-  def allowed_preview?
-    p params
-    if params[:filter] == '2013_africa_final' and params[:year] == '2013'
-      return true
-    end
-    if current_user
-      current_user.admin?
-    else
-      false
-    end
+  helper_method :latest_report
+
+  #
+  # Gets the latest published Report (Analysis)
+  #
+  def latest_report
+    @latest_report ||= AedUtils.latest_analysis
   end
 
-  def maybe_authenticate_user!
-    if allowed_preview?
-      return true
-    end
-    authenticate_user!
+  #
+  # Gets if the request is for a legacy year or not.
+  #
+  def legacy_request?
+    AedLegacy.legacy_year?(params[:year])
   end
 
   def authenticate_superuser!

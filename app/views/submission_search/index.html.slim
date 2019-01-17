@@ -19,7 +19,7 @@ form action="submission_search" class='form-inline'
       label
         ' Survey Year
       select name='survey_year' class='form-control'
-        - 2002.upto(2013).each do |year|
+        - AedUtils.all_years.each do |year|
           - if year.to_s == params[:survey_year]
             option value=year selected='selected'
               = year

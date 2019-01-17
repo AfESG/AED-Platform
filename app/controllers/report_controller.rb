@@ -8,7 +8,7 @@ class ReportController < ApplicationController
   include DppsRegionPreviousHelper
   include DppsCountryPreviousHelper
 
-  before_filter :set_past_years
+  before_filter :all_publication_years, :set_analysis
 
   def execute(*array)
     sql = ActiveRecord::Base.send(:sanitize_sql_array, array)
@@ -23,191 +23,199 @@ class ReportController < ApplicationController
     SQL
   end
 
-  def set_past_years
-    @past_years = ['2007', '2002', '1998', '1995']
+  #
+  # Sets the Analysis unless it's a legacy request.
+  #
+  def set_analysis
+    year = params.include?(:year) ? params[:year].to_i : nil
+
+    if legacy_request?
+      @analysis = nil
+      @title = nil
+      @analysis_year = year
+      @publication_year = year
+    else
+      @analysis = Analysis.find_by(publication_year: year) if year.present?
+      @title = @analysis&.title
+      @analysis_year = @analysis&.analysis_year
+      @publication_year = @analysis&.publication_year
+    end
+  end
+
+  #
+  # Gets all the Years including legacy years.
+  #
+  def all_publication_years
+    @all_publication_years ||= AedUtils.all_publication_years
   end
 
   def species
-    @past_reports = [
-      { year: '2007', full_text: '033', authors: 'J.J. Blanc, R.F.W. Barnes, G.C. Craig, H.T. Dublin, C.R. Thouless, I. Douglas-Hamilton, and J.A. Hart', errata: true },
-      { year: '2002', full_text: '029', authors: 'J.J. Blanc, C.R. Thouless, J.A. Hart, H.T. Dublin, I. Douglas-Hamilton, G.C. Craig and R.F.W. Barnes', errata: true },
-      { year: '1998', full_text: '022', authors: 'R.F.W. Barnes, G.C. Craig, H.T. Dublin, G. Overton, W. Simons and C.R. Thouless', errata: false },
-      { year: '1995', full_text: '011', authors: 'M.Y. Said, R.N. Chunge, G.C. Craig, C.R. Thouless, R.F.W. Barnes and H.T. Dublin', errata: true }
-    ]
+    @reports = (current_user&.admin? ? Analysis.all : Analysis.published).order(publication_year: :desc)
+    @legacy_reports = AedLegacy.reports
   end
 
   def year
-    @year = params[:year]
+    # Uses @publication_year from #set_analysis
   end
 
-  before_filter :maybe_authenticate_user!, :only => [:preview_continent, :preview_region, :preview_country]
-
-  # define official titles for certain filters
-  def official_title(filter)
-    if filter == "2013_africa_final"
-      return "Provisional African Elephant Population Estimates: update to 31 Dec 2013"
+  def corrections
+    if legacy_request?
+      return nil
     end
-    return nil
-  end
 
-  def preview_corrections
-    return unless allowed_preview?
-    @year = params[:year].to_i
     @continent = params[:continent]
-    @filter = params[:filter]
-    @preview_title = official_title(@filter) or @filter.humanize.upcase
-  end
-
-  def preview_continent
-    return unless allowed_preview?
-    @year = params[:year].to_i
-    @continent = params[:continent]
-    @filter = params[:filter]
-    @preview_title = official_title(@filter) or @filter.humanize.upcase
-    @comp_year = Analysis.find_by_analysis_name(@filter).try(:comparison_year)
-
-    # ADD values
-    @alt_summary_totals = execute alt_dpps("1=1", @year, @filter)
-    @alt_summary_sums   = execute alt_dpps_totals("1=1", @year, @filter)
-    @alt_summary_sums_s = execute alt_dpps_totals("1=1", @comp_year, @filter) if @comp_year != @year
-    @alt_areas          = execute alt_dpps_continent_area("1=1", @year, @filter)
-    @alt_regions        = execute alt_dpps_continental_stats("1=1", @year, @filter)
-    @alt_regions_sums   = execute alt_dpps_continental_stats_sums("1=1", @year, @filter)
-    @alt_causes_of_change = execute alt_dpps_causes_of_change("1=1", @year, @filter)
-    @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("1=1", @year, @filter)
-    @alt_areas_by_reason  = execute alt_dpps_continent_area_by_reason("1=1", @year, @filter)
-
-    # DPPS values
-    get_continent_values(@continent, @filter, @year).each do |k, v|
-      instance_variable_set("@#{k}".to_sym, v)
-    end
-    @summary_totals_by_continent = execute totalizer("1=1",@filter,@year)
-    if @summary_totals_by_continent.num_tuples < 1
-      raise ActionController::RoutingError.new('Not Found')
-    end
   end
 
   def continent
-    @year = params[:year].to_i
     @continent = params[:continent]
-    get_continent_previous_values(@continent, @year).each do |k,v|
-      instance_variable_set("@#{k}".to_sym, v)
-    end
-  end
 
-  def preview_region
-    return unless allowed_preview?
-    @year = params[:year].to_i
-    @continent = params[:continent]
-    @region = params[:region].gsub('_',' ')
-    @filter = params[:filter]
-    @preview_title = official_title(@filter) or @filter.humanize.upcase
-    @comp_year = Analysis.find_by_analysis_name(@filter).try(:comparison_year)
+    if legacy_request?
+      get_continent_previous_values(@continent, @analysis_year).each do |k, v|
+        instance_variable_set("@#{k}".to_sym, v)
+      end
 
-    # ADD values
-    @alt_summary_totals = execute alt_dpps("region = '#{@region}'", @year, @filter)
-    @alt_summary_sums   = execute alt_dpps_totals("region = '#{@region}'", @year, @filter)
-    @alt_summary_sums_s = execute alt_dpps_totals("region = '#{@region}'", @comp_year, @filter) if @comp_year != @year
-    @alt_areas          = execute alt_dpps_region_area("region = '#{@region}'", @year, @filter)
-    @alt_countries      = execute alt_dpps_region_stats("region = '#{@region}'", @year, @filter)
-    @alt_country_sums   = execute alt_dpps_region_stats_sums("region = '#{@region}'", @year, @filter)
-    @alt_causes_of_change = execute alt_dpps_causes_of_change("region = '#{@region}'", @year, @filter)
-    @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("region = '#{@region}'", @year, @filter)
-    @alt_areas_by_reason  = execute alt_dpps_region_area_by_reason("region = '#{@region}'", @year, @filter)
-
-    # DPPS values
-    get_region_values(@region, @filter, @year).each do |k, v|
-      instance_variable_set("@#{k}".to_sym, v)
-    end
-    @summary_totals_by_region = execute totalizer("region='#{@region}'",@filter,@year)
-    if @summary_totals_by_region.num_tuples < 1
-      raise ActionController::RoutingError.new('Not Found')
-    end
-  end
-
-def region
-  @year = params[:year].to_i
-  @continent = params[:continent]
-  @region = params[:region].gsub('_',' ')
-  get_region_previous_values(@region, @year).each do |k,v|
-    instance_variable_set("@#{k}".to_sym, v)
-  end
-end
-
-def preview_country
-  return unless allowed_preview?
-  @year = params[:year].to_i
-  @continent = params[:continent]
-  @region = params[:region].gsub('_',' ')
-  @country = params[:country].gsub('_',' ')
-  @map_uri = Country.where(name: @country).first().iso_code + "/" + params[:filter] + "/" + params[:year]
-  @filter = params[:filter]
-  @preview_title = official_title(@filter) or @filter.humanize.upcase
-  @comp_year = Analysis.find_by_analysis_name(@filter).try(:comparison_year)
-
-  # ADD values
-  @alt_summary_totals = execute alt_dpps("country = '#{sql_escape @country}'", @year, @filter)
-  @alt_summary_sums   = execute alt_dpps_totals("country = '#{sql_escape @country}'", @year, @filter)
-  @alt_summary_sums_s = execute alt_dpps_totals("country = '#{sql_escape @country}'", @comp_year, @filter) if @comp_year != @year
-  @alt_areas          = execute alt_dpps_country_area("country = '#{sql_escape @country}'", @year, @filter)
-  @alt_causes_of_change = execute alt_dpps_causes_of_change("country = '#{sql_escape @country}'", @year, @filter)
-  @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("country = '#{sql_escape @country}'", @year, @filter)
-  @alt_areas_by_reason  = execute alt_dpps_country_area_by_reason("country = '#{sql_escape @country}'", @year, @filter)
-  @alt_elephant_estimates_by_country = execute alt_dpps_country_stats(@country, @year, @filter)
-
-  @alt_elephant_estimate_groups = []
-  group = []
-  current_replacement_name = @alt_elephant_estimates_by_country[0]['replacement_name']
-  @alt_elephant_estimates_by_country.each do |row|
-    if row['replacement_name'] == current_replacement_name
-      group << row
+      render 'report/legacy_continent'
     else
-      @alt_elephant_estimate_groups << group
-      group = []
-      group << row
-      current_replacement_name = row['replacement_name']
+      @analysis_year = @analysis.analysis_year
+      @comp_year = @analysis.comparison_year
+
+      # ADD values
+      @alt_summary_totals = execute alt_dpps("1=1", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_summary_sums = execute alt_dpps_totals("1=1", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_summary_sums_s = execute alt_dpps_totals("1=1", @comp_year, @analysis.analysis_name) if @comp_year != @analysis.analysis_year
+      @alt_areas = execute alt_dpps_continent_area("1=1", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_regions = execute alt_dpps_continental_stats("1=1", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_regions_sums = execute alt_dpps_continental_stats_sums("1=1", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_causes_of_change = execute alt_dpps_causes_of_change("1=1", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("1=1", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_areas_by_reason = execute alt_dpps_continent_area_by_reason("1=1", @analysis.analysis_year, @analysis.analysis_name)
+
+      # DPPS values
+      get_continent_values(@continent, @analysis.analysis_name, @analysis.analysis_year).each do |k, v|
+        instance_variable_set("@#{k}".to_sym, v)
+      end
+      @summary_totals_by_continent = execute totalizer("1=1", @analysis.analysis_name, @analysis.analysis_year)
+      if @summary_totals_by_continent.num_tuples < 1
+        raise ActionController::RoutingError.new('Not Found')
+      end
     end
   end
-  @alt_elephant_estimate_groups << group
 
-  # DPPS values
-  get_country_values(@country, @filter, @year).each do |k, v|
-    instance_variable_set("@#{k}".to_sym, v)
-  end
-  @summary_totals_by_country = execute totalizer("country='#{sql_escape @country}'",@filter,@year)
-  if @summary_totals_by_country.num_tuples < 1
-    raise ActionController::RoutingError.new('Not Found')
-  end
-
-  @ioc_tabs = [
-        {
-            title: 'ADD Interpretation of Changes',
-            template: 'table_causes_of_change_add',
-            args: {
-                totals: @alt_causes_of_change,
-                sums: @alt_causes_of_change_s
-            }
-        },
-        {
-            title: 'DPPS Interpretation of Changes',
-            template: 'table_causes_of_change_dpps',
-            args: {
-                base_totals: @causes_of_change_by_country_u,
-                base_sums: @causes_of_change_sums_by_country_u,
-                scaled_totals: @causes_of_change_by_country,
-                scaled_sums: @causes_of_change_sums_by_country
-            }
-        }
-  ]
-  end
-
-  def preview_site
-    return unless allowed_preview?
-    @year = params[:year].to_i
+  def region
     @continent = params[:continent]
-    @site = params[:site].gsub('_',' ')
-    @filter = params[:filter]
-    @preview_title = official_title(@filter) or @filter.humanize.upcase
+
+    if legacy_request?
+      @region = params[:region].gsub('_', ' ')
+      get_region_previous_values(@region, @analysis_year).each do |k, v|
+        instance_variable_set("@#{k}".to_sym, v)
+      end
+
+      render 'report/legacy_region'
+    else
+      @comp_year = @analysis.comparison_year
+      @region = params[:region].gsub('_', ' ')
+
+      # ADD values
+      @alt_summary_totals = execute alt_dpps("region = '#{@region}'", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_summary_sums = execute alt_dpps_totals("region = '#{@region}'", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_summary_sums_s = execute alt_dpps_totals("region = '#{@region}'", @comp_year, @analysis.analysis_name) if @comp_year != @analysis.analysis_year
+      @alt_areas = execute alt_dpps_region_area("region = '#{@region}'", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_countries = execute alt_dpps_region_stats("region = '#{@region}'", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_country_sums = execute alt_dpps_region_stats_sums("region = '#{@region}'", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_causes_of_change = execute alt_dpps_causes_of_change("region = '#{@region}'", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("region = '#{@region}'", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_areas_by_reason = execute alt_dpps_region_area_by_reason("region = '#{@region}'", @analysis.analysis_year, @analysis.analysis_name)
+
+      # DPPS values
+      get_region_values(@region, @analysis.analysis_name, @analysis.analysis_year).each do |k, v|
+        instance_variable_set("@#{k}".to_sym, v)
+      end
+      @summary_totals_by_region = execute totalizer("region='#{@region}'", @analysis.analysis_name, @analysis.analysis_year)
+      if @summary_totals_by_region.num_tuples < 1
+        raise ActionController::RoutingError.new('Not Found')
+      end
+    end
+  end
+
+  def country
+    @continent = params[:continent]
+    @region = params[:region].gsub('_', ' ')
+    @country = params[:country].gsub('_', ' ')
+
+    if legacy_request?
+      get_country_previous_values(@country, @analysis_year).each do |k, v|
+        instance_variable_set("@#{k}".to_sym, v)
+      end
+
+      render 'report/legacy_country'
+    else
+      @comp_year = @analysis.comparison_year
+      @map_uri = Country.where(name: @country).first().iso_code + "/" + @analysis.analysis_name + "/" + params[:year]
+
+      # ADD values
+      @alt_summary_totals = execute alt_dpps("country = '#{sql_escape @country}'", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_summary_sums = execute alt_dpps_totals("country = '#{sql_escape @country}'", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_summary_sums_s = execute alt_dpps_totals("country = '#{sql_escape @country}'", @comp_year, @analysis.analysis_name) if @comp_year != @analysis.analysis_year
+      @alt_areas = execute alt_dpps_country_area("country = '#{sql_escape @country}'", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_causes_of_change = execute alt_dpps_causes_of_change("country = '#{sql_escape @country}'", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("country = '#{sql_escape @country}'", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_areas_by_reason = execute alt_dpps_country_area_by_reason("country = '#{sql_escape @country}'", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_elephant_estimates_by_country = execute alt_dpps_country_stats(@country, @analysis.analysis_year, @analysis.analysis_name)
+
+      @alt_elephant_estimate_groups = []
+      group = []
+      current_replacement_name = @alt_elephant_estimates_by_country[0]['replacement_name']
+      @alt_elephant_estimates_by_country.each do |row|
+        if row['replacement_name'] == current_replacement_name
+          group << row
+        else
+          @alt_elephant_estimate_groups << group
+          group = []
+          group << row
+          current_replacement_name = row['replacement_name']
+        end
+      end
+      @alt_elephant_estimate_groups << group
+
+      # DPPS values
+      get_country_values(@country, @analysis.analysis_name, @analysis.analysis_year).each do |k, v|
+        instance_variable_set("@#{k}".to_sym, v)
+      end
+      @summary_totals_by_country = execute totalizer("country='#{sql_escape @country}'", @analysis.analysis_name, @analysis.analysis_year)
+      if @summary_totals_by_country.num_tuples < 1
+        raise ActionController::RoutingError.new('Not Found')
+      end
+
+      @ioc_tabs = [
+          {
+              title: 'ADD Interpretation of Changes',
+              template: 'table_causes_of_change_add',
+              args: {
+                  totals: @alt_causes_of_change,
+                  sums: @alt_causes_of_change_s
+              }
+          },
+          {
+              title: 'DPPS Interpretation of Changes',
+              template: 'table_causes_of_change_dpps',
+              args: {
+                  base_totals: @causes_of_change_by_country_u,
+                  base_sums: @causes_of_change_sums_by_country_u,
+                  scaled_totals: @causes_of_change_by_country,
+                  scaled_sums: @causes_of_change_sums_by_country
+              }
+          }
+      ]
+    end
+  end
+
+  def site
+    if legacy_request?
+      return nil
+    end
+
+    @continent = params[:continent]
+    @site = params[:site].gsub('_', ' ')
 
     @summary_totals_by_site = execute <<-SQL, @site
       select
@@ -222,7 +230,7 @@ def preview_country
           and e.analysis_name = d.analysis_name
           and e.analysis_year = d.analysis_year
         join surveytypes t on t.category = e.category
-        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
+        where e.analysis_name = '#{@analysis.analysis_name}' and e.analysis_year = '#{@analysis.analysis_year}'
         and replacement_name=?
       group by e.category, surveytype
       order by e.category;
@@ -238,7 +246,7 @@ def preview_country
           and e.analysis_name = d.analysis_name
           and e.analysis_year = d.analysis_year
         join surveytypes t on t.category = e.category
-        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
+        where e.analysis_name = '#{@analysis.analysis_name}' and e.analysis_year = '#{@analysis.analysis_year}'
         and replacement_name=?
     SQL
     @elephant_estimates_by_site = execute <<-SQL, @site
@@ -282,7 +290,7 @@ def preview_country
           and e.analysis_year = d.analysis_year
         join surveytypes t on t.category = e.category
         join population_submissions on e.population_submission_id = population_submissions.id
-        where e.analysis_name = '#{@filter}' and e.analysis_year = '#{@year}'
+        where e.analysis_name = '#{@analysis.analysis_name}' and e.analysis_year = '#{@analysis.analysis_year}'
         and replacement_name=?
       order by e.site_name, e.stratum_name
     SQL
@@ -290,33 +298,22 @@ def preview_country
     @causes_of_change_by_site = execute <<-SQL, @site
       SELECT *
       FROM causes_of_change_by_site where site=?
-        and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
+        and analysis_name = '#{@analysis.analysis_name}' and analysis_year = '#{@analysis.analysis_year}'
     SQL
 
     @causes_of_change_sums_by_site = execute <<-SQL, @site
       SELECT *
       FROM causes_of_change_sums_by_site where site=?
-        and analysis_name = '#{@filter}' and analysis_year = '#{@year}'
+        and analysis_name = '#{@analysis.analysis_name}' and analysis_year = '#{@analysis.analysis_year}'
     SQL
   end
 
-  def country
-    @year = params[:year].to_i
-    @continent = params[:continent]
-    @region = params[:region].gsub('_',' ')
-    @country = params[:country].gsub('_',' ')
-    get_country_previous_values(@country, @year).each do |k,v|
-      instance_variable_set("@#{k}".to_sym, v)
-    end
-  end
-
   def survey
-    @year = params[:year].to_i
     @continent = params[:continent]
-    @region = params[:region].gsub('_',' ')
-    @country = params[:country].gsub('_',' ')
+    @region = params[:region].gsub('_', ' ')
+    @country = params[:country].gsub('_', ' ')
     @survey = params[:survey]
-    db = "aed#{@year}"
+    db = "aed#{@analysis_year}"
     if @survey.to_i > 0
       survey_zones = execute <<-SQL, @survey
         SELECT *
@@ -368,16 +365,13 @@ def preview_country
   end
 
   def bibliography
-    @filter = params[:filter]
-    @bibliography = execute <<-SQL, @filter
+    @bibliography = execute <<-SQL, @analysis.analysis_name
       select input_zone_id, short_citation, citation from estimate_factors join new_strata on analysis_name=? and input_zone_id=new_stratum;
     SQL
   end
 
   def appendix_1
-    @filter = params[:filter]
-    @year = params[:year]
-    @table = execute <<-SQL, @filter, @filter
+    @table = execute <<-SQL, @analysis.analysis_name, @analysis.analysis_name
       SELECT
         x.country "Country",
 	substring(c.region from 1 for 1) "Region",
@@ -416,8 +410,7 @@ def preview_country
   end
 
   def appendix_2
-    @filter = params[:filter]
-    @table = execute <<-SQL, @filter
+    @table = execute <<-SQL, @analysis.analysis_name
       SELECT
         analysis_year,
         region,
@@ -429,7 +422,7 @@ def preview_country
       FROM appendix_2_add
       WHERE analysis_name = ?
     SQL
-    @regional_totals = execute <<-SQL, @filter, @filter
+    @regional_totals = execute <<-SQL, @analysis.analysis_name, @analysis.analysis_name
       SELECT
         analysis_year,
         region,
@@ -454,9 +447,7 @@ def preview_country
   end
 
   def general_statistics
-    @filter = params[:filter]
-
-    @table = execute <<-SQL, @filter
+    @table = execute <<-SQL, @analysis.analysis_name
       select
         crt.region,
         pam.country,
@@ -482,7 +473,7 @@ def preview_country
       order by region, pam.country;
     SQL
 
-    @regional_table = execute <<-SQL, @filter, @filter
+    @regional_table = execute <<-SQL, @analysis.analysis_name, @analysis.analysis_name
       select
         s1.region,
         s1.country_area region_area,
@@ -547,7 +538,7 @@ def preview_country
       order by region;
     SQL
 
-  @continental_table = execute <<-SQL, @filter, @filter
+    @continental_table = execute <<-SQL, @analysis.analysis_name, @analysis.analysis_name
       select
       s1.country_area continental_area,
       s1.range_area,

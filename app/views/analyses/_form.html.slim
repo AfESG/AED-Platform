@@ -1,7 +1,10 @@
 = semantic_form_for @analysis do |f|
   = f.inputs do
     = f.input :analysis_name
+    = f.input :title
+    = f.input :authors
     = f.input :analysis_year
     = f.input :comparison_year
+    = f.input :publication_year
   = f.actions do
     = f.submit

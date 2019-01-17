@@ -63,6 +63,7 @@ class SpreadsheetsController < ApplicationController
 
       @targets = { 'WA_NoRounding' => 'West_Africa', 'CA_NoRounding' => 'Central_Africa', 'EA_NoRounding' => 'Eastern_Africa' }
       @sheets  = []
+      latest_analysis = AedUtils.latest_analysis
 
       @targets.each do |name, region|
         sheet = @xlsx.sheet_for name
@@ -81,7 +82,7 @@ class SpreadsheetsController < ApplicationController
             end
           end
 
-          @sheets << { name: name, sheet: sheet, expected: data, actual: hash_tuples(execute(alt_dpps("region = '#{region.gsub('_',' ')}'", 2013, '2013_africa_final'))) }
+          @sheets << { name: name, sheet: sheet, expected: data, actual: hash_tuples(execute(alt_dpps("region = '#{region.gsub('_',' ')}'", latest_analysis.analysis_year, latest_analysis.analysis_name))) }
         end
       end
     else

@@ -15,17 +15,6 @@ class PopulationSubmissionsController < ApplicationController
     end
   end
 
-  def analysis_2013
-    @population_submissions = PopulationSubmission.joins(:submission).joins('join countries on submissions.country_id=countries.id').where("population_submissions.id in (select population_submission_id from estimate_factors_analyses where analysis_name='2013_africa_final')").order(translated_sort_column + ' ' + sort_direction);
-    unless sort_column=='created_at'
-      # always add a secondary sort, to enforce a guaranteed order
-      @population_submissions = @population_submissions.order('created_at desc');
-    end
-    respond_to do |format|
-      format.html
-    end
-  end
-
   def my
     @population_submissions = PopulationSubmission.joins(:submission).where("submissions.user_id = ?",current_user.id).order('created_at desc')
     respond_to do |format|

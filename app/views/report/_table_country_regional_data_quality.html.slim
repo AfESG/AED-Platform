@@ -1,5 +1,3 @@
-- preview = local_assigns[:preview] || false
-
 - if !@countries.nil? && @countries.num_tuples > 0
   h2 Country and Regional Totals and Data Quality
   table.table style='font-size:16px' 
@@ -18,10 +16,7 @@
       - unless row['RANGEAREA'].nil?
         tr style=('height: 24px;') 
           td
-            - if preview
-              a href=("#{@region.gsub(' ','_')}/#{u row['CNTRYNAME'].gsub(' ','_')}") = row['CNTRYNAME']
-            - else
-              a href=("#{@region.gsub(' ','_')}/#{u row['CNTRYNAME'].gsub(' ','_')}") = row['CNTRYNAME'] 
+            a href=("#{@region.gsub(' ','_')}/#{u row['CNTRYNAME'].gsub(' ','_')}") = row['CNTRYNAME']
           - ['DEFINITE','PROBABLE','POSSIBLE','SPECUL','RANGEAREA','RANGEPERC','SURVRANGPERC','INFQLTYIDX'].each do |key|
             td.numeric= number_with_delimiter row[key]
           td.numeric = number_with_delimiter(round_pfs row['PFS'])

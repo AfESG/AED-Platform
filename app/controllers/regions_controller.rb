@@ -47,7 +47,7 @@ class RegionsController < ApplicationController
   end
 
   def year
-    params[:year] || 2013
+    params[:year] || Analysis.published.maximum(:analysis_year)
   end
 
   def simplify

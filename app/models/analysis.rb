@@ -6,9 +6,12 @@ class Analysis < ActiveRecord::Base
 
   attr_protected :created_at, :updated_at
 
+  scope :published, -> { where(is_published: true) }
+  scope :not_published, -> { where(is_published: true) }
+
   class << self
     def years
-      { add: Analysis.all.pluck(:analysis_year), dpps: [2015, 2013, 2007, 2002, 1998, 1995] }
+      { add: AedUtils.publication_years, dpps: AedUtils.all_publication_years}
     end
 
     def latest_add_year

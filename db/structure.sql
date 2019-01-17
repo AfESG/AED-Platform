@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.10
--- Dumped by pg_dump version 10.5 (Ubuntu 10.5-2.pgdg18.04+1)
+-- Dumped from database version 9.6.11
+-- Dumped by pg_dump version 11.1 (Ubuntu 11.1-1.pgdg18.04+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -41,20 +41,6 @@ CREATE SCHEMA aed2002;
 --
 
 CREATE SCHEMA aed2007;
-
-
---
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
@@ -10739,7 +10725,11 @@ CREATE TABLE public.analyses (
     analysis_year integer,
     id integer NOT NULL,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    publication_year integer NOT NULL,
+    is_published boolean DEFAULT false,
+    title character varying NOT NULL,
+    authors character varying NOT NULL
 );
 
 
@@ -18493,4 +18483,10 @@ INSERT INTO schema_migrations (version) VALUES ('20160825220444');
 INSERT INTO schema_migrations (version) VALUES ('20160826015001');
 
 INSERT INTO schema_migrations (version) VALUES ('20160826015351');
+
+INSERT INTO schema_migrations (version) VALUES ('20190116142519');
+
+INSERT INTO schema_migrations (version) VALUES ('20190116205115');
+
+INSERT INTO schema_migrations (version) VALUES ('20190117182408');
 

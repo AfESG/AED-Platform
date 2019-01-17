@@ -1,5 +1,3 @@
-- preview = local_assigns[:preview] || false
-
 - if !@alt_countries.nil? && @alt_countries.num_tuples > 0
   h2 Country and Regional Totals and Data Quality
   - totals = {}
@@ -26,10 +24,7 @@
       - unless row['RANGE_AREA'].nil?
         tr style=('height: 24px;')
           td
-            - if preview
-              a href=("#{@region.gsub(' ','_')}/#{u row['country'].gsub(' ','_')}") = row['country']
-            - else
-              a href=("#{@region.gsub(' ','_')}/#{u row['country'].gsub(' ','_')}") = row['country'] 
+            a href=("#{@region.gsub(' ','_')}/#{u row['country'].gsub(' ','_')}") = row['country']
           - ['ESTIMATE','CONFIDENCE','GUESS_MIN','GUESS_MAX','RANGE_AREA','PERCENT_OF_RANGE_COVERED','PERCENT_OF_RANGE_ASSESSED'].each do |key|
             = add_and_display_cell row, key, totals, round: false
           = add_and_display_cell row, 'IQI', totals, precision: 2, zeroes: false

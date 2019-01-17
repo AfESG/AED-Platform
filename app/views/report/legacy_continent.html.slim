@@ -1,0 +1,31 @@
+.row
+  .col-xs-12
+    h1 #{@publication_year} Continental Totals for #{@continent}
+
+    = render 'legacy_breadcrumbs'
+
+    p
+    | All Years for #{@continent}:
+    - @all_publication_years.each do |publication_year|
+      = link_to publication_year, "/report/#{publication_year}/#{@continent}"
+      - if publication_year != @all_publication_years.last
+        '
+        ' &mdash;
+
+    == narrative
+
+    = render 'table_legacy_summary_totals', level: @continent, totals: @summary_totals_by_continent, sums: @summary_sums_by_continent
+
+    = render 'table_causes_of_change', totals: @causes_of_change_by_continent, sums: @causes_of_change_sums_by_continent
+
+    = render 'table_area_of_range_covered', totals: @area_of_range_covered_by_continent, sums: @area_of_range_covered_sum_by_continent
+
+    = render 'table_continental_regional_data_quality'
+
+    p
+      sup 1
+      == t 'footnotes.iqi'
+    p
+      sup 2
+      == t 'footnotes.pfs'
+    == footnote
