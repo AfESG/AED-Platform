@@ -6,12 +6,13 @@
       thead
         tr
           th= Analysis.human_attribute_name :analysis_name
+          th= Analysis.human_attribute_name :publication_year
           th= Analysis.human_attribute_name :analysis_year
           th= Analysis.human_attribute_name :comparison_year
           th
       
       tbody
-        - Analysis.order('analysis_year desc').each do |analysis|
+        - Analysis.order(publication_year: :desc).each do |analysis|
           tr
             td
               div
@@ -29,6 +30,7 @@
                   div
                     ' Last update: #{time_ago_in_words(last_change.updated_at)} ago
 
+            td= analysis.publication_year
             td= analysis.analysis_year
             td= analysis.comparison_year
             td style='text-align: right'

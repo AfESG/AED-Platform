@@ -63,7 +63,7 @@ class SpreadsheetsController < ApplicationController
 
       @targets = { 'WA_NoRounding' => 'West_Africa', 'CA_NoRounding' => 'Central_Africa', 'EA_NoRounding' => 'Eastern_Africa' }
       @sheets  = []
-      latest_analysis = AedUtils.latest_analysis
+      latest_analysis = AedUtils.latest_published_analysis
 
       @targets.each do |name, region|
         sheet = @xlsx.sheet_for name

@@ -11,7 +11,7 @@ class Analysis < ActiveRecord::Base
 
   class << self
     def years
-      { add: AedUtils.publication_years, dpps: AedUtils.all_publication_years}
+      { add: AedUtils.analysis_years, dpps: AedUtils.all_analysis_years}
     end
 
     def latest_add_year

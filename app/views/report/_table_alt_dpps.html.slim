@@ -89,10 +89,10 @@
     tr
       td align='right' colspan='5' Unassessed Range
       = round_area_cell 100 - (table_totals['CATEGORY_RANGE_ASSESSED'] || 0)
-      = round_area_sqkm_cell(area_candidate['range_area'].to_f - (@alt_areas.inject(0) { |sum, tuple| sum+= tuple['AREA'].to_f }))
+      = round_area_sqkm_cell(area_candidate&.dig('range_area').to_f - (@alt_areas.inject(0) { |sum, tuple| sum+= tuple['AREA'].to_f }))
 
     tr.bold
       td align='right' colspan='5'
         strong Total Range
       td.numeric 100
-      = round_area_sqkm_cell area_candidate['range_area']
+      = round_area_sqkm_cell area_candidate&.dig('range_area')

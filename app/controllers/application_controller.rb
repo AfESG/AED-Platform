@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   # Gets the latest published Report (Analysis)
   #
   def latest_report
-    @latest_report ||= AedUtils.latest_analysis
+    @latest_report ||= AedUtils.latest_published_analysis
   end
 
   #

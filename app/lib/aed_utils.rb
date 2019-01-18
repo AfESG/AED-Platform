@@ -3,7 +3,7 @@ module AedUtils
   #
   # Get all analysis years (does not include legacy years).
   #
-  def self.years(published=true)
+  def self.analysis_years(published=true)
     get_years(:analysis_year, published)
   end
 
@@ -17,7 +17,7 @@ module AedUtils
   #
   # Gets all analysis years and legacy years.
   #
-  def self.all_years(published=true)
+  def self.all_analysis_years(published=true)
     get_all_years(:analysis_year, published)
   end
 
@@ -31,7 +31,7 @@ module AedUtils
   #
   # Gets the latest published Analysis.
   #
-  def self.latest_analysis
+  def self.latest_published_analysis
     Analysis.published.order(publication_year: :desc).first
   end
 
@@ -51,7 +51,7 @@ module AedUtils
   def self.get_all_years(year_field, published=true)
     years =
         if published || published.nil?
-          (Analysis.published.pluck(year_field) + AedLegacy.years).sort.reverse
+          (Analysis.published.pluck(year_field) + AedLegacy.years)
         else
           Analysis.not_published.pluck(year_field)
         end.sort.reverse

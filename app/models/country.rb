@@ -138,7 +138,7 @@ class Country < ActiveRecord::Base
 
   def self.add_dump
     where.not(region_id: nil).order(:name).map do |c|
-      year = Analysis.published.maximum(:analysis_year)
+      year = AedUtils.analysis_years.max
       analysis = Analysis.find_by(analysis_year: year)
 
       filter = analysis.analysis_name

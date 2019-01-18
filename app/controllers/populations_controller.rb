@@ -21,7 +21,7 @@ class PopulationsController < ApplicationController
   end
 
   def year
-    params[:year] || Analysis.published.maximum(:analysis_year)
+    params[:year] || AedUtils.analysis_years.max
   end
 
   def simplify
