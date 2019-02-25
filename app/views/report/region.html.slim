@@ -18,18 +18,17 @@
 
     == narrative
 
-    = render 'tabs', id: 'summary', tabs: [ { admin: true, title: 'Alternate, No Rounding', template: 'table_alt_dpps', args: { level: @region, totals: @alt_summary_totals, baselines: @alt_summary_sums_s } },
-      { admin: true, title: 'Alternate, Rounded', template: 'table_alt_dpps', args: { level: @region, totals: @alt_summary_totals, baselines: @alt_summary_sums_s, rounded: true } },
+    = render 'tabs', id: 'summary', tabs: [ { admin: false, title: 'Alternate, No Rounding', template: 'table_alt_dpps', args: { level: @region, totals: @alt_summary_totals, baselines: @alt_summary_sums_s } },
+      { admin: false, title: 'Alternate, Rounded', template: 'table_alt_dpps', args: { level: @region, totals: @alt_summary_totals, baselines: @alt_summary_sums_s, rounded: true } },
       { title: 'DPPS Calculations', template: 'table_summary_totals', args: { level: @region, totals: @summary_totals_by_region, baselines: @baseline_total } } ]
 
-    - if current_user and current_user.admin?
-      = render 'tabs', id: 'ioc', tabs: [ { title: 'ADD Interpretation of Change', template: 'table_causes_of_change_add' },
-        { title: 'DPPS Interpretation of Change', template: 'table_causes_of_change_dpps',
-          args: { base_totals: @causes_of_change_by_region_u, base_sums: @causes_of_change_sums_by_region_u, scaled_totals: @causes_of_change_by_region, scaled_sums: @causes_of_change_sums_by_region } } ]
+    = render 'tabs', id: 'ioc', tabs: [ { title: 'ADD Interpretation of Change', template: 'table_causes_of_change_add' },
+      { title: 'DPPS Interpretation of Change', template: 'table_causes_of_change_dpps',
+        args: { base_totals: @causes_of_change_by_region_u, base_sums: @causes_of_change_sums_by_region_u, scaled_totals: @causes_of_change_by_region, scaled_sums: @causes_of_change_sums_by_region } } ]
 
     = render 'table_area_of_range_covered', totals: @area_of_range_covered_by_region, sums: @area_of_range_covered_sum_by_region
 
-    = render 'tabs', id: 'data-quality', tabs: [ { admin: true, title: 'Alternate', template: 'table_country_regional_data_quality_add', args: {} },
+    = render 'tabs', id: 'data-quality', tabs: [ { admin: false, title: 'Alternate', template: 'table_country_regional_data_quality_add', args: {} },
       { title: 'DPPS Calculations', template: 'table_country_regional_data_quality', args: {} } ]
 
     == footnote
