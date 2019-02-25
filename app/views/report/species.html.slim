@@ -26,6 +26,9 @@
           = link_to "/report/#{analysis.publication_year}/Africa" do
             h5 #{analysis.is_published ? analysis.title : "#{analysis.title} (Not Published)"}
           .authors #{analysis.authors}
+          .links
+            - if analysis.pdf_url.present?
+              | Explore the <a href="#{analysis.pdf_url}" target="_blank">full text of the #{analysis.publication_year} report</a> (PDF)
 
     - @legacy_reports.each do |report|
       = render 'legacy_yearly_status', report

@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.11
--- Dumped by pg_dump version 11.1 (Ubuntu 11.1-1.pgdg18.04+1)
+-- Dumped from database version 9.6.12
+-- Dumped by pg_dump version 11.2 (Ubuntu 11.2-1.pgdg18.04+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -10729,7 +10729,8 @@ CREATE TABLE public.analyses (
     publication_year integer NOT NULL,
     is_published boolean DEFAULT false,
     title character varying NOT NULL,
-    authors character varying NOT NULL
+    authors character varying NOT NULL,
+    pdf_url character varying
 );
 
 
@@ -18489,4 +18490,6 @@ INSERT INTO schema_migrations (version) VALUES ('20190116142519');
 INSERT INTO schema_migrations (version) VALUES ('20190116205115');
 
 INSERT INTO schema_migrations (version) VALUES ('20190117182408');
+
+INSERT INTO schema_migrations (version) VALUES ('20190225140735');
 
