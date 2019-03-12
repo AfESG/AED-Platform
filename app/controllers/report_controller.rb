@@ -188,7 +188,7 @@ class ReportController < ApplicationController
 
       @ioc_tabs = [
           {
-              title: 'ADD Interpretation of Changes',
+              title: 'ADD',
               template: 'table_causes_of_change_add',
               args: {
                   totals: @alt_causes_of_change,
@@ -196,7 +196,7 @@ class ReportController < ApplicationController
               }
           },
           {
-              title: 'DPPS Interpretation of Changes',
+              title: 'DPPS',
               template: 'table_causes_of_change_dpps',
               args: {
                   base_totals: @causes_of_change_by_country_u,
