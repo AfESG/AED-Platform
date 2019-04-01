@@ -5,7 +5,7 @@ class AnalysesController < ApplicationController
   # GET /analyses
   # GET /analyses.json
   def index
-    @analyses = Analysis.order(:analysis_name,:analysis_year)
+    @analyses = Analysis.order(:analysis_name, :publication_year)
 
     respond_to do |format|
       format.html # index.html.erb

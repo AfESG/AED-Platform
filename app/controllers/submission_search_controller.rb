@@ -40,4 +40,3 @@ class SubmissionSearchController < ApplicationController
     end
   end
 end
-#@population_submissions = PopulationSubmission.joins(:submission).joins('join countries on submissions.country_id=countries.id').where("population_submissions.id in (select population_submission_id from estimate_factors_analyses where analysis_name='2013_africa_final')").order(translated_sort_column + ' ' + sort_direction);

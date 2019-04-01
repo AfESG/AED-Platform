@@ -1,87 +1,56 @@
 .row
   .col-xs-12
-    h1 = "#{@country}, #{@year}"
+    h1
+      div
+        = @country
+      div style=('font-size: 20px;')
+        = @title
 
     = render 'breadcrumbs'
 
     p
-
     ' All Years for #{@country}:
-
-    a href=("/preview_report/2013_africa_final/2013/#{@continent}/#{@region.gsub(' ','_')}/#{@country.gsub(' ','_')}") = 2013
-
-    - @past_years.each do |year|
-      '
-      ' &mdash;
-      = link_to year, "/report/#{year}/#{@continent}/#{@region.gsub(' ','_')}/#{@country.gsub(' ','_')}"
+    - @all_publication_years.each do |publication_year|
+      = link_to publication_year, "/report/#{publication_year}/#{@continent}/#{@region.gsub(' ','_')}/#{@country.gsub(' ','_')}"
+      - if publication_year != @all_publication_years.last
+        '
+        ' &mdash;
 
     == narrative
 
-    = render 'table_summary_totals', level: @country, totals: @summary_totals_by_country, sums: @summary_sums_by_country
+    / = render 'tabs', tabs: [ { admin: false, title: 'Alternate, No Rounding', template: 'table_alt_dpps', args: { level: @country, totals: @alt_summary_totals, baselines: @alt_summary_sums_s } },
+    /   { title: 'DPPS Calculations', template: 'table_summary_totals', args: { level: @country, totals: @summary_totals_by_country, baselines: @baseline_total } },
+    /   { admin: false, title: 'Map', template: 'map', args: { country: @country, map_uri: @map_uri } } ]
+    = render 'tabs', tabs: [{admin: false, title: 'ADD', template: 'table_alt_dpps', args: {level: @country, totals: @alt_summary_totals, baselines: @alt_summary_sums_s}},
+            {title: 'DPPS', template: 'table_summary_totals', args: {level: @country, totals: @summary_totals_by_country, baselines: @baseline_total}}]
 
-    = render 'table_causes_of_change', totals: @causes_of_change_by_country, sums: @causes_of_change_sums_by_country
+    .below_tabs
+      = render 'tabs', id: 'ioc', tabs: @ioc_tabs
 
-    = render 'table_area_of_range_covered', totals: @area_of_range_covered_by_country, sums: @area_of_range_covered_sum_by_country
+      = render 'table_area_of_range_covered', totals: @area_of_range_covered_by_country, sums: @area_of_range_covered_sum_by_country
 
-    - if @elephant_estimates_by_country.num_tuples > 0
-      h2 #{@country} : Elephant Estimates
-      table.table
-        tr
-          th style="border:none" 
-            - if @year.to_i==2007
-              th style="border:none"  Cause of
-          th colspan=3 style="text-align:center" 
-            | Survey Details
-            sup 2
-          th colspan=2 style="text-align:center"  Number of Elephants
-          th style="border:none" 
-          th style="border:none" 
-          th.numeric style=("border:none; padding-right:10px")  Area
-          th colspan=2 style="text-align:center"  Map Location
-        tr
-          th Input Zone
-          - if @year.to_i==2007
-            th
-              | Change
-              sup 1
-          th Type
-          th Reliab.
-          th Year
-          th.numeric Estimate
-          th.numeric 95% C.L.
-          th style="padding-left:10px"  Source
-          th
-            | PFS
-            sup 3
-          th.numeric style="padding-right:10px"  (km²)
-          th style='text-align:center'  Lon.
-          th style='text-align:center'  Lat.
-        - @elephant_estimates_by_country.each do |row|
-          tr style='height:18px' 
-            td
-              a href=("#{@country.gsub(' ','_')}/#{row['OBJECTID']}") = row['survey_zone']
-            - if @year.to_i==2007
-              td= row['ReasonForChange']
-            td= row['method_and_quality']
-            td style="text-align:center" = row['CATEGORY']
-            td= row['CYEAR']
-            td.numeric= number_with_delimiter row['ESTIMATE']
-            td.numeric= number_with_delimiter row['CL95']
-            td style="padding-left:10px" = row['REFERENCE']
-            td style='text-align:center' = round_pfs row['PFS']
-            td.numeric style="padding-right:10px" = number_with_delimiter row['AREA_SQKM']
-            td style='text-align:center' = row['LON']
-            td style='text-align:center' = row['LAT']
+      /= render 'tabs', id: 'zones', tabs: [ { admin: false, title: 'ADD Calculations', template: 'table_country_zones_add' },
+      /  { title: 'DPPS Calculations', template: 'table_country_zones_dpps' } ]
 
-    p
-      | * Range of informed guess
-    p
-      sup 1
-      == t 'footnotes.causes_of_change'
-    p
-      sup 2
-      == t 'footnotes.survey_types'
-    p
-      sup 3
-      == t 'footnotes.pfs'
-    == footnote
+      = render 'tabs', id: 'zones', tabs: [{ title: 'DPPS', template: 'table_country_zones_dpps'}]
+
+      == footnote
+
+      p
+        | * Range of informed guess
+      p
+        sup 1
+        == t 'footnotes.causes_of_change'
+      p
+        sup 2
+        == t 'footnotes.survey_types'
+      p
+        sup 3
+        == t 'footnotes.pfs'
+      p
+        == t 'footnotes.derived_warning'
+
+javascript:
+  function toggle_section(key){
+    jQuery('*[data-section="'+key+'"]').toggle(300)
+  }

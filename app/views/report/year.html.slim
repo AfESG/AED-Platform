@@ -1,13 +1,13 @@
 .row
   .col-xs-12
-    h1 African Elephant Status Report #{@year}
+    h1 African Elephant Status Report #{@publication_year}
 
     = render 'breadcrumbs'
 
     div style='margin-top:20px' 
 
-    a href=("/report/#{@year}/Africa")  Continental totals for Africa
-    - if @year.to_i==2007
+    a href=("/report/#{@publication_year}/Africa")  Continental totals for Africa
+    - if @publication_year.to_i==2007
       p
       .errata
         | The 2007 African Elephant Status Report contained a number of errata.  These have been fixed in the display of data found on www.#{AedEnv.DOMAIN}, but for the purposes of clarity, they are briefly outlined below.
@@ -45,7 +45,7 @@
             | was inadvertently omitted from the input zones in South Africa (page 146).  This has been rectified and slightly impacts the South Africa national-level totals (page 145), the Southern Africa regional-level totals (page 113), as well as the interpretation of changes at these three levels.
           li
             | An error in assignment of the cause of change for the Luiana East and West Partial Reserves (page 120) slightly impacts the interpretation of changes for Angola (page 119), Southern Africa (page 113) and the continent (page 23).
-    - if @year.to_i==2002
+    - if @publication_year.to_i==2002
       p
       .errata
         | The 2002 African Elephant Status Report contained an erratum.  This has been fixed in the display of data found on www.#{AedEnv.DOMAIN}, but for the purposes of clarity, it is briefly outlined below.
@@ -53,7 +53,7 @@
         ol
           li
             | The continental summary totals (page 19) are incorrectly displayed.  The numbers that appear in the detail cells under POSSIBLE should be under PROBABLE, and vice versa. The totals row is correct.
-    - if @year.to_i==1995
+    - if @publication_year.to_i==1995
       p
       .errata
         | The 1995 African Elephant Status Report contained a number of errata.  These have been fixed in the display of data found on www.#{AedEnv.DOMAIN}, but for the purposes of clarity, they are briefly outlined below.

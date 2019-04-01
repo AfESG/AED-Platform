@@ -90,7 +90,7 @@ class Country < ActiveRecord::Base
 
   def dpps(year)
     begin
-      if year.to_i < 2013
+      if AedLegacy.legacy_year?(year)
         {
             country: name,
             year: year
@@ -138,11 +138,14 @@ class Country < ActiveRecord::Base
 
   def self.add_dump
     where.not(region_id: nil).order(:name).map do |c|
-      filter = Analysis.find_by_analysis_year(2013).analysis_name
-      args = ["country='#{c.escaped_name}'", 2013, filter]
+      year = AedUtils.analysis_years.max
+      analysis = Analysis.find_by(analysis_year: year)
+
+      filter = analysis.analysis_name
+      args = ["country='#{c.escaped_name}'", year, filter]
       {
           country: c.name,
-          year: 2013,
+          year: year,
           analysis_name: filter,
           summary_sums: execute(c.alt_dpps_totals(*args)),
           causes_of_change_sums: execute(c.alt_dpps_causes_of_change_sums(*args)),

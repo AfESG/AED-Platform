@@ -11,11 +11,7 @@ class ReportNarrativesController < ApplicationController
   end
 
   def redirect_for(uri)
-    if uri =~ /_report/
-      return "/preview"+uri
-    else
-      return "/report/"+uri
-    end
+    return "/report/"+uri
   end
 
   # GET /report_narratives/1

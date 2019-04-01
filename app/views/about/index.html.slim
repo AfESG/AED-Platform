@@ -2,7 +2,7 @@
 
 .row
   .col-xs-12
-    h1 About Elephant Database
+    h1 About African Elephant Database
 
     .partners
       = link_to "http://www.iucn.org" do
@@ -10,36 +10,29 @@
       = link_to "http://www.iucn.org/about/work/programmes/species/about_ssc/" do
         = image_tag "ssc2005web_res.gif"
       = link_to "http://african-elephant.org/" do
-        = image_tag "afesgRGBTxtSml.gif"
+        = image_tag "afesgRGBTxtSml.png"
 
     markdown:
 
-      ElephantDatabase.org is the online home of the African Elephant Database,
+      AfricanElephantDatabase.org is the online home of the African Elephant Database,
       maintained by the [IUCN SSC African Elephant Specialist Group (AfESG)](http://www.iucn.org/african_elephant).
 
-      ElephantDatabase.org presents data from past [African Elephant Status Reports](report),
-      as well as more recent survey data reported to the specialist group. Data on this web site is made available under a
+      AfricanElephantDatabase.org presents data from past [African Elephant Status Reports](report),
+      as well as more recent survey data reported to the AfESG. Data on this web site is made available under a
       [Creative Commons Attribution-NonCommercial-ShareAlike license](http://creativecommons.org/licenses/by-nc-sa/4.0).
 
-      ElephantDatabase.org is an Open Source software project.  Every aspect of 
-      the database is powered by free and open source software.  We are especially 
-      thankful for [PostgreSQL](http://www.postgresql.org"),
-      [PostGIS](http://postgis.refractions.net), and the open source tools that 
-      make them possible.  We also would like to thank 
-      [Google Fusion Tables](http://google.com/fusiontables) for serving up
-      simple and free visualizations of our geospatial data.
 
       Request Data
       ----------------
 
-      To obtain direct data access to African elephant data, please review our
-        [data access and release policy](/about/darp) and
-        complete the [data request form](/data_request_forms/new) online.
+      To request spatial and tabular data from the current and previous African Elephant Status Reports,
+      please email [#{AedEnv.REQUEST_FORM_SUBMITTED_TO_EMAIL}](mailto:#{AedEnv.REQUEST_FORM_SUBMITTED_TO_EMAIL})
+      with a brief summary of the data you are requesting and the intended use of the data.
 
       Thank You
       ----------------
 
-      ElephantDatabase.org would not have been possible without our great donors and partners:
+      AfricanElephantDatabase.org would not have been possible without our great donors and partners:
 
     .partners
       = link_to "http://africanelephantfund.org" do
@@ -68,19 +61,15 @@
       br
       = link_to "http://www.solertium.com" do
         = image_tag "solertium-logo.png", height: image_height
+      br
+      = link_to "https://www.vulcan.com/" do
+        = image_tag "vulcan-logo.jpg", height: image_height
+
 
     markdown:
       Technology
       ----------------
 
-      ElephantDatabase.org was created with PostgreSQL, PostGIS, Ruby, and Ruby on Rails:
-
-    .partners
-      = link_to "http://www.postgresql.org/" do
-        = image_tag "Postgresql_elephant.png", height: image_height
-      = link_to "http://postgis.refractions.net/" do
-        = image_tag "PostGIS_logo_100h.png", height: image_height
-      = link_to "http://www.ruby-lang.org/en/" do
-        = image_tag "Ruby_logo.png", height: image_height
-      = link_to "http://rubyonrails.org/" do
-        = image_tag "Ruby_on_Rails.png", height: image_height
+      AfricanElephantDatabase.org is an Open Source software project.
+      AfricanElephantDatabase.org was created with PostgreSQL, PostGIS, Ruby, and Ruby on Rails.
+      Every aspect of the database is powered by free and open source software.

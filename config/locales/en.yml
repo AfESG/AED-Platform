@@ -348,13 +348,13 @@ en:
   prospectively: "Prospectively"
   retrospectively: "Retrospectively"
   about_narrative:
-    ElephantDatabase.org contains the most comprehensive data on elephant population and range worldwide.
+    AfricanElephantDatabase.org contains the most comprehensive data on elephant population and range worldwide.
     Currently we have extensive data on African elephants, and are beginning to introduce some Asian
     elephant data. Please explore our range data and population estimates using the map and tables below,
     or click on one of the links above to share your own data.
   range_maps: "Range Maps"
   population_tables: "Population Tables"
-  legal: "All materials on this site are Copyright (C) 1995-$today$ IUCN - The International Union for the Conservation of Nature.  Use is permitted only under the Creative Commons Attribution-NonCommercial-ShareAlike license (http://creativecommons.org/licenses/by-nc-sa/3.0/)."
+  legal: "All materials on this site are Copyright (C) 1995-$today$ IUCN - The International Union for the Conservation of Nature.  Use is permitted only under the Creative Commons Attribution-NonCommercial-ShareAlike license (https://creativecommons.org/licenses/by-nc-sa/4.0)."
   banner: "AfricanElephantDatabase.org"
   about: "About"
   contribute: "Contribute"
@@ -419,7 +419,7 @@ en:
     will be explicitly acknowledged. The embargo will be lifted on the date you specify, and the survey
     report and any associated data will then be available for download on this website under the
     Creative Commons BY-NC-SA license, which ensures proper attribution and non-commercial use of the data.
-    See <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank">http://creativecommons.org/licenses/by-nc-sa/3.0/</a>
+    See <a href="https://creativecommons.org/licenses/by-nc-sa/4.0" target="_blank">https://creativecommons.org/licenses/by-nc-sa/4.0</a>
     for more details.
   creative_commons:
     <strong>Creative Commons License BY-NC-SA</strong><br/> Your survey data will be used to create pooled estimates at the
@@ -427,8 +427,8 @@ en:
     elephant range and survey zones to be featured on this website and IUCN publications.  Your contribution
     will be explicitly acknowledged. Additionally, your survey report and any associated range data will be
     available for download on this website under a Creative Commons (BY-NC-SA) license, which ensures proper
-    attribution and non-commercial use of the data. See  <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/"
-    target="_blank">http://creativecommons.org/licenses/by-nc-sa/3.0/</a>
+    attribution and non-commercial use of the data. See  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0"
+    target="_blank">https://creativecommons.org/licenses/by-nc-sa/4.0</a>
     for more details.
   controlled_redistribution:
     <strong>Controlled redistribution</strong><br/> Your survey data will be used to create pooled estimates
@@ -439,4 +439,4 @@ en:
     redistribution will be permitted. GIS survey zone boundaries may be used to improve the distribution map,
     and if so they would be shared, stripped of tabular attributes, under the Creative Commons BY-NC-SA license,
     which ensures proper attribution and non-commercial use of the data. See
-    <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank">http://creativecommons.org/licenses/by-nc-sa/3.0/</a> for more details.
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0" target="_blank">https://creativecommons.org/licenses/by-nc-sa/4.0</a> for more details.

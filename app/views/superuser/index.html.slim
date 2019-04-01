@@ -13,7 +13,10 @@
         h3
           = link_to 'Users', '/users'
         h3
-          = link_to 'Data Requests', '/data_request_forms'
+          / This has been disabled because the routes were changed to break this feature.
+          / When enabling this you will also need to fix the routes for data_requests.
+          - data_requests_enabled = false
+          = link_to_if data_requests_enabled, 'Data Requests', '/data_request_forms'
         h3
           = link_to 'Narratives and Footnotes', '/report_narratives'
   - else

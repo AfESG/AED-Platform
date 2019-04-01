@@ -47,7 +47,7 @@ class RegionsController < ApplicationController
   end
 
   def year
-    params[:year] || 2013
+    params[:year] || AedUtils.analysis_years.max
   end
 
   def simplify
