@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    environment:
+      DEV_DATABASE_URL: 'postgis://db:5432/aed_development'
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+  db:
+    image: postgis/postgis:9.6-2.5
+    volumes:
+      - db_storage:/var/lib/postgresql/data
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "6543:5432"
+
+volumes:
+  db_storage:
