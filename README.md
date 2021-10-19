@@ -12,6 +12,23 @@ This is the web application for the African Elephant Database (www.AfricanElepha
 
 **NOTE**: The application server, database server, and memcached server are all hosted on a single Droplet in their own containers. This droplet also hosts all the environments (production, staging, dev, etc.).
 
+## Docker Development Environment Setup
+
+- Install [Docker](https://www.docker.com/) and Docker Compose
+- Spin up the containerized environment
+  - `docker-compose up -d`
+  - *NOTE: if you have issues you can always `docker-compose down && docker-compose up -d`
+- Set up the database
+  - `createdb -h 0.0.0.0 -U postgres -p 6543 aed_development`
+  - `createuser -h 0.0.0.0 -U postgres -p 6543 --superuser root`
+- Load the most recent dump into the DB
+  - `pg_restore -U postgres -h 0.0.0.0 -p 6543 -d aed_development --verbose <dump file>`
+  - *NOTE: if this fails just run the above command multiple times until it doesn't fail*
+- View the local development site
+  - Open `http://localhost:3000` in a web browser
+- To tail logs
+  - `docker-compose logs -f`
+
 ## Development Environment Setup
 
 - Clone the repository
