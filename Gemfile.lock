@@ -1241,6 +1241,8 @@ GEM
     ffi (1.15.4)
     font-awesome-rails (4.7.0.7)
       railties (>= 3.2, < 7)
+    font-awesome-sass (4.6.2)
+      sass (>= 3.2)
     formtastic (3.1.5)
       actionpack (>= 3.2.13)
     formtastic-bootstrap (3.1.1)
@@ -1358,6 +1360,9 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (13.0.6)
+    rb-fsevent (0.11.0)
+    rb-inotify (0.10.1)
+      ffi (~> 1.0)
     remotipart (1.4.4)
     request_store (1.5.0)
       rack (>= 1.4)
@@ -1381,6 +1386,11 @@ GEM
       rexml
     rubyzip (2.3.2)
     safe_yaml (1.0.5)
+    sass (3.7.4)
+      sass-listen (~> 4.0.0)
+    sass-listen (4.0.0)
+      rb-fsevent (~> 0.9, >= 0.9.4)
+      rb-inotify (~> 0.9, >= 0.9.7)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
@@ -1435,6 +1445,7 @@ DEPENDENCIES
   devise
   dotenv-rails
   faker
+  font-awesome-sass (~> 4.6.1)
   formtastic
   formtastic-bootstrap
   georuby
