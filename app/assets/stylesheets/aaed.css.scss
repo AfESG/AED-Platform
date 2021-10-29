@@ -767,3 +767,8 @@ body.bootstrapped div.container div.row div.notice{
   margin-bottom: 5px;
   margin-top: 5px;
 }
+
+a[target="_blank"]:after {
+  font-family: 'FontAwesome';
+  content: " \f08e";
+}
