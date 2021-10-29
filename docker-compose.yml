@@ -13,7 +13,7 @@ services:
       - db
 
   db:
-    image: postgis/postgis:9.6-2.5
+    image: mdillon/postgis:9.6
     volumes:
       - db_storage:/var/lib/postgresql/data
     environment:
