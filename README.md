@@ -153,8 +153,9 @@ All commands should be run as the root user unless stated otherwise.
   - `/home/dokku/<app-name>/backup.sh`
     - Example: `/home/dokku/production/backup.sh`
     - Note: You should never have to do this since the backups happen automatically every night.
-    
-    
+- Database information `dokku postgres:info <production|staging|dev>`
+- Expose a database connection `dokku postgres:expose <production|staging|dev> <ports...>`
+
 File Paths
 - `/home/dokku/<app-name>`
   - Root directory for each application.
