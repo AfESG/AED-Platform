@@ -155,6 +155,7 @@ All commands should be run as the root user unless stated otherwise.
     - Note: You should never have to do this since the backups happen automatically every night.
 - Database information `dokku postgres:info <production|staging|dev>`
 - Expose a database connection `dokku postgres:expose <production|staging|dev> <ports...>`
+- Un-expose a database connection (recommended after done accessing) `dokku postgres:unexpose <production|staging|dev>`
 
 File Paths
 - `/home/dokku/<app-name>`
