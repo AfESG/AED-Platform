@@ -26,8 +26,15 @@ This is the web application for the African Elephant Database (www.AfricanElepha
   - *NOTE: if this fails just run the above command multiple times until it doesn't fail*
 - View the local development site
   - Open `http://localhost:3000` in a web browser
-- To tail logs
+
+## Docker Development Environment helpful commands
+
+- To tail logs:
   - `docker-compose logs -f`
+- To destroy the local database (if a clean setup is desired):
+  - `docker volume rm aed-platform_db_storage`
+- To rebuild app container (needed if adding gems to `Gemfile`):
+  - `docker-compose build app`
 
 ## Development Environment Setup
 
@@ -156,6 +163,7 @@ All commands should be run as the root user unless stated otherwise.
 - Database information `dokku postgres:info <production|staging|dev>`
 - Expose a database connection `dokku postgres:expose <production|staging|dev> <ports...>`
 - Un-expose a database connection (recommended after done accessing) `dokku postgres:unexpose <production|staging|dev>`
+- Tail application logs `dokku logs <production|staging|dev> --tail`
 
 File Paths
 - `/home/dokku/<app-name>`
