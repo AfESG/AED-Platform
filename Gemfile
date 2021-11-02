@@ -74,6 +74,9 @@ gem 'actionpack-action_caching'
 # font-awesome for admin
 gem 'font-awesome-sass', '~> 4.6.1'
 
+# log down login form with captcha
+gem 'recaptcha'
+
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
 # and rake tasks are available in development mode:
