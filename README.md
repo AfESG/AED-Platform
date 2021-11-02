@@ -15,6 +15,7 @@ This is the web application for the African Elephant Database (www.AfricanElepha
 ## Docker Development Environment Setup
 
 - Install [Docker](https://www.docker.com/) and Docker Compose
+- Create the `.env` file per instructions in the "Development Environment Setup" below
 - Spin up the containerized environment
   - `docker-compose up -d`
   - *NOTE: if you have issues you can always `docker-compose down && docker-compose up -d`
@@ -62,8 +63,11 @@ This is the web application for the African Elephant Database (www.AfricanElepha
   REQUEST_FORM_SUBMITTED_BCC_EMAIL=
   REQUEST_FORM_THANKS_BCC_EMAIL=
   GOOGLE_ANALYTICS_TRACKING_ID=u-disabled-1
+  RECAPTCHA_SITE_KEY=
+  RECAPTCHA_SECRET_KEY=
   ```
   - Fill in the blanks with your development values.
+  - It is recommended you create your own reCAPTCHA key/secret for your development environment [here](https://www.google.com/recaptcha/admin)
   - See [aed_env.rb](app/lib/aed_env.rb) for complete list of environment variables.
 
 ## Setup DigitalOcean Droplet
