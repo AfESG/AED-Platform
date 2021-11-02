@@ -168,6 +168,7 @@ All commands should be run as the root user unless stated otherwise.
 - Expose a database connection `dokku postgres:expose <production|staging|dev> <ports...>`
 - Un-expose a database connection (recommended after done accessing) `dokku postgres:unexpose <production|staging|dev>`
 - Tail application logs `dokku logs <production|staging|dev> --tail`
+- Set/update an environment variable `dokku config:set <production|staging|dev> ENV="VALUE"`
 
 File Paths
 - `/home/dokku/<app-name>`
