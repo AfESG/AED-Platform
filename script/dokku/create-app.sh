@@ -215,6 +215,10 @@ echo ""
 echo "==> Setting DOKKU_RM_CONTAINER=1"
 dokku config:set --global DOKKU_RM_CONTAINER=1
 
+# Update max upload size allowed
+echo "==> Setting client-max-body-size=10M"
+dokku nginx:set "${APPNAME}" client-max-body-size 10M
+
 # Restart all apps every day at midnight.
 RESTART_CRON_FILE="/etc/cron.d/restart-${APPNAME}"
 echo ""
@@ -238,6 +242,7 @@ server {
     listen 80 default_server;
     server_name _;
     access_log off;
+    client_max_body_size 10M;
     return 444;
 }
 
@@ -256,6 +261,7 @@ server {
 #     ssl_certificate /etc/nginx/ssl/cert.crt;
 #     ssl_certificate_key /etc/nginx/ssl/cert.key;
 #     access_log off;
+#     client_max_body_size 10M;
 #     return 444;
 # }
 EOT
