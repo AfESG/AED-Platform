@@ -136,8 +136,8 @@ Note: This application uses multiple buildpacks. The GEOS buildpack is located a
 - The Droplet will be configured to take complete backups once a week.
   - This is standard feature that DigitalOcean provides for an extra fee.
 - All non-Droplet backups will be stored on AWS S3 in the `aed-server-backups` bucket. Under this bucket each app will have its own folder where the backup files are stored.
-- The PostgreSQL database backups are scheduled to run daily at 3AM and will be stored on S3.
-  - This backup is scheduled via the Postgres Dokku plugin and runs via cron.
+- The PostgreSQL database backups are scheduled to run daily (12AM for staging and 3AM for production) and will be stored on S3.
+  - This backup is scheduled via the Postgres Dokku plugin and runs via cron (list details via `dokku postgres:backup-schedule-cat <staging|production>`).
 - The application's storage folder (`/var/lib/dokku/data/storage/<app-name>`) is scheduled to run daily at 3AM and will be stored on S3.
   - This backup is scheduled via the root users cron in `/etc/cron.d/storage-backup-<app-name>`
   - This folder is mapped to the application’s container and currently stores:
