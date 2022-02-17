@@ -191,3 +191,6 @@ File Paths
       - Cron job for nightly PostgreSQL database backups.
 - `/etc/nginx/conf.d/00-default-vhost.conf`
   - Nginx custom configuration.
+
+## Helpful tasks
+- To update the phenotype dropdown for submissions update [this line](https://github.com/AfESG/AED-Platform/blob/master/app/views/submissions/_form.html.slim#L10)
