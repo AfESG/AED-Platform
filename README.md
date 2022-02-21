@@ -36,6 +36,8 @@ This is the web application for the African Elephant Database (www.AfricanElepha
   - `docker volume rm aed-platform_db_storage`
 - To rebuild app container (needed if adding gems to `Gemfile`):
   - `docker-compose build app`
+- To get command line access (for running `rails` tasks):
+  - `docker-compose exec app bash`
 
 ## Development Environment Setup
 
