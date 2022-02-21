@@ -311,6 +311,8 @@ CREATE OR REPLACE VIEW estimate_factors_analyses_categorized_sums_country_for_ad
     continent,
     region,
     country,
+    phenotype,
+    phenotype_basis,
     sum(e.best_estimate) as "ESTIMATE",
     1.96*sqrt(sum(e.best_population_variance)) as "CONFIDENCE",
     sum(e.population_lower_confidence_limit) as "GUESS_MIN",
@@ -320,7 +322,7 @@ CREATE OR REPLACE VIEW estimate_factors_analyses_categorized_sums_country_for_ad
     estimate_factors_analyses_categorized_for_add e
   WHERE
     e.category <> 'C'
-  GROUP BY "CATEGORY", "SURVEYTYPE", analysis_year, analysis_name, continent, region, country
+  GROUP BY "CATEGORY", "SURVEYTYPE", analysis_year, analysis_name, continent, region, country, phenotype, phenotype_basis
 
   UNION
 
