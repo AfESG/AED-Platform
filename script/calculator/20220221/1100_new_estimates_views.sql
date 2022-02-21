@@ -15,6 +15,8 @@ select
   stratum_name,
   stratum_area,
   completion_year,
+  phenotype,
+  phenotype_basis,
   citation,
   short_citation,
   population_estimate,
@@ -31,6 +33,7 @@ select
     survey_ground_total_count_strata
     join survey_ground_total_counts on survey_ground_total_counts.id=survey_ground_total_count_id
     join population_submissions on population_submissions.id=population_submission_id
+    join submissions on submissions.id = population_submissions.submission_id
 union
 select
   'DC',
@@ -40,6 +43,8 @@ select
   stratum_name,
   stratum_area,
   completion_year,
+  phenotype,
+  phenotype_basis,
   citation,
   short_citation,
   population_estimate,
@@ -50,7 +55,9 @@ select
   population_lower_confidence_limit,
   population_upper_confidence_limit,
   CASE
-    WHEN dung_decay_rate_measurement_method != 'Decay rate NOT measured on site' and dung_decay_rate_measurement_site != '' THEN 1
+    WHEN dung_decay_rate_measurement_method != 'Decay rate NOT measured on site'
+     AND dung_decay_rate_measurement_site != ''
+    THEN 1
     ELSE 0
   END quality_level,
   actually_seen,
@@ -59,6 +66,7 @@ from
   survey_dung_count_line_transect_strata
   join survey_dung_count_line_transects on survey_dung_count_line_transects.id=survey_dung_count_line_transect_id
   join population_submissions on population_submissions.id=population_submission_id
+  join submissions on submissions.id = population_submissions.submission_id
 union
 select
   'AT',
@@ -68,6 +76,8 @@ select
   stratum_name,
   stratum_area,
   completion_year,
+  phenotype,
+  phenotype_basis,
   citation,
   short_citation,
   population_estimate,
@@ -84,6 +94,7 @@ from
   survey_aerial_total_count_strata
   join survey_aerial_total_counts on survey_aerial_total_counts.id=survey_aerial_total_count_id
   join population_submissions on population_submissions.id=population_submission_id
+  join submissions on submissions.id = population_submissions.submission_id
 union
 select
   'GS',
@@ -93,6 +104,8 @@ select
   stratum_name,
   stratum_area,
   completion_year,
+  phenotype,
+  phenotype_basis,
   citation,
   short_citation,
   population_estimate,
@@ -109,6 +122,7 @@ from
   survey_ground_sample_count_strata
   join survey_ground_sample_counts on survey_ground_sample_counts.id=survey_ground_sample_count_id
   join population_submissions on population_submissions.id=population_submission_id
+  join submissions on submissions.id = population_submissions.submission_id
 union
 select
   'AS',
@@ -118,6 +132,8 @@ select
   stratum_name,
   stratum_area,
   completion_year,
+  phenotype,
+  phenotype_basis,
   citation,
   short_citation,
   population_estimate,
@@ -133,6 +149,7 @@ select
 from survey_aerial_sample_count_strata
   join survey_aerial_sample_counts on survey_aerial_sample_counts.id=survey_aerial_sample_count_id
   join population_submissions on population_submissions.id=population_submission_id
+  join submissions on submissions.id = population_submissions.submission_id
 union
 select
   'GD',
@@ -142,6 +159,8 @@ select
   stratum_name,
   stratum_area,
   completion_year,
+  phenotype,
+  phenotype_basis,
   citation,
   short_citation,
   population_estimate,
@@ -157,6 +176,7 @@ select
 from survey_faecal_dna_strata
   join survey_faecal_dnas on survey_faecal_dnas.id=survey_faecal_dna_id
   join population_submissions on population_submissions.id=population_submission_id
+  join submissions on submissions.id = population_submissions.submission_id
 union
 select
   'IR',
@@ -166,6 +186,8 @@ select
   site_name,
   area,
   completion_year,
+  phenotype,
+  phenotype_basis,
   citation,
   short_citation,
   population_estimate,
@@ -176,13 +198,15 @@ select
   NULL population_lower_confidence_limit,
   population_upper_range population_upper_confidence_limit,
   CASE
-    WHEN population_upper_range is null THEN 1
+    WHEN population_upper_range is null
+    THEN 1
     ELSE 0
   END quality_level,
   population_estimate actually_seen,
   survey_geometry_id
 from survey_individual_registrations
   join population_submissions on population_submissions.id=population_submission_id
+  join submissions on submissions.id = population_submissions.submission_id
 union
 select
   'O',
@@ -192,6 +216,8 @@ select
   site_name,
   area,
   completion_year,
+  phenotype,
+  phenotype_basis,
   citation,
   short_citation,
   population_estimate_min,
@@ -209,6 +235,7 @@ select
   survey_geometry_id
 from survey_others
   join population_submissions on population_submissions.id=population_submission_id
+  join submissions on submissions.id = population_submissions.submission_id
 ;
 
 ---
