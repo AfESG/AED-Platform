@@ -415,12 +415,14 @@ CREATE OR REPLACE VIEW estimate_factors_analyses_categorized_totals_region_for_a
     analysis_year,
     continent,
     region,
+    phenotype,
+    phenotype_basis,
     sum("ESTIMATE") "ESTIMATE",
     1.96*sqrt(sum(population_variance)) "CONFIDENCE",
     sum("GUESS_MIN") "GUESS_MIN",
     sum("GUESS_MAX") "GUESS_MAX"
   FROM estimate_factors_analyses_categorized_sums_region_for_add
-  GROUP BY analysis_name, analysis_year, continent, region;
+  GROUP BY analysis_name, analysis_year, continent, region, phenotype, phenotype_basis;
 
 
 CREATE OR REPLACE VIEW estimate_factors_analyses_categorized_sums_continent_for_add AS
