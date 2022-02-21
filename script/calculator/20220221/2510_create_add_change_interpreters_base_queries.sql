@@ -93,6 +93,8 @@ CREATE OR REPLACE VIEW ioc_add_new_base AS
     e.continent,
     e.region,
     e.country,
+    e.phenotype,
+    e.phenotype_basis,
     e.input_zone_id,
     e.category,
     c.adjusted_reason_change reason_change,
