@@ -408,6 +408,8 @@ select
   completion_year,
   analysis_name,
   analysis_year,
+  phenotype,
+  phenotype_basis,
   age,
   sort_key,
   population,
