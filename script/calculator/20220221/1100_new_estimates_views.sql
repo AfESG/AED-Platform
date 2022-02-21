@@ -254,40 +254,46 @@ select
   stratum_name,
   stratum_area,
   completion_year,
+  phenotype,
+  phenotype_basis,
   citation,
   short_citation,
   quality_level,
   population_estimate,
   CASE
-    WHEN population_variance IS NOT NULL
-    THEN population_variance
-    WHEN population_standard_error IS NOT NULL
-    THEN population_standard_error ^ 2
-    WHEN population_confidence_interval IS NOT NULL
-         AND population_t IS NOT NULL
-    THEN (population_confidence_interval/population_t) ^ 2
-    WHEN population_confidence_interval IS NOT NULL
-    THEN (population_confidence_interval/1.96) ^ 2
-    ELSE null
-  END population_variance,
-  population_standard_error,
+      WHEN (estimate_factors.population_variance IS NOT NULL)
+      THEN estimate_factors.population_variance
+      WHEN (estimate_factors.population_standard_error IS NOT NULL)
+      THEN (estimate_factors.population_standard_error ^ (2)::double precision)
+      WHEN ((estimate_factors.population_confidence_interval IS NOT NULL)
+       AND (estimate_factors.population_t IS NOT NULL))
+      THEN ((estimate_factors.population_confidence_interval / estimate_factors.population_t) ^ (2)::double precision) --TODO this value will change
+      WHEN (estimate_factors.population_confidence_interval IS NOT NULL)
+      THEN ((estimate_factors.population_confidence_interval / (1.96)::double precision) ^ (2)::double precision) --TODO this value will change
+      ELSE NULL::double precision
+      END AS population_variance,
+  estimate_factors.population_standard_error,
   CASE
-    WHEN population_confidence_interval IS NOT NULL
-    THEN population_confidence_interval
-    WHEN population_standard_error IS NOT NULL
-    THEN population_standard_error * 1.96
-    WHEN population_standard_error IS NOT NULL
-         AND population_t IS NOT NULL
-    THEN population_standard_error * population_t
-    WHEN population_variance IS NOT NULL
-    THEN SQRT(population_variance) * 1.96
-    ELSE null
-  END population_confidence_interval,
-  population_lower_confidence_limit,
-  population_upper_confidence_limit,
-  CASE WHEN actually_seen IS NULL THEN 0 ELSE actually_seen END actually_seen
+      WHEN (estimate_factors.population_confidence_interval IS NOT NULL)
+      THEN estimate_factors.population_confidence_interval
+      WHEN (estimate_factors.population_standard_error IS NOT NULL)
+      THEN (estimate_factors.population_standard_error * (1.96)::double precision) --TODO this value will change
+      WHEN ((estimate_factors.population_standard_error IS NOT NULL)
+       AND (estimate_factors.population_t IS NOT NULL))
+      THEN (estimate_factors.population_standard_error * estimate_factors.population_t)
+      WHEN (estimate_factors.population_variance IS NOT NULL)
+      THEN (sqrt(estimate_factors.population_variance) * (1.96)::double precision) --TODO this value will change
+      ELSE NULL::double precision
+      END AS population_confidence_interval,
+  estimate_factors.population_lower_confidence_limit,
+  estimate_factors.population_upper_confidence_limit,
+  CASE
+      WHEN (estimate_factors.actually_seen IS NULL) THEN 0
+      ELSE estimate_factors.actually_seen
+      END AS actually_seen
   from
-    estimate_factors;
+    estimate_factors
+;
 
 ---
 --- new_strata and replaced_strata
