@@ -63,6 +63,8 @@ CREATE OR REPLACE VIEW ioc_add_new_continents AS
       e.analysis_name,
       e.analysis_year,
       e.continent,
+      e.phenotype,
+      e.phenotype_basis,
       e.reason_change,
       sum(e.population_estimate) estimate,
       sum(e.population_variance) population_variance,
@@ -70,12 +72,14 @@ CREATE OR REPLACE VIEW ioc_add_new_continents AS
       sum(e.population_upper_confidence_limit) guess_max
     FROM ioc_add_new_base e
     WHERE category <> 'C'
-    GROUP BY e.analysis_name, e.analysis_year, e.continent, e.reason_change
+    GROUP BY e.analysis_name, e.analysis_year, e.continent, e.phenotype, e.phenotype_basis, e.reason_change
     UNION
     SELECT
       e.analysis_name,
       e.analysis_year,
       e.continent,
+      e.phenotype,
+      e.phenotype_basis,
       e.reason_change,
       sum(e.population_estimate) estimate,
       0 AS population_variance,
@@ -83,7 +87,7 @@ CREATE OR REPLACE VIEW ioc_add_new_continents AS
       sum(e.population_upper_confidence_limit) + 1.96*sqrt(sum(e.population_variance)) AS guess_max
     FROM ioc_add_new_base e
     WHERE category = 'C'
-    GROUP BY e.analysis_name, e.analysis_year, e.continent, e.reason_change
+    GROUP BY e.analysis_name, e.analysis_year, e.continent, e.phenotype, e.phenotype_basis, e.reason_change
   ) new ON new.analysis_name = a.analysis_name
     AND new.analysis_year = a.analysis_year
   GROUP BY a.analysis_name, a.analysis_year, new.continent, new.reason_change;
