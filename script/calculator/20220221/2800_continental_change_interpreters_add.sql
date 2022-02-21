@@ -111,9 +111,9 @@ create view i_add_sums_continent_category_reason as
     sum(guess_max) guess_max,
     sum(population_variance) meta_population_variance
   FROM (
-    SELECT * FROM ioc_add_new_continents i JOIN cause_of_changes c ON i.reason_change = c.code
+    SELECT * FROM ioc_add_new_continents i JOIN cause_of_changes c ON i.reason_change = c.code -- don't need to add new fields as we use * here
   UNION ALL
-    SELECT * FROM ioc_add_replaced_continents i JOIN cause_of_changes c ON i.reason_change = c.code
+    SELECT * FROM ioc_add_replaced_continents i JOIN cause_of_changes c ON i.reason_change = c.code -- don't need to add new fields as we use * here
   ) x
   GROUP BY analysis_name, analysis_year, continent, reason_change
   ORDER BY analysis_name, analysis_year, continent, reason_change;
