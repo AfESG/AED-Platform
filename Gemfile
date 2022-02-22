@@ -86,6 +86,7 @@ end
 
 group :development do
   gem "rails-erd"
+  gem 'web-console'
 end
 
 group :development, :test do

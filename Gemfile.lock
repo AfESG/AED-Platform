@@ -1224,6 +1224,7 @@ GEM
     crass (1.0.6)
     dalli (2.7.11)
     dbf (4.2.0)
+    debug_inspector (1.1.0)
     devise (4.8.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -1430,6 +1431,10 @@ GEM
     unicode_utils (1.4.0)
     warden (1.2.7)
       rack (>= 1.0)
+    web-console (3.3.0)
+      activemodel (>= 4.2)
+      debug_inspector
+      railties (>= 4.2)
 
 PLATFORMS
   ruby
@@ -1476,6 +1481,7 @@ DEPENDENCIES
   sass-rails
   slim
   uglifier
+  web-console
 
 RUBY VERSION
    ruby 2.5.3p105
