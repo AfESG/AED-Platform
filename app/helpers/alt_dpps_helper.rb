@@ -262,7 +262,23 @@ module AltDppsHelper
   def alt_dpps_region_stats_sums scope, year, filter=nil
     analysis_name = filter.nil?? '' : "AND x.analysis_name = '#{filter}'"
     <<-SQL
+    SELECT
+      "CLASSIFICATION",
+      SUM("ESTIMATE") AS "ESTIMATE",
+      SUM("CONFIDENCE") AS "CONFIDENCE",
+      SUM("GUESS_MIN") AS "GUESS_MIN",
+      SUM("GUESS_MAX") AS "GUESS_MAX",
+      MAX("RANGE_AREA") AS "RANGE_AREA",
+      MAX("PERCENT_OF_RANGE_COVERED") AS "PERCENT_OF_RANGE_COVERED",
+      MAX("PERCENT_OF_RANGE_ASSESSED") AS "PERCENT_OF_RANGE_ASSESSED",
+      (SUM("ESTIMATE") / (SUM("ESTIMATE") + SUM("CONFIDENCE") + SUM("GUESS_MAX"))) * (MAX("ASSESSED_RANGE") / MAX("RANGE_AREA")) AS "IQI"
+    FROM (
       SELECT
+        CASE
+          WHEN x.phenotype IN ('Savanna', 'Savanna with hybrid') THEN 'Savanna'
+          WHEN x.phenotype IN ('Forest', 'Forest with hybrid') THEN 'Forest'
+          ELSE 'Other'
+        END AS "CLASSIFICATION",
         x."ESTIMATE",
         x."CONFIDENCE",
         x."GUESS_MIN",
@@ -283,15 +299,36 @@ module AltDppsHelper
         x.analysis_year = #{year}
         #{analysis_name}
         AND x.#{scope}
+        AND x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX" > 0
       ORDER BY x.region
+    ) data
+    GROUP BY "CLASSIFICATION"
     SQL
   end
 
   def alt_dpps_region_stats scope, year, filter=nil
     analysis_name = filter.nil?? '' : "AND x.analysis_name = '#{filter}'"
     <<-SQL
+    SELECT
+      country,
+      "CLASSIFICATION",
+      SUM("ESTIMATE") AS "ESTIMATE",
+      SUM("CONFIDENCE") AS "CONFIDENCE",
+      SUM("GUESS_MIN") AS "GUESS_MIN",
+      SUM("GUESS_MAX") AS "GUESS_MAX",
+      MAX("RANGE_AREA") AS "RANGE_AREA",
+      MAX("PERCENT_OF_RANGE_COVERED") AS "PERCENT_OF_RANGE_COVERED",
+      MAX("PERCENT_OF_RANGE_ASSESSED") AS "PERCENT_OF_RANGE_ASSESSED",
+      (SUM("ESTIMATE") / (SUM("ESTIMATE") + SUM("CONFIDENCE") + SUM("GUESS_MAX"))) * (MAX("ASSESSED_RANGE") / MAX("RANGE_AREA")) AS "IQI",
+      log((1+(SUM("ESTIMATE") / (SUM("ESTIMATE") + SUM("CONFIDENCE") + SUM("GUESS_MAX"))) * (MAX("ASSESSED_RANGE") / MAX("RANGE_AREA"))) / (MAX("RANGE_AREA") / MAX(cont_range_area))) AS "PFS"
+    FROM (
       SELECT
         x.country,
+        CASE
+          WHEN x.phenotype IN ('Savanna', 'Savanna with hybrid') THEN 'Savanna'
+          WHEN x.phenotype IN ('Forest', 'Forest with hybrid') THEN 'Forest'
+          ELSE 'Other'
+        END AS "CLASSIFICATION",
         x."ESTIMATE",
         x."CONFIDENCE",
         x."GUESS_MIN",
@@ -304,7 +341,8 @@ module AltDppsHelper
         crt."ASSESSED_RANGE",
         crt."RANGE_AREA",
         crt."RANGE_AREA" / rrt.range_area * 100 AS "PERCENT_OF_RANGE_COVERED",
-        crt."ASSESSED_RANGE" / crt."RANGE_AREA" * 100 as "PERCENT_OF_RANGE_ASSESSED"
+        crt."ASSESSED_RANGE" / crt."RANGE_AREA" * 100 as "PERCENT_OF_RANGE_ASSESSED",
+        cont.range_area AS cont_range_area
       FROM estimate_factors_analyses_categorized_totals_country_for_add x
       JOIN country_range_totals crt ON crt.country = x.country AND crt.analysis_year = x.analysis_year AND crt.analysis_name = x.analysis_name
       JOIN regional_range_totals rrt ON rrt.region = crt.region AND rrt.analysis_name = crt.analysis_name AND rrt.analysis_year = crt.analysis_year
@@ -313,7 +351,10 @@ module AltDppsHelper
         x.analysis_year = #{year}
         #{analysis_name}
         AND x.#{scope}
+        AND x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX" > 0
       ORDER BY x.country
+    ) data
+    GROUP BY country, "CLASSIFICATION"
     SQL
   end
 
