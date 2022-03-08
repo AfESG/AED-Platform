@@ -462,10 +462,10 @@ module AltDppsHelper
         "CATEGORY",
         "SURVEYTYPE",
         st.display_order,
-        "ESTIMATE",
-        "CONFIDENCE",
-        "GUESS_MIN",
-        "GUESS_MAX"
+        SUM("ESTIMATE") AS "ESTIMATE",
+        SUM("CONFIDENCE") AS "CONFIDENCE",
+        SUM("GUESS_MIN") AS "GUESS_MIN",
+        SUM("GUESS_MAX") AS "GUESS_MAX"
       FROM
         estimate_factors_analyses_categorized_sums_#{sql[:table]}_for_add s
       JOIN surveytypes st ON st.category = s."CATEGORY"
@@ -473,6 +473,7 @@ module AltDppsHelper
         s.analysis_year = #{year}
         #{analysis_name}
         AND #{scope}
+      GROUP BY "CATEGORY", "SURVEYTYPE", st.display_order
       ORDER BY st.display_order
     SQL
   end
@@ -483,10 +484,10 @@ module AltDppsHelper
     analysis_name = filter.nil?? '' : "AND s.analysis_name = '#{filter}'"
     <<-SQL
       SELECT
-        "ESTIMATE",
-        "CONFIDENCE",
-        "GUESS_MIN",
-        "GUESS_MAX"
+        SUM("ESTIMATE") AS "ESTIMATE",
+        SUM("CONFIDENCE") AS "CONFIDENCE",
+        SUM("GUESS_MIN") AS "GUESS_MIN",
+        SUM("GUESS_MAX") AS "GUESS_MAX"
       FROM
         estimate_factors_analyses_categorized_totals_#{sql[:table]}_for_add s
       WHERE
