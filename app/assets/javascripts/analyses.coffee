@@ -410,7 +410,7 @@ activate_adding_strata = (element) ->
   commit_active_cell()
   ACTIVE_STRATA_CELL = element
   $(".RM_strata").css {
-    border: 'none';
+    border: 'none'
   }
   $(element).css {
     border: '3px solid #cccccc'
