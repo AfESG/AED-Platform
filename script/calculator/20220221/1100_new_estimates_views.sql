@@ -7,6 +7,13 @@
 ---
 drop view estimate_factors cascade;
 create or replace view estimate_factors as
+WITH ddr_median AS ( -- get ddr median value (dont' check year)
+    SELECT PERCENTILE_DISC(0.5) WITHIN GROUP(ORDER BY sdclts.dung_decay_rate_estimate_used) AS val
+    FROM survey_dung_count_line_transect_strata sdclts
+    JOIN survey_dung_count_line_transects sdclt ON sdclts.survey_dung_count_line_transect_id = sdclt.id
+    JOIN population_submissions ps ON sdclt.population_submission_id = ps.id
+    WHERE sdclts.dung_decay_rate_measurement_method = 'Retrospectively'
+)
 select
   'GT'::text estimate_type,
   'GT'||survey_ground_total_count_strata.id input_zone_id,
@@ -35,38 +42,131 @@ select
     join population_submissions on population_submissions.id=population_submission_id
     join submissions on submissions.id = population_submissions.submission_id
 union
-select
-  'DC',
-  'DC'||survey_dung_count_line_transect_strata.id input_zone_id,
-  population_submission_id,
-  site_name,
-  stratum_name,
-  stratum_area,
-  completion_year,
-  phenotype,
-  phenotype_basis,
-  citation,
-  short_citation,
-  population_estimate,
-  population_variance,
-  population_standard_error,
-  population_confidence_interval,
-  population_t,
-  population_lower_confidence_limit,
-  population_upper_confidence_limit,
-  CASE
-    WHEN dung_decay_rate_measurement_method != 'Decay rate NOT measured on site'
-     AND dung_decay_rate_measurement_site != ''
-    THEN 1
-    ELSE 0
-  END quality_level,
-  actually_seen,
-  survey_geometry_id
+select -- retrospective method with matching year
+       'DC' AS estimate_type,
+       'DC' || survey_dung_count_line_transect_strata.id AS input_zone_id,
+       population_submission_id,
+       site_name,
+       stratum_name,
+       stratum_area,
+       completion_year,
+       phenotype,
+       phenotype_basis,
+       citation,
+       short_citation,
+       population_estimate,
+       population_variance,
+       population_standard_error,
+       population_confidence_interval,
+       population_t,
+       population_lower_confidence_limit,
+       population_upper_confidence_limit,
+       1 AS quality_level,
+       actually_seen,
+       survey_geometry_id
 from
-  survey_dung_count_line_transect_strata
-  join survey_dung_count_line_transects on survey_dung_count_line_transects.id=survey_dung_count_line_transect_id
-  join population_submissions on population_submissions.id=population_submission_id
-  join submissions on submissions.id = population_submissions.submission_id
+    survey_dung_count_line_transect_strata
+    join survey_dung_count_line_transects on survey_dung_count_line_transects.id=survey_dung_count_line_transect_id
+    join population_submissions on population_submissions.id=population_submission_id
+    join submissions on submissions.id = population_submissions.submission_id
+WHERE dung_decay_rate_measurement_method = 'Retrospectively'
+  AND dung_decay_rate_measurement_year = population_submissions.completion_year
+union
+select -- higher ddr than median
+       'DC' AS estimate_type,
+       'DC' || survey_dung_count_line_transect_strata.id AS input_zone_id,
+       population_submission_id,
+       site_name,
+       stratum_name,
+       stratum_area,
+       completion_year,
+       phenotype,
+       phenotype_basis,
+       citation,
+       short_citation,
+       population_estimate,
+       population_variance,
+       population_standard_error,
+       population_confidence_interval,
+       population_t,
+       population_lower_confidence_limit,
+       population_upper_confidence_limit,
+       1 AS quality_level,
+       actually_seen,
+       survey_geometry_id
+from
+    survey_dung_count_line_transect_strata
+    join survey_dung_count_line_transects on survey_dung_count_line_transects.id=survey_dung_count_line_transect_id
+    join population_submissions on population_submissions.id=population_submission_id
+    join submissions on submissions.id = population_submissions.submission_id
+WHERE (dung_decay_rate_measurement_method != 'Retrospectively' OR dung_decay_rate_measurement_year != population_submissions.completion_year)
+  AND dung_decay_rate_estimate_used >= (select val from ddr_median)
+union
+select -- lower ddr than median (estimate)
+       'DC' AS estimate_type,
+       'DC' || survey_dung_count_line_transect_strata.id AS input_zone_id,
+       population_submission_id,
+       site_name,
+       stratum_name,
+       stratum_area,
+       completion_year,
+       phenotype,
+       phenotype_basis,
+       citation,
+       short_citation,
+       ROUND( -- area * (dung density / (dung production * median DDR))
+           stratum_area * (dung_density_estimate / (defecation_rate_estimate_used * (select val from ddr_median)))
+       )::INT AS population_estimate,
+       population_variance,
+       population_standard_error,
+       population_confidence_interval,
+       population_t,
+       population_lower_confidence_limit,
+       population_upper_confidence_limit,
+       1 AS quality_level,
+       actually_seen,
+       survey_geometry_id
+from
+    survey_dung_count_line_transect_strata
+    join survey_dung_count_line_transects on survey_dung_count_line_transects.id=survey_dung_count_line_transect_id
+    join population_submissions on population_submissions.id=population_submission_id
+    join submissions on submissions.id = population_submissions.submission_id
+WHERE (dung_decay_rate_measurement_method != 'Retrospectively' OR dung_decay_rate_measurement_year != population_submissions.completion_year)
+  AND dung_decay_rate_estimate_used < (select val from ddr_median)
+  AND defecation_rate_estimate_used > 0 -- fix divide by zero issues
+union
+select -- lower ddr than median (guess)
+       'DC' AS estimate_type,
+       'DC' || survey_dung_count_line_transect_strata.id AS input_zone_id,
+       population_submission_id,
+       site_name,
+       stratum_name,
+       stratum_area,
+       completion_year,
+       phenotype,
+       phenotype_basis,
+       citation,
+       short_citation,
+       population_estimate - ROUND( -- population estimate - (area * (dung density / (dung production * median DDR)))
+           (stratum_area * (dung_density_estimate / (defecation_rate_estimate_used * (select val from ddr_median))))
+       )::INT AS population_estimate,
+       population_variance,
+       population_standard_error,
+       population_confidence_interval,
+       population_t,
+       population_lower_confidence_limit,
+       population_upper_confidence_limit,
+       0 AS quality_level,
+       actually_seen,
+       survey_geometry_id
+from
+    survey_dung_count_line_transect_strata
+    join survey_dung_count_line_transects on survey_dung_count_line_transects.id=survey_dung_count_line_transect_id
+    join population_submissions on population_submissions.id=population_submission_id
+    join submissions on submissions.id = population_submissions.submission_id
+WHERE (dung_decay_rate_measurement_method != 'Retrospectively' OR dung_decay_rate_measurement_year != population_submissions.completion_year)
+  AND dung_decay_rate_estimate_used < (select val from ddr_median)
+  AND defecation_rate_estimate_used > 0 -- fix divide by zero issues
 union
 select
   'AT',
