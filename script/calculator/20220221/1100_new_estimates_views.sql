@@ -629,10 +629,10 @@ select
     ELSE actually_seen
   END as definite,
   CASE WHEN lcl95>0 or actually_seen>0 THEN
-    population_estimate-(CASE
+    greatest(population_estimate-(CASE
       WHEN lcl95>actually_seen THEN lcl95
       ELSE actually_seen
-    END)
+    END),0)
     ELSE population_estimate
   END as probable,
   population_confidence_interval as possible,
@@ -655,10 +655,10 @@ select
   as definite,
   population_estimate as probable,
   CASE WHEN lcl95>0 or actually_seen>0 THEN
-    population_estimate-(CASE
+    greatest(population_estimate-(CASE
       WHEN lcl95>actually_seen THEN lcl95
       ELSE actually_seen
-    END)
+    END),0)
     ELSE 0
   END as possible,
   0 as speculative
@@ -681,13 +681,13 @@ select
   0 as probable,
   CASE
     WHEN actually_seen>0 THEN
-      population_estimate-actually_seen
+      greatest(population_estimate-actually_seen,0)
     ELSE
       population_estimate
   END as possible,
-  CASE WHEN lcl95>0 and lcl95!=population_estimate THEN (population_estimate-lcl95)*2
+  CASE WHEN lcl95>0 and lcl95!=population_estimate THEN greatest((population_estimate-lcl95)*2, 0)
   WHEN population_upper_confidence_limit>0 THEN
-    population_upper_confidence_limit-population_estimate
+    greatest(population_upper_confidence_limit-population_estimate,0)
   ELSE 0
   END as speculative
 from
@@ -708,7 +708,7 @@ select
   as definite,
   0 as probable,
   0 as possible,
-  population_estimate-actually_seen as speculative
+  greatest(population_estimate-actually_seen,0) as speculative
 from
   estimate_factors_analyses_categorized
 where
