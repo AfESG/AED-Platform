@@ -63,6 +63,7 @@ module DppsCountryHelper
         join estimate_dpps d on e.input_zone_id = d.input_zone_id
           and e.analysis_name = d.analysis_name
           and e.analysis_year = d.analysis_year
+          and e.category = d.category
         join estimate_locator_areas a on e.input_zone_id = a.input_zone_id
           and e.analysis_name = a.analysis_name
           and e.analysis_year = a.analysis_year
