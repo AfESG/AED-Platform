@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 9.6.12
--- Dumped by pg_dump version 11.2 (Ubuntu 11.2-1.pgdg18.04+1)
+-- Dumped by pg_dump version 9.6.23
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -12,6 +12,7 @@ SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
+SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
@@ -44,17 +45,17 @@ CREATE SCHEMA aed2007;
 
 
 --
--- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
 --
 
-CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: -
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
 --
 
-COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
@@ -11249,6 +11250,27 @@ CREATE TABLE public.population_submissions (
 
 
 --
+-- Name: submissions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.submissions (
+    id integer NOT NULL,
+    user_id integer,
+    phenotype character varying(255),
+    phenotype_basis character varying(255),
+    data_type character varying(255),
+    right_to_grant_permission boolean,
+    permission_email character varying(255),
+    is_mike_site boolean,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    species_id integer,
+    country_id integer,
+    mike_site_id integer
+);
+
+
+--
 -- Name: survey_aerial_sample_count_strata; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -11638,6 +11660,13 @@ CREATE TABLE public.survey_others (
 --
 
 CREATE VIEW public.estimate_factors AS
+ WITH ddr_median AS (
+         SELECT percentile_disc((0.5)::double precision) WITHIN GROUP (ORDER BY sdclts.dung_decay_rate_estimate_used) AS val
+           FROM ((public.survey_dung_count_line_transect_strata sdclts
+             JOIN public.survey_dung_count_line_transects sdclt ON ((sdclts.survey_dung_count_line_transect_id = sdclt.id)))
+             JOIN public.population_submissions ps ON ((sdclt.population_submission_id = ps.id)))
+          WHERE ((sdclts.dung_decay_rate_measurement_method)::text = 'Retrospectively'::text)
+        )
  SELECT 'GT'::text AS estimate_type,
     ('GT'::text || survey_ground_total_count_strata.id) AS input_zone_id,
     survey_ground_total_counts.population_submission_id,
@@ -11645,6 +11674,8 @@ CREATE VIEW public.estimate_factors AS
     survey_ground_total_count_strata.stratum_name,
     survey_ground_total_count_strata.stratum_area,
     population_submissions.completion_year,
+    submissions.phenotype,
+    submissions.phenotype_basis,
     population_submissions.citation,
     population_submissions.short_citation,
     survey_ground_total_count_strata.population_estimate,
@@ -11657,9 +11688,10 @@ CREATE VIEW public.estimate_factors AS
     1 AS quality_level,
     survey_ground_total_count_strata.actually_seen,
     survey_ground_total_count_strata.survey_geometry_id
-   FROM ((public.survey_ground_total_count_strata
+   FROM (((public.survey_ground_total_count_strata
      JOIN public.survey_ground_total_counts ON ((survey_ground_total_counts.id = survey_ground_total_count_strata.survey_ground_total_count_id)))
      JOIN public.population_submissions ON ((population_submissions.id = survey_ground_total_counts.population_submission_id)))
+     JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)))
 UNION
  SELECT 'DC'::text AS estimate_type,
     ('DC'::text || survey_dung_count_line_transect_strata.id) AS input_zone_id,
@@ -11668,6 +11700,8 @@ UNION
     survey_dung_count_line_transect_strata.stratum_name,
     survey_dung_count_line_transect_strata.stratum_area,
     population_submissions.completion_year,
+    submissions.phenotype,
+    submissions.phenotype_basis,
     population_submissions.citation,
     population_submissions.short_citation,
     survey_dung_count_line_transect_strata.population_estimate,
@@ -11677,15 +11711,100 @@ UNION
     survey_dung_count_line_transect_strata.population_t,
     survey_dung_count_line_transect_strata.population_lower_confidence_limit,
     survey_dung_count_line_transect_strata.population_upper_confidence_limit,
-        CASE
-            WHEN (((survey_dung_count_line_transect_strata.dung_decay_rate_measurement_method)::text <> 'Decay rate NOT measured on site'::text) AND ((survey_dung_count_line_transect_strata.dung_decay_rate_measurement_site)::text <> ''::text)) THEN 1
-            ELSE 0
-        END AS quality_level,
+    1 AS quality_level,
     survey_dung_count_line_transect_strata.actually_seen,
     survey_dung_count_line_transect_strata.survey_geometry_id
-   FROM ((public.survey_dung_count_line_transect_strata
+   FROM (((public.survey_dung_count_line_transect_strata
      JOIN public.survey_dung_count_line_transects ON ((survey_dung_count_line_transects.id = survey_dung_count_line_transect_strata.survey_dung_count_line_transect_id)))
      JOIN public.population_submissions ON ((population_submissions.id = survey_dung_count_line_transects.population_submission_id)))
+     JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)))
+  WHERE (((survey_dung_count_line_transect_strata.dung_decay_rate_measurement_method)::text = 'Retrospectively'::text) AND (survey_dung_count_line_transect_strata.dung_decay_rate_measurement_year = population_submissions.completion_year))
+UNION
+ SELECT 'DC'::text AS estimate_type,
+    ('DC'::text || survey_dung_count_line_transect_strata.id) AS input_zone_id,
+    survey_dung_count_line_transects.population_submission_id,
+    population_submissions.site_name,
+    survey_dung_count_line_transect_strata.stratum_name,
+    survey_dung_count_line_transect_strata.stratum_area,
+    population_submissions.completion_year,
+    submissions.phenotype,
+    submissions.phenotype_basis,
+    population_submissions.citation,
+    population_submissions.short_citation,
+    survey_dung_count_line_transect_strata.population_estimate,
+    survey_dung_count_line_transect_strata.population_variance,
+    survey_dung_count_line_transect_strata.population_standard_error,
+    survey_dung_count_line_transect_strata.population_confidence_interval,
+    survey_dung_count_line_transect_strata.population_t,
+    survey_dung_count_line_transect_strata.population_lower_confidence_limit,
+    survey_dung_count_line_transect_strata.population_upper_confidence_limit,
+    1 AS quality_level,
+    survey_dung_count_line_transect_strata.actually_seen,
+    survey_dung_count_line_transect_strata.survey_geometry_id
+   FROM (((public.survey_dung_count_line_transect_strata
+     JOIN public.survey_dung_count_line_transects ON ((survey_dung_count_line_transects.id = survey_dung_count_line_transect_strata.survey_dung_count_line_transect_id)))
+     JOIN public.population_submissions ON ((population_submissions.id = survey_dung_count_line_transects.population_submission_id)))
+     JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)))
+  WHERE ((((survey_dung_count_line_transect_strata.dung_decay_rate_measurement_method)::text <> 'Retrospectively'::text) OR (survey_dung_count_line_transect_strata.dung_decay_rate_measurement_year <> population_submissions.completion_year)) AND (survey_dung_count_line_transect_strata.dung_decay_rate_estimate_used >= ( SELECT ddr_median.val
+           FROM ddr_median)))
+UNION
+ SELECT 'DC'::text AS estimate_type,
+    ('DC'::text || survey_dung_count_line_transect_strata.id) AS input_zone_id,
+    survey_dung_count_line_transects.population_submission_id,
+    population_submissions.site_name,
+    survey_dung_count_line_transect_strata.stratum_name,
+    survey_dung_count_line_transect_strata.stratum_area,
+    population_submissions.completion_year,
+    submissions.phenotype,
+    submissions.phenotype_basis,
+    population_submissions.citation,
+    population_submissions.short_citation,
+    (round(((survey_dung_count_line_transect_strata.stratum_area)::double precision * ((survey_dung_count_line_transect_strata.dung_density_estimate)::double precision / (survey_dung_count_line_transect_strata.defecation_rate_estimate_used * ( SELECT ddr_median.val
+           FROM ddr_median))))))::integer AS population_estimate,
+    survey_dung_count_line_transect_strata.population_variance,
+    survey_dung_count_line_transect_strata.population_standard_error,
+    survey_dung_count_line_transect_strata.population_confidence_interval,
+    survey_dung_count_line_transect_strata.population_t,
+    survey_dung_count_line_transect_strata.population_lower_confidence_limit,
+    survey_dung_count_line_transect_strata.population_upper_confidence_limit,
+    1 AS quality_level,
+    survey_dung_count_line_transect_strata.actually_seen,
+    survey_dung_count_line_transect_strata.survey_geometry_id
+   FROM (((public.survey_dung_count_line_transect_strata
+     JOIN public.survey_dung_count_line_transects ON ((survey_dung_count_line_transects.id = survey_dung_count_line_transect_strata.survey_dung_count_line_transect_id)))
+     JOIN public.population_submissions ON ((population_submissions.id = survey_dung_count_line_transects.population_submission_id)))
+     JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)))
+  WHERE ((((survey_dung_count_line_transect_strata.dung_decay_rate_measurement_method)::text <> 'Retrospectively'::text) OR (survey_dung_count_line_transect_strata.dung_decay_rate_measurement_year <> population_submissions.completion_year)) AND (survey_dung_count_line_transect_strata.dung_decay_rate_estimate_used < ( SELECT ddr_median.val
+           FROM ddr_median)) AND (survey_dung_count_line_transect_strata.defecation_rate_estimate_used > (0)::double precision))
+UNION
+ SELECT 'DC'::text AS estimate_type,
+    ('DC'::text || survey_dung_count_line_transect_strata.id) AS input_zone_id,
+    survey_dung_count_line_transects.population_submission_id,
+    population_submissions.site_name,
+    survey_dung_count_line_transect_strata.stratum_name,
+    survey_dung_count_line_transect_strata.stratum_area,
+    population_submissions.completion_year,
+    submissions.phenotype,
+    submissions.phenotype_basis,
+    population_submissions.citation,
+    population_submissions.short_citation,
+    (survey_dung_count_line_transect_strata.population_estimate - (round(((survey_dung_count_line_transect_strata.stratum_area)::double precision * ((survey_dung_count_line_transect_strata.dung_density_estimate)::double precision / (survey_dung_count_line_transect_strata.defecation_rate_estimate_used * ( SELECT ddr_median.val
+           FROM ddr_median))))))::integer) AS population_estimate,
+    survey_dung_count_line_transect_strata.population_variance,
+    survey_dung_count_line_transect_strata.population_standard_error,
+    survey_dung_count_line_transect_strata.population_confidence_interval,
+    survey_dung_count_line_transect_strata.population_t,
+    survey_dung_count_line_transect_strata.population_lower_confidence_limit,
+    survey_dung_count_line_transect_strata.population_upper_confidence_limit,
+    0 AS quality_level,
+    survey_dung_count_line_transect_strata.actually_seen,
+    survey_dung_count_line_transect_strata.survey_geometry_id
+   FROM (((public.survey_dung_count_line_transect_strata
+     JOIN public.survey_dung_count_line_transects ON ((survey_dung_count_line_transects.id = survey_dung_count_line_transect_strata.survey_dung_count_line_transect_id)))
+     JOIN public.population_submissions ON ((population_submissions.id = survey_dung_count_line_transects.population_submission_id)))
+     JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)))
+  WHERE ((((survey_dung_count_line_transect_strata.dung_decay_rate_measurement_method)::text <> 'Retrospectively'::text) OR (survey_dung_count_line_transect_strata.dung_decay_rate_measurement_year <> population_submissions.completion_year)) AND (survey_dung_count_line_transect_strata.dung_decay_rate_estimate_used < ( SELECT ddr_median.val
+           FROM ddr_median)) AND (survey_dung_count_line_transect_strata.defecation_rate_estimate_used > (0)::double precision))
 UNION
  SELECT 'AT'::text AS estimate_type,
     ('AT'::text || survey_aerial_total_count_strata.id) AS input_zone_id,
@@ -11694,6 +11813,8 @@ UNION
     survey_aerial_total_count_strata.stratum_name,
     survey_aerial_total_count_strata.stratum_area,
     population_submissions.completion_year,
+    submissions.phenotype,
+    submissions.phenotype_basis,
     population_submissions.citation,
     population_submissions.short_citation,
     survey_aerial_total_count_strata.population_estimate,
@@ -11706,9 +11827,10 @@ UNION
     1 AS quality_level,
     survey_aerial_total_count_strata.observations AS actually_seen,
     survey_aerial_total_count_strata.survey_geometry_id
-   FROM ((public.survey_aerial_total_count_strata
+   FROM (((public.survey_aerial_total_count_strata
      JOIN public.survey_aerial_total_counts ON ((survey_aerial_total_counts.id = survey_aerial_total_count_strata.survey_aerial_total_count_id)))
      JOIN public.population_submissions ON ((population_submissions.id = survey_aerial_total_counts.population_submission_id)))
+     JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)))
 UNION
  SELECT 'GS'::text AS estimate_type,
     ('GS'::text || survey_ground_sample_count_strata.id) AS input_zone_id,
@@ -11717,6 +11839,8 @@ UNION
     survey_ground_sample_count_strata.stratum_name,
     survey_ground_sample_count_strata.stratum_area,
     population_submissions.completion_year,
+    submissions.phenotype,
+    submissions.phenotype_basis,
     population_submissions.citation,
     population_submissions.short_citation,
     survey_ground_sample_count_strata.population_estimate,
@@ -11729,9 +11853,10 @@ UNION
     1 AS quality_level,
     NULL::integer AS actually_seen,
     survey_ground_sample_count_strata.survey_geometry_id
-   FROM ((public.survey_ground_sample_count_strata
+   FROM (((public.survey_ground_sample_count_strata
      JOIN public.survey_ground_sample_counts ON ((survey_ground_sample_counts.id = survey_ground_sample_count_strata.survey_ground_sample_count_id)))
      JOIN public.population_submissions ON ((population_submissions.id = survey_ground_sample_counts.population_submission_id)))
+     JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)))
 UNION
  SELECT 'AS'::text AS estimate_type,
     ('AS'::text || survey_aerial_sample_count_strata.id) AS input_zone_id,
@@ -11740,6 +11865,8 @@ UNION
     survey_aerial_sample_count_strata.stratum_name,
     survey_aerial_sample_count_strata.stratum_area,
     population_submissions.completion_year,
+    submissions.phenotype,
+    submissions.phenotype_basis,
     population_submissions.citation,
     population_submissions.short_citation,
     survey_aerial_sample_count_strata.population_estimate,
@@ -11752,9 +11879,10 @@ UNION
     1 AS quality_level,
     survey_aerial_sample_count_strata.seen_in_transects AS actually_seen,
     survey_aerial_sample_count_strata.survey_geometry_id
-   FROM ((public.survey_aerial_sample_count_strata
+   FROM (((public.survey_aerial_sample_count_strata
      JOIN public.survey_aerial_sample_counts ON ((survey_aerial_sample_counts.id = survey_aerial_sample_count_strata.survey_aerial_sample_count_id)))
      JOIN public.population_submissions ON ((population_submissions.id = survey_aerial_sample_counts.population_submission_id)))
+     JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)))
 UNION
  SELECT 'GD'::text AS estimate_type,
     ('GD'::text || survey_faecal_dna_strata.id) AS input_zone_id,
@@ -11763,6 +11891,8 @@ UNION
     survey_faecal_dna_strata.stratum_name,
     survey_faecal_dna_strata.stratum_area,
     population_submissions.completion_year,
+    submissions.phenotype,
+    submissions.phenotype_basis,
     population_submissions.citation,
     population_submissions.short_citation,
     survey_faecal_dna_strata.population_estimate,
@@ -11775,9 +11905,10 @@ UNION
     1 AS quality_level,
     survey_faecal_dna_strata.genotypes_identified AS actually_seen,
     survey_faecal_dna_strata.survey_geometry_id
-   FROM ((public.survey_faecal_dna_strata
+   FROM (((public.survey_faecal_dna_strata
      JOIN public.survey_faecal_dnas ON ((survey_faecal_dnas.id = survey_faecal_dna_strata.survey_faecal_dna_id)))
      JOIN public.population_submissions ON ((population_submissions.id = survey_faecal_dnas.population_submission_id)))
+     JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)))
 UNION
  SELECT 'IR'::text AS estimate_type,
     ('IR'::text || survey_individual_registrations.id) AS input_zone_id,
@@ -11786,6 +11917,8 @@ UNION
     population_submissions.site_name AS stratum_name,
     population_submissions.area AS stratum_area,
     population_submissions.completion_year,
+    submissions.phenotype,
+    submissions.phenotype_basis,
     population_submissions.citation,
     population_submissions.short_citation,
     survey_individual_registrations.population_estimate,
@@ -11801,8 +11934,9 @@ UNION
         END AS quality_level,
     survey_individual_registrations.population_estimate AS actually_seen,
     survey_individual_registrations.survey_geometry_id
-   FROM (public.survey_individual_registrations
+   FROM ((public.survey_individual_registrations
      JOIN public.population_submissions ON ((population_submissions.id = survey_individual_registrations.population_submission_id)))
+     JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)))
 UNION
  SELECT 'O'::text AS estimate_type,
     ('O'::text || survey_others.id) AS input_zone_id,
@@ -11811,6 +11945,8 @@ UNION
     population_submissions.site_name AS stratum_name,
     population_submissions.area AS stratum_area,
     population_submissions.completion_year,
+    submissions.phenotype,
+    submissions.phenotype_basis,
     population_submissions.citation,
     population_submissions.short_citation,
     survey_others.population_estimate_min AS population_estimate,
@@ -11826,8 +11962,9 @@ UNION
         END AS quality_level,
     survey_others.actually_seen,
     survey_others.survey_geometry_id
-   FROM (public.survey_others
-     JOIN public.population_submissions ON ((population_submissions.id = survey_others.population_submission_id)));
+   FROM ((public.survey_others
+     JOIN public.population_submissions ON ((population_submissions.id = survey_others.population_submission_id)))
+     JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)));
 
 
 --
@@ -11842,6 +11979,8 @@ CREATE VIEW public.estimate_factors_confidence AS
     estimate_factors.stratum_name,
     estimate_factors.stratum_area,
     estimate_factors.completion_year,
+    estimate_factors.phenotype,
+    estimate_factors.phenotype_basis,
     estimate_factors.citation,
     estimate_factors.short_citation,
     estimate_factors.quality_level,
@@ -11925,6 +12064,8 @@ CREATE VIEW public.estimate_factors_analyses AS
     estimate_factors_confidence.stratum_name,
     estimate_factors_confidence.stratum_area,
     estimate_factors_confidence.completion_year,
+    estimate_factors_confidence.phenotype,
+    estimate_factors_confidence.phenotype_basis,
     a.analysis_name,
     a.analysis_year,
     a.comparison_year,
@@ -11954,6 +12095,8 @@ UNION
     estimate_factors_confidence.stratum_name,
     estimate_factors_confidence.stratum_area,
     estimate_factors_confidence.completion_year,
+    estimate_factors_confidence.phenotype,
+    estimate_factors_confidence.phenotype_basis,
     a.analysis_name,
     a.comparison_year AS analysis_year,
     a.comparison_year,
@@ -11991,6 +12134,8 @@ CREATE VIEW public.estimate_factors_analyses_categorized AS
     estimate_factors_analyses.completion_year,
     estimate_factors_analyses.analysis_name,
     estimate_factors_analyses.analysis_year,
+    estimate_factors_analyses.phenotype,
+    estimate_factors_analyses.phenotype_basis,
     estimate_factors_analyses.age,
     estimate_factors_analyses.sort_key,
     estimate_factors_analyses.population,
@@ -12060,27 +12205,6 @@ CREATE TABLE public.regions (
 
 
 --
--- Name: submissions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.submissions (
-    id integer NOT NULL,
-    user_id integer,
-    phenotype character varying(255),
-    phenotype_basis character varying(255),
-    data_type character varying(255),
-    right_to_grant_permission boolean,
-    permission_email character varying(255),
-    is_mike_site boolean,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    species_id integer,
-    country_id integer,
-    mike_site_id integer
-);
-
-
---
 -- Name: surveytypes; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -12105,6 +12229,8 @@ CREATE VIEW public.estimate_factors_analyses_categorized_for_add AS
     ct.name AS continent,
     r.name AS region,
     c.name AS country,
+    m.phenotype,
+    m.phenotype_basis,
     m.site_name,
     m.best_estimate,
     m.best_population_variance,
@@ -12137,6 +12263,8 @@ CREATE VIEW public.estimate_factors_analyses_categorized_for_add AS
             e.analysis_name,
             e.analysis_year,
             e.completion_year,
+            e.phenotype,
+            e.phenotype_basis,
             e.site_name,
             e.population_estimate AS best_estimate,
             0 AS best_population_variance,
@@ -12171,6 +12299,8 @@ CREATE VIEW public.estimate_factors_analyses_categorized_for_add AS
             e.analysis_name,
             e.analysis_year,
             e.completion_year,
+            e.phenotype,
+            e.phenotype_basis,
             e.site_name,
                 CASE
                     WHEN ((e.population_estimate IS NULL) OR (e.population_estimate = 0)) THEN e.actually_seen
@@ -12204,6 +12334,8 @@ CREATE VIEW public.estimate_factors_analyses_categorized_for_add AS
             e.analysis_name,
             e.analysis_year,
             e.completion_year,
+            e.phenotype,
+            e.phenotype_basis,
             e.site_name,
             e.actually_seen AS best_estimate,
             0 AS best_population_variance,
@@ -12239,6 +12371,8 @@ CREATE VIEW public.estimate_factors_analyses_categorized_for_add AS
             e.analysis_name,
             e.analysis_year,
             e.completion_year,
+            e.phenotype,
+            e.phenotype_basis,
             e.site_name,
             e.actually_seen AS best_estimate,
             0 AS best_population_variance,
@@ -12274,6 +12408,8 @@ CREATE VIEW public.estimate_factors_analyses_categorized_for_add AS
             e.analysis_name,
             e.analysis_year,
             e.completion_year,
+            e.phenotype,
+            e.phenotype_basis,
             e.site_name,
             0 AS best_estimate,
             0 AS best_population_variance,
@@ -12309,6 +12445,8 @@ CREATE VIEW public.estimate_factors_analyses_categorized_for_add AS
             e.analysis_name,
             e.analysis_year,
             e.completion_year,
+            e.phenotype,
+            e.phenotype_basis,
             e.site_name,
             0 AS best_estimate,
             0 AS best_population_variance,
@@ -12338,6 +12476,8 @@ CREATE VIEW public.estimate_factors_analyses_categorized_for_add AS
             e.analysis_name,
             e.analysis_year,
             e.completion_year,
+            e.phenotype,
+            e.phenotype_basis,
             e.site_name,
             0 AS best_estimate,
             0 AS best_population_variance,
@@ -12379,7 +12519,7 @@ CREATE VIEW public.changes_expanded AS
     ch.reason_change,
         CASE
             WHEN (ne.reason_change IS NULL) THEN ch.reason_change
-            WHEN (((ne.reason_change)::text = ANY (ARRAY[('-'::character varying)::text, ('NC'::character varying)::text])) AND (ne.age >= 10)) THEN (
+            WHEN (((ne.reason_change)::text = ANY ((ARRAY['-'::character varying, 'NC'::character varying])::text[])) AND (ne.age >= 10)) THEN (
             CASE
                 WHEN (oe.age >= 10) THEN '-'::text
                 ELSE 'DD'::text
@@ -12416,7 +12556,7 @@ CREATE VIEW public.changes_expanded AS
             changes.reason_change,
             changes.country,
             btrim(unnest(regexp_split_to_array((changes.replaced_strata)::text, ','::text))) AS replaced_stratum,
-            '-'::text AS text
+            '-'::text
            FROM public.changes
           WHERE (((changes.new_strata)::text = '-'::text) OR (changes.new_strata IS NULL))) ch
      JOIN public.analyses a ON (((a.analysis_name)::text = (ch.analysis_name)::text)))
@@ -12438,6 +12578,8 @@ CREATE VIEW public.estimate_locator AS
     e.completion_year,
     e.analysis_name,
     e.analysis_year,
+    e.phenotype,
+    e.phenotype_basis,
     e.age,
     e.sort_key,
     e.population,
@@ -12476,6 +12618,8 @@ CREATE VIEW public.ioc_add_new_base AS
     e.continent,
     e.region,
     e.country,
+    e.phenotype,
+    e.phenotype_basis,
     e.input_zone_id,
     e.category,
     c.adjusted_reason_change AS reason_change,
@@ -12502,6 +12646,8 @@ CREATE VIEW public.ioc_add_replaced_base AS
     e.continent,
     e.region,
     e.country,
+    e.phenotype,
+    e.phenotype_basis,
     e.input_zone_id,
     e.category,
     c.adjusted_reason_change AS reason_change,
@@ -13890,11 +14036,11 @@ UNION
             ELSE (estimate_factors_analyses_categorized.actually_seen)::double precision
         END AS definite,
         CASE
-            WHEN ((estimate_factors_analyses_categorized.lcl95 > (0)::double precision) OR (estimate_factors_analyses_categorized.actually_seen > 0)) THEN ((estimate_factors_analyses_categorized.population_estimate)::double precision -
+            WHEN ((estimate_factors_analyses_categorized.lcl95 > (0)::double precision) OR (estimate_factors_analyses_categorized.actually_seen > 0)) THEN GREATEST(((estimate_factors_analyses_categorized.population_estimate)::double precision -
             CASE
                 WHEN (estimate_factors_analyses_categorized.lcl95 > (estimate_factors_analyses_categorized.actually_seen)::double precision) THEN estimate_factors_analyses_categorized.lcl95
                 ELSE (estimate_factors_analyses_categorized.actually_seen)::double precision
-            END)
+            END), (0)::double precision)
             ELSE (estimate_factors_analyses_categorized.population_estimate)::double precision
         END AS probable,
     estimate_factors_analyses_categorized.population_confidence_interval AS possible,
@@ -13913,11 +14059,11 @@ UNION
         END AS definite,
     estimate_factors_analyses_categorized.population_estimate AS probable,
         CASE
-            WHEN ((estimate_factors_analyses_categorized.lcl95 > (0)::double precision) OR (estimate_factors_analyses_categorized.actually_seen > 0)) THEN ((estimate_factors_analyses_categorized.population_estimate)::double precision -
+            WHEN ((estimate_factors_analyses_categorized.lcl95 > (0)::double precision) OR (estimate_factors_analyses_categorized.actually_seen > 0)) THEN GREATEST(((estimate_factors_analyses_categorized.population_estimate)::double precision -
             CASE
                 WHEN (estimate_factors_analyses_categorized.lcl95 > (estimate_factors_analyses_categorized.actually_seen)::double precision) THEN estimate_factors_analyses_categorized.lcl95
                 ELSE (estimate_factors_analyses_categorized.actually_seen)::double precision
-            END)
+            END), (0)::double precision)
             ELSE (0)::double precision
         END AS possible,
     0 AS speculative
@@ -13935,12 +14081,12 @@ UNION
         END AS definite,
     0 AS probable,
         CASE
-            WHEN (estimate_factors_analyses_categorized.actually_seen > 0) THEN (estimate_factors_analyses_categorized.population_estimate - estimate_factors_analyses_categorized.actually_seen)
+            WHEN (estimate_factors_analyses_categorized.actually_seen > 0) THEN GREATEST((estimate_factors_analyses_categorized.population_estimate - estimate_factors_analyses_categorized.actually_seen), 0)
             ELSE estimate_factors_analyses_categorized.population_estimate
         END AS possible,
         CASE
-            WHEN ((estimate_factors_analyses_categorized.lcl95 > (0)::double precision) AND (estimate_factors_analyses_categorized.lcl95 <> (estimate_factors_analyses_categorized.population_estimate)::double precision)) THEN (((estimate_factors_analyses_categorized.population_estimate)::double precision - estimate_factors_analyses_categorized.lcl95) * (2)::double precision)
-            WHEN (estimate_factors_analyses_categorized.population_upper_confidence_limit > 0) THEN ((estimate_factors_analyses_categorized.population_upper_confidence_limit - estimate_factors_analyses_categorized.population_estimate))::double precision
+            WHEN ((estimate_factors_analyses_categorized.lcl95 > (0)::double precision) AND (estimate_factors_analyses_categorized.lcl95 <> (estimate_factors_analyses_categorized.population_estimate)::double precision)) THEN GREATEST((((estimate_factors_analyses_categorized.population_estimate)::double precision - estimate_factors_analyses_categorized.lcl95) * (2)::double precision), (0)::double precision)
+            WHEN (estimate_factors_analyses_categorized.population_upper_confidence_limit > 0) THEN (GREATEST((estimate_factors_analyses_categorized.population_upper_confidence_limit - estimate_factors_analyses_categorized.population_estimate), 0))::double precision
             ELSE (0)::double precision
         END AS speculative
    FROM public.estimate_factors_analyses_categorized
@@ -13957,7 +14103,7 @@ UNION
         END AS definite,
     0 AS probable,
     0 AS possible,
-    (estimate_factors_analyses_categorized.population_estimate - estimate_factors_analyses_categorized.actually_seen) AS speculative
+    GREATEST((estimate_factors_analyses_categorized.population_estimate - estimate_factors_analyses_categorized.actually_seen), 0) AS speculative
    FROM public.estimate_factors_analyses_categorized
   WHERE (estimate_factors_analyses_categorized.category = 'E'::text);
 
@@ -13972,6 +14118,8 @@ CREATE VIEW public.estimate_factors_analyses_categorized_sums_continent_for_add 
     e.analysis_year,
     e.analysis_name,
     e.continent,
+    e.phenotype,
+    e.phenotype_basis,
     sum(e.best_estimate) AS "ESTIMATE",
     ((1.96)::double precision * sqrt(sum(e.population_variance))) AS "CONFIDENCE",
     sum(e.population_lower_confidence_limit) AS "GUESS_MIN",
@@ -13979,13 +14127,15 @@ CREATE VIEW public.estimate_factors_analyses_categorized_sums_continent_for_add 
     sum(e.best_population_variance) AS population_variance
    FROM public.estimate_factors_analyses_categorized_for_add e
   WHERE (e.category <> 'C'::text)
-  GROUP BY e.category, e.surveytype, e.analysis_year, e.analysis_name, e.continent
+  GROUP BY e.category, e.surveytype, e.analysis_year, e.analysis_name, e.continent, e.phenotype, e.phenotype_basis
 UNION
  SELECT e.category AS "CATEGORY",
     e.surveytype AS "SURVEYTYPE",
     e.analysis_year,
     e.analysis_name,
     e.continent,
+    e.phenotype,
+    e.phenotype_basis,
     sum(e.best_estimate) AS "ESTIMATE",
     0 AS "CONFIDENCE",
     ((sum(e.population_lower_confidence_limit))::double precision + ((1.96)::double precision * sqrt(sum(e.population_variance)))) AS "GUESS_MIN",
@@ -13993,7 +14143,7 @@ UNION
     sum(e.best_population_variance) AS population_variance
    FROM public.estimate_factors_analyses_categorized_for_add e
   WHERE (e.category = 'C'::text)
-  GROUP BY e.category, e.surveytype, e.analysis_year, e.analysis_name, e.continent
+  GROUP BY e.category, e.surveytype, e.analysis_year, e.analysis_name, e.continent, e.phenotype, e.phenotype_basis
   ORDER BY 1;
 
 
@@ -14009,6 +14159,8 @@ CREATE VIEW public.estimate_factors_analyses_categorized_sums_country_for_add AS
     e.continent,
     e.region,
     e.country,
+    e.phenotype,
+    e.phenotype_basis,
     sum(e.best_estimate) AS "ESTIMATE",
     ((1.96)::double precision * sqrt(sum(e.best_population_variance))) AS "CONFIDENCE",
     sum(e.population_lower_confidence_limit) AS "GUESS_MIN",
@@ -14016,7 +14168,7 @@ CREATE VIEW public.estimate_factors_analyses_categorized_sums_country_for_add AS
     sum(e.best_population_variance) AS population_variance
    FROM public.estimate_factors_analyses_categorized_for_add e
   WHERE (e.category <> 'C'::text)
-  GROUP BY e.category, e.surveytype, e.analysis_year, e.analysis_name, e.continent, e.region, e.country
+  GROUP BY e.category, e.surveytype, e.analysis_year, e.analysis_name, e.continent, e.region, e.country, e.phenotype, e.phenotype_basis
 UNION
  SELECT e.category AS "CATEGORY",
     e.surveytype AS "SURVEYTYPE",
@@ -14025,6 +14177,8 @@ UNION
     e.continent,
     e.region,
     e.country,
+    e.phenotype,
+    e.phenotype_basis,
     sum(e.best_estimate) AS "ESTIMATE",
     0 AS "CONFIDENCE",
     ((sum(e.population_lower_confidence_limit))::double precision + ((1.96)::double precision * sqrt(sum(e.population_variance)))) AS "GUESS_MIN",
@@ -14032,7 +14186,7 @@ UNION
     sum(e.best_population_variance) AS population_variance
    FROM public.estimate_factors_analyses_categorized_for_add e
   WHERE (e.category = 'C'::text)
-  GROUP BY e.category, e.surveytype, e.analysis_year, e.analysis_name, e.continent, e.region, e.country
+  GROUP BY e.category, e.surveytype, e.analysis_year, e.analysis_name, e.continent, e.region, e.country, e.phenotype, e.phenotype_basis
   ORDER BY 1;
 
 
@@ -14047,6 +14201,8 @@ CREATE VIEW public.estimate_factors_analyses_categorized_sums_region_for_add AS
     e.analysis_name,
     e.continent,
     e.region,
+    e.phenotype,
+    e.phenotype_basis,
     sum(e.best_estimate) AS "ESTIMATE",
     ((1.96)::double precision * sqrt(sum(e.best_population_variance))) AS "CONFIDENCE",
     sum(e.population_lower_confidence_limit) AS "GUESS_MIN",
@@ -14054,7 +14210,7 @@ CREATE VIEW public.estimate_factors_analyses_categorized_sums_region_for_add AS
     sum(e.best_population_variance) AS population_variance
    FROM public.estimate_factors_analyses_categorized_for_add e
   WHERE (e.category <> 'C'::text)
-  GROUP BY e.category, e.surveytype, e.analysis_year, e.analysis_name, e.continent, e.region
+  GROUP BY e.category, e.surveytype, e.analysis_year, e.analysis_name, e.continent, e.region, e.phenotype, e.phenotype_basis
 UNION
  SELECT e.category AS "CATEGORY",
     e.surveytype AS "SURVEYTYPE",
@@ -14062,6 +14218,8 @@ UNION
     e.analysis_name,
     e.continent,
     e.region,
+    e.phenotype,
+    e.phenotype_basis,
     sum(e.best_estimate) AS "ESTIMATE",
     0 AS "CONFIDENCE",
     ((sum(e.population_lower_confidence_limit))::double precision + ((1.96)::double precision * sqrt(sum(e.population_variance)))) AS "GUESS_MIN",
@@ -14069,7 +14227,7 @@ UNION
     sum(e.best_population_variance) AS population_variance
    FROM public.estimate_factors_analyses_categorized_for_add e
   WHERE (e.category = 'C'::text)
-  GROUP BY e.category, e.surveytype, e.analysis_year, e.analysis_name, e.continent, e.region
+  GROUP BY e.category, e.surveytype, e.analysis_year, e.analysis_name, e.continent, e.region, e.phenotype, e.phenotype_basis
   ORDER BY 1;
 
 
@@ -14081,12 +14239,14 @@ CREATE VIEW public.estimate_factors_analyses_categorized_totals_continent_for_ad
  SELECT estimate_factors_analyses_categorized_sums_continent_for_add.analysis_name,
     estimate_factors_analyses_categorized_sums_continent_for_add.analysis_year,
     estimate_factors_analyses_categorized_sums_continent_for_add.continent,
+    estimate_factors_analyses_categorized_sums_continent_for_add.phenotype,
+    estimate_factors_analyses_categorized_sums_continent_for_add.phenotype_basis,
     sum(estimate_factors_analyses_categorized_sums_continent_for_add."ESTIMATE") AS "ESTIMATE",
     ((1.96)::double precision * sqrt(sum(estimate_factors_analyses_categorized_sums_continent_for_add.population_variance))) AS "CONFIDENCE",
     sum(estimate_factors_analyses_categorized_sums_continent_for_add."GUESS_MIN") AS "GUESS_MIN",
     sum(estimate_factors_analyses_categorized_sums_continent_for_add."GUESS_MAX") AS "GUESS_MAX"
    FROM public.estimate_factors_analyses_categorized_sums_continent_for_add
-  GROUP BY estimate_factors_analyses_categorized_sums_continent_for_add.analysis_name, estimate_factors_analyses_categorized_sums_continent_for_add.analysis_year, estimate_factors_analyses_categorized_sums_continent_for_add.continent;
+  GROUP BY estimate_factors_analyses_categorized_sums_continent_for_add.analysis_name, estimate_factors_analyses_categorized_sums_continent_for_add.analysis_year, estimate_factors_analyses_categorized_sums_continent_for_add.continent, estimate_factors_analyses_categorized_sums_continent_for_add.phenotype, estimate_factors_analyses_categorized_sums_continent_for_add.phenotype_basis;
 
 
 --
@@ -14099,12 +14259,14 @@ CREATE VIEW public.estimate_factors_analyses_categorized_totals_country_for_add 
     estimate_factors_analyses_categorized_sums_country_for_add.continent,
     estimate_factors_analyses_categorized_sums_country_for_add.region,
     estimate_factors_analyses_categorized_sums_country_for_add.country,
+    estimate_factors_analyses_categorized_sums_country_for_add.phenotype,
+    estimate_factors_analyses_categorized_sums_country_for_add.phenotype_basis,
     sum(estimate_factors_analyses_categorized_sums_country_for_add."ESTIMATE") AS "ESTIMATE",
     ((1.96)::double precision * sqrt(sum(estimate_factors_analyses_categorized_sums_country_for_add.population_variance))) AS "CONFIDENCE",
     sum(estimate_factors_analyses_categorized_sums_country_for_add."GUESS_MIN") AS "GUESS_MIN",
     sum(estimate_factors_analyses_categorized_sums_country_for_add."GUESS_MAX") AS "GUESS_MAX"
    FROM public.estimate_factors_analyses_categorized_sums_country_for_add
-  GROUP BY estimate_factors_analyses_categorized_sums_country_for_add.analysis_name, estimate_factors_analyses_categorized_sums_country_for_add.analysis_year, estimate_factors_analyses_categorized_sums_country_for_add.continent, estimate_factors_analyses_categorized_sums_country_for_add.region, estimate_factors_analyses_categorized_sums_country_for_add.country;
+  GROUP BY estimate_factors_analyses_categorized_sums_country_for_add.analysis_name, estimate_factors_analyses_categorized_sums_country_for_add.analysis_year, estimate_factors_analyses_categorized_sums_country_for_add.continent, estimate_factors_analyses_categorized_sums_country_for_add.region, estimate_factors_analyses_categorized_sums_country_for_add.country, estimate_factors_analyses_categorized_sums_country_for_add.phenotype, estimate_factors_analyses_categorized_sums_country_for_add.phenotype_basis;
 
 
 --
@@ -14116,12 +14278,14 @@ CREATE VIEW public.estimate_factors_analyses_categorized_totals_region_for_add A
     estimate_factors_analyses_categorized_sums_region_for_add.analysis_year,
     estimate_factors_analyses_categorized_sums_region_for_add.continent,
     estimate_factors_analyses_categorized_sums_region_for_add.region,
+    estimate_factors_analyses_categorized_sums_region_for_add.phenotype,
+    estimate_factors_analyses_categorized_sums_region_for_add.phenotype_basis,
     sum(estimate_factors_analyses_categorized_sums_region_for_add."ESTIMATE") AS "ESTIMATE",
     ((1.96)::double precision * sqrt(sum(estimate_factors_analyses_categorized_sums_region_for_add.population_variance))) AS "CONFIDENCE",
     sum(estimate_factors_analyses_categorized_sums_region_for_add."GUESS_MIN") AS "GUESS_MIN",
     sum(estimate_factors_analyses_categorized_sums_region_for_add."GUESS_MAX") AS "GUESS_MAX"
    FROM public.estimate_factors_analyses_categorized_sums_region_for_add
-  GROUP BY estimate_factors_analyses_categorized_sums_region_for_add.analysis_name, estimate_factors_analyses_categorized_sums_region_for_add.analysis_year, estimate_factors_analyses_categorized_sums_region_for_add.continent, estimate_factors_analyses_categorized_sums_region_for_add.region;
+  GROUP BY estimate_factors_analyses_categorized_sums_region_for_add.analysis_name, estimate_factors_analyses_categorized_sums_region_for_add.analysis_year, estimate_factors_analyses_categorized_sums_region_for_add.continent, estimate_factors_analyses_categorized_sums_region_for_add.region, estimate_factors_analyses_categorized_sums_region_for_add.phenotype, estimate_factors_analyses_categorized_sums_region_for_add.phenotype_basis;
 
 
 --
@@ -14244,6 +14408,8 @@ CREATE VIEW public.estimate_factors_analyses_categorized_zones_for_add AS
     el.population,
     zone.country,
     zone.site_name,
+    zone.phenotype,
+    zone.phenotype_basis,
     zone.stratum_name,
     zone.replacement_name,
     zone.population_variance,
@@ -14281,6 +14447,8 @@ CREATE VIEW public.estimate_factors_analyses_categorized_zones_for_add AS
             e.country,
             e.site_name,
             e.stratum_name,
+            e.phenotype,
+            e.phenotype_basis,
             e.replacement_name,
             e.best_population_variance AS population_variance,
             e.population_confidence_interval,
@@ -14312,6 +14480,8 @@ CREATE VIEW public.estimate_factors_analyses_categorized_zones_for_add AS
             e.country,
             e.site_name,
             e.stratum_name,
+            e.phenotype,
+            e.phenotype_basis,
             e.replacement_name,
             e.best_population_variance AS population_variance,
             e.population_confidence_interval,
@@ -14644,6 +14814,8 @@ CREATE VIEW public.ioc_add_new_continents AS
      JOIN ( SELECT e.analysis_name,
             e.analysis_year,
             e.continent,
+            e.phenotype,
+            e.phenotype_basis,
             e.reason_change,
             sum(e.population_estimate) AS estimate,
             sum(e.population_variance) AS population_variance,
@@ -14651,11 +14823,13 @@ CREATE VIEW public.ioc_add_new_continents AS
             sum(e.population_upper_confidence_limit) AS guess_max
            FROM public.ioc_add_new_base e
           WHERE (e.category <> 'C'::text)
-          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.reason_change
+          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.phenotype, e.phenotype_basis, e.reason_change
         UNION
          SELECT e.analysis_name,
             e.analysis_year,
             e.continent,
+            e.phenotype,
+            e.phenotype_basis,
             e.reason_change,
             sum(e.population_estimate) AS estimate,
             0 AS population_variance,
@@ -14663,7 +14837,7 @@ CREATE VIEW public.ioc_add_new_continents AS
             ((sum(e.population_upper_confidence_limit))::double precision + ((1.96)::double precision * sqrt(sum(e.population_variance)))) AS guess_max
            FROM public.ioc_add_new_base e
           WHERE (e.category = 'C'::text)
-          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.reason_change) new_1 ON ((((new_1.analysis_name)::text = (a.analysis_name)::text) AND (new_1.analysis_year = a.analysis_year))))
+          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.phenotype, e.phenotype_basis, e.reason_change) new_1 ON ((((new_1.analysis_name)::text = (a.analysis_name)::text) AND (new_1.analysis_year = a.analysis_year))))
   GROUP BY a.analysis_name, a.analysis_year, new_1.continent, new_1.reason_change;
 
 
@@ -14684,6 +14858,8 @@ CREATE VIEW public.ioc_add_replaced_continents AS
      JOIN ( SELECT e.analysis_name,
             e.analysis_year,
             e.continent,
+            e.phenotype,
+            e.phenotype_basis,
             e.reason_change,
             sum(e.population_estimate) AS estimate,
             sum(e.population_variance) AS population_variance,
@@ -14691,11 +14867,13 @@ CREATE VIEW public.ioc_add_replaced_continents AS
             sum(e.population_upper_confidence_limit) AS guess_max
            FROM public.ioc_add_replaced_base e
           WHERE (e.category <> 'C'::text)
-          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.reason_change
+          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.phenotype, e.phenotype_basis, e.reason_change
         UNION
          SELECT e.analysis_name,
             e.analysis_year,
             e.continent,
+            e.phenotype,
+            e.phenotype_basis,
             e.reason_change,
             sum(e.population_estimate) AS estimate,
             0 AS population_variance,
@@ -14703,7 +14881,7 @@ CREATE VIEW public.ioc_add_replaced_continents AS
             ((sum(e.population_upper_confidence_limit))::double precision + ((1.96)::double precision * sqrt(sum(e.population_variance)))) AS guess_max
            FROM public.ioc_add_replaced_base e
           WHERE (e.category = 'C'::text)
-          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.reason_change) old_1 ON ((((old_1.analysis_name)::text = (a.analysis_name)::text) AND (old_1.analysis_year = a.comparison_year))))
+          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.phenotype, e.phenotype_basis, e.reason_change) old_1 ON ((((old_1.analysis_name)::text = (a.analysis_name)::text) AND (old_1.analysis_year = a.comparison_year))))
   GROUP BY a.analysis_name, a.analysis_year, old_1.continent, old_1.reason_change;
 
 
@@ -14773,6 +14951,8 @@ CREATE VIEW public.ioc_add_new_countries AS
             e.continent,
             e.region,
             e.country,
+            e.phenotype,
+            e.phenotype_basis,
             e.reason_change,
             sum(e.population_estimate) AS estimate,
             sum(e.population_variance) AS population_variance,
@@ -14780,13 +14960,15 @@ CREATE VIEW public.ioc_add_new_countries AS
             sum(e.population_upper_confidence_limit) AS guess_max
            FROM public.ioc_add_new_base e
           WHERE (e.category <> 'C'::text)
-          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.region, e.country, e.reason_change
+          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.region, e.country, e.phenotype, e.phenotype_basis, e.reason_change
         UNION
          SELECT e.analysis_name,
             e.analysis_year,
             e.continent,
             e.region,
             e.country,
+            e.phenotype,
+            e.phenotype_basis,
             e.reason_change,
             sum(e.population_estimate) AS estimate,
             0 AS population_variance,
@@ -14794,7 +14976,7 @@ CREATE VIEW public.ioc_add_new_countries AS
             ((sum(e.population_upper_confidence_limit))::double precision + ((1.96)::double precision * sqrt(sum(e.population_variance)))) AS guess_max
            FROM public.ioc_add_new_base e
           WHERE (e.category = 'C'::text)
-          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.region, e.country, e.reason_change) new_1 ON ((((new_1.analysis_name)::text = (a.analysis_name)::text) AND (new_1.analysis_year = a.analysis_year))))
+          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.region, e.country, e.phenotype, e.phenotype_basis, e.reason_change) new_1 ON ((((new_1.analysis_name)::text = (a.analysis_name)::text) AND (new_1.analysis_year = a.analysis_year))))
   GROUP BY a.analysis_name, a.analysis_year, new_1.continent, new_1.region, new_1.country, new_1.reason_change;
 
 
@@ -14819,6 +15001,8 @@ CREATE VIEW public.ioc_add_replaced_countries AS
             e.continent,
             e.region,
             e.country,
+            e.phenotype,
+            e.phenotype_basis,
             e.reason_change,
             sum(e.population_estimate) AS estimate,
             sum(e.population_variance) AS population_variance,
@@ -14826,13 +15010,15 @@ CREATE VIEW public.ioc_add_replaced_countries AS
             sum(e.population_upper_confidence_limit) AS guess_max
            FROM public.ioc_add_replaced_base e
           WHERE (e.category <> 'C'::text)
-          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.region, e.country, e.reason_change
+          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.region, e.country, e.phenotype, e.phenotype_basis, e.reason_change
         UNION
          SELECT e.analysis_name,
             e.analysis_year,
             e.continent,
             e.region,
             e.country,
+            e.phenotype,
+            e.phenotype_basis,
             e.reason_change,
             sum(e.population_estimate) AS estimate,
             0 AS population_variance,
@@ -14840,7 +15026,7 @@ CREATE VIEW public.ioc_add_replaced_countries AS
             ((sum(e.population_upper_confidence_limit))::double precision + ((1.96)::double precision * sqrt(sum(e.population_variance)))) AS guess_max
            FROM public.ioc_add_replaced_base e
           WHERE (e.category = 'C'::text)
-          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.region, e.country, e.reason_change) old_1 ON ((((old_1.analysis_name)::text = (a.analysis_name)::text) AND (old_1.analysis_year = a.comparison_year))))
+          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.region, e.country, e.phenotype, e.phenotype_basis, e.reason_change) old_1 ON ((((old_1.analysis_name)::text = (a.analysis_name)::text) AND (old_1.analysis_year = a.comparison_year))))
   GROUP BY a.analysis_name, a.analysis_year, old_1.continent, old_1.region, old_1.country, old_1.reason_change;
 
 
@@ -14914,6 +15100,8 @@ CREATE VIEW public.ioc_add_new_regions AS
             e.analysis_year,
             e.continent,
             e.region,
+            e.phenotype,
+            e.phenotype_basis,
             e.reason_change,
             sum(e.population_estimate) AS estimate,
             sum(e.population_variance) AS population_variance,
@@ -14921,12 +15109,14 @@ CREATE VIEW public.ioc_add_new_regions AS
             sum(e.population_upper_confidence_limit) AS guess_max
            FROM public.ioc_add_new_base e
           WHERE (e.category <> 'C'::text)
-          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.region, e.reason_change
+          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.region, e.phenotype, e.phenotype_basis, e.reason_change
         UNION
          SELECT e.analysis_name,
             e.analysis_year,
             e.continent,
             e.region,
+            e.phenotype,
+            e.phenotype_basis,
             e.reason_change,
             sum(e.population_estimate) AS estimate,
             0 AS population_variance,
@@ -14934,7 +15124,7 @@ CREATE VIEW public.ioc_add_new_regions AS
             ((sum(e.population_upper_confidence_limit))::double precision + ((1.96)::double precision * sqrt(sum(e.population_variance)))) AS guess_max
            FROM public.ioc_add_new_base e
           WHERE (e.category = 'C'::text)
-          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.region, e.reason_change) new_1 ON ((((new_1.analysis_name)::text = (a.analysis_name)::text) AND (new_1.analysis_year = a.analysis_year))))
+          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.region, e.phenotype, e.phenotype_basis, e.reason_change) new_1 ON ((((new_1.analysis_name)::text = (a.analysis_name)::text) AND (new_1.analysis_year = a.analysis_year))))
   GROUP BY a.analysis_name, a.analysis_year, new_1.continent, new_1.region, new_1.reason_change;
 
 
@@ -14957,6 +15147,8 @@ CREATE VIEW public.ioc_add_replaced_regions AS
             e.analysis_year,
             e.continent,
             e.region,
+            e.phenotype,
+            e.phenotype_basis,
             e.reason_change,
             sum(e.population_estimate) AS estimate,
             sum(e.population_variance) AS population_variance,
@@ -14964,12 +15156,14 @@ CREATE VIEW public.ioc_add_replaced_regions AS
             sum(e.population_upper_confidence_limit) AS guess_max
            FROM public.ioc_add_replaced_base e
           WHERE (e.category <> 'C'::text)
-          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.region, e.reason_change
+          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.region, e.phenotype, e.phenotype_basis, e.reason_change
         UNION
          SELECT e.analysis_name,
             e.analysis_year,
             e.continent,
             e.region,
+            e.phenotype,
+            e.phenotype_basis,
             e.reason_change,
             sum(e.population_estimate) AS estimate,
             0 AS population_variance,
@@ -14977,7 +15171,7 @@ CREATE VIEW public.ioc_add_replaced_regions AS
             ((sum(e.population_upper_confidence_limit))::double precision + ((1.96)::double precision * sqrt(sum(e.population_variance)))) AS guess_max
            FROM public.ioc_add_replaced_base e
           WHERE (e.category = 'C'::text)
-          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.region, e.reason_change) old_1 ON ((((old_1.analysis_name)::text = (a.analysis_name)::text) AND (old_1.analysis_year = a.comparison_year))))
+          GROUP BY e.analysis_name, e.analysis_year, e.continent, e.region, e.phenotype, e.phenotype_basis, e.reason_change) old_1 ON ((((old_1.analysis_name)::text = (a.analysis_name)::text) AND (old_1.analysis_year = a.comparison_year))))
   GROUP BY a.analysis_name, a.analysis_year, old_1.continent, old_1.region, old_1.reason_change;
 
 
@@ -18492,4 +18686,6 @@ INSERT INTO schema_migrations (version) VALUES ('20190116205115');
 INSERT INTO schema_migrations (version) VALUES ('20190117182408');
 
 INSERT INTO schema_migrations (version) VALUES ('20190225140735');
+
+INSERT INTO schema_migrations (version) VALUES ('20220221233424');
 
