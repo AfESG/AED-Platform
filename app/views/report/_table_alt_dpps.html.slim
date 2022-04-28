@@ -3,6 +3,7 @@
 - raw_base      = local_assigns[:baselines] || @alt_summary_sums_s || []
 - round         = local_assigns[:rounded] || false
 - analysis_year = local_assigns[:analysis_year] || @analysis_year
+- comp_year     = local_assigns[:comp_year] || @comp_year
 - level         = local_assigns[:level]
 
 - if raw_totals.count == 0
@@ -66,7 +67,7 @@
 
     - table_totals.merge!(sums)
     - if baseline.any?
-      - [ { year: 2015, totals: table_totals }, { year: 2006, totals: baseline } ].each do |v|
+      - [ { year: analysis_year, totals: table_totals }, { year: comp_year, totals: baseline } ].each do |v|
         tr.bold
           td = "Totals #{v[:year]}"
           - data_columns.each do |column|
