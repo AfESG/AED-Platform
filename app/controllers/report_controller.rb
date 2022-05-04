@@ -80,12 +80,19 @@ class ReportController < ApplicationController
       @comp_year = @analysis.comparison_year
 
       # ADD values
-      @alt_summary_totals = execute alt_dpps("1=1", @analysis.analysis_year, @analysis.analysis_name)
-      @alt_summary_sums = execute alt_dpps_totals("1=1", @analysis.analysis_year, @analysis.analysis_name)
-      @alt_summary_sums_s = execute alt_dpps_totals("1=1", @comp_year, @analysis.analysis_name) if @comp_year != @analysis.analysis_year
+      if params[:forest_only]
+        scope = "phenotype NOT IN ('Savanna', 'Savanna with hybrid')"
+        alt_scope = "\"CLASSIFICATION\" != 'Savanna'"
+      else
+        scope = "1=1"
+        alt_scope = "1=1"
+      end
+      @alt_summary_totals = execute alt_dpps(scope, @analysis.analysis_year, @analysis.analysis_name)
+      @alt_summary_sums = execute alt_dpps_totals(scope, @analysis.analysis_year, @analysis.analysis_name)
+      @alt_summary_sums_s = execute alt_dpps_totals(scope, @comp_year, @analysis.analysis_name) if @comp_year != @analysis.analysis_year
       @alt_areas = execute alt_dpps_continent_area("1=1", @analysis.analysis_year, @analysis.analysis_name)
-      @alt_regions = execute alt_dpps_continental_stats("1=1", @analysis.analysis_year, @analysis.analysis_name)
-      @alt_regions_sums = execute alt_dpps_continental_stats_sums("1=1", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_regions = execute alt_dpps_continental_stats(alt_scope, @analysis.analysis_year, @analysis.analysis_name)
+      @alt_regions_sums = execute alt_dpps_continental_stats_sums(alt_scope, @analysis.analysis_year, @analysis.analysis_name)
       @alt_causes_of_change = execute alt_dpps_causes_of_change("1=1", @analysis.analysis_year, @analysis.analysis_name)
       @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("1=1", @analysis.analysis_year, @analysis.analysis_name)
       @alt_areas_by_reason = execute alt_dpps_continent_area_by_reason("1=1", @analysis.analysis_year, @analysis.analysis_name)
@@ -116,12 +123,14 @@ class ReportController < ApplicationController
       @region = params[:region].gsub('_', ' ')
 
       # ADD values
-      @alt_summary_totals = execute alt_dpps("region = '#{@region}'", @analysis.analysis_year, @analysis.analysis_name)
-      @alt_summary_sums = execute alt_dpps_totals("region = '#{@region}'", @analysis.analysis_year, @analysis.analysis_name)
-      @alt_summary_sums_s = execute alt_dpps_totals("region = '#{@region}'", @comp_year, @analysis.analysis_name) if @comp_year != @analysis.analysis_year
+      scope = "region = '#{@region}'"
+      scope += " AND phenotype NOT IN ('Savanna', 'Savanna with hybrid')" if params[:forest_only]
+      @alt_summary_totals = execute alt_dpps(scope, @analysis.analysis_year, @analysis.analysis_name)
+      @alt_summary_sums = execute alt_dpps_totals(scope, @analysis.analysis_year, @analysis.analysis_name)
+      @alt_summary_sums_s = execute alt_dpps_totals(scope, @comp_year, @analysis.analysis_name) if @comp_year != @analysis.analysis_year
       @alt_areas = execute alt_dpps_region_area("region = '#{@region}'", @analysis.analysis_year, @analysis.analysis_name)
-      @alt_countries = execute alt_dpps_region_stats("region = '#{@region}'", @analysis.analysis_year, @analysis.analysis_name)
-      @alt_country_sums = execute alt_dpps_region_stats_sums("region = '#{@region}'", @analysis.analysis_year, @analysis.analysis_name)
+      @alt_countries = execute alt_dpps_region_stats(scope, @analysis.analysis_year, @analysis.analysis_name)
+      @alt_country_sums = execute alt_dpps_region_stats_sums(scope, @analysis.analysis_year, @analysis.analysis_name)
       @alt_causes_of_change = execute alt_dpps_causes_of_change("region = '#{@region}'", @analysis.analysis_year, @analysis.analysis_name)
       @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("region = '#{@region}'", @analysis.analysis_year, @analysis.analysis_name)
       @alt_areas_by_reason = execute alt_dpps_region_area_by_reason("region = '#{@region}'", @analysis.analysis_year, @analysis.analysis_name)
@@ -153,14 +162,21 @@ class ReportController < ApplicationController
       @map_uri = Country.where(name: @country).first().iso_code + "/" + @analysis.analysis_name + "/" + params[:year]
 
       # ADD values
-      @alt_summary_totals = execute alt_dpps("country = '#{sql_escape @country}'", @analysis.analysis_year, @analysis.analysis_name)
-      @alt_summary_sums = execute alt_dpps_totals("country = '#{sql_escape @country}'", @analysis.analysis_year, @analysis.analysis_name)
-      @alt_summary_sums_s = execute alt_dpps_totals("country = '#{sql_escape @country}'", @comp_year, @analysis.analysis_name) if @comp_year != @analysis.analysis_year
+      if params[:forest_only]
+        scope = "country = '#{sql_escape @country}' AND phenotype NOT IN ('Savanna', 'Savanna with hybrid')"
+        alt_scope = "phenotype NOT IN ('Savanna', 'Savanna with hybrid')"
+      else
+        scope = "country = '#{sql_escape @country}'"
+        alt_scope = "1=1"
+      end
+      @alt_summary_totals = execute alt_dpps(scope, @analysis.analysis_year, @analysis.analysis_name)
+      @alt_summary_sums = execute alt_dpps_totals(scope, @analysis.analysis_year, @analysis.analysis_name)
+      @alt_summary_sums_s = execute alt_dpps_totals(scope, @comp_year, @analysis.analysis_name) if @comp_year != @analysis.analysis_year
       @alt_areas = execute alt_dpps_country_area("country = '#{sql_escape @country}'", @analysis.analysis_year, @analysis.analysis_name)
       @alt_causes_of_change = execute alt_dpps_causes_of_change("country = '#{sql_escape @country}'", @analysis.analysis_year, @analysis.analysis_name)
       @alt_causes_of_change_s = execute alt_dpps_causes_of_change_sums("country = '#{sql_escape @country}'", @analysis.analysis_year, @analysis.analysis_name)
       @alt_areas_by_reason = execute alt_dpps_country_area_by_reason("country = '#{sql_escape @country}'", @analysis.analysis_year, @analysis.analysis_name)
-      @alt_elephant_estimates_by_country = execute alt_dpps_country_stats(@country, @analysis.analysis_year, @analysis.analysis_name)
+      @alt_elephant_estimates_by_country = execute alt_dpps_country_stats(@country, @analysis.analysis_year, @analysis.analysis_name, alt_scope)
 
       @alt_elephant_estimate_groups = []
       group = []

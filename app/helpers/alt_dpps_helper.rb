@@ -246,7 +246,7 @@ module AltDppsHelper
     SQL
   end
 
-  def alt_dpps_country_stats country, year, filter=nil
+  def alt_dpps_country_stats country, year, filter=nil, scope="1=1"
     analysis_name = filter.nil?? '' : "AND e.analysis_name = '#{filter}'"
     <<-SQL
       SELECT
@@ -256,6 +256,7 @@ module AltDppsHelper
         e.analysis_year = #{year}
         #{analysis_name}
         AND e.country = '#{country.gsub("\'","\'\'")}'
+        AND #{scope}
     SQL
   end
 
@@ -402,9 +403,9 @@ module AltDppsHelper
         x.analysis_year = #{year}
         #{analysis_name}
         AND x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX" > 0
-      --GROUP BY x.analysis_name, x.analysis_year, x.region, rt.range_area
       ORDER BY x.region
     ) data
+    WHERE #{scope}
     GROUP BY region, "CLASSIFICATION"
     SQL
   end
@@ -449,6 +450,7 @@ module AltDppsHelper
         AND x.continent = 'Africa'
         AND x."ESTIMATE" + x."CONFIDENCE" + x."GUESS_MAX" > 0
     ) data
+    WHERE #{scope}
     GROUP BY "CLASSIFICATION"
     SQL
   end
