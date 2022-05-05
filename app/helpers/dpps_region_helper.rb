@@ -21,8 +21,16 @@ module DppsRegionHelper
         ROUND(rm.range_area) "RANGEAREA",
         ROUND(rm.percent_regional_range) "RANGEPERC",
         ROUND(rm.percent_range_assessed) "SURVRANGPERC",
-        to_char(((definite+probable)/(definite+probable+possible+speculative))*(rm.range_assessed/range_area),'999999D99') "INFQLTYIDX",
-        round(log((((definite+probable)/(definite+probable+possible+speculative))*(rm.range_assessed/range_area)+1)/(rm.range_area/ca.continental_range))) "PFS"
+        CASE
+            WHEN range_area = 0 OR rm.range_assessed = 0 OR (definite+probable+possible+speculative) = 0
+            THEN NULL
+            ELSE to_char(((definite+probable)/(definite+probable+possible+speculative))*(rm.range_assessed/range_area),'999999D99')
+        END AS "INFQLTYIDX",
+        CASE
+            WHEN range_area = 0 OR rm.range_assessed = 0 OR (definite+probable+possible+speculative) = 0
+            THEN NULL
+            ELSE round(log((((definite+probable)/(definite+probable+possible+speculative))*(rm.range_assessed/range_area)+1)/(rm.range_area/ca.continental_range))) 
+        END AS "PFS"
       from
         (select distinct continental_range from continental_range_table) ca,
         dpps_sums_country d
