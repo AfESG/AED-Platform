@@ -8,11 +8,12 @@
 drop view estimate_factors cascade;
 create or replace view estimate_factors as
 WITH ddr_median AS ( -- get ddr median value (dont' check year)
-    SELECT PERCENTILE_DISC(0.5) WITHIN GROUP(ORDER BY sdclts.dung_decay_rate_estimate_used) AS val
-    FROM survey_dung_count_line_transect_strata sdclts
-    JOIN survey_dung_count_line_transects sdclt ON sdclts.survey_dung_count_line_transect_id = sdclt.id
-    JOIN population_submissions ps ON sdclt.population_submission_id = ps.id
-    WHERE sdclts.dung_decay_rate_measurement_method = 'Retrospectively'
+    SELECT 60.9 AS val -- manual override per stakeholders
+--     SELECT PERCENTILE_DISC(0.5) WITHIN GROUP(ORDER BY sdclts.dung_decay_rate_estimate_used) AS val
+--     FROM survey_dung_count_line_transect_strata sdclts
+--     JOIN survey_dung_count_line_transects sdclt ON sdclts.survey_dung_count_line_transect_id = sdclt.id
+--     JOIN population_submissions ps ON sdclt.population_submission_id = ps.id
+--     WHERE sdclts.dung_decay_rate_measurement_method = 'Retrospectively'
 )
 select
   'GT'::text estimate_type,
