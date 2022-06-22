@@ -15,11 +15,12 @@ services:
   db:
     image: mdillon/postgis:9.6
     volumes:
-      - db_storage:/var/lib/postgresql/data
+      - db_storage_forest:/var/lib/postgresql/data
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
     ports:
       - "6543:5432"
 
 volumes:
-  db_storage:
+  db_storage_savanna:
+  db_storage_forest:

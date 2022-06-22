@@ -11661,11 +11661,7 @@ CREATE TABLE public.survey_others (
 
 CREATE VIEW public.estimate_factors AS
  WITH ddr_median AS (
-         SELECT percentile_disc((0.5)::double precision) WITHIN GROUP (ORDER BY sdclts.dung_decay_rate_estimate_used) AS val
-           FROM ((public.survey_dung_count_line_transect_strata sdclts
-             JOIN public.survey_dung_count_line_transects sdclt ON ((sdclts.survey_dung_count_line_transect_id = sdclt.id)))
-             JOIN public.population_submissions ps ON ((sdclt.population_submission_id = ps.id)))
-          WHERE ((sdclts.dung_decay_rate_measurement_method)::text = 'Retrospectively'::text)
+         SELECT 60.9 AS val
         )
  SELECT 'GT'::text AS estimate_type,
     ('GT'::text || survey_ground_total_count_strata.id) AS input_zone_id,
@@ -11692,6 +11688,7 @@ CREATE VIEW public.estimate_factors AS
      JOIN public.survey_ground_total_counts ON ((survey_ground_total_counts.id = survey_ground_total_count_strata.survey_ground_total_count_id)))
      JOIN public.population_submissions ON ((population_submissions.id = survey_ground_total_counts.population_submission_id)))
      JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)))
+  WHERE ((submissions.phenotype)::text = ANY ((ARRAY['Savanna'::character varying, 'Savanna with hybrid'::character varying])::text[]))
 UNION
  SELECT 'DC'::text AS estimate_type,
     ('DC'::text || survey_dung_count_line_transect_strata.id) AS input_zone_id,
@@ -11718,7 +11715,7 @@ UNION
      JOIN public.survey_dung_count_line_transects ON ((survey_dung_count_line_transects.id = survey_dung_count_line_transect_strata.survey_dung_count_line_transect_id)))
      JOIN public.population_submissions ON ((population_submissions.id = survey_dung_count_line_transects.population_submission_id)))
      JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)))
-  WHERE (((survey_dung_count_line_transect_strata.dung_decay_rate_measurement_method)::text = 'Retrospectively'::text) AND (survey_dung_count_line_transect_strata.dung_decay_rate_measurement_year = population_submissions.completion_year))
+  WHERE (((survey_dung_count_line_transect_strata.dung_decay_rate_measurement_method)::text = 'Retrospectively'::text) AND (survey_dung_count_line_transect_strata.dung_decay_rate_measurement_year = population_submissions.completion_year) AND ((submissions.phenotype)::text = ANY ((ARRAY['Savanna'::character varying, 'Savanna with hybrid'::character varying])::text[])))
 UNION
  SELECT 'DC'::text AS estimate_type,
     ('DC'::text || survey_dung_count_line_transect_strata.id) AS input_zone_id,
@@ -11745,8 +11742,8 @@ UNION
      JOIN public.survey_dung_count_line_transects ON ((survey_dung_count_line_transects.id = survey_dung_count_line_transect_strata.survey_dung_count_line_transect_id)))
      JOIN public.population_submissions ON ((population_submissions.id = survey_dung_count_line_transects.population_submission_id)))
      JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)))
-  WHERE ((((survey_dung_count_line_transect_strata.dung_decay_rate_measurement_method)::text <> 'Retrospectively'::text) OR (survey_dung_count_line_transect_strata.dung_decay_rate_measurement_year <> population_submissions.completion_year)) AND (survey_dung_count_line_transect_strata.dung_decay_rate_estimate_used >= ( SELECT ddr_median.val
-           FROM ddr_median)))
+  WHERE ((((survey_dung_count_line_transect_strata.dung_decay_rate_measurement_method)::text <> 'Retrospectively'::text) OR (survey_dung_count_line_transect_strata.dung_decay_rate_measurement_year <> population_submissions.completion_year)) AND (survey_dung_count_line_transect_strata.dung_decay_rate_estimate_used >= (( SELECT ddr_median.val
+           FROM ddr_median))::double precision) AND ((submissions.phenotype)::text = ANY ((ARRAY['Savanna'::character varying, 'Savanna with hybrid'::character varying])::text[])))
 UNION
  SELECT 'DC'::text AS estimate_type,
     ('DC'::text || survey_dung_count_line_transect_strata.id) AS input_zone_id,
@@ -11759,8 +11756,8 @@ UNION
     submissions.phenotype_basis,
     population_submissions.citation,
     population_submissions.short_citation,
-    (round(((survey_dung_count_line_transect_strata.stratum_area)::double precision * ((survey_dung_count_line_transect_strata.dung_density_estimate)::double precision / (survey_dung_count_line_transect_strata.defecation_rate_estimate_used * ( SELECT ddr_median.val
-           FROM ddr_median))))))::integer AS population_estimate,
+    (round(((survey_dung_count_line_transect_strata.stratum_area)::double precision * ((survey_dung_count_line_transect_strata.dung_density_estimate)::double precision / (survey_dung_count_line_transect_strata.defecation_rate_estimate_used * (( SELECT ddr_median.val
+           FROM ddr_median))::double precision)))))::integer AS population_estimate,
     survey_dung_count_line_transect_strata.population_variance,
     survey_dung_count_line_transect_strata.population_standard_error,
     survey_dung_count_line_transect_strata.population_confidence_interval,
@@ -11774,8 +11771,8 @@ UNION
      JOIN public.survey_dung_count_line_transects ON ((survey_dung_count_line_transects.id = survey_dung_count_line_transect_strata.survey_dung_count_line_transect_id)))
      JOIN public.population_submissions ON ((population_submissions.id = survey_dung_count_line_transects.population_submission_id)))
      JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)))
-  WHERE ((((survey_dung_count_line_transect_strata.dung_decay_rate_measurement_method)::text <> 'Retrospectively'::text) OR (survey_dung_count_line_transect_strata.dung_decay_rate_measurement_year <> population_submissions.completion_year)) AND (survey_dung_count_line_transect_strata.dung_decay_rate_estimate_used < ( SELECT ddr_median.val
-           FROM ddr_median)) AND (survey_dung_count_line_transect_strata.defecation_rate_estimate_used > (0)::double precision))
+  WHERE ((((survey_dung_count_line_transect_strata.dung_decay_rate_measurement_method)::text <> 'Retrospectively'::text) OR (survey_dung_count_line_transect_strata.dung_decay_rate_measurement_year <> population_submissions.completion_year)) AND (survey_dung_count_line_transect_strata.dung_decay_rate_estimate_used < (( SELECT ddr_median.val
+           FROM ddr_median))::double precision) AND (survey_dung_count_line_transect_strata.defecation_rate_estimate_used > (0)::double precision) AND ((submissions.phenotype)::text = ANY ((ARRAY['Savanna'::character varying, 'Savanna with hybrid'::character varying])::text[])))
 UNION
  SELECT 'DC'::text AS estimate_type,
     ('DC'::text || survey_dung_count_line_transect_strata.id) AS input_zone_id,
@@ -11788,8 +11785,8 @@ UNION
     submissions.phenotype_basis,
     population_submissions.citation,
     population_submissions.short_citation,
-    (survey_dung_count_line_transect_strata.population_estimate - (round(((survey_dung_count_line_transect_strata.stratum_area)::double precision * ((survey_dung_count_line_transect_strata.dung_density_estimate)::double precision / (survey_dung_count_line_transect_strata.defecation_rate_estimate_used * ( SELECT ddr_median.val
-           FROM ddr_median))))))::integer) AS population_estimate,
+    (survey_dung_count_line_transect_strata.population_estimate - (round(((survey_dung_count_line_transect_strata.stratum_area)::double precision * ((survey_dung_count_line_transect_strata.dung_density_estimate)::double precision / (survey_dung_count_line_transect_strata.defecation_rate_estimate_used * (( SELECT ddr_median.val
+           FROM ddr_median))::double precision)))))::integer) AS population_estimate,
     survey_dung_count_line_transect_strata.population_variance,
     survey_dung_count_line_transect_strata.population_standard_error,
     survey_dung_count_line_transect_strata.population_confidence_interval,
@@ -11803,8 +11800,8 @@ UNION
      JOIN public.survey_dung_count_line_transects ON ((survey_dung_count_line_transects.id = survey_dung_count_line_transect_strata.survey_dung_count_line_transect_id)))
      JOIN public.population_submissions ON ((population_submissions.id = survey_dung_count_line_transects.population_submission_id)))
      JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)))
-  WHERE ((((survey_dung_count_line_transect_strata.dung_decay_rate_measurement_method)::text <> 'Retrospectively'::text) OR (survey_dung_count_line_transect_strata.dung_decay_rate_measurement_year <> population_submissions.completion_year)) AND (survey_dung_count_line_transect_strata.dung_decay_rate_estimate_used < ( SELECT ddr_median.val
-           FROM ddr_median)) AND (survey_dung_count_line_transect_strata.defecation_rate_estimate_used > (0)::double precision))
+  WHERE ((((survey_dung_count_line_transect_strata.dung_decay_rate_measurement_method)::text <> 'Retrospectively'::text) OR (survey_dung_count_line_transect_strata.dung_decay_rate_measurement_year <> population_submissions.completion_year)) AND (survey_dung_count_line_transect_strata.dung_decay_rate_estimate_used < (( SELECT ddr_median.val
+           FROM ddr_median))::double precision) AND (survey_dung_count_line_transect_strata.defecation_rate_estimate_used > (0)::double precision) AND ((submissions.phenotype)::text = ANY ((ARRAY['Savanna'::character varying, 'Savanna with hybrid'::character varying])::text[])))
 UNION
  SELECT 'AT'::text AS estimate_type,
     ('AT'::text || survey_aerial_total_count_strata.id) AS input_zone_id,
@@ -11831,6 +11828,7 @@ UNION
      JOIN public.survey_aerial_total_counts ON ((survey_aerial_total_counts.id = survey_aerial_total_count_strata.survey_aerial_total_count_id)))
      JOIN public.population_submissions ON ((population_submissions.id = survey_aerial_total_counts.population_submission_id)))
      JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)))
+  WHERE ((submissions.phenotype)::text = ANY ((ARRAY['Savanna'::character varying, 'Savanna with hybrid'::character varying])::text[]))
 UNION
  SELECT 'GS'::text AS estimate_type,
     ('GS'::text || survey_ground_sample_count_strata.id) AS input_zone_id,
@@ -11857,6 +11855,7 @@ UNION
      JOIN public.survey_ground_sample_counts ON ((survey_ground_sample_counts.id = survey_ground_sample_count_strata.survey_ground_sample_count_id)))
      JOIN public.population_submissions ON ((population_submissions.id = survey_ground_sample_counts.population_submission_id)))
      JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)))
+  WHERE ((submissions.phenotype)::text = ANY ((ARRAY['Savanna'::character varying, 'Savanna with hybrid'::character varying])::text[]))
 UNION
  SELECT 'AS'::text AS estimate_type,
     ('AS'::text || survey_aerial_sample_count_strata.id) AS input_zone_id,
@@ -11883,6 +11882,7 @@ UNION
      JOIN public.survey_aerial_sample_counts ON ((survey_aerial_sample_counts.id = survey_aerial_sample_count_strata.survey_aerial_sample_count_id)))
      JOIN public.population_submissions ON ((population_submissions.id = survey_aerial_sample_counts.population_submission_id)))
      JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)))
+  WHERE ((submissions.phenotype)::text = ANY ((ARRAY['Savanna'::character varying, 'Savanna with hybrid'::character varying])::text[]))
 UNION
  SELECT 'GD'::text AS estimate_type,
     ('GD'::text || survey_faecal_dna_strata.id) AS input_zone_id,
@@ -11909,6 +11909,7 @@ UNION
      JOIN public.survey_faecal_dnas ON ((survey_faecal_dnas.id = survey_faecal_dna_strata.survey_faecal_dna_id)))
      JOIN public.population_submissions ON ((population_submissions.id = survey_faecal_dnas.population_submission_id)))
      JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)))
+  WHERE ((submissions.phenotype)::text = ANY ((ARRAY['Savanna'::character varying, 'Savanna with hybrid'::character varying])::text[]))
 UNION
  SELECT 'IR'::text AS estimate_type,
     ('IR'::text || survey_individual_registrations.id) AS input_zone_id,
@@ -11937,6 +11938,7 @@ UNION
    FROM ((public.survey_individual_registrations
      JOIN public.population_submissions ON ((population_submissions.id = survey_individual_registrations.population_submission_id)))
      JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)))
+  WHERE ((submissions.phenotype)::text = ANY ((ARRAY['Savanna'::character varying, 'Savanna with hybrid'::character varying])::text[]))
 UNION
  SELECT 'O'::text AS estimate_type,
     ('O'::text || survey_others.id) AS input_zone_id,
@@ -11964,7 +11966,8 @@ UNION
     survey_others.survey_geometry_id
    FROM ((public.survey_others
      JOIN public.population_submissions ON ((population_submissions.id = survey_others.population_submission_id)))
-     JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)));
+     JOIN public.submissions ON ((submissions.id = population_submissions.submission_id)))
+  WHERE ((submissions.phenotype)::text = ANY ((ARRAY['Savanna'::character varying, 'Savanna with hybrid'::character varying])::text[]));
 
 
 --
