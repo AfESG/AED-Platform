@@ -106,6 +106,40 @@ WHERE (dung_decay_rate_measurement_method != 'Retrospectively' OR dung_decay_rat
   AND dung_decay_rate_estimate_used >= (select val from ddr_median)
   AND phenotype NOT IN ('Savanna', 'Savanna with hybrid')
 union
+select -- lower ddr than median but old population estimate is less than the new calculated one
+       'DC' AS estimate_type,
+       'DC' || survey_dung_count_line_transect_strata.id AS input_zone_id,
+       population_submission_id,
+       site_name,
+       stratum_name,
+       stratum_area,
+       completion_year,
+       phenotype,
+       phenotype_basis,
+       citation,
+       short_citation,
+       population_estimate,
+       population_variance,
+       population_standard_error,
+       population_confidence_interval,
+       population_t,
+       population_lower_confidence_limit,
+       population_upper_confidence_limit,
+       1 AS quality_level,
+       actually_seen,
+       survey_geometry_id
+from
+    survey_dung_count_line_transect_strata
+    join survey_dung_count_line_transects on survey_dung_count_line_transects.id=survey_dung_count_line_transect_id
+    join population_submissions on population_submissions.id=population_submission_id
+    join submissions on submissions.id = population_submissions.submission_id
+WHERE (dung_decay_rate_measurement_method != 'Retrospectively' OR dung_decay_rate_measurement_year != population_submissions.completion_year)
+  AND dung_decay_rate_estimate_used < (select val from ddr_median)
+  AND defecation_rate_estimate_used > 0 -- fix divide by zero issues
+  AND ROUND( -- area * (dung density / (dung production * median DDR))
+                  stratum_area * (dung_density_estimate / (defecation_rate_estimate_used * (select val from ddr_median)))
+          )::INT >= population_estimate
+union
 select -- lower ddr than median (estimate)
        'DC' AS estimate_type,
        'DC' || survey_dung_count_line_transect_strata.id AS input_zone_id,
@@ -139,6 +173,9 @@ WHERE (dung_decay_rate_measurement_method != 'Retrospectively' OR dung_decay_rat
   AND dung_decay_rate_estimate_used < (select val from ddr_median)
   AND defecation_rate_estimate_used > 0 -- fix divide by zero issues
   AND phenotype NOT IN ('Savanna', 'Savanna with hybrid')
+  AND ROUND( -- area * (dung density / (dung production * median DDR))
+                  stratum_area * (dung_density_estimate / (defecation_rate_estimate_used * (select val from ddr_median)))
+          )::INT < population_estimate
 union
 select -- lower ddr than median (guess)
        'DC' AS estimate_type,
@@ -173,6 +210,9 @@ WHERE (dung_decay_rate_measurement_method != 'Retrospectively' OR dung_decay_rat
   AND dung_decay_rate_estimate_used < (select val from ddr_median)
   AND defecation_rate_estimate_used > 0 -- fix divide by zero issues
   AND phenotype NOT IN ('Savanna', 'Savanna with hybrid')
+  AND ROUND( -- area * (dung density / (dung production * median DDR))
+                  stratum_area * (dung_density_estimate / (defecation_rate_estimate_used * (select val from ddr_median)))
+          )::INT < population_estimate
 union
 select
   'AT',
