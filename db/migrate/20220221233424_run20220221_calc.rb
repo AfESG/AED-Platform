@@ -4,7 +4,7 @@ class Run20220221Calc < ActiveRecord::Migration
   include SqlHelper
 
   def up
-    build_calculator '20220221_savanna_only'
+    build_calculator '20220221'
   end
 
   def down
