@@ -16,7 +16,7 @@
   - area_candidate = @alt_areas.first
 
   - table_totals = {}
-  - data_columns = ['ESTIMATE', 'CONFIDENCE', 'GUESS_MIN', 'GUESS_MAX']
+  - data_columns = ['ESTIMATE', 'CONFIDENCE', 'LOWER_BOUND', 'UPPER_BOUND', 'GUESS_MIN', 'GUESS_MAX']
 
   - merged_categories = []
   / 'F', 'G']
@@ -39,7 +39,7 @@
   table.table style='font-size:16px'
     tr
       th
-      th.text-center colspan='2' Estimates from Surveys
+      th.text-center colspan='4' Estimates from Surveys
       th.text-center colspan='2' Guesses
       th.text-center % Known and <br/>Possible Range
       th.text-center Area (km<sup>2</sup>)
@@ -47,6 +47,8 @@
       th Survey category
       th.text-center Estimate
       th.text-center &plusmn; 95% CL
+      th.text-center Lower bound
+      th.text-center Upper bound
       th.text-center From
       th.text-center To
       th
@@ -83,17 +85,17 @@
         td &nbsp;
 
     tr
-      td align='right' colspan='5' Assessed Range
+      td align='right' colspan='7' Assessed Range
       = round_area_cell table_totals['CATEGORY_RANGE_ASSESSED'] || 0
       = round_area_sqkm_cell (@alt_areas.inject(0) { |sum, tuple| sum+= tuple['AREA'].to_f })
 
     tr
-      td align='right' colspan='5' Unassessed Range
+      td align='right' colspan='7' Unassessed Range
       = round_area_cell 100 - (table_totals['CATEGORY_RANGE_ASSESSED'] || 0)
       = round_area_sqkm_cell(area_candidate&.dig('range_area').to_f - (@alt_areas.inject(0) { |sum, tuple| sum+= tuple['AREA'].to_f }))
 
     tr.bold
-      td align='right' colspan='5'
+      td align='right' colspan='7'
         strong Total Range
       td.numeric 100
       = round_area_sqkm_cell area_candidate&.dig('range_area')
