@@ -171,6 +171,20 @@ All commands should be run as the root user unless stated otherwise.
 - Un-expose a database connection (recommended after done accessing) `dokku postgres:unexpose <production|staging|dev>`
 - Tail application logs `dokku logs <production|staging|dev> --tail`
 - Set/update an environment variable `dokku config:set <production|staging|dev> ENV="VALUE"`
+- Replace the dokku env database with a dump, SSH onto the server (and transfer a dump) and use the following commands:
+```bash
+  (aed)$: dokku postgres:enter <ENV>
+  (pg) $: psql -U postgres
+  (db) $: UPDATE pg_database SET datallowconn = 'false' WHERE datname = '<ENV>';
+  (db) $: ALTER DATABASE <ENV> CONNECTION LIMIT 1;
+  (db) $: SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '<ENV>';
+  (db) $: DROP DATABASE <ENV>;
+  (db) $: CREATE DATABASE <ENV>;
+  (db) $: \q
+  (pg) $: exit
+  (aed)$: dokku postgres:import <ENV> < <DUMPFILE>
+  (aed)$: dokku run <ENV> rake db:migrate
+```
 
 File Paths
 - `/home/dokku/<app-name>`
