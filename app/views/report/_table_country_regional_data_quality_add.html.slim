@@ -4,7 +4,7 @@
   table.table style='font-size:16px'
     tr
       th colspan='2'
-      th.text-center colspan='2' Estimates from Surveys
+      th.text-center colspan='4' Estimates from Surveys
       th.text-center colspan='2' Guesses
       th.text-center colspan='3' Range
       th &nbsp;
@@ -14,6 +14,8 @@
       th Classification
       th.numeric Estimate/Number Seen
       th.numeric &plusmn; 95% CL
+      th.numeric Upper bound
+      th.numeric Lower bound
       th.numeric From
       th.numeric To
       th.numeric Area (km²)
@@ -27,7 +29,7 @@
           td
             a href=("#{@region.gsub(' ','_')}/#{u row['country'].gsub(' ','_')}") = row['country']
           td =row['CLASSIFICATION']
-          - ['ESTIMATE','CONFIDENCE','GUESS_MIN','GUESS_MAX','RANGE_AREA','PERCENT_OF_RANGE_COVERED','PERCENT_OF_RANGE_ASSESSED'].each do |key|
+          - ['ESTIMATE','CONFIDENCE','LOWER_BOUND','UPPER_BOUND','GUESS_MIN','GUESS_MAX','RANGE_AREA','PERCENT_OF_RANGE_COVERED','PERCENT_OF_RANGE_ASSESSED'].each do |key|
             = add_and_display_cell row, key, totals, round: false
           = add_and_display_cell row, 'IQI', totals, precision: 2, zeroes: false
           = add_and_display_cell row, 'PFS', totals, pfs: true
@@ -35,7 +37,7 @@
       tr.totals style=('height: 24px; font-weight: bold')
         td Totals
         td =row['CLASSIFICATION']
-        - ['ESTIMATE','CONFIDENCE','GUESS_MIN','GUESS_MAX','RANGE_AREA','PERCENT_OF_RANGE_COVERED','PERCENT_OF_RANGE_ASSESSED'].each do |key|
+        - ['ESTIMATE','CONFIDENCE','LOWER_BOUND','UPPER_BOUND','GUESS_MIN','GUESS_MAX','RANGE_AREA','PERCENT_OF_RANGE_COVERED','PERCENT_OF_RANGE_ASSESSED'].each do |key|
           = numeric_cell row[key]
         = numeric_cell row['IQI'], precision: 2, zeroes: false
         = numeric_cell round_pfs(row['PFS'])
