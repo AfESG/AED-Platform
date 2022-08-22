@@ -322,8 +322,14 @@ CREATE OR REPLACE VIEW estimate_factors_analyses_categorized_sums_country_for_ad
     sum(e.population_lower_confidence_limit) as "GUESS_MIN",
     sum(e.population_upper_confidence_limit) as "GUESS_MAX",
     sum(e.best_population_variance) as population_variance,
-    1.96*sqrt(sum(e.lower_bound_variance)) as "LOWER_CONFIDENCE",
-    1.96*sqrt(sum(e.upper_bound_variance)) as "UPPER_CONFIDENCE",
+    CASE
+        WHEN category IN ('H', 'I', 'M') THEN NULL
+        ELSE 1.96*sqrt(sum(e.lower_bound_variance))
+    END as "LOWER_CONFIDENCE",
+    CASE
+        WHEN category IN ('H', 'I', 'M') THEN NULL
+        ELSE 1.96*sqrt(sum(e.upper_bound_variance))
+    END as "UPPER_CONFIDENCE",
     sum(e.lower_bound_variance) as lower_bound_variance,
     sum(e.upper_bound_variance) as upper_bound_variance
   FROM
@@ -394,8 +400,14 @@ CREATE OR REPLACE VIEW estimate_factors_analyses_categorized_sums_region_for_add
     sum(e.population_lower_confidence_limit) as "GUESS_MIN",
     sum(e.population_upper_confidence_limit) as "GUESS_MAX",
     sum(e.best_population_variance) population_variance,
-    1.96*sqrt(sum(e.lower_bound_variance)) as "LOWER_CONFIDENCE",
-    1.96*sqrt(sum(e.upper_bound_variance)) as "UPPER_CONFIDENCE",
+    CASE
+        WHEN category IN ('H', 'I', 'M') THEN NULL
+        ELSE 1.96*sqrt(sum(e.lower_bound_variance))
+    END as "LOWER_CONFIDENCE",
+    CASE
+        WHEN category IN ('H', 'I', 'M') THEN NULL
+        ELSE 1.96*sqrt(sum(e.upper_bound_variance))
+    END as "UPPER_CONFIDENCE",
     sum(e.lower_bound_variance) as lower_bound_variance,
     sum(e.upper_bound_variance) as upper_bound_variance
   FROM
@@ -465,8 +477,14 @@ CREATE OR REPLACE VIEW estimate_factors_analyses_categorized_sums_continent_for_
     sum(e.population_lower_confidence_limit) as "GUESS_MIN",
     sum(e.population_upper_confidence_limit) as "GUESS_MAX",
     sum(e.best_population_variance) population_variance,
-    1.96*sqrt(sum(e.lower_bound_variance)) as "LOWER_CONFIDENCE",
-    1.96*sqrt(sum(e.upper_bound_variance)) as "UPPER_CONFIDENCE",
+    CASE
+        WHEN category IN ('H', 'I', 'M') THEN NULL
+        ELSE 1.96*sqrt(sum(e.lower_bound_variance))
+    END as "LOWER_CONFIDENCE",
+    CASE
+        WHEN category IN ('H', 'I', 'M') THEN NULL
+        ELSE 1.96*sqrt(sum(e.upper_bound_variance))
+    END as "UPPER_CONFIDENCE",
     sum(e.lower_bound_variance) as lower_bound_variance,
     sum(e.upper_bound_variance) as upper_bound_variance
   FROM
