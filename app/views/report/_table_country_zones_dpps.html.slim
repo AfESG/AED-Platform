@@ -23,7 +23,8 @@
       th Reliab.
       th Year
       th.numeric Estimate
-      th.numeric 95% C.L.
+      th.numeric Lower bound
+      th.numeric Upper bound
       th style="padding-left:10px"  Source
       th
         | PFS
@@ -36,6 +37,10 @@
     - @elephant_estimate_groups.each do |group|
       - @pop = @rn = @cc = @ty = @yr = @re = ''
       - @ar = @n = @pv = @es = @cl = @car = @dp = @dpps = @ra = 0
+      - lbs = group.map{|row| row['LOWER_CONFIDENCE']}.compact
+      - @lb = lbs.empty? ? nil : lbs.map(&:to_i).sum
+      - ubs = group.map{|row| row['UPPER_CONFIDENCE']}.compact
+      - @ub = ubs.empty? ? nil : ubs.map(&:to_i).sum
       - if group.size > 1
         - group.each do |row|
           - @pop = row['population']
@@ -94,10 +99,8 @@
         td style="text-align:center" = @ca
         td= @yr
         td style="text-align:right" = number_with_delimiter @es
-        -if @pv>0
-          td style="text-align:right" = number_with_delimiter ((Math.sqrt(@pv))*1.96).round
-        - else
-          td style="text-align:right" = @cl.to_s.gsub(/[^\d]/, "")!="0" ? number_with_delimiter(@cl) : ""
+        td style="text-align:right" = @lb.nil? ? '-' : @lb
+        td style="text-align:right" = @ub.nil? ? '-' : @ub
         td style="padding-left:10px" = @re
         td style="text-align:center" = round_pfs @pf
         td style="text-align:right" = @ar.to_s!="0" ? number_with_delimiter(@ar) : ""
@@ -113,7 +116,8 @@
           td style="text-align:center" = row['CATEGORY']
           td= row['CYEAR']
           td.numeric= number_with_delimiter row['ESTIMATE']
-          td.numeric= row['CL95'].to_s.gsub(/[^\d]/, '')!="0" ? (number_with_delimiter row['CL95']) : ""
+          td.numeric= row['LOWER_CONFIDENCE'].nil? ? '-' : row['LOWER_CONFIDENCE']
+          td.numeric= row['UPPER_CONFIDENCE'].nil? ? '-' : row['UPPER_CONFIDENCE']
           td style="padding-left:10px" = row['REFERENCE']
           td style='text-align:center'
           td.numeric style="padding-right:10px" = number_with_delimiter row['AREA_SQKM']

@@ -38,6 +38,14 @@ module DppsCountryHelper
         ELSE
           ''
         END "CL95",
+        CASE
+            WHEN e.category IN ('D', 'E', 'H', 'I', 'M') THEN NULL
+            ELSE round(1.96*sqrt(((e.population_estimate - e.population_lower_confidence_limit) / 1.96) ^ 2))
+        END as "LOWER_CONFIDENCE",
+        CASE
+            WHEN e.category IN ('D', 'E', 'H', 'I', 'M') THEN NULL
+            ELSE round(1.96*sqrt(((e.population_upper_confidence_limit - e.population_estimate) / 1.96) ^ 2))
+        END as "UPPER_CONFIDENCE",
         e.short_citation "REFERENCE",
         round(log((((definite+probable+0.001)/(definite+probable+possible+speculative+0.001))+1)/(a.area_sqkm/rm.range_area))) "PFS",
         definite+probable "DP",
