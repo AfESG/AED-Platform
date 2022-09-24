@@ -18,7 +18,7 @@ create index si_country_range on country_range using gist (range_geometry);
 
 DROP VIEW IF EXISTS estimate_locator_with_geometry_add CASCADE;
 CREATE VIEW estimate_locator_with_geometry_add AS
- SELECT g.id,
+ SELECT DISTINCT g.id,
     l.estimate_type,
     l.input_zone_id,
     l.population_submission_id,
