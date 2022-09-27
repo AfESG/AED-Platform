@@ -39,13 +39,13 @@ module DppsCountryHelper
           ''
         END "CL95",
         CASE
-            WHEN e.category IN ('D', 'E', 'H', 'I', 'M') THEN NULL
-            ELSE round(1.96*sqrt(((e.population_estimate - e.population_lower_confidence_limit) / 1.96) ^ 2))
-        END as "LOWER_CONFIDENCE",
+            WHEN e.category IN ('J', 'K') THEN GREATEST(e.population_estimate - (sqrt(e.population_variance) * 1.96), 0)
+            WHEN e.category IN ('B', 'L') THEN GREATEST(e.population_estimate - (sqrt(e.population_variance) * 1.96) - (sqrt(((e.population_estimate - e.population_lower_confidence_limit) / 1.96) ^ 2) * 1.96), 0)
+        END as "LOWER_BOUND",
         CASE
-            WHEN e.category IN ('D', 'E', 'H', 'I', 'M') THEN NULL
-            ELSE round(1.96*sqrt(((e.population_upper_confidence_limit - e.population_estimate) / 1.96) ^ 2))
-        END as "UPPER_CONFIDENCE",
+            WHEN e.category IN ('J', 'K') THEN e.population_estimate + (sqrt(e.population_variance) * 1.96)
+            WHEN e.category IN ('B', 'L') THEN e.population_estimate + (sqrt(e.population_variance) * 1.96) - (sqrt(((e.population_upper_confidence_limit - e.population_estimate) / 1.96) ^ 2) * 1.96)
+        END as "UPPER_BOUND",
         e.short_citation "REFERENCE",
         round(log((((definite+probable+0.001)/(definite+probable+possible+speculative+0.001))+1)/(a.area_sqkm/rm.range_area))) "PFS",
         definite+probable "DP",
