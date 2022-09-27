@@ -292,12 +292,12 @@ CREATE OR REPLACE VIEW estimate_factors_analyses_categorized_sums_country_for_ad
     sum(e.population_upper_confidence_limit) as "GUESS_MAX",
     sum(e.best_population_variance) as population_variance,
     CASE
-        WHEN category IN ('D', 'E', 'H', 'I', 'M') THEN NULL
-        ELSE 1.96*sqrt(sum(e.lower_bound_variance))
+        WHEN category IN ('J', 'K') THEN (1.96*sqrt(sum(e.best_population_variance)))::numeric
+        WHEN category IN ('B', 'L') THEN ((1.96*sqrt(sum(e.best_population_variance))) - (1.96*sqrt(sum(e.lower_bound_variance))))::numeric
     END as "LOWER_CONFIDENCE",
     CASE
-        WHEN category IN ('D', 'E', 'H', 'I', 'M') THEN NULL
-        ELSE 1.96*sqrt(sum(e.upper_bound_variance))
+        WHEN category IN ('J', 'K') THEN (1.96*sqrt(sum(e.best_population_variance)))::numeric
+        WHEN category IN ('B', 'L') THEN ((1.96*sqrt(sum(e.best_population_variance))) - (1.96*sqrt(sum(e.upper_bound_variance))))::numeric
     END as "UPPER_CONFIDENCE",
     sum(e.lower_bound_variance) as lower_bound_variance,
     sum(e.upper_bound_variance) as upper_bound_variance
@@ -345,12 +345,12 @@ CREATE OR REPLACE VIEW estimate_factors_analyses_categorized_totals_country_for_
     country,
     phenotype,
     phenotype_basis,
-    sum("ESTIMATE") "ESTIMATE",
-    1.96*sqrt(sum(population_variance)) "CONFIDENCE",
-    sum("GUESS_MIN") "GUESS_MIN",
-    sum("GUESS_MAX") "GUESS_MAX",
-    1.96*sqrt(sum(lower_bound_variance) FILTER (WHERE "CATEGORY" NOT IN ('D', 'E'))) as "LOWER_CONFIDENCE",
-    1.96*sqrt(sum(upper_bound_variance) FILTER (WHERE "CATEGORY" NOT IN ('D', 'E'))) as "UPPER_CONFIDENCE"
+    sum("ESTIMATE") as "ESTIMATE",
+    1.96*sqrt(sum(population_variance)) as "CONFIDENCE",
+    sum("GUESS_MIN") as "GUESS_MIN",
+    sum("GUESS_MAX") as "GUESS_MAX",
+    1.96*sqrt(sum(lower_bound_variance) FILTER (WHERE "CATEGORY" IN ('B', 'J', 'K', 'L'))) as "LOWER_CONFIDENCE",
+    1.96*sqrt(sum(upper_bound_variance) FILTER (WHERE "CATEGORY" IN ('B', 'J', 'K', 'L'))) as "UPPER_CONFIDENCE"
   FROM estimate_factors_analyses_categorized_sums_country_for_add
   GROUP BY analysis_name, analysis_year, continent, region, country, phenotype, phenotype_basis;
 
@@ -368,14 +368,14 @@ CREATE OR REPLACE VIEW estimate_factors_analyses_categorized_sums_region_for_add
     1.96*sqrt(sum(e.best_population_variance)) as "CONFIDENCE",
     sum(e.population_lower_confidence_limit) as "GUESS_MIN",
     sum(e.population_upper_confidence_limit) as "GUESS_MAX",
-    sum(e.best_population_variance) population_variance,
+    sum(e.best_population_variance) as population_variance,
     CASE
-        WHEN category IN ('D', 'E', 'H', 'I', 'M') THEN NULL
-        ELSE 1.96*sqrt(sum(e.lower_bound_variance))
+        WHEN category IN ('J', 'K') THEN 1.96*sqrt(sum(e.best_population_variance))
+        WHEN category IN ('B', 'L') THEN (1.96*sqrt(sum(e.best_population_variance))) - (1.96*sqrt(sum(e.lower_bound_variance)))
     END as "LOWER_CONFIDENCE",
     CASE
-        WHEN category IN ('D', 'E', 'H', 'I', 'M') THEN NULL
-        ELSE 1.96*sqrt(sum(e.upper_bound_variance))
+        WHEN category IN ('J', 'K') THEN 1.96*sqrt(sum(e.best_population_variance))
+        WHEN category IN ('B', 'L') THEN (1.96*sqrt(sum(e.best_population_variance))) - (1.96*sqrt(sum(e.upper_bound_variance)))
     END as "UPPER_CONFIDENCE",
     sum(e.lower_bound_variance) as lower_bound_variance,
     sum(e.upper_bound_variance) as upper_bound_variance
@@ -400,7 +400,7 @@ CREATE OR REPLACE VIEW estimate_factors_analyses_categorized_sums_region_for_add
     0 as "CONFIDENCE",
     sum(e.population_lower_confidence_limit) + 1.96*sqrt(sum(population_variance)) as "GUESS_MIN",
     sum(e.population_upper_confidence_limit) + 1.96*sqrt(sum(population_variance)) as "GUESS_MAX",
-    sum(e.best_population_variance) population_variance,
+    sum(e.best_population_variance) as population_variance,
     0 as "LOWER_CONFIDENCE",
     0 as "UPPER_CONFIDENCE",
     sum(e.lower_bound_variance) as lower_bound_variance,
@@ -413,7 +413,6 @@ CREATE OR REPLACE VIEW estimate_factors_analyses_categorized_sums_region_for_add
 
   ORDER BY "CATEGORY";
 
-
 CREATE OR REPLACE VIEW estimate_factors_analyses_categorized_totals_region_for_add AS
   SELECT
     analysis_name,
@@ -422,15 +421,14 @@ CREATE OR REPLACE VIEW estimate_factors_analyses_categorized_totals_region_for_a
     region,
     phenotype,
     phenotype_basis,
-    sum("ESTIMATE") "ESTIMATE",
-    1.96*sqrt(sum(population_variance)) "CONFIDENCE",
-    sum("GUESS_MIN") "GUESS_MIN",
-    sum("GUESS_MAX") "GUESS_MAX",
-    1.96*sqrt(sum(lower_bound_variance) FILTER (WHERE "CATEGORY" NOT IN ('D', 'E'))) as "LOWER_CONFIDENCE",
-    1.96*sqrt(sum(upper_bound_variance) FILTER (WHERE "CATEGORY" NOT IN ('D', 'E'))) as "UPPER_CONFIDENCE"
+    sum("ESTIMATE") as "ESTIMATE",
+    1.96*sqrt(sum(population_variance)) as "CONFIDENCE",
+    sum("GUESS_MIN") as "GUESS_MIN",
+    sum("GUESS_MAX") as "GUESS_MAX",
+    1.96*sqrt(sum(lower_bound_variance) FILTER (WHERE "CATEGORY" IN ('B', 'J', 'K', 'L'))) as "LOWER_CONFIDENCE",
+    1.96*sqrt(sum(upper_bound_variance) FILTER (WHERE "CATEGORY" IN ('B', 'J', 'K', 'L'))) as "UPPER_CONFIDENCE"
   FROM estimate_factors_analyses_categorized_sums_region_for_add
   GROUP BY analysis_name, analysis_year, continent, region, phenotype, phenotype_basis;
-
 
 CREATE OR REPLACE VIEW estimate_factors_analyses_categorized_sums_continent_for_add AS
   SELECT
@@ -445,14 +443,14 @@ CREATE OR REPLACE VIEW estimate_factors_analyses_categorized_sums_continent_for_
     1.96*sqrt(sum(e.population_variance)) as "CONFIDENCE",
     sum(e.population_lower_confidence_limit) as "GUESS_MIN",
     sum(e.population_upper_confidence_limit) as "GUESS_MAX",
-    sum(e.best_population_variance) population_variance,
+    sum(e.best_population_variance) as population_variance,
     CASE
-        WHEN category IN ('D', 'E', 'H', 'I', 'M') THEN NULL
-        ELSE 1.96*sqrt(sum(e.lower_bound_variance))
+        WHEN category IN ('J', 'K') THEN 1.96*sqrt(sum(e.best_population_variance))
+        WHEN category IN ('B', 'L') THEN (1.96*sqrt(sum(e.best_population_variance))) - (1.96*sqrt(sum(e.lower_bound_variance)))
     END as "LOWER_CONFIDENCE",
     CASE
-        WHEN category IN ('D', 'E', 'H', 'I', 'M') THEN NULL
-        ELSE 1.96*sqrt(sum(e.upper_bound_variance))
+        WHEN category IN ('J', 'K') THEN 1.96*sqrt(sum(e.best_population_variance))
+        WHEN category IN ('B', 'L') THEN (1.96*sqrt(sum(e.best_population_variance))) - (1.96*sqrt(sum(e.upper_bound_variance)))
     END as "UPPER_CONFIDENCE",
     sum(e.lower_bound_variance) as lower_bound_variance,
     sum(e.upper_bound_variance) as upper_bound_variance
@@ -476,7 +474,7 @@ CREATE OR REPLACE VIEW estimate_factors_analyses_categorized_sums_continent_for_
     0 as "CONFIDENCE",
     sum(e.population_lower_confidence_limit) + 1.96*sqrt(sum(population_variance)) as "GUESS_MIN",
     sum(e.population_upper_confidence_limit) + 1.96*sqrt(sum(population_variance)) as "GUESS_MAX",
-    sum(e.best_population_variance) population_variance,
+    sum(e.best_population_variance) as population_variance,
     0 as "LOWER_CONFIDENCE",
     0 as "UPPER_CONFIDENCE",
     sum(e.lower_bound_variance) as lower_bound_variance,
@@ -496,11 +494,11 @@ CREATE OR REPLACE VIEW estimate_factors_analyses_categorized_totals_continent_fo
     continent,
     phenotype,
     phenotype_basis,
-    sum("ESTIMATE") "ESTIMATE",
-    1.96*sqrt(sum(population_variance)) "CONFIDENCE",
-    sum("GUESS_MIN") "GUESS_MIN",
-    sum("GUESS_MAX") "GUESS_MAX",
-    1.96*sqrt(sum(lower_bound_variance) FILTER (WHERE "CATEGORY" NOT IN ('D', 'E'))) as "LOWER_CONFIDENCE",
-    1.96*sqrt(sum(upper_bound_variance) FILTER (WHERE "CATEGORY" NOT IN ('D', 'E'))) as "UPPER_CONFIDENCE"
+    sum("ESTIMATE") as "ESTIMATE",
+    1.96*sqrt(sum(population_variance)) as "CONFIDENCE",
+    sum("GUESS_MIN") as "GUESS_MIN",
+    sum("GUESS_MAX") as "GUESS_MAX",
+    1.96*sqrt(sum(lower_bound_variance) FILTER (WHERE "CATEGORY" IN ('B', 'J', 'K', 'L'))) as "LOWER_CONFIDENCE",
+    1.96*sqrt(sum(upper_bound_variance) FILTER (WHERE "CATEGORY" IN ('B', 'J', 'K', 'L'))) as "UPPER_CONFIDENCE"
   FROM estimate_factors_analyses_categorized_sums_continent_for_add
   GROUP BY analysis_name, analysis_year, continent, phenotype, phenotype_basis;
