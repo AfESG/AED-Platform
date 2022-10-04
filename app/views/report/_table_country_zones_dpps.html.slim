@@ -36,10 +36,12 @@
     - @indent = 0
     - @elephant_estimate_groups.each do |group|
       - @pop = @rn = @cc = @ty = @yr = @re = ''
-      - @ar = @n = @pv = @es = @cl = @car = @dp = @dpps = @ra = @lb = @ub = 0
-      - lbs = group.map{|row| row['LOWER_CONFIDENCE']}.compact
+      - @ar = @n = @pv = @cl = @car = @dp = @dpps = @ra = @lb = @ub = 0
+      - ess = group.map{|row| row['ESTIMATE']}.compact
+      - @es = ess.empty? ? nil : ess.map(&:to_i).sum
+      - lbs = group.map{|row| row['LOWER_BOUND']}.compact
       - @lb = lbs.empty? ? nil : lbs.map(&:to_i).sum
-      - ubs = group.map{|row| row['UPPER_CONFIDENCE']}.compact
+      - ubs = group.map{|row| row['UPPER_BOUND']}.compact
       - @ub = ubs.empty? ? nil : ubs.map(&:to_i).sum
       - if group.size > 1
         - group.each do |row|
@@ -55,9 +57,6 @@
           - @car = @car + row['CALC_SQKM'].to_f
           - @ar = @ar + row['AREA_SQKM'].to_i
           - @pv = @pv + row['population_variance'].to_f
-          - @es = @es + row['ESTIMATE'].to_i
-          - @lb = @lb.to_i + row['LOWER_BOUND'].to_i
-          - @ub = @ub.to_i + row['UPPER_BOUND'].to_i
           - @lo = row['LON']
           - @la = row['LAT']
           - @ra = row['RA'].to_f
@@ -77,9 +76,6 @@
           - @ar = row['AREA_SQKM']
           - @pv = 0
           - @cl = row['CL95']
-          - @es = row['ESTIMATE']
-          - @lb = row['LOWER_BOUND'].to_i
-          - @ub = row['UPPER_BOUND'].to_i
           - @lo = row['LON']
           - @la = row['LAT']
           - @n = @n + 1
@@ -102,9 +98,9 @@
         td= @ty
         td style="text-align:center" = @ca
         td= @yr
-        td style="text-align:right" = number_with_delimiter @es
-        td style="text-align:right" = @lb == 0 && @ub == 0 ? '-' : @lb
-        td style="text-align:right" = @lb == 0 && @ub == 0 ? '-' : @ub
+        td style="text-align:right" = @es.nil? ? '-' : number_with_delimiter(@es)
+        td style="text-align:right" = (@ub.nil? ? '-' : @lb).to_s + (['D','E','F','G'].include?(@ca) ? '*' : '')
+        td style="text-align:right" = (@ub.nil? ? '-' : @ub).to_s + (['D','E','F','G'].include?(@ca) ? '*' : '')
         td style="padding-left:10px" = @re
         td style="text-align:center" = round_pfs @pf
         td style="text-align:right" = @ar.to_s!="0" ? number_with_delimiter(@ar) : ""
@@ -119,9 +115,9 @@
           td= row['method_and_quality'].gsub(/[\d]/,'')
           td style="text-align:center" = row['CATEGORY']
           td= row['CYEAR']
-          td.numeric= number_with_delimiter row['ESTIMATE']
-          td.numeric= row['LOWER_BOUND'].nil? ? '-' : row['LOWER_BOUND'].to_i
-          td.numeric= row['UPPER_BOUND'].nil? ? '-' : row['UPPER_BOUND'].to_i
+          td.numeric= row['ESTIMATE'].nil? ? '-' : number_with_delimiter(row['ESTIMATE'])
+          td.numeric= (row['UPPER_BOUND'].nil? ? '-' : row['LOWER_BOUND'].to_i).to_s + (['D','E','F','G'].include?(row['CATEGORY']) ? '*' : '')
+          td.numeric= (row['UPPER_BOUND'].nil? ? '-' : row['UPPER_BOUND'].to_i).to_s + (['D','E','F','G'].include?(row['CATEGORY']) ? '*' : '')
           td style="padding-left:10px" = row['REFERENCE']
           td style='text-align:center'
           td.numeric style="padding-right:10px" = number_with_delimiter row['AREA_SQKM']
